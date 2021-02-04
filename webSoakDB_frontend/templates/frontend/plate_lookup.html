@@ -1,0 +1,25 @@
+{% comment %}
+Template to display the currently available list of compounds in a selected
+library plate.
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{ library }} {{plate }}</title>
+	<!--<link rel="stylesheet" href="../../static/playground/plate_details.css"> -->
+</head>
+<body>
+	<div>Top of the page</div>
+	<div id="root">
+	</div>
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>  
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <!-- Load our React component. -->
+ <!-- <script src="../../../src/plate_lookup/index.js"></script> -->
+ {% load static %}
+  <!--  <script src="{% static "frontend/main.js" %}"></script> -->
+		<script src="{% static "frontend/location_test.js" %}"></script>
+		<script src="{% static "frontend/index.js" %}"></script>
+</body>
