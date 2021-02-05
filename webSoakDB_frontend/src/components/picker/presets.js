@@ -4,8 +4,9 @@ import PresetOption from './preset_option.js';
 class Presets extends React.Component {
 	
 	render(){
-		const presets = this.props.presets.map((preset) => 
+		const presets = this.props.presets.map((preset, index) => 
 		<PresetOption
+			key={index}
 			id={preset.id}
 			name = {preset.name}
 			description = {preset.description}

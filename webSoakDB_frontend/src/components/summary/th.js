@@ -11,6 +11,7 @@ class TableHeader extends React.Component {
 				<th>{this.props.compoundsDescription} <br/>compounds</th>
 				<th>Origin</th>
 				<th>Compounds</th>
+				<th></th>
 			</tr>
 		</thead>	
 		); 

@@ -9,7 +9,7 @@ class LibraryOption extends React.Component {
 		return (
 			<p className="library">
 				<input type="checkbox" value="{this.props.plate.id}" name="lib_ids" />
-				<label for="{this.props.plate.id}">{libname} </label>
+				<label htmlFor="{this.props.plate.id}">{libname} </label>
 				<br />
 				<a href={url}>See compounds</a>
 			</p>

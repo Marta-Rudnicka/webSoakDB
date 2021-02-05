@@ -1,5 +1,5 @@
 import React from 'react';
-import './style.css';
+//import './style.css';
 import Libraries from './libraries.js';
 import Presets from './presets.js';
 import Uploads from './uploads.js';
@@ -63,9 +63,11 @@ const presets = [
 		"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec tempus libero, quis porta mi. ",
 	}
 ]
+
+const proposal = 'Test string';
 //const libs = "string"
 //function App() {
-class App extends React.Component {
+class Picker extends React.Component {
 	
 	constructor(props) {
 		super(props);
@@ -76,8 +78,8 @@ class App extends React.Component {
 	render() {
 		return (
 		<div id="all">
-			<h1>Select compounds - proposal: {this.props.proposal}</h1>
-			<main>
+			<h1>Select compounds - proposal: {proposal}</h1>
+			<main id="main-picker">
 			
 				<Libraries libs={this.state.libs}/>
 				<Presets presets={this.state.presets}/>
@@ -91,4 +93,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default Picker;

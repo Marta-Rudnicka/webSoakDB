@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+//import './home.css';
+import CollectionRow from './collection_row.js';
+import TableHeader from './th.js';
+
 
 const proposal = {
         "name": "test_proposal_3",
@@ -142,14 +142,101 @@ const ownplates = [{
         "size": 19
     }]
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App proposal={proposal} current={current} ownplates={ownplates} proposalPlates = {proposal_plates}/>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function deepCopyObjectArray(array){
+	//this sucks; needs to be changed
+	let output = [];
+	array.forEach(object => {
+		const objectDeepCopy = JSON.parse(JSON.stringify(object));
+		output.push(objectDeepCopy);
+	});
+	return output;
+}
+
+class Summary extends React.Component {
+	
+	constructor(props) {
+		super(props);
+		this.removeCollection = this.removeCollection.bind(this);
+		this.state = { 	libraries: proposal.libraries,
+						ownplates: ownplates,
+						proposalPlates: proposal_plates};
+	}
+	
+	get_compound_collections(){
+		let collections = []
+			
+		this.state.proposalPlates.forEach(plate =>{
+			if (plate.library.public){
+				plate.origin = 'XChem in-house library';
+			}
+			else{
+				plate.origin = "User-submitted library"
+			}
+			collections.push(plate);
+		});
+		//TODO: get subsets from selected presets and cherrypicking lists
+		return collections;
+	}
+	
+	removeCollection(plate){
+		const plates = deepCopyObjectArray(this.state.proposalPlates)
+		const found = plates.find(object => object.id === plate.id);
+		plates.splice(plates.indexOf(found), 1);
+		this.setState({proposalPlates : plates});
+	}
+	
+	
+	undoChages(){
+		console.log('fired undoChanges');
+		console.log('libraries: ', this.state.libraries)
+		console.log('libraries in props: ', proposal.libraries)
+		
+		this.setState({proposalPlates: proposal_plates});
+	}
+	
+	render() {
+		
+		const collections = this.get_compound_collections()
+		
+		const library_rows = collections.map(collection =>{
+			return <CollectionRow 
+				key={collection.name + '-' + collection.library} 
+				collection={collection} 
+				handleClick={this.removeCollection}
+			/>
+		});
+		
+		const subset_rows = [];
+		return (
+			<div id="all">
+				<h1>Selected Compounds for {proposal.name} </h1>
+				<section>
+				<h2>Whole libraries</h2>
+					<table className="summary-table">
+						<TableHeader compoundsDescription="Available"/>
+						<tbody>
+							{library_rows}
+						</tbody>
+					</table>
+				</section>
+				<section>
+					<h2>Selections from libraries (cherrypicked compounds)</h2>
+					<table className="summary-table">
+						<TableHeader compoundsDescription="Available"/>
+						<tbody>
+							{subset_rows}
+						</tbody>
+					</table>
+				</section>
+				<div>
+				
+					<button>Save changes </button>
+					<button onClick={event => this.undoChages()}>Undo all changes </button>
+				</div>
+			</div>
+		); 
+	}
+}
+
+export default Summary;

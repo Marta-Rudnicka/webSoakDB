@@ -1,17 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Library, LibraryPlate, Compounds, SourceWell, Protein, Proposals, Preset, CrystalPlate
 from django.http import HttpResponseRedirect
-#from datetime import date
-#from decimal import Decimal
-#from rest_framework.renderers import TemplateHTMLRenderer
-#from rest_framework.response import Response
-#from rest_framework.views import APIView
 from django.views.generic import ListView #RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from .serializers import LibrarySerializer, SourceWellSerializer, CurrentPlateSerializer, PresetSerializer, CrystalPlateSerializer, ProposalSelectionSerializer, LibraryPlateSerializer
+from .serializers import LibrarySerializer, SourceWellSerializer, CurrentPlateSerializer, PresetSerializer, CrystalPlateSerializer, ProposalListSerializer, LibraryPlateSerializer
 
-#API endpoints
+
+#TODO: change persmissions everywhere; temporarily [AllowAny] for early stages of testing
+#general-purpose endpoints
 
 class LibraryList(generics.ListAPIView):
 	queryset = Library.objects.all()
@@ -24,13 +21,39 @@ class LibraryDetail(generics.RetrieveAPIView):
 	permission_classes = [AllowAny]
 	lookup_field = 'name'
 
+class InHouseLibraryList(generics.ListAPIView):
+	queryset = Library.objects.filter(public=True)
+	serializer_class = LibrarySerializer
+	permission_classes = [AllowAny]
+
+class AllPlateList(generics.ListAPIView):
+	queryset = LibraryPlate.objects.all()
+	serializer_class = CurrentPlateSerializer
+	permission_classes = [AllowAny]
+
+class PresetList(generics.ListAPIView):
+	queryset = Preset.objects.all()
+	serializer_class = PresetSerializer
+	permission_classes = [AllowAny]
+
+class CrystalsInPlates(generics.ListAPIView):
+	queryset = CrystalPlate.objects.all()
+	serializer_class = CrystalPlateSerializer
+	permission_classes = [AllowAny]
+
+class ProposalList(generics.ListAPIView):
+	queryset = Proposals.objects.all()	
+	lookup_field = "name"
+	serializer_class = ProposalListSerializer
+	permission_classes = [AllowAny]
+
 
 class ProposalPlateList(generics.ListAPIView):
 #lists cuttent library plates for libraries selected for the proposal
 #both in-house and user libraries
 	def get_queryset(self):
 		self.plate_list = []
-		self.proposal = get_object_or_404(Proposal, name=self.kwargs['name'])
+		self.proposal = get_object_or_404(Proposals, name=self.kwargs['name'])
 		self.libraries = self.proposal.libraries.all()
 		for library in self.libraries:
 			self.plates = LibraryPlate.objects.filter(library=library, current=True)
@@ -42,10 +65,7 @@ class ProposalPlateList(generics.ListAPIView):
 	lookup_field = 'name'
 
 
-class InHouseLibraryList(generics.ListAPIView):
-	queryset = Library.objects.filter(public=True)
-	serializer_class = LibrarySerializer
-	permission_classes = [AllowAny]
+
 
 class PlateCompoundList(generics.ListAPIView):
 	
@@ -71,24 +91,3 @@ class CurrentPlateList(generics.ListAPIView):
 	serializer_class = CurrentPlateSerializer
 	permission_classes = [AllowAny]
 
-class AllPlateList(generics.ListAPIView):
-	queryset = LibraryPlate.objects.all()
-	serializer_class = CurrentPlateSerializer
-	permission_classes = [AllowAny]
-
-class PresetList(generics.ListAPIView):
-	queryset = Preset.objects.all()
-	serializer_class = PresetSerializer
-	permission_classes = [AllowAny]
-
-class CrystalsInPlates(generics.ListAPIView):
-	queryset = CrystalPlate.objects.all()
-	serializer_class = CrystalPlateSerializer
-	permission_classes = [AllowAny]
-
-
-class ProposalSelection(generics.ListAPIView):
-	queryset = Proposals.objects.all()	
-	lookup_field = "name"
-	serializer_class = ProposalSelectionSerializer
-	permission_classes = [AllowAny]

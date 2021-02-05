@@ -27,7 +27,7 @@ class CurrentPlateSerializer(serializers.ModelSerializer):
 class CompoundSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Compounds
-		fields = ['code', 'smiles', 'molecular_weight']
+		fields = ['code', 'smiles']#, 'molecular_weight'] #add when RDKit is added
 '''
 class SourceWellSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -59,7 +59,7 @@ class CrystalPlateSerializer(serializers.ModelSerializer):
 		fields = ['name', 'drop_volume', 'plate_type', 'crystals']
 		depth=2
 
-class ProposalSelectionSerializer(serializers.ModelSerializer):
+class ProposalListSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Proposals
 		fields = ["name", "libraries", "subsets"]

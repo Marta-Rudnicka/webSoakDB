@@ -1,9 +1,9 @@
 import React from 'react';
-import './home.css';
+//import './home.css';
 
 const proposal = "Test proposal x"
 //function App() {
-class App extends React.Component {
+class Home extends React.Component {
 	
 	constructor(props) {
 		super(props);
@@ -11,11 +11,7 @@ class App extends React.Component {
 	}
 	render() {
 		return (
-		<div id="all">
-			<nav>
-		<a href="/playground/">Home</a> | <a href="/playground/proposal">Change proposal</a>
-		</nav>
-
+		<div id="home">
 			<h1>SoakDB home - {this.state.proposal}</h1>
 			<main>
 			<section id="prep">
@@ -51,7 +47,6 @@ class App extends React.Component {
 
 		); 
 	}
-
 }
 
-export default App;
+export default Home;

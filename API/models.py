@@ -66,6 +66,8 @@ class LibraryPlate(models.Model):
 	unique_together = ['name', 'library']
 
 	#plate_type = models.CharField(max_length=32) #probable addition, maybe foreign key
+	def size(self):
+		return len(self.compounds.all())
 
 	def __str__ (self):
 		return f"[{self.id}]{self.library}, {self.name}"

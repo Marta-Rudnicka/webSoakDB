@@ -7,7 +7,7 @@ class Libraries extends React.Component {
 
 	render(){
 		
-		const libraries = this.props.libs.map((lib) => <LibraryOption plate={lib}/>)
+		const libraries = this.props.libs.map((lib, index) => <LibraryOption key={index} plate={lib}/>)
 		
 		return (
 		<section id="libraries">

@@ -31,6 +31,7 @@ export class ExampleTable extends Component
         return (
             <Fragment>
                 <h1>Example</h1>
+               
                 <table className="table table-striped">
                     <thead>
                         <tr>
