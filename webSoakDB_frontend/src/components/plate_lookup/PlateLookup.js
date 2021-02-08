@@ -1,20 +1,18 @@
 import React from 'react';
-import './plate_details.css';
-//import ButtonBar from './button_bar.js';
 import ExportBar from './export_bar.js';
 import DataTable from './data_table.js';
 import PlateList from './plate_list.js';
 import TableHeader from './table_header.js';
+import axios from 'axios';
 
-//const proposal = "Test proposal"
 
-class App extends React.Component {
+class PlateLookup extends React.Component {
 	
 	constructor(props) {
 		super(props);
 		this.toggleDisplay = this.toggleDisplay.bind(this);
-	//	this.setToFalse = this.setToFalse.bind(this);
 		this.state = {
+			compounds: [],
 			show_well: true, 
 			show_code: true, 
 			show_smiles: true, 
@@ -30,38 +28,50 @@ class App extends React.Component {
 		this.setState({[display_option]: !this.state[display_option]});
 	}
 	
-	render() {
-		const library = this.props.plate.library.name;
-		const name = this.props.plate.name;
+	componentDidMount() {
+		const library = this.props.library;
+		const plate = this.props.plate;
+		const apiUrl = 'api/compounds/' + library + '/' + plate;
 		
-		let current = "";
-		if (this.props.plate.current){
-			current = "current"; 
+		axios.get(apiUrl)
+			.then(res => {
+			const compounds = res.data;
+			this.setState({ compounds });
+      });     		
+	}
+	
+	render() {
+		const library = this.props.library;
+		const name = this.props.plate;
+		let current =""
+		
+		if (this.props.current){
+			current = "(current)"; 
 			}
 		
 		const display_options = [
-			["show_well", "Show Well"],
-			["show_code", "Show Compound Code"],
-			["show_smiles", "Show SMILES"],
-			["show_structure", "Show 2D Structure"],
-			["show_concentration", "Show Concentration"],
-			["show_mw", "Show Molecular Weight"],
-			["show_p3", "Show [Property3]"],
-			["show_p4", "Show [Property4]"]
+			["show_well", "Well"],
+			["show_code", "Compound Code"],
+			["show_smiles", "SMILES"],
+			["show_structure", "2D Structure"],
+			["show_concentration", "Concentration"],
+			["show_mw", "Molecular Weight"],
+			["show_p3", "[Property3]"],
+			["show_p4", "[Property4]"]
 		];
 		
-		const buttons = display_options.map( option => {
-			return <button className={this.state[option[0]] ? "hidden" : "small-button"} onClick={event => this.toggleDisplay(option[0])}>{option[1]}</button>
+		const buttons = display_options.map((option, index) => {
+			return <button key={index} className={this.state[option[0]] ? "hidden" : "small-button"} onClick={event => this.toggleDisplay(option[0])}>Show {option[1]}</button>
 			});
 		
-		const cols =  display_options.map( option => {
-			return <col className={this.state[option[0]] ? "" : "hidden"} />
+		const cols =  display_options.map((option, index) => {
+			return <col key={index}  className={this.state[option[0]] ? "" : "hidden"} />
 			});
 		
 		return (
-		<div id="all">
+		<div id="plate-lookup">
 				<h1>Library: {library} </h1>
-				<h2>Plate: {name} ({current})</h2>	
+				<h2>Plate: {name} {current}</h2>	
 			<main>
 				<div className="sidebar-div">
 					<div>
@@ -70,12 +80,12 @@ class App extends React.Component {
 					</div>
 					
 					<ExportBar />
-					<PlateList current = {this.props.plate.current} library ={library} />
+					<PlateList current = {true} library ={library} />
 					
 				</div>
 				<table className="datatable">
 					<caption>
-						<h2>Compound list ({this.props.compounds.length} items)</h2>
+						Compound list ({this.state.compounds.length} items)
 					</caption>
 					<colgroup>
 						<col/>
@@ -93,7 +103,7 @@ class App extends React.Component {
 						onButtonClick = {this.toggleDisplay}
 					/>
 					<DataTable 
-						compounds = {this.props.compounds}
+						compounds = {this.state.compounds}
 						show_well = {this.state.show_well}
 						show_code = {this.state.show_code}
 						show_smiles = {this.state.show_smiles}
@@ -106,9 +116,9 @@ class App extends React.Component {
 				</table>		
 			</main>
 		</div>
-		); 
+		);
 	}
 }
 
-export default App;
+export default PlateLookup;
 

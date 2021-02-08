@@ -2,145 +2,7 @@ import React from 'react';
 //import './home.css';
 import CollectionRow from './collection_row.js';
 import TableHeader from './th.js';
-
-
-const proposal = {
-        "name": "test_proposal_3",
-        "libraries": [
-            {
-                "id": 2,
-                "name": "DSI_Poised_EG",
-                "for_industry": true,
-                "public": true
-            },
-            {
-                "id": 3,
-                "name": "FragLite",
-                "for_industry": false,
-                "public": true
-            },
-            {
-                "id": 6,
-                "name": "mylib_for_test_proposal_3",
-                "for_industry": true,
-                "public": false
-            }
-        ],
-        "subsets": []
-    };
-
-const proposal_plates = [
-    {
-        "id": 3,
-        "library": {
-            "id": 2,
-            "name": "DSI_Poised_EG",
-            "for_industry": true,
-            "public": true
-        },
-        "name": "plate1",
-        "current": true,
-        "size": 308
-    },
-    {
-        "id": 7,
-        "library": {
-            "id": 2,
-            "name": "DSI_Poised_EG",
-            "for_industry": true,
-            "public": true
-        },
-        "name": "plate2",
-        "current": true,
-        "size": 308
-    },
-    {
-        "id": 9,
-        "library": {
-            "id": 3,
-            "name": "FragLite",
-            "for_industry": false,
-            "public": true
-        },
-        "name": "test plate",
-        "current": true,
-        "size": 31
-    },
-    {
-        "id": 6,
-        "library": {
-            "id": 6,
-            "name": "mylib_for_test_proposal_3",
-            "for_industry": true,
-            "public": false
-        },
-        "name": "mylib_for_test_proposal_3",
-        "current": true,
-        "size": 19
-    }
-]
-const current = [
-    {
-        "id": 3,
-        "library": {
-            "id": 2,
-            "name": "DSI_Poised_EG",
-            "for_industry": true,
-            "public": true
-        },
-        "name": "plate1",
-        "current": true,
-        "size": 308
-    },
-    {
-        "id": 7,
-        "library": {
-            "id": 2,
-            "name": "DSI_Poised_EG",
-            "for_industry": true,
-            "public": true
-        },
-        "name": "plate2",
-        "current": true,
-        "size": 308
-    },
-    {
-        "id": 9,
-        "library": {
-            "id": 3,
-            "name": "FragLite",
-            "for_industry": false,
-            "public": true
-        },
-        "name": "test plate",
-        "current": true,
-        "size": 31
-    },
-    {
-        "id": 6,
-        "library": {
-            "id": 6,
-            "name": "mylib_for_test_proposal_3",
-            "for_industry": true,
-            "public": false
-        },
-        "name": "mylib_for_test_proposal_3",
-        "current": true,
-        "size": 19
-    }
-]
-
-const ownplates = [{
-        "id": 6,
-        "library": {
-            "id": 6,
-            "name": "mylib_for_test_proposal_3",
-            "for_industry": true,
-            "public": false
-        },
-        "name": "mylib_for_test_proposal_3",
-        "size": 19
-    }]
+import axios from 'axios';
 
 
 function deepCopyObjectArray(array){
@@ -158,13 +20,31 @@ class Summary extends React.Component {
 	constructor(props) {
 		super(props);
 		this.removeCollection = this.removeCollection.bind(this);
-		this.state = { 	libraries: proposal.libraries,
-						ownplates: ownplates,
-						proposalPlates: proposal_plates};
+		this.state = { 	proposalPlates: [],
+						//proposal: {},
+					};
 	}
 	
-	get_compound_collections(){
-		let collections = []
+	componentDidMount() {
+		const platesApiUrl = 'api/proposal_plates/' + this.props.proposal.name;;
+		//const proposalApiUrl = 'api/proposals/' + this.props.proposal.name;
+		
+		axios.get(platesApiUrl)
+			.then(res => {
+			const proposalPlates = res.data;
+			this.setState({ proposalPlates });
+      });
+      /*
+		axios.get(proposalApiUrl)
+			.then(res => {
+			const proposal = res.data;
+			this.setState({ proposal });
+      });
+      	*/	
+	}
+	
+	get_plates(){
+		let plates = []
 			
 		this.state.proposalPlates.forEach(plate =>{
 			if (plate.library.public){
@@ -173,10 +53,19 @@ class Summary extends React.Component {
 			else{
 				plate.origin = "User-submitted library"
 			}
-			collections.push(plate);
+			plates.push(plate);
 		});
-		//TODO: get subsets from selected presets and cherrypicking lists
-		return collections;
+		return plates;
+	}
+	
+	get_subsets(){
+		let subsets = []
+			
+		this.props.proposal.subsets.forEach(subset =>{
+			subset.size = subset.compounds.length;
+			subsets.push(subset);
+		});
+		return subsets;
 	}
 	
 	removeCollection(plate){
@@ -188,29 +77,42 @@ class Summary extends React.Component {
 	
 	
 	undoChages(){
-		console.log('fired undoChanges');
-		console.log('libraries: ', this.state.libraries)
-		console.log('libraries in props: ', proposal.libraries)
-		
-		this.setState({proposalPlates: proposal_plates});
+		this.componentDidMount();
 	}
 	
 	render() {
 		
-		const collections = this.get_compound_collections()
+		const plates = this.get_plates();		
 		
-		const library_rows = collections.map(collection =>{
+		const library_rows = plates.map(plate =>{
 			return <CollectionRow 
-				key={collection.name + '-' + collection.library} 
-				collection={collection} 
+				key={plate.name + '-' + plate.library} 
+				collection={plate} 
 				handleClick={this.removeCollection}
+				showPlate={this.props.showPlate}
 			/>
 		});
 		
-		const subset_rows = [];
+		let subset_rows;
+		
+		if (this.props.proposal.subsets){
+			const subsets = this.get_subsets();
+			subset_rows = subsets.map(subset =>{
+				return <CollectionRow 
+					key={subset.name + '-' + subset.library} 
+					collection={subset} 
+					handleClick={this.removeCollection}
+					showPlate={this.props.showPlate}
+				/>
+			});
+		}
+		else {
+			subset_rows = [];
+		}
+		
 		return (
 			<div id="all">
-				<h1>Selected Compounds for {proposal.name} </h1>
+				<h1>Selected Compounds for {this.props.proposal.name} </h1>
 				<section>
 				<h2>Whole libraries</h2>
 					<table className="summary-table">
@@ -223,7 +125,7 @@ class Summary extends React.Component {
 				<section>
 					<h2>Selections from libraries (cherrypicked compounds)</h2>
 					<table className="summary-table">
-						<TableHeader compoundsDescription="Available"/>
+						<TableHeader compoundsDescription="Selected"/>
 						<tbody>
 							{subset_rows}
 						</tbody>

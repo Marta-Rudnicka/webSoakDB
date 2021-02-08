@@ -29,7 +29,7 @@ class TableRow extends React.Component {
 				<td className={code} > {this.props.compound.compound.code}</td>
 				<td className={smiles} >{this.props.compound.compound.smiles}</td>
 				<td className={structure}>
-					<img alt="alttext" src="../../static/ethanol.png" />
+					[PICTURE GOES HERE]
 				</td>
 				<td className={concentration}> {this.props.compound.concentration}</td>
 				<td className={mw}>{this.props.compound.compound.molecular_weight}</td>

@@ -10,7 +10,7 @@ class CollectionRow extends React.Component {
 				<td>{col.name}</td>
 				<td>{col.size}</td>
 				<td>{col.origin}</td>
-				<td><a href={"/playground/" + col.library.name + "/" + col.name}>See compounds</a></td>
+				<td><span className="pseudo-link" onClick={event => this.props.showPlate(col.library.name, col.name, true)}>See compounds</span></td>
 				<td>
 					<button onClick={event => this.props.handleClick(col)}>Remove</button>
 				</td>

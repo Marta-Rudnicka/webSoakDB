@@ -10,13 +10,14 @@ table, th, td {
 }
 
 .summary-table {
-	width: 100%
+	width: 100%;
+	table-layout: fixed;
 }
 tfoot {
 	font-weight: bold;
 
 }
-main {
+#picker main {
 	display: grid;
 	grid-template: auto auto / auto auto max(20%);
 	grid-gap: 1em;
@@ -29,14 +30,29 @@ section {
 	margin: 1em;
 }
 
-h1, h2 {
+h1, h2, h3 {
 	text-align: center;
-	padding-bottom: 1em;
-	padding-top: 1em;
+	padding-bottom: 0.5em;
+	padding-top: 0.5em;
 }
 
 h2 {
-	font-size: 1.5em
+	font-size: 1.5em;
+}
+
+h3 {
+	font-size: 1.2em;
+}
+
+span.pseudo-link {
+	color:#2780e3;
+	text-decoration:none;
+	background-color:transparent
+}
+
+.pseudo-link:hover {
+	color:#165ba8;
+	text-decoration:underline
 }
 
 
@@ -83,93 +99,92 @@ grid-template-columns: 50% 50%;
 }
 
 form.plate-list {
-border: solid black 1px;
-background: white;
-display: grid;
-visibility: hidden;
-max-height: 0;
-position: absolute;
-width: 100%;
-grid-template-columns: 15% auto auto;
-z-index: 3;
-padding: 3px;
-transition: visibility 0s, max-height 0.8s;
+	border: solid black 1px;
+	background: white;
+	display: grid;
+	visibility: hidden;
+	max-height: 0;
+	position: absolute;
+	width: 100%;
+	grid-template-columns: 15% auto auto;
+	z-index: 3;
+	padding: 3px;
+	transition: visibility 0s, max-height 0.8s;
 }
 
 form.plate-list-shown {
-border: solid black 1px;
-background: white;
-display: grid;
-width: 80%;
-grid-template-columns: 15% auto auto;
-z-index: 3;
-padding: 3px;
+	border: solid black 1px;
+	background: white;
+	display: grid;
+	width: 80%;
+	grid-template-columns: 15% auto auto;
+	z-index: 3;
+	padding: 3px;
 }
 
 #hide-all {
-display: none;
+	display: none;
 }
 
 input[type="radio"]:checked ~ .plate-list {
-visibility: visible;
-height:auto;
-max-height:600px;
+	visibility: visible;
+	height:auto;
+	max-height:600px;
 }
 
 input[type="radio"]:checked ~ .hide-icon {
-visibility: visible;
+	visibility: visible;
 }
 
 .icon {
-opacity: 0.5;
+	opacity: 0.5;
 }
 
 .icon:hover {
-opacity: 1;
+	opacity: 1;
 }
 
 .show, .hide {
-display: none;
+	display: none;
 }
 
 .hide-icon {
-visibility: hidden;
+	visibility: hidden;
 }
 
 input[type="radio"]:checked ~  .hide-icon {
-visibility: visible;
+	visibility: visible;
 }
 
 input[type="checkbox"]:checked label{
-width: 500px;
+	width: 500px;
 }
 
 .plate-list label{
-grid-column: 2/3;
-text-align: left;
+	grid-column: 2/3;
+	text-align: left;
 }
 
 .plate-list input{
-grid-column: 1/2;
+	grid-column: 1/2;
 }
 
 .library {
-position: relative;
+	position: relative;
 }
 
 #hide-all-label{
-display: block;
-float: right;
-border: solid black 1px;
+	display: block;
+	float: right;
+	border: solid black 1px;
 }
 
 #properties-form {
-padding: 1em;
-display: grid;
-grid-template-columns: auto auto auto auto;
-grid-gap: 1em;
+	padding: 1em;
+	display: grid;
+	grid-template-columns: auto auto auto auto;
+	grid-gap: 1em;
 }
-
 
 .show-on-hover ~ p {
 	display: none;
@@ -183,3 +198,79 @@ grid-gap: 1em;
 	border: 1px solid black;
 	padding: 5px;
 }
+
+#plate-lookup main {
+	padding: 1em;
+	width: 100%;
+	margin-top: 20px;
+	display: grid;
+	grid-gap: 1em;
+	grid-template-columns: 15em auto;
+}
+
+.datatable {
+	grid-column: 2;
+	grid-row: 1;
+	width: 100%;
+}
+
+table caption {
+	caption-side: top;
+	border: solid black 1px;
+	padding: 2px;
+	text-align: center;
+	font-size: 2em;
+}
+
+th {
+	vertical-align: top;
+}
+
+table.datatable th {
+	position: webkit-sticky;
+	position: sticky;
+	top: 0px;
+	background: white;
+}
+
+.sidebar-div {
+	display: table-;
+	position: webkit-sticky;
+	position: sticky;
+	top: 0;
+	border: none;
+}
+
+
+.row-no {
+	width: 3em;
+}
+
+
+.datatable tr:nth-child(even) {
+	background: rgba(211, 211, 211, 0.4);
+}
+
+button.in-table {
+	width: 98%;
+	padding: 1px;
+	margin: 2px;
+	font-size: 0.8em;
+	position: absolute;
+	bottom:0;
+	left:0;
+}
+
+.hidden {
+	display: none;
+}
+
+button.small-button {
+	width: 100%;
+	padding: 1px;
+	margin: 1px;
+	font-size: 0.8em;
+}
+ .old-uploads {
+	font-size: 0.8em;
+ }

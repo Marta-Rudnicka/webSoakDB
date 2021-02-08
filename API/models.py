@@ -94,6 +94,8 @@ class LibrarySubset(models.Model):
     library = models.ForeignKey(Library, on_delete=models.CASCADE)
     compounds = models.ManyToManyField(Compounds)
     origin = models.CharField(max_length=64)
+    def size(self):
+        return len(self.compounds.all())
 
 
 class Preset(models.Model):

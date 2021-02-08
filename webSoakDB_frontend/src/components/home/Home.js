@@ -1,8 +1,7 @@
 import React from 'react';
-//import './home.css';
 
 const proposal = "Test proposal x"
-//function App() {
+
 class Home extends React.Component {
 	
 	constructor(props) {
@@ -18,11 +17,11 @@ class Home extends React.Component {
 				<h2>Prepararation</h2>
 				<ul>
 					<li>
-						<p><a href="/playground/picker">Selection of compounds</a> </p>
+						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Picker")}>Selection of compounds</span> </p>
 						<p>the place to select libraries, cherry-pick compounds, and upload the data of your own library</p>
 					</li>
 					<li>
-						<p><a href="/playground/summary">Summary</a> </p>
+						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Summary")}>Summary</span> </p>
 						<p> the place to see and manage your protein and compound data</p>
 					</li>
 				</ul>
@@ -38,7 +37,7 @@ class Home extends React.Component {
 						<p><a href="/playground/dummy">Compound screen application</a> </p><p> software used for managing the experiment in the lab</p>
 					</li>
 					<li>
-						<p><a href="/playground/all">Data summary</a> </p><p> the place to see and download all the data produced in your experiment (at any stage)</p>
+						<p><a href="/playground/dummy">Data summary</a> </p><p> the place to see and download all the data produced in your experiment (at any stage)</p>
 					</li>
 				</ul>
 			</section>

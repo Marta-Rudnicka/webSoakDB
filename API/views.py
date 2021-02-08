@@ -43,13 +43,19 @@ class CrystalsInPlates(generics.ListAPIView):
 
 class ProposalList(generics.ListAPIView):
 	queryset = Proposals.objects.all()	
+	#lookup_field = "name"
+	serializer_class = ProposalListSerializer
+	permission_classes = [AllowAny]
+
+class ProposalDetail(generics.RetrieveAPIView):
+	queryset = Proposals.objects.all()	
 	lookup_field = "name"
 	serializer_class = ProposalListSerializer
 	permission_classes = [AllowAny]
 
 
 class ProposalPlateList(generics.ListAPIView):
-#lists cuttent library plates for libraries selected for the proposal
+#lists current library plates for libraries selected for the proposal
 #both in-house and user libraries
 	def get_queryset(self):
 		self.plate_list = []

@@ -63,5 +63,5 @@ class ProposalListSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Proposals
 		fields = ["name", "libraries", "subsets"]
-		depth = 1
+		depth = 2
 		lookup_field = "name"

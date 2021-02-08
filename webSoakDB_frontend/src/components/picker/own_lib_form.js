@@ -3,7 +3,7 @@ import React from 'react';
 class OwnLibraryForm extends React.Component {
 	render(){
 		return (
-			<form method="post" action="/playground/upload_user_library" id="own_lib" encType="multipart/form-data">
+			<form method="post" action="data_test/" id="own_lib" encType="multipart/form-data">
 				<p>
 					<label htmlFor="id_name">Library name:</label> 
 					<input type="text" name="name" required id="id_name" />
