@@ -4,11 +4,19 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView #RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from .serializers import LibrarySerializer, SourceWellSerializer, CurrentPlateSerializer, PresetSerializer, CrystalPlateSerializer, ProposalListSerializer, LibraryPlateSerializer
-
+from .serializers import (LibrarySerializer, 
+							SourceWellSerializer, 
+							CurrentPlateSerializer, 
+							PresetSerializer, 
+							CrystalPlateSerializer, 
+							ProposalListSerializer, 
+							LibraryPlateSerializer, 
+							LibraryPlateStatSerializer, 
+							ProposalUpdateSerializer)
 
 #TODO: change persmissions everywhere; temporarily [AllowAny] for early stages of testing
-#general-purpose endpoints
+
+#general-purpose generic endpoints
 
 class LibraryList(generics.ListAPIView):
 	queryset = Library.objects.all()
@@ -19,7 +27,7 @@ class LibraryDetail(generics.RetrieveAPIView):
 	queryset = Library.objects.all()
 	serializer_class = LibrarySerializer
 	permission_classes = [AllowAny]
-	lookup_field = 'name'
+	#lookup_field = 'name'
 
 class InHouseLibraryList(generics.ListAPIView):
 	queryset = Library.objects.filter(public=True)
@@ -47,7 +55,7 @@ class ProposalList(generics.ListAPIView):
 	serializer_class = ProposalListSerializer
 	permission_classes = [AllowAny]
 
-class ProposalDetail(generics.RetrieveAPIView):
+class ProposalDetail(generics.RetrieveUpdateAPIView):
 	queryset = Proposals.objects.all()	
 	lookup_field = "name"
 	serializer_class = ProposalListSerializer
@@ -66,7 +74,7 @@ class ProposalPlateList(generics.ListAPIView):
 			for plate in self.plates:
 				self.plate_list.append(plate)
 		return self.plate_list		
-	serializer_class = LibraryPlateSerializer	
+	serializer_class = LibraryPlateStatSerializer	
 	permission_classes = [AllowAny]
 	lookup_field = 'name'
 
@@ -97,3 +105,18 @@ class CurrentPlateList(generics.ListAPIView):
 	serializer_class = CurrentPlateSerializer
 	permission_classes = [AllowAny]
 
+
+class LibCurrentPlatesStatList(generics.ListAPIView):
+	#list all current plates, with details about compounds (for stats)
+	def get_queryset(self):
+		self.library = get_object_or_404(Library, id=self.kwargs['pk'])
+		print('self.library: ', self.library)
+		return self.library.plates.filter(current=True);
+	serializer_class = LibraryPlateStatSerializer	
+	permission_classes = [AllowAny]
+
+class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
+	queryset = Proposals.objects.all()	
+	lookup_field = "name"
+	serializer_class = ProposalUpdateSerializer
+	permission_classes = [AllowAny]

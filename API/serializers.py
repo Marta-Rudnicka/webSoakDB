@@ -9,8 +9,8 @@ class LibrarySerializer(serializers.ModelSerializer):
 class LibraryPlateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = LibraryPlate
-		fields = ['id', 'library', 'name', 'current', 'size']
-		depth = 1
+		fields = ['id', 'library', 'name', 'current', 'size', 'compounds']
+		depth = 2
 
 class LibraryPlateWithCompoundsSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -27,7 +27,7 @@ class CurrentPlateSerializer(serializers.ModelSerializer):
 class CompoundSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Compounds
-		fields = ['code', 'smiles']#, 'molecular_weight'] #add when RDKit is added
+		fields = ['code', 'smiles', 'molecular_weight'] #add when RDKit is added
 '''
 class SourceWellSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -64,4 +64,25 @@ class ProposalListSerializer(serializers.ModelSerializer):
 		model = Proposals
 		fields = ["name", "libraries", "subsets"]
 		depth = 2
+		lookup_field = "name"
+
+#CUSTOM SERIALIZERS FOR RUNNING STATS
+
+class CompoundsStatSerializer(serializers.Serializer):
+	molecular_weight = serializers.FloatField()
+
+class SourceWellStatSerializer(serializers.Serializer):
+	compound = CompoundsStatSerializer()
+	concentration = serializers.IntegerField()
+
+class LibraryPlateStatSerializer(serializers.Serializer):
+	name = serializers.CharField(max_length=4)
+	library = LibrarySerializer()
+	compounds = SourceWellStatSerializer(many=True)
+
+#CUSTOM SERIALIZERS FOR COMPOUND SELECTION APP
+class ProposalUpdateSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Proposals
+		fields = ["name", "libraries", "subsets"]
 		lookup_field = "name"

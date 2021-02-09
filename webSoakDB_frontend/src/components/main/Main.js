@@ -13,6 +13,7 @@ class Main extends Component {
 	constructor(props){
 		super(props);
 		this.state = {page: <Home />};
+		this.updateLibrarySelection = this.updateLibrarySelection.bind(this);
 		this.changeMainPage = this.changeMainPage.bind(this);
 		this.showPlate = this.showPlate.bind(this);
 		}
@@ -33,7 +34,7 @@ class Main extends Component {
 				this.setState({page: <Home handleClick={this.changeMainPage}/>});
 				break;
 			case 'Picker':
-				this.setState({page: <Picker showPlate={this.showPlate}  proposal={this.state.proposal} />});
+				this.setState({page: <Picker showPlate={this.showPlate}  proposal={this.state.proposal} updateLibrarySelection={this.updateLibrarySelection} />});
 				break;
 			case 'Summary':
 				this.setState({page: <Summary showPlate={this.showPlate} proposal={this.state.proposal} />});
@@ -45,11 +46,18 @@ class Main extends Component {
 		this.setState({page: <PlateLookup library={library} plate={plate} current={current} />});
 	}
 	
+	updateLibrarySelection(idArray){
+		const apiUrl='api/update_proposal_selection/' + this.props.proposalName + '/';
+		axios.patch(apiUrl, {libraries: idArray}).then(this.componentDidMount());
+		this.componentDidMount();
+		this.changeMainPage('Summary');
+	}
+	
     render() {
 		const app = this.state.page;
-		console.log('Proposal in Main: ', this.props.proposalName)
+		
         return (
-         <div>  
+         <div>
 			<nav>
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Home')}>Home | </span>
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Picker')}> Select compounds |</span>

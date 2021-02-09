@@ -18,6 +18,7 @@ class App extends Component {
 	}
 	
 	logIn(name){
+		event.preventDefault();
 		this.setState({proposalName: name});
 	}
 	

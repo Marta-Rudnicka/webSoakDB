@@ -21,7 +21,6 @@ class Summary extends React.Component {
 		super(props);
 		this.removeCollection = this.removeCollection.bind(this);
 		this.state = { 	proposalPlates: [],
-						//proposal: {},
 					};
 	}
 	
@@ -34,13 +33,6 @@ class Summary extends React.Component {
 			const proposalPlates = res.data;
 			this.setState({ proposalPlates });
       });
-      /*
-		axios.get(proposalApiUrl)
-			.then(res => {
-			const proposal = res.data;
-			this.setState({ proposal });
-      });
-      	*/	
 	}
 	
 	get_plates(){

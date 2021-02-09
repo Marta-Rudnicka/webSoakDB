@@ -1,8 +1,4 @@
 import React from 'react';
-//import pic1 from './dsi-ClogP.png';
-//import pic2 from './dsi-Fsp3.png';
-//import pic3 from './dsi-mol-weight.png';
-//import pic4 from './dsi-TPSA.png';
 
 class Graphs extends React.Component {
 
@@ -13,7 +9,7 @@ class Graphs extends React.Component {
 				<div>
 					<div>
 						<br /><br /><br /><br /><br /><br />
-							<p>------------------------------------- Pictures go here ---------------------------------------</p>
+							<p>--------------------------------------------------------------- Graphs go here ---------------------------------------------------------</p>
 						<br /><br /><br /><br /><br /><br />
 					</div>
 				</div>

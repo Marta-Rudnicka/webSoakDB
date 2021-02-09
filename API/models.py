@@ -1,7 +1,7 @@
 #this schema is based on: https://github.com/xchem/xchem_db/tree/main/xchem_db
 # with slight modifications to the old models, and new models added to manage SoakDB-specific data
 
-#ORIGINAL COMMEND FROM XCHEM_DB
+#ORIGINAL COMMENT FROM XCHEM_DB
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
 #   * Rearrange models' order
@@ -13,6 +13,13 @@
 from __future__ import unicode_literals
 from django.db import models
 import os
+
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+
+#wrapper for RDKit function for better readability
+def mol_wt(smiles):
+	return Descriptors.ExactMolWt(Chem.MolFromSmiles(smiles))
 
 
 #INVENTORY DATA - mostly SoakDB-only classes
@@ -33,6 +40,9 @@ class Protein(models.Model):
 class Compounds(models.Model):
     smiles = models.CharField(max_length=255, blank=True, null=True)
     code = models.CharField(max_length=32,  blank=True, null=True)
+    
+    def molecular_weight(self):
+        return mol_wt(self.smiles)
 
     def __str__ (self):
         return self.code

@@ -5,7 +5,8 @@ from . import views
 urlpatterns = [
 	#general purpose views:
 	path("library_list/", views.LibraryList.as_view(), name="library_list"),
-	path("library_detail/<str:name>/", views.LibraryDetail.as_view(), name="library_detail"),
+	path("library_detail/<int:pk>/", views.LibraryDetail.as_view(), name="library_detail"),
+	path("current_plates/<int:pk>/", views.LibCurrentPlatesStatList.as_view(), name="library_detail"),
 	path("proposal_plates/<str:name>/", views.ProposalPlateList.as_view(), name="proposal_detail"),
 	path("compounds/<str:library>/<str:plate>/", views.PlateCompoundList.as_view(), name="api_lib"),
 	path("in_house_library_list/", views.InHouseLibraryList.as_view(), name="in_house_library_list"),
@@ -15,4 +16,5 @@ urlpatterns = [
 	#path("crystals_list", views.CrystalsInPlates.as_view(), name="crystals_list"), #needs debug
 	path("proposals/", views.ProposalList.as_view(), name="proposals"),
 	path("proposals/<str:name>/", views.ProposalDetail.as_view(), name="proposal_detail"),
+	path("update_proposal_selection/<str:name>/", views.UpdateProposalSelection.as_view(), name="proposal_detail"),
 ]

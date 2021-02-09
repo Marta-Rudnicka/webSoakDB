@@ -15,10 +15,7 @@ class Presets extends React.Component {
 		return (
 		<section id="presets">
 			<h2>Presets</h2>
-			<p>Collections of compounds that do not cover whole libraries. 
-			They can be parts of larger libraries intended for experiments 
-			with a smaller number of crystals, or sets of compounds 
-			cherry-picked from multiple libraries based on properties</p>
+			<p>Specific-purpose compounds selections from in-house libraries</p>
 			<form id="properties-form">
 				{presets}
 			</form>

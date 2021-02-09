@@ -81,7 +81,6 @@ span.pseudo-link {
 #stats {
 	grid-row: 2/3;
 	grid-column: 1/2;
-	opacity: 0.2;
 }
 
 #graphs {
@@ -208,7 +207,7 @@ input[type="checkbox"]:checked label{
 	grid-template-columns: 15em auto;
 }
 
-.datatable {
+.datatable, #library-stats {
 	grid-column: 2;
 	grid-row: 1;
 	width: 100%;
@@ -274,3 +273,20 @@ button.small-button {
  .old-uploads {
 	font-size: 0.8em;
  }
+
+.compound-upload p {
+	background: lightgrey;
+}
+
+.compound-upload label {
+	margin-bottom: 0;
+}
+
+.compound-upload input {
+	width: 100%;
+	padding-bottom: 1em;
+	}
+
+#own_lib button {
+	width: 100%;
+}

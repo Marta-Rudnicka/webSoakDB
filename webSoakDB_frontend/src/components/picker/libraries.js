@@ -2,12 +2,14 @@ import React from 'react';
 import LibraryOption from './library_option.js';
 import axios from 'axios';
 
+import { deepCopyObjectArray, getAttributeArray, mean, shareAllElements } from  '../../actions/stat_functions.js';
+
 class Libraries extends React.Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			libs: [],
+			currentLibPlates: [],
 		};
 	}
 	
@@ -16,8 +18,8 @@ class Libraries extends React.Component {
 		
 		axios.get(apiUrl)
 			.then(res => {
-			const libs = res.data;
-			this.setState({ libs });
+			const currentLibPlates = res.data;
+			this.setState({ currentLibPlates });
       });
 	}
 	
@@ -29,20 +31,25 @@ class Libraries extends React.Component {
 			return arrayIds.includes(plateLibId);
 		}
 		return false;
-	}
+	}	
+	
 	render(){
 		
 		const proposalLibs =  this.props.proposal.libraries;
 		
-		const libraries = this.state.libs.map((lib, index) => { 
+		const libraries = this.state.currentLibPlates.map((plate, index) => { 
 			return <LibraryOption 
 				key={index} 
-				plate={lib} 
+				plate={plate} 
 				showPlate={this.props.showPlate}
-				defaultChecked={this.isInProposal(lib, proposalLibs)}
+				handleCheckboxChange = {this.props.handleChange}
+				defaultChecked={this.isInProposal(plate, proposalLibs)}
 				/>;
 		});
 		
+		const selectedLibIds = getAttributeArray(this.props.selectedLibs, "id");
+		const selectionHasNotChanged = shareAllElements(getAttributeArray(this.props.proposal.libraries, "id"), selectedLibIds);
+			
 		return (
 		<section id="libraries">
 			<h2>XChem in-house fragment libraries</h2>
@@ -51,7 +58,7 @@ class Libraries extends React.Component {
 				<div id="libs">
 					{libraries}
 				</div>
-				<button type="submit">Add selected to your collection</button>
+				<button type="submit" onClick={event => this.props.handleSubmit(selectedLibIds)} disabled={selectionHasNotChanged}>Save changes in your library selection</button>
 			</form>
 		</section>
 		)
