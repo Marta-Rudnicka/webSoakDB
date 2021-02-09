@@ -12,10 +12,12 @@ class Main extends Component {
 	
 	constructor(props){
 		super(props);
-		this.state = {page: <Home />};
-		this.updateLibrarySelection = this.updateLibrarySelection.bind(this);
+		
 		this.changeMainPage = this.changeMainPage.bind(this);
 		this.showPlate = this.showPlate.bind(this);
+
+		this.updateLibrarySelection = this.updateLibrarySelection.bind(this);
+		this.state = {page: <Home />};
 		}
 	
 	componentDidMount() {
@@ -37,7 +39,7 @@ class Main extends Component {
 				this.setState({page: <Picker showPlate={this.showPlate}  proposal={this.state.proposal} updateLibrarySelection={this.updateLibrarySelection} />});
 				break;
 			case 'Summary':
-				this.setState({page: <Summary showPlate={this.showPlate} proposal={this.state.proposal} />});
+				this.setState({page: <Summary showPlate={this.showPlate} proposalName={this.props.proposalName} updateLibrarySelection={this.updateLibrarySelection}/>});
 				break;
 		}
 	}
@@ -48,7 +50,12 @@ class Main extends Component {
 	
 	updateLibrarySelection(idArray){
 		const apiUrl='api/update_proposal_selection/' + this.props.proposalName + '/';
-		axios.patch(apiUrl, {libraries: idArray}).then(this.componentDidMount());
+		
+		axios.patch(apiUrl, {libraries: idArray}) 
+		.catch(error => {
+			console.log(error)
+		})
+		
 		this.componentDidMount();
 		this.changeMainPage('Summary');
 	}

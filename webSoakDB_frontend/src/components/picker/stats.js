@@ -14,7 +14,7 @@ class Stats extends React.Component {
 	componentDidMount(){
 		let plates = [];
 		this.props.selectedLibs.map(library => {
-			const apiUrl = 'api/current_plates/' + library.id;		
+			const apiUrl = 'api/current_plates_stats/' + library.id + '/';		
 			axios.get(apiUrl)
 				.then(res => {
 					const addedPlate = res.data;

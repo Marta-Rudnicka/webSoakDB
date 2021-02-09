@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView #RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+from django.views.decorators.csrf import csrf_exempt
 from .serializers import (LibrarySerializer, 
 							SourceWellSerializer, 
 							CurrentPlateSerializer, 
@@ -115,8 +116,16 @@ class LibCurrentPlatesStatList(generics.ListAPIView):
 	serializer_class = LibraryPlateStatSerializer	
 	permission_classes = [AllowAny]
 
+
 class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
 	queryset = Proposals.objects.all()	
 	lookup_field = "name"
 	serializer_class = ProposalUpdateSerializer
+	permission_classes = [AllowAny]
+	
+class CurrentPlatesForLib(generics.ListAPIView):
+	def get_queryset(self):
+		library = get_object_or_404(Library, id=self.kwargs['pk'])
+		return LibraryPlate.objects.filter(library=library, current=True)
+	serializer_class = CurrentPlateSerializer
 	permission_classes = [AllowAny]

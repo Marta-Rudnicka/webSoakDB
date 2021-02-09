@@ -34,7 +34,6 @@ class Libraries extends React.Component {
 	}	
 	
 	render(){
-		
 		const proposalLibs =  this.props.proposal.libraries;
 		
 		const libraries = this.state.currentLibPlates.map((plate, index) => { 

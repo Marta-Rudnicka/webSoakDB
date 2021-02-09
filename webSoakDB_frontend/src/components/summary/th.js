@@ -7,9 +7,9 @@ class TableHeader extends React.Component {
 		<thead>
 			<tr>
 				<th>Library</th>
-				<th>Currently used plate</th>
-				<th>{this.props.compoundsDescription} <br/>compounds</th>
 				<th>Origin</th>
+				<th>Currently used plate</th>
+				<th>Available <br/>compounds</th>
 				<th>Compounds</th>
 				<th></th>
 			</tr>
