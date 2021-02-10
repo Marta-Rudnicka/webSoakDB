@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Error log</title>
+</head>
+<body lang="en">
+	<h1>Log error</h1>
+	<div>The submitted file could not be uploaded because it contained errors. Please correct the file and try again.</div>
+	<main>
+		<h2>The following errors have been detected:</h2>
+		{% for message in error_log %}
+				{{message}}
+		{% endfor %}
+	</main>
+</body>
