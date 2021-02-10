@@ -1,0 +1,31 @@
+from django import forms
+from API.models import Library, Proposals
+from .helpers import create_lib_selection
+from django.forms import formset_factory
+	
+libs = create_lib_selection()
+#proposals = []
+#for proposal in Proposal.objects.all():
+#	proposals.append([proposal.id, proposal.name])
+
+proposals = list([item.id, item.name] for item in Proposals.objects.all())
+libraries = list([item.id, item.name] for item in Library.objects.filter(public=True))
+
+
+class DateInput(forms.DateInput):
+	input_type= 'date'
+	
+class LibraryPlateForm(forms.Form): 
+	library = forms.ChoiceField(choices=libs)
+	name = forms.CharField(label='Plate name')
+	current = forms.BooleanField(label='Set to current plate', required=False )
+	data_file = forms.FileField(label='Upload compound data:')
+
+class ExternalLibraryForm(forms.Form):
+	name = forms.CharField(label='Library name')
+	data_file = forms.FileField(label='Upload compound data:')
+	
+
+class SubsetForm(forms.Form):
+	lib_id = forms.ChoiceField(label='Select library', choices=libraries)
+	data_file = forms.FileField(label='Upload your selection:')

@@ -1,0 +1,21 @@
+body {
+	padding: 2em;
+	font-size: 4em;
+}
+
+main {
+	display: block;
+	background: #f6f6f6;;
+	padding: 30px;
+	margin: 1em;
+}
+
+code.rdkit-err {
+	font-size: 3em;
+	background: blue;
+	color: red;
+}
+
+h1 {
+	text-align: center;
+}

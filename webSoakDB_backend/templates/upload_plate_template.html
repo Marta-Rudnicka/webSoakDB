@@ -1,0 +1,14 @@
+
+{% block upload %}
+<div>
+	<caption>Add a new library plate</caption>
+	<form method="post" enctype="multipart/form-data">
+		 {% csrf_token %}
+		 {{ form.as_p }}
+		 <button type="submit">Submit</button>
+	</form>
+</div>
+<div>
+
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 '''	Module to validate library plate data in a CSV file
-	is_valid() performs the validation; the rest of the functions are helpers.
+	data_is_valid() performs the validation; the rest of the functions are helpers.
 	Accepted CSV format:
 	Field 1 (Code): any non-empty string
 	Field 2 (Well name): one or two letters + one or two digits (except '0' and '00')
@@ -17,7 +17,7 @@ import csv
 Chem.WrapLogs()
 
 
-def is_valid(file_name, error_log):
+def data_is_valid(file_name, error_log):
 	'''Opens CSV file with file_name and validates the data in the file.
 	Whith each error it finds, it adds a new string to error_log 
 	(the strings are HTML code). If the data is valid, returns True.
@@ -119,7 +119,7 @@ def smiles_is_valid(string, line, error_log):
 	if rdkit_stderr == "" and Chem.MolFromSmiles(string) != None:
 		return True
 	
-	msg = "Line " + str(line) + ": SMILES STRING ERROR. Invalid SMILES string: '" + string + '\'<br/><span class="rdkit-err">' + rdkit_stderr + "</span>"
+	msg = "Line " + str(line) + ": SMILES STRING ERROR. Invalid SMILES string: '" + string + '\'<br/><code class="rdkit-err">' + rdkit_stderr + "</code>"
 	update_error_log(msg, error_log)
 	return False
 
