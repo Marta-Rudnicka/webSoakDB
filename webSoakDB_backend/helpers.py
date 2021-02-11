@@ -29,13 +29,16 @@ def get_selection_details(proposal):
 #import data from a csv file
 def upload_plate(file_name, plate):
 	with open(file_name, newline='') as csvfile:
-		compound_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
-		i = 0
+		dialect = csv.Sniffer().sniff(csvfile.read(1024))
+		csvfile.seek(0)
+		compound_reader = csv.reader(csvfile, dialect)
+		#i = 0
 		for row in compound_reader:
 			try:
-				compound = Compound.objects.get(code = row[0])	
+				compound = Compounds.objects.get(code = row[0], smiles = row[2])	
 			except django.core.exceptions.ObjectDoesNotExist:
-				compound = Compound.objects.create(smiles = row[2], code = row[0])
+				print('Compound not found, creating new one.')
+				compound = Compounds.objects.create(smiles = row[2], code = row[0])
 				
 			s_well = SourceWell.objects.create(compound = compound, library_plate = plate, well = row[1])
 			
@@ -44,7 +47,7 @@ def upload_plate(file_name, plate):
 				s_well.save()
 			except (IndexError, ValueError):
 				pass
-			i += 1
+		#	i += 1
 
 def create_subset(file_name, library, name, origin):
 	new_subset = LibrarySubset.objects.create(library=library, name=name, origin=origin)

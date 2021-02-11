@@ -32,7 +32,7 @@ class Uploads extends React.Component {
 		return (
 		<section id="upload">
 			<h2>Upload your own library</h2>
-				<OwnLibraryForm proposal={this.props.proposal}/>
+				<OwnLibraryForm proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
 				{liblist()}
 			<hr />
 			<h2>Upload cherrypicking list</h2>

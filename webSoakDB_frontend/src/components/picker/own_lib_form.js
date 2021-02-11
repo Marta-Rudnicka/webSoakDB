@@ -1,9 +1,14 @@
 import React from 'react';
 
+import CSRFToken from './csrf.js';
+
 class OwnLibraryForm extends React.Component {
 	render(){
 		return (
-			<form className="compound-upload" method="post" action="data_test/" id="own_lib" encType="multipart/form-data">
+			<form className="compound-upload" method="post" action="uploads/library_upload_form/" id="own_lib" encType="multipart/form-data" target="_blank">
+			<CSRFToken />
+			<input type="hidden" name="proposal" value={this.props.proposal.name} />
+			
 				<p>
 					<label htmlFor="id_name">Enter library name: </label> 
 					<input type="text" name="name" required id="id_name" />

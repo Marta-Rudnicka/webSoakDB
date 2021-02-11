@@ -36,7 +36,7 @@ class Main extends Component {
 				this.setState({page: <Home handleClick={this.changeMainPage}/>});
 				break;
 			case 'Picker':
-				this.setState({page: <Picker showPlate={this.showPlate}  proposal={this.state.proposal} updateLibrarySelection={this.updateLibrarySelection} />});
+				this.setState({page: <Picker showPlate={this.showPlate}  proposal={this.state.proposal} updateLibrarySelection={this.updateLibrarySelection} changeMainPage={this.changeMainPage}/>});
 				break;
 			case 'Summary':
 				this.setState({page: <Summary showPlate={this.showPlate} proposalName={this.props.proposalName} updateLibrarySelection={this.updateLibrarySelection}/>});

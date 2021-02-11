@@ -161,7 +161,7 @@ class Proposals(models.Model):
     subsets = models.ManyToManyField(LibrarySubset, blank=True)
 
     def __str__(self):
-         return self.name
+         return self.name + "proposal object"
 
 #    class Meta:
 #        if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':

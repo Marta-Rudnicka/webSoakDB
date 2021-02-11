@@ -1,20 +1,26 @@
 body {
 	padding: 2em;
-	font-size: 4em;
+	margin: auto;
+	width: 1200px;
 }
 
 main {
 	display: block;
 	background: #f6f6f6;;
 	padding: 30px;
-	margin: 1em;
 }
 
+div {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+/*
 code.rdkit-err {
-	font-size: 3em;
+	/*font-size: 3em;
 	background: blue;
 	color: red;
-}
+}*/
 
 h1 {
 	text-align: center;

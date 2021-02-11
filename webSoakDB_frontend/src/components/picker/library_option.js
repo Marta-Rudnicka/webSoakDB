@@ -7,12 +7,12 @@ class LibraryOption extends React.Component {
 		const platename = this.props.plate.name;
 		
 		return (
-			<p className="library">
+			<div className="library">
 				<input type="checkbox" value={this.props.plate.library.id} name="lib_ids" defaultChecked={this.props.defaultChecked} onChange={event => this.props.handleCheckboxChange(event)} />
 				<label htmlFor={this.props.plate.library.id}>{libname} </label>
 				<br />
 				<span className="pseudo-link" onClick={event => this.props.showPlate(libname, platename, true)} >See compounds</span>
-			</p>
+			</div>
 		)
 	}
 }

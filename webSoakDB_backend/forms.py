@@ -22,6 +22,7 @@ class LibraryPlateForm(forms.Form):
 	data_file = forms.FileField(label='Upload compound data:')
 
 class ExternalLibraryForm(forms.Form):
+	proposal = forms.CharField(label="proposal")
 	name = forms.CharField(label='Library name')
 	data_file = forms.FileField(label='Upload compound data:')
 	

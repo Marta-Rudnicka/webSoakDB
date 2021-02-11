@@ -84,12 +84,12 @@ def code_is_valid(string, line, used_codes, error_log):
 
 #WELL validation helpers
 
-def valid_well_name(string, line, error_log):
+def valid_well_name(string, line, error_log): #figure out what are actual possible well names
 	match = re.fullmatch('([A-Z]{1,2}[1-9])|([A-Z]{1,2}(?!(00))([0-9]{2}))', string.upper())
 	if match:
 		return True
 	
-	msg = "line " + str(line) + ": WELL NAME ERROR. Invalid well name: '" + string + "'"
+	msg = "Line " + str(line) + ": WELL NAME ERROR. Invalid well name: '" + string + "'"
 	update_error_log(msg, error_log)
 	return False
 
@@ -144,7 +144,7 @@ def is_csv(file_name, error_log):
 
 	if match:
 		return True
-	msg = "FILE ERROR: Wrong file: '" + file_name + "'! Compound data should be uploaded as a CSV file."
+	msg = "FILE ERROR: Wrong file type: '" + file_name + "'! Compound data should be uploaded as a CSV file."
 	update_error_log(msg, error_log)
 	return False
 

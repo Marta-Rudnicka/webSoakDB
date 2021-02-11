@@ -71,7 +71,7 @@ class Picker extends React.Component {
 			<main id="main-picker">
 				<Libraries showPlate={this.props.showPlate}  proposal={this.props.proposal} handleChange={this.handleChange} selectedLibs={this.state.selectedLibs} handleSubmit={this.props.updateLibrarySelection}/>
 				<Presets presets={this.state.presets}  proposal={this.props.proposal}/>
-				<Uploads proposal={this.props.proposal}/>
+				<Uploads proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
 				<Stats proposal={this.props.proposal} selectedLibs={this.state.selectedLibs}/>
 				<Graphs />
 			</main>
