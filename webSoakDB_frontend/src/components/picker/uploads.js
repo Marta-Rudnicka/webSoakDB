@@ -36,7 +36,7 @@ class Uploads extends React.Component {
 				{liblist()}
 			<hr />
 			<h2>Upload cherrypicking list</h2>
-			<CherryPickForm libs={this.props.libs}/>
+			<CherryPickForm libs={this.props.libs} proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
 		</section>
 		)
 	}

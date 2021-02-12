@@ -28,5 +28,7 @@ class ExternalLibraryForm(forms.Form):
 	
 
 class SubsetForm(forms.Form):
+	proposal = forms.CharField(label="proposal")
 	lib_id = forms.ChoiceField(label='Select library', choices=libraries)
+	name = forms.CharField(label='name')
 	data_file = forms.FileField(label='Upload your selection:')

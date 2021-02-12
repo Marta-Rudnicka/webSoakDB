@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import CSRFToken from './csrf.js';
 
 class CherryPickForm extends React.Component {
 	
@@ -26,20 +27,26 @@ class CherryPickForm extends React.Component {
 		);
 		
 		return (
-			<form method="post" action="/playground/upload_subset" id="own_subset" encType="multipart/form-data">
-				<p>
-					<label htmlFor="id_lib_id">Select library:</label> 
-					<select name="lib_id" id="id_lib_id">
-						<option>...</option>
-					{options}
-					</select>
-				</p>
-				<p>
-					<label htmlFor="id_data_file">Upload your selection:</label> 
-					<input type="file" name="data_file" required id="id_data_file" />
-				</p>
-				<button type="submit">Upload and add to your selection</button>
-			</form>
+		<form className="compound-upload" method="post" action="uploads/subset_upload_form/" id="own_subset" encType="multipart/form-data" target="_blank">
+			<CSRFToken />
+			<input type="hidden" name="proposal" value={this.props.proposal.name} />
+			<p>
+				<label htmlFor="id_lib_id">Select library:</label> 
+				<select name="lib_id" id="id_lib_id">
+					<option>...</option>
+				{options}
+				</select>
+			</p>
+			<p>
+				<label htmlFor="id_name">Name your selection: </label> 
+				<input type="text" name="name" required id="id_name" />
+			</p>
+			<p>
+				<label htmlFor="id_data_file">Upload your selection:</label> 
+				<input type="file" name="data_file" required id="id_data_file" />
+			</p>
+			<button type="submit">Upload and add to your selection</button>
+		</form>
 		);
 	}
 }
