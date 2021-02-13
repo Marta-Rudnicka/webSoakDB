@@ -15,8 +15,18 @@ class DataTable extends React.Component {
 			show_structure = {this.props.show_structure}
 			show_concentration = {this.props.show_concentration} 
 			show_mw = {this.props.show_mw}
-			show_p3 = {this.props.show_p3}
-			show_p4 = {this.props.show_p4}
+			show_tpsa = {this.props.show_tpsa}
+			show_logp = {this.props.show_logp}
+			show_heavy_atom_count = {this.props.show_heavy_atom_count}
+			show_heavy_atom_mol_wt = {this.props.show_heavy_atom_mol_wt}
+			show_nhoh_count = {this.props.show_nhoh_count}
+			show_no_count = {this.props.show_no_count}
+			show_num_h_acceptors = {this.props.show_num_h_acceptors}
+			show_num_h_donors = {this.props.show_num_h_donors}
+			show_num_het_atoms = {this.props.show_num_het_atoms}
+			show_num_rot_bonds = {this.props.show_num_rot_bonds}
+			show_num_val_electrons = {this.props.show_num_val_electrons}
+			show_ring_count = {this.props.show_ring_count}
 		/>
 		);
 		return (

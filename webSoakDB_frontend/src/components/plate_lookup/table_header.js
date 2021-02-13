@@ -1,4 +1,5 @@
 import React from 'react';
+import {display_options} from './display_options';
 
 function showHide(value) {
 	if (value){
@@ -12,17 +13,7 @@ function showHide(value) {
 class TableHeader extends React.Component {
 	
 	render() {
-		const display_options = [
-			["show_well", "Well"],
-			["show_code", "Compound Code"],
-			["show_smiles", "SMILES"],
-			["show_structure", "2D Structure"],
-			["show_concentration", "Concentration"],
-			["show_mw", "Molecular Weight"],
-			["show_p3", "[Property3]"],
-			["show_p4", "[Property4]"]
-		];
-		
+
 		const ths = display_options.map((option, index) => {
 			return	<th key={index} className={this.props[option[0]] ? "" : "hidden"}>{option[1]} 
 						<br />

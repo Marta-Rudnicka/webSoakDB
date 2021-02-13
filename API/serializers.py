@@ -27,7 +27,7 @@ class CurrentPlateSerializer(serializers.ModelSerializer):
 class CompoundSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Compounds
-		fields = ['code', 'smiles', 'molecular_weight'] #add when RDKit is added
+		fields = ['id', 'code', 'smiles', 'properties']
 '''
 class SourceWellSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -72,11 +72,12 @@ class CompoundsStatSerializer(serializers.Serializer):
 	molecular_weight = serializers.FloatField()
 
 class SourceWellStatSerializer(serializers.Serializer):
-	compound = CompoundsStatSerializer()
+	compound = CompoundSerializer()
 	concentration = serializers.IntegerField()
 
 class LibraryPlateStatSerializer(serializers.Serializer):
-	name = serializers.CharField(max_length=4)
+	id = serializers.IntegerField()
+	name = serializers.CharField(max_length=32)
 	library = LibrarySerializer()
 	compounds = SourceWellStatSerializer(many=True)
 

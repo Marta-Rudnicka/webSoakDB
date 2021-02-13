@@ -16,10 +16,15 @@ import os
 
 from rdkit import Chem
 from rdkit.Chem import Descriptors
+from rdkit.Chem import Crippen
 
-#wrapper for RDKit function for better readability
+#wrappers for RDKit function for better readability
 def mol_wt(smiles):
 	return Descriptors.ExactMolWt(Chem.MolFromSmiles(smiles))
+
+def tpsa(smiles):
+	mol = Chem.MolFromSmiles(smiles)
+	return Chem.rdMolDescriptors.CalcTPSA(mol) 
 
 
 #INVENTORY DATA - mostly SoakDB-only classes
@@ -41,8 +46,36 @@ class Compounds(models.Model):
     smiles = models.CharField(max_length=255, blank=True, null=True)
     code = models.CharField(max_length=32,  blank=True, null=True)
     
+    def properties(self):
+        sanitized_mol = Chem.MolFromSmiles(self.smiles)
+		
+        new_mol = {}
+        new_mol['log_p'] = Crippen.MolLogP(sanitized_mol)
+        new_mol['mol_wt'] = float(Chem.rdMolDescriptors.CalcExactMolWt(sanitized_mol))
+        new_mol['heavy_atom_count'] = Chem.Lipinski.HeavyAtomCount(sanitized_mol)
+        new_mol['heavy_atom_mol_wt'] = float(Descriptors.HeavyAtomMolWt(sanitized_mol))
+        new_mol['nhoh_count'] = Chem.Lipinski.NHOHCount(sanitized_mol)
+        new_mol['no_count'] = Chem.Lipinski.NOCount(sanitized_mol)
+        new_mol['num_h_acceptors'] = Chem.Lipinski.NumHAcceptors(sanitized_mol)
+        new_mol['num_h_donors'] = Chem.Lipinski.NumHDonors(sanitized_mol)
+        new_mol['num_het_atoms'] = Chem.Lipinski.NumHeteroatoms(sanitized_mol)
+        new_mol['num_rot_bonds'] = Chem.Lipinski.NumRotatableBonds(sanitized_mol)
+        new_mol['num_val_electrons'] = Descriptors.NumValenceElectrons(sanitized_mol)
+        new_mol['ring_count'] = Chem.Lipinski.RingCount(sanitized_mol)
+        new_mol['tpsa'] = Chem.rdMolDescriptors.CalcTPSA(sanitized_mol)
+
+        # make sure there is an id so inspirations can be added
+        #new_mol.save()
+
+        return new_mol
+
+    
+    
     def molecular_weight(self):
         return mol_wt(self.smiles)
+    
+    def tpsa(self):
+        return tpsa(self.smiles)
 
     def __str__ (self):
         return self.code

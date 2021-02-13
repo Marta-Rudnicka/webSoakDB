@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
+import StatHeaders from './stat_headers.js';
 
 import { deepCopyObjectArray, getAttributeArray, mean } from  '../../actions/stat_functions.js';
+import { descriptor_names, get_stats, updateAllSelection, dict } from './stats_helpers.js';
 
 class Stats extends React.Component {
 	constructor(props) {
@@ -35,39 +37,39 @@ class Stats extends React.Component {
 	
 
 	render(){
-		const allSelectionStats = {libraries : new Set(), plates : 0, compounds : 0, mws : []};
-		
-		function updateAllSelectionStats(library, NumberOfCompounds, mwArray){
-			allSelectionStats.libraries.add(library.name);
-			allSelectionStats.plates ++;
-			allSelectionStats.compounds = allSelectionStats.compounds + NumberOfCompounds;
-			allSelectionStats.mws.push(...mwArray);
-		}
-		
+		const allSelection = {libraries : new Set(), plates : new Set (), compounds : [] };
+
 		const selectedPlates = this.state.selectedPlates;
 		const rows = selectedPlates.map((plate, index) => {
 			
-			const sourceWells = getAttributeArray(plate.compounds, "compound");
-			const mwArray = getAttributeArray(sourceWells, "molecular_weight");
+			//get sums and means for each property			
+			const stats = get_stats(plate.compounds, dict);
 			const NumberOfCompounds = plate.compounds.length;
-			const mw = mean(mwArray).toFixed(4);
-		
-			updateAllSelectionStats(plate.library, NumberOfCompounds, mwArray);
 			
-			//create table rows for specific library plates
+			//add the plate data to the stats of the whole selection
+			updateAllSelection(plate.library.id, plate.id, plate.compounds, allSelection)
+			
+			//create cells with mean values
+			const stat_cells = descriptor_names.map((string, index) => {
+					return <td key={index}>{stats[string]}</td>
+				});
+			
+			//create table row for the specific library plates
 			return <tr key={index}>
 						<td>{plate.library.name}</td>
 						<td>{plate.name}</td>
 						<td>{NumberOfCompounds}</td>
 						<td>{NumberOfCompounds}</td>
-						<td>{mw}</td>
-						<td>TODO</td>
-						<td>TODO</td>
+						{stat_cells}
 					</tr>
 			});
-		
-			allSelectionStats.mw = (allSelectionStats.mws.length > 0) ? mean(allSelectionStats.mws).toFixed(4) : "N/A";
-		
+			
+			allSelection.stats = get_stats(allSelection.compounds, dict)
+			
+			const all_stat_cells = descriptor_names.map((string, index) => {
+				return <td key={index}>{allSelection.stats[string]}</td>
+			});
+			
 		return (
 		<section id="stats">
 			<h2>Statistics for the current selection</h2>
@@ -78,32 +80,25 @@ class Stats extends React.Component {
 						<th>Plate</th>
 						<th>Compounds</th>
 						<th>Selected <br />compounds</th>
-						<th>Mean molecular<br/>weight</th>
-						<th>Stat 2</th>
-						<th>Stat 3</th>
+						<StatHeaders />						
 					</tr>
 				</thead>
 				<tbody>
 					{rows}
 					<tr>
-						<td colSpan="7"><h3>ALL SELECTION</h3></td>
+						<td colSpan="17"><h3>ALL SELECTION</h3></td>
 					</tr>
 					<tr>
 						<td><strong>Libraries</strong></td>
 						<td><strong>Plates</strong></td>
 						<td colSpan="2"><strong>Selected compounds</strong></td>
-						<td><strong>Mean molecular<br/>weight</strong></td>
-						<td>Stat 2</td>
-						<td>Stat 3</td>
+						<StatHeaders />
 					</tr>
 					<tr>
-						<td>{allSelectionStats.libraries.size}</td>
-						<td>{allSelectionStats.plates}</td>
-						<td colSpan="2">{allSelectionStats.compounds}</td>
-						<td>{allSelectionStats.mw}</td>
-						<td>TODO</td>
-						<td>TODO</td>
-						
+						<td>{allSelection.libraries.size}</td>
+						<td>{allSelection.plates.size}</td>
+						<td colSpan="2">{allSelection.compounds.length}</td>
+						{all_stat_cells}
 					</tr>
 				</tbody>
 			</table>

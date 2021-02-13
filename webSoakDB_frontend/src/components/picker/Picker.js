@@ -73,7 +73,6 @@ class Picker extends React.Component {
 				<Presets presets={this.state.presets}  proposal={this.props.proposal}/>
 				<Uploads proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
 				<Stats proposal={this.props.proposal} selectedLibs={this.state.selectedLibs}/>
-				<Graphs />
 			</main>
 		</div>
 	); 

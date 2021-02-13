@@ -4,6 +4,7 @@ import DataTable from './data_table.js';
 import PlateList from './plate_list.js';
 import TableHeader from './table_header.js';
 import axios from 'axios';
+import {display_options} from './display_options.js';
 
 
 class PlateLookup extends React.Component {
@@ -19,8 +20,18 @@ class PlateLookup extends React.Component {
 			show_structure: false, 
 			show_concentration: true, 
 			show_mw: true, 
-			show_p3: false, 
-			show_p4: false,
+			show_tpsa: false, 
+			show_logp: false,
+			show_heavy_atom_count: false,
+			show_heavy_atom_mol_wt: false,
+			show_nhoh_count: false,
+			show_no_count: false,
+			show_num_h_acceptors: false,
+			show_num_h_donors: false,
+			show_num_het_atoms: false,
+			show_num_rot_bonds: false,
+			show_num_val_electrons: false,
+			show_ring_count: false,
 		};
 	}
 	
@@ -48,17 +59,6 @@ class PlateLookup extends React.Component {
 		if (this.props.current){
 			current = "(current)"; 
 			}
-		
-		const display_options = [
-			["show_well", "Well"],
-			["show_code", "Compound Code"],
-			["show_smiles", "SMILES"],
-			["show_structure", "2D Structure"],
-			["show_concentration", "Concentration"],
-			["show_mw", "Molecular Weight"],
-			["show_p3", "[Property3]"],
-			["show_p4", "[Property4]"]
-		];
 		
 		const buttons = display_options.map((option, index) => {
 			return <button key={index} className={this.state[option[0]] ? "hidden" : "small-button"} onClick={event => this.toggleDisplay(option[0])}>Show {option[1]}</button>
@@ -98,8 +98,18 @@ class PlateLookup extends React.Component {
 						show_structure = {this.state.show_structure}
 						show_concentration = {this.state.show_concentration} 
 						show_mw = {this.state.show_mw}
-						show_p3 = {this.state.show_p3}
-						show_p4 = {this.state.show_p4}
+						show_tpsa = {this.state.show_tpsa}
+						show_logp = {this.state.show_logp}
+						show_heavy_atom_count = {this.state.show_heavy_atom_count}
+						show_heavy_atom_mol_wt = {this.state.show_heavy_atom_mol_wt}
+						show_nhoh_count = {this.state.show_nhoh_count}
+						show_no_count = {this.state.show_no_count}
+						show_num_h_acceptors = {this.state.show_num_h_acceptors}
+						show_num_h_donors = {this.state.show_num_h_donors}
+						show_num_het_atoms = {this.state.show_num_het_atoms}
+						show_num_rot_bonds = {this.state.show_num_rot_bonds}
+						show_num_val_electrons = {this.state.show_num_val_electrons}
+						show_ring_count = {this.state.show_ring_count}
 						onButtonClick = {this.toggleDisplay}
 					/>
 					<DataTable 
@@ -110,8 +120,18 @@ class PlateLookup extends React.Component {
 						show_structure = {this.state.show_structure}
 						show_concentration = {this.state.show_concentration} 
 						show_mw = {this.state.show_mw}
-						show_p3 = {this.state.show_p3}
-						show_p4 = {this.state.show_p4}
+						show_tpsa = {this.state.show_tpsa}
+						show_logp = {this.state.show_logp}
+						show_heavy_atom_count = {this.state.show_heavy_atom_count}
+						show_heavy_atom_mol_wt = {this.state.show_heavy_atom_mol_wt}
+						show_nhoh_count = {this.state.show_nhoh_count}
+						show_no_count = {this.state.show_no_count}
+						show_num_h_acceptors = {this.state.show_num_h_acceptors}
+						show_num_h_donors = {this.state.show_num_h_donors}
+						show_num_het_atoms = {this.state.show_num_het_atoms}
+						show_num_rot_bonds = {this.state.show_num_rot_bonds}
+						show_num_val_electrons = {this.state.show_num_val_electrons}
+						show_ring_count = {this.state.show_ring_count}
 					/> 
 				</table>		
 			</main>
