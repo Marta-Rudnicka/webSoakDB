@@ -8,38 +8,49 @@ import Picker from '../picker/Picker.js';
 import Summary from '../summary/Summary.js';
 import PlateLookup from '../plate_lookup/PlateLookup.js';
 
+import { deepCopyObjectArray, getAttributeArray, mean, shareAllElements } from  '../../actions/stat_functions.js';
+
 class Main extends Component {
 	
 	constructor(props){
 		super(props);
 		
+		
 		this.changeMainPage = this.changeMainPage.bind(this);
 		this.showPlate = this.showPlate.bind(this);
 
 		this.updateLibrarySelection = this.updateLibrarySelection.bind(this);
-		this.state = {page: <Home />};
+		this.state = {
+			page: 'Home',
 		}
-	
-	componentDidMount() {
-		const proposalApiUrl = 'api/proposals/' + this.props.proposalName;
-		axios.get(proposalApiUrl)
-			.then(res => {
-			const proposal = res.data;
-			this.setState({ proposal });
-      });
-      		
 	}
 	
+	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.libSelection !== this.props.libSelection) {
+			this.setState({libSelection : this.props.libSelection});
+		}
+	}
+
+	
 	changeMainPage(page){
-		switch(page){
+		if (['Home', 'Picker', 'Summary'].includes(page)){
+			this.setState({page: page});
+		}
+		else {
+			console.log('changeMainPage: invalid argument: ', page);
+		}
+	}
+	
+	mainPage(){
+		switch(this.state.page){
 			case 'Home':
-				this.setState({page: <Home handleClick={this.changeMainPage}/>});
+				return <Home key="home" handleClick={this.changeMainPage}/>
 				break;
 			case 'Picker':
-				this.setState({page: <Picker showPlate={this.showPlate}  proposal={this.state.proposal} updateLibrarySelection={this.updateLibrarySelection} changeMainPage={this.changeMainPage}/>});
+				return <Picker key="picker" showPlate={this.showPlate} proposal={this.props.proposal} updateLibrarySelection={this.updateLibrarySelection} changeMainPage={this.changeMainPage} />
 				break;
 			case 'Summary':
-				this.setState({page: <Summary showPlate={this.showPlate} proposalName={this.props.proposalName} updateLibrarySelection={this.updateLibrarySelection}/>});
+				return <Summary key="summary" showPlate={this.showPlate} proposal={this.props.proposal} libSelection={this.props.libSelection} updateLibrarySelection={this.updateLibrarySelection}/>
 				break;
 		}
 	}
@@ -48,20 +59,20 @@ class Main extends Component {
 		this.setState({page: <PlateLookup library={library} plate={plate} current={current} />});
 	}
 	
-	updateLibrarySelection(idArray){
-		const apiUrl='api/update_proposal_selection/' + this.props.proposalName + '/';
-		
+	updateLibrarySelection(idArray, page){
+		event.preventDefault()
+		const apiUrl='api/update_proposal_selection/' + this.props.proposal.name + '/';
 		axios.patch(apiUrl, {libraries: idArray}) 
 		.catch(error => {
+			console.log('updateLibrarySelection: axios error:');
 			console.log(error)
 		})
 		
-		this.componentDidMount();
-		this.changeMainPage('Summary');
+		this.props.logIn(this.props.proposal.name);
 	}
 	
     render() {
-		const app = this.state.page;
+		const content = this.mainPage();
 		
         return (
          <div>
@@ -69,13 +80,12 @@ class Main extends Component {
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Home')}>Home | </span>
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Picker')}> Select compounds |</span>
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Summary')}>Selection summary | </span>
-				<span className="pseudo-link" onClick={event => this.props.logIn('')}>Log out | </span>
+				<span className="pseudo-link" onClick={event => this.props.logIn(null)}>Log out | </span>
 			</nav>
-			{app}
+			{content}
         </div>
         )
     }
 }
 
 export default Main;
-

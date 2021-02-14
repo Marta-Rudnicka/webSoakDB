@@ -3,29 +3,41 @@ import ReactDOM from 'react-dom';
 
 import Main from './main/Main.js';
 import ProposalSelection from './main/proposal_selection.js';
+import { deepCopyObjectArray, getAttributeArray, mean, shareAllElements } from  '../actions/stat_functions.js';
 
 import axios from 'axios';
-//import { Provider } from 'react-redux';
-//import store from '../store';
 
 class App extends Component {
 	
 	constructor(props){
 		super(props);
 		this.logIn = this.logIn.bind(this);
-		this.state = {proposalName: "",
+		this.state = {
+			proposal: null,
+			}
 		};
-	}
+	
 	
 	logIn(name){
-		event.preventDefault();
-		this.setState({proposalName: name});
+		console.log('Logging in');
+		event.preventDefault();	
+		if (name){
+			const proposalApiUrl = 'api/proposals/' + name;
+			axios.get(proposalApiUrl)
+				.then(res => {
+				const proposal = res.data;
+				this.setState({ proposal });
+			});
+		}
+		else{
+			this.setState({ proposal : null });
+		}
 	}
 	
     render() {
 		let app;
-		if(this.state.proposalName){
-			app = <Main proposalName={this.state.proposalName} logIn={this.logIn}/>;
+		if(this.state.proposal){
+			app = <Main proposal={this.state.proposal} logIn={this.logIn} />;
 		}
 		else{
 			app = <ProposalSelection logIn={this.logIn} />;

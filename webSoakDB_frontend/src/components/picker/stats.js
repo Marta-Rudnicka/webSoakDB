@@ -10,21 +10,30 @@ class Stats extends React.Component {
 		super(props);
 		this.state = { 	
 			selectedPlates: [],
+			content: [],
 			};
 	}
 	
-	componentDidMount(){
+	calculate(){
+		/* get data from api, generate the table and flush the data 
+		 * immediately (otherwise page becomes nearly unresponsive) */
+		console.log('fired calculate()')
 		let plates = [];
-		this.props.selectedLibs.map(library => {
-			const apiUrl = 'api/current_plates_stats/' + library.id + '/';		
+		this.props.selectedLibIds.forEach(id => {
+			const apiUrl = 'api/current_plates_stats/' + id + '/';		
 			axios.get(apiUrl)
 				.then(res => {
 					const addedPlate = res.data;
 					plates = deepCopyObjectArray(this.state.selectedPlates);
 					plates.push(...addedPlate);
 					this.setState({selectedPlates: plates});
+					this.setState({content: this.generateContent()});
 			});
 		});
+		
+		
+		this.setState({selectedPlates: []});
+		
 	}
 	
 	componentDidUpdate(prevProps) {
@@ -35,8 +44,8 @@ class Stats extends React.Component {
 		}
 	}
 	
-
-	render(){
+	generateContent(){
+		console.log('fired generateContent()')
 		const allSelection = {libraries : new Set(), plates : new Set (), compounds : [] };
 
 		const selectedPlates = this.state.selectedPlates;
@@ -70,9 +79,23 @@ class Stats extends React.Component {
 				return <td key={index}>{allSelection.stats[string]}</td>
 			});
 			
+			const sums = <React.Fragment><td>{allSelection.libraries.size}</td><td>{allSelection.plates.size}</td><td colSpan="2">{allSelection.compounds.length}</td></React.Fragment>
+			
+			return [rows, sums, all_stat_cells]
+	
+		}
+	
+
+	render(){
+			
+			const rows = this.state.content[0];
+			const sums = this.state.content[1];
+			const all_stats = this.state.content[2];
+						
 		return (
 		<section id="stats">
 			<h2>Statistics for the current selection</h2>
+			<button id="stat-calculator" onClick={event => this.calculate()}>(Re)calculate</button>
 			<table id="library-stats">
 				<thead>
 					<tr>
@@ -95,10 +118,8 @@ class Stats extends React.Component {
 						<StatHeaders />
 					</tr>
 					<tr>
-						<td>{allSelection.libraries.size}</td>
-						<td>{allSelection.plates.size}</td>
-						<td colSpan="2">{allSelection.compounds.length}</td>
-						{all_stat_cells}
+						{sums}
+						{all_stats}
 					</tr>
 				</tbody>
 			</table>

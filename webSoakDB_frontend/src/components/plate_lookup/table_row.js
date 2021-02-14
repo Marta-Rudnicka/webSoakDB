@@ -44,7 +44,7 @@ class TableRow extends React.Component {
 				<td className={concentration}> {this.props.compound.concentration}</td>
 				<td className={mw}>{this.props.compound.compound.properties.mol_wt.toFixed(4)}</td>
 				<td className={tpsa}>{this.props.compound.compound.properties.tpsa.toFixed(2)}</td>
-				<td className={logp}>{this.props.compound.compound.properties.mol_log_p.toFixed(4)}</td>
+				<td className={logp}>{this.props.compound.compound.properties.log_p.toFixed(4)}</td>
 				<td className={heavy_atom_count}>{this.props.compound.compound.properties.heavy_atom_count}</td>
 				<td className={heavy_atom_mol_wt}>{this.props.compound.compound.properties.heavy_atom_mol_wt.toFixed(4)}</td>
 				<td className={nhoh_count}>{this.props.compound.compound.properties.nhoh_count}</td>

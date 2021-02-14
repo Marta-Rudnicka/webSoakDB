@@ -324,3 +324,11 @@ button.small-button {
 	padding: 1em;
 	margin: 0.5em;
 }
+
+#stat-calculator {
+margin:0 auto;
+    display:block;
+/*	margin: auto;*/
+	padding: 1.5em;
+	margin-bottom: 5px;
+}
