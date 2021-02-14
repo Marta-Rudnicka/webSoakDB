@@ -15,8 +15,7 @@ class Stats extends React.Component {
 	}
 	
 	calculate(){
-		/* get data from api, generate the table and flush the data 
-		 * immediately (otherwise page becomes nearly unresponsive) */
+		/* downloads compound data and generates the contents of the stats table */
 		console.log('fired calculate()')
 		let plates = [];
 		this.props.selectedLibIds.forEach(id => {
@@ -31,7 +30,7 @@ class Stats extends React.Component {
 			});
 		});
 		
-		
+		/* to improve performance with larger data sets */
 		this.setState({selectedPlates: []});
 		
 	}
@@ -63,7 +62,7 @@ class Stats extends React.Component {
 					return <td key={index}>{stats[string]}</td>
 				});
 			
-			//create table row for the specific library plates
+			//create table row for the specific library plate
 			return <tr key={index}>
 						<td>{plate.library.name}</td>
 						<td>{plate.name}</td>
@@ -73,6 +72,7 @@ class Stats extends React.Component {
 					</tr>
 			});
 			
+			//generate page content for overall selection
 			allSelection.stats = get_stats(allSelection.compounds, dict)
 			
 			const all_stat_cells = descriptor_names.map((string, index) => {

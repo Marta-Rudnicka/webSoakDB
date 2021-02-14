@@ -50,8 +50,7 @@ class ProteinSerializer(serializers.ModelSerializer):
 class PresetSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Preset
-		fields = ['name', 'description', 'subsets']
-		depth=2
+		fields = ['id', 'name', 'description', 'subsets']
 
 class CrystalPlateSerializer(serializers.ModelSerializer):
 	class Meta:

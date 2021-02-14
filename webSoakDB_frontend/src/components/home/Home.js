@@ -17,11 +17,11 @@ class Home extends React.Component {
 				<h2>Prepararation</h2>
 				<ul>
 					<li>
-						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Picker")}>Selection of compounds</span> </p>
+						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Picker", true)}>Selection of compounds</span> </p>
 						<p>the place to select libraries, cherry-pick compounds, and upload the data of your own library</p>
 					</li>
 					<li>
-						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Summary")}>Summary</span> </p>
+						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Summary", true)}>Summary</span> </p>
 						<p> the place to see and manage your protein and compound data</p>
 					</li>
 				</ul>

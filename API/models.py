@@ -137,6 +137,8 @@ class LibrarySubset(models.Model):
     library = models.ForeignKey(Library, on_delete=models.CASCADE)
     compounds = models.ManyToManyField(Compounds)
     origin = models.CharField(max_length=64)
+    def __str__ (self):
+        return f"{self.id}: {self.name} - {self.library.name}"
     def size(self):
         return len(self.compounds.all())
 

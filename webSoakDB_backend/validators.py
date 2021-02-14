@@ -280,6 +280,8 @@ def compound_exists(code, smiles, library_id, line, error_log):
 		msg = "Line " + str(line) + ": COMPOUND ERROR: '" + code + ' : ' + smiles + "': No such compound is registered in the inventory."
 		update_error_log(msg, error_log)
 		return False
+	except django.core.exceptions.MultipleObjectsReturned:
+		msg = "Line " + str(line) + ": DATA INTEGRITY ERROR DETECTED: This selection cannot be uploaded because of database error. There are duplicate compounds in the database: ", row[0], ':', row[1], 'and this selection cannot be uploaded. Please contact the staff.'
 	
 	locations = compound.locations.all()
 	library_id = int(library_id)

@@ -18,4 +18,5 @@ urlpatterns = [
 	path("proposals/", views.ProposalList.as_view(), name="proposals"),
 	path("proposals/<str:name>/", views.ProposalDetail.as_view(), name="proposal_detail"),
 	path("update_proposal_selection/<str:name>/", views.UpdateProposalSelection.as_view(), name="update_proposal_selection"),
+	#path("update_subset_selection/<str:name>/", views.UpdateSubsetSelection.as_view(), name="update_subset_selection"),
 ]

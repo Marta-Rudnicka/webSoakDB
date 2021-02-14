@@ -13,7 +13,7 @@ from .serializers import (LibrarySerializer,
 							ProposalListSerializer, 
 							LibraryPlateSerializer, 
 							LibraryPlateStatSerializer, 
-							ProposalUpdateSerializer)
+							ProposalUpdateSerializer,)
 
 #TODO: change persmissions everywhere; temporarily [AllowAny] for early stages of testing
 
@@ -122,6 +122,12 @@ class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
 	lookup_field = "name"
 	serializer_class = ProposalUpdateSerializer
 	permission_classes = [AllowAny]
+	
+'''class UpdateSubsetSelection(generics.RetrieveUpdateAPIView):
+	queryset = Proposals.objects.all()	
+	lookup_field = "name"
+	serializer_class = SubsetSerializer
+	permission_classes = [AllowAny]'''
 	
 class CurrentPlatesForLib(generics.ListAPIView):
 	def get_queryset(self):

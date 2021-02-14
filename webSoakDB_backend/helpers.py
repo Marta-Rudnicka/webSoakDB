@@ -61,15 +61,15 @@ def upload_subset(file_name, library_id, name, origin):
 				new_subset.compounds.add(compound)
 				new_subset.save()
 			except django.core.exceptions.ObjectDoesNotExist:
-				print('No such compound found')
+				print('Error: No such compound found.')
+				print('Error: upload_subset running on unvalidated data. Use validators.selection_is_valid() on the input data first!')
 			except django.core.exceptions.MultipleObjectsReturned:
-				duplicates = Compounds.objects.filter(code = row[0], smiles=row[1])
-				print('duplicates: ', duplicates)
-				for compound in duplicates:
-					print('smiles: ', compound.smiles)
-					print('locations: ')
-					for l in compound.locations.all():
-						print(l.library_plate.library.name)
+				print('Error: There are duplicate compounds in the database: ', row[0], ':', row[1])
+				print('Error: upload_subset running on unvalidated data. Use validators.selection_is_valid() on the input data first!')
+	
+	return new_subset
+	
+	
 
 '''
 def copy_compounds_to_experiment(proposal):

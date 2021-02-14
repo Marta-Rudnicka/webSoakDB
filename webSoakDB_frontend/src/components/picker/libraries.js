@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import LibraryOption from './library_option.js';
 import axios from 'axios';
 
@@ -65,3 +65,4 @@ class Libraries extends React.Component {
 }
 
 export default Libraries;
+*/

@@ -27,6 +27,9 @@ class CrystalPlateAdmin(admin.ModelAdmin):
 
 class LibrarySubsetAdmin(admin.ModelAdmin):
 	list_display = ("id", "name", "library", "origin")
+
+class PresetAdmin(admin.ModelAdmin):
+	list_display = ("id", "name", "description")
 	 
 admin.site.register(Compounds, CompoundsAdmin)    
 admin.site.register(SourceWell, SourceWellAdmin)
@@ -35,7 +38,7 @@ admin.site.register(Library, LibraryAdmin)
 admin.site.register(Proposals,ProposalsAdmin)
 admin.site.register(Protein)
 admin.site.register(LibrarySubset, LibrarySubsetAdmin)
-admin.site.register(Preset)
+admin.site.register(Preset, PresetAdmin)
 admin.site.register(SoakDBCompound)
 admin.site.register(Crystal)
 admin.site.register(CrystalPlate, CrystalPlateAdmin)

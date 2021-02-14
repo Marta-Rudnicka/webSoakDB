@@ -5,22 +5,10 @@ import Presets from './presets.js';
 import Uploads from './uploads.js';
 import Stats from './stats.js';
 import Graphs from './graphs.js';
+import PresetOption from './preset_option.js';
 import axios from 'axios';
 
 import { deepCopyObjectArray, getAttributeArray, mean, shareAllElements } from  '../../actions/stat_functions.js';
-
-const presets = [
-	{
-		"id": 1,
-		"name": "Preset 1",
-		"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec tempus libero, quis porta mi. ",
-	},
-	{
-		"id": 2,
-		"name": "Preset 2",
-		"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec tempus libero, quis porta mi. ",
-	}
-]
 
 const proposal = 'Test string';
 
@@ -29,26 +17,34 @@ class Picker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			presets: presets,
-			//libSelection: =
-			//selectedLibIds: this.props.libSelection,
+			//presets: presets,
 			selectedLibIds: getAttributeArray(this.props.proposal.libraries, "id"),
 			initialLibs: getAttributeArray(this.props.proposal.libraries, "id"),
-
-			selectedSubsetIds: [],
+			selectedSubsetIds: getAttributeArray(this.props.proposal.subsets, "id"),
+			initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
 			currentLibPlates: [],
+			presets: [],
 		}
-		this.handleChange = this.handleChange.bind(this);
-		this.updateSelection = this.updateSelection.bind(this);
+		this.handleChangeLib = this.handleChangeLib.bind(this);
+		this.handleChangePreset = this.handleChangePreset.bind(this);
+		this.updateSelectionLibs = this.updateSelectionLibs.bind(this);
 	}
 	
 	componentDidMount() {
-		const apiUrl = 'api/library_selection_list/';
+		const libApiUrl = 'api/library_selection_list/';
 		
-		axios.get(apiUrl)
+		axios.get(libApiUrl)
 			.then(res => {
 			const currentLibPlates = res.data;
 			this.setState({ currentLibPlates });
+      });
+      
+      const presetApiUrl = 'api/preset_list/';
+		
+		axios.get(presetApiUrl)
+			.then(res => {
+			const presets = res.data;
+			this.setState({ presets });
       });
       
 	}
@@ -71,7 +67,24 @@ class Picker extends React.Component {
 		this.setState({selectedLibIds : selectedLibIdsCopy});
 	}
 	
-	handleChange(event){
+	removePresetFromSelected(id){
+		const removedPreset = this.state.presets.find(preset => preset.id === parseInt(id))
+		const selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);	
+		removedPreset.subsets.forEach(subset => {
+			const found = selectedSubsetIdsCopy.find(item => item === parseInt(id));
+			selectedSubsetIdsCopy.splice(selectedSubsetIdsCopy.indexOf(found), 1);
+		});
+		this.setState({selectedSubsetIds : selectedSubsetIdsCopy});
+	}
+	
+	addPresetToSelected(id){
+		const addedPreset = this.state.presets.find(preset => preset.id === parseInt(id))
+		const selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);
+		selectedSubsetIdsCopy.push(...addedPreset.subsets);
+		this.setState({selectedSubsetIds : selectedSubsetIdsCopy});
+	}
+
+	handleChangeLib(event){
 		if(event.target.checked === true){
 			this.addLibraryToSelected(event.target.value);
 		}
@@ -80,8 +93,21 @@ class Picker extends React.Component {
 		}
 	}
 	
-	updateSelection(){
+	handleChangePreset(event){
+		if(event.target.checked === true){
+			this.addPresetToSelected(event.target.value);
+		}
+		else{
+			this.removePresetFromSelected(event.target.value);
+		}
+	}
+	
+	updateSelectionLibs(){
 		this.props.updateLibrarySelection(this.state.selectedLibIds, 'Picker');
+	}
+	
+	updateSelectionSubsets(){
+		this.props.updateSubsetSelection(this.state.selectedSubsetIds, 'Picker');
 	}
 	
 	render() {
@@ -91,10 +117,20 @@ class Picker extends React.Component {
 				key={index} 
 				plate={plate} 
 				showPlate={this.props.showPlate}
-				handleCheckboxChange = {this.handleChange}
+				handleCheckboxChange = {this.handleChangeLib}
 				defaultChecked={this.state.selectedLibIds.includes(plate.library.id)}
 				/>;
 		});
+		
+		const presets = this.state.presets.map((preset, index) => {
+		return <PresetOption
+			key={index}
+			id={preset.id}
+			name = {preset.name}
+			handleCheckboxChange = {this.handleChangePreset}
+			description = {preset.description}
+			/>}
+		)
 		
 		const proposalLibs =  this.props.proposal.libraries;
 		//const selectionHasNotChanged = shareAllElements(getAttributeArray(this.props.proposal.libraries, "id"), this.state.selectedLibIds);			
@@ -111,11 +147,19 @@ class Picker extends React.Component {
 						<div id="libs">
 							{libraries}
 						</div>
-						<button type="submit" onClick={event => this.updateSelection()} disabled={selectionHasNotChanged}>Save changes in your library selection</button>
+						<button type="submit" onClick={event => this.updateSelectionLibs()} disabled={selectionHasNotChanged}>Save changes in your library selection</button>
 					</form>
 				</section>
 				
-				<Presets presets={this.state.presets}  proposal={this.props.proposal}/>
+				<section id="presets">
+					<h2>Presets</h2>
+					<p>Specific-purpose compounds selections from in-house libraries</p>
+					<form id="properties-form">
+						{presets}
+					</form>
+					<button type="submit" onClick={event => this.updateSelectionSubsets()}>Submit</button>
+				</section>
+				
 				<Uploads proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
 				<Stats proposal={this.props.proposal} selectedLibIds={this.state.selectedLibIds}/>
 			
