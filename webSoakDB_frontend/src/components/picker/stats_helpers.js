@@ -8,11 +8,20 @@ export const dict = descriptor_names.map(function(name, index) {
   return [name, arrayNames[index]];
 });
 
-export function get_stats(plate, dictionary){
+export function get_stats(collection, colType, dictionary){
+	console.log('Fired get_stats with: ', collection, colType)
 	let stats = {}
-	const compounds =  getAttributeArray(plate, "compound");
+	let compounds;
+	if (colType === "plate"){
+		console.log ('detected as plate')
+		compounds =  getAttributeArray(collection, "compound");
+	}
+	else {
+		console.log('detected as not plate')
+		compounds = collection;
+	}
 	const properties = getAttributeArray(compounds, "properties");
-	plate.forEach(compound => {
+	collection.forEach(compound => {
 		dictionary.forEach(item =>{
 			stats[item[1]] = getAttributeArray(properties, item[0]);
 			stats[item[0]] = mean(stats[item[1]]).toFixed(2);
@@ -23,6 +32,8 @@ export function get_stats(plate, dictionary){
 
 export function updateAllSelection(libraryId, plateId, compounds, allSelection){
 	allSelection.libraries.add(parseInt(libraryId));
-	allSelection.plates.add(parseInt(plateId));
+	if (plateId){
+		allSelection.plates.add(parseInt(plateId));
+	}
 	allSelection.compounds = addUniqueCompounds(allSelection.compounds, compounds);
 }

@@ -64,9 +64,6 @@ class Compounds(models.Model):
         new_mol['ring_count'] = Chem.Lipinski.RingCount(sanitized_mol)
         new_mol['tpsa'] = Chem.rdMolDescriptors.CalcTPSA(sanitized_mol)
 
-        # make sure there is an id so inspirations can be added
-        #new_mol.save()
-
         return new_mol
 
     
@@ -204,22 +201,6 @@ class Proposals(models.Model):
 #        db_table = 'proposals'
 
 
-
-#new class (SoakDB experimental data)	
-class SoakDBCompound(models.Model):
-    '''Compound data copied from inventory data when the compound is used
-    in the experiment'''
-
-    proposal = models.ForeignKey(Proposals, related_name="exp_compounds", on_delete=models.CASCADE, blank=True, null=True)
-    library_name = models.CharField(max_length=100)
-    library_plate = models.CharField(max_length=100)
-    well = models.CharField(max_length=4)
-    code = models.CharField(max_length=100)
-    smiles = models.CharField(max_length=256)
-#    concentration = IntegerField(max_length=256) #not sure if needed
-
-
-
 class SoakdbFiles(models.Model):
     filename = models.CharField(max_length=255, blank=False, null=False, unique=True)
     modification_date = models.BigIntegerField(blank=False, null=False)
@@ -285,6 +266,57 @@ class Crystal(models.Model):
 #            app_label = 'xchem_db'
         db_table = 'crystal'
         unique_together = ('crystal_name', 'visit', 'compound', 'product')
+
+#new class FILL WITH PROPER OPTIONS!!!!
+class SolventNotes(models.Model):
+    '''A more organised 'notebook' for conclusions from solvent testing. 
+    For user's reference only - data not to be used in other processes '''
+
+    DMSO = 'DMSO'
+    EG = 'EG'
+    SOLVENT_CHOICES = (
+        (DMSO,  'DMSO'),
+        (EG, 'Ethylene Glycol')
+    )
+    
+    NONE = 'none'
+    CRYO1 = 'c1'
+    CRYO2 = 'c2'
+    CRYO3 = 'c3'
+	
+    CRYO_CHOICES = (
+        (NONE, 'No cryoprotectant'),
+        (CRYO1, 'Some string'),
+        (CRYO2, 'Some other string'),
+        (CRYO3, 'Yet another string'),
+    )
+    
+    proposal = models.ForeignKey(Proposals, on_delete=models.CASCADE)
+    solvent = models.CharField(choices=SOLVENT_CHOICES, max_length=4, default=DMSO)
+    solvent_concentration = models.FloatField(blank=True, null=True, )
+    soak_time = models.DurationField(blank=True, null=True, )
+    cryo = models.CharField(choices=CRYO_CHOICES, max_length=4, default=NONE)
+    cryo_concentration = models.FloatField(blank=True, null=True, default=None)
+    comments = models.TextField(blank=True, null=True, )
+
+
+
+#new class (SoakDB experimental data)	
+class SoakDBCompound(models.Model):
+    '''Compound data copied from inventory data when the compound is used
+    in the experiment'''
+
+    proposal = models.ForeignKey(Proposals, related_name="exp_compounds", on_delete=models.CASCADE, blank=True, null=True)
+    library_name = models.CharField(max_length=100)
+    library_plate = models.CharField(max_length=100)
+    well = models.CharField(max_length=4)
+    code = models.CharField(max_length=100)
+    smiles = models.CharField(max_length=256)
+    ############ NEW ##########################
+    crystal = models.ForeignKey(Crystal, related_name="compounds", on_delete=models.PROTECT, blank=True, null=True) #to allow cocktails
+#    concentration = IntegerField(max_length=256) #not sure if needed
+
+
 
 #new class (SoakDB experimental data)	
 class Batch(models.Model):

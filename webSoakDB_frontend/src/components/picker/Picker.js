@@ -24,6 +24,8 @@ class Picker extends React.Component {
 			initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
 			currentLibPlates: [],
 			presets: [],
+			unsavedChanges: false,
+			
 		}
 		this.handleChangeLib = this.handleChangeLib.bind(this);
 		this.handleChangePreset = this.handleChangePreset.bind(this);
@@ -48,9 +50,15 @@ class Picker extends React.Component {
       });
       
 	}
+
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.proposal !== this.props.proposal) {
-			this.setState({selectedLibIds : getAttributeArray(this.props.proposal.libraries, "id"), initialLibs: getAttributeArray(this.props.proposal.libraries, "id")});
+			this.setState({
+				selectedLibIds : getAttributeArray(this.props.proposal.libraries, "id"), 
+				initialLibs: getAttributeArray(this.props.proposal.libraries, "id"),
+				selectedSubsetIds: getAttributeArray(this.props.proposal.subsets, "id"),
+				initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
+				});
 		}
 	}
 	
@@ -110,6 +118,20 @@ class Picker extends React.Component {
 		this.props.updateSubsetSelection(this.state.selectedSubsetIds, 'Picker');
 	}
 	
+	presetAreadySelected(preset){
+		if (this.state.selectedSubsetIds.includes(preset.subsets[0])){
+			console.log('presetAreadySelected returns true')
+			return true;
+			
+		}
+		else{
+			console.log('presetAreadySelected returns false')
+			return false;
+			
+		}
+	}
+	
+	
 	render() {
 		
 		const libraries = this.state.currentLibPlates.map((plate, index) => { 
@@ -123,18 +145,23 @@ class Picker extends React.Component {
 		});
 		
 		const presets = this.state.presets.map((preset, index) => {
-		return <PresetOption
-			key={index}
-			id={preset.id}
-			name = {preset.name}
-			handleCheckboxChange = {this.handleChangePreset}
-			description = {preset.description}
-			/>}
+			return <PresetOption
+				key={index}
+				id={preset.id}
+				name = {preset.name}
+				handleCheckboxChange = {this.handleChangePreset}
+				description = {preset.description}
+				defaultChecked={this.presetAreadySelected(preset)}
+				/>}
 		)
 		
 		const proposalLibs =  this.props.proposal.libraries;
-		//const selectionHasNotChanged = shareAllElements(getAttributeArray(this.props.proposal.libraries, "id"), this.state.selectedLibIds);			
-		const selectionHasNotChanged = shareAllElements(this.state.initialLibs, this.state.selectedLibIds);			
+		
+		const sameLibs = shareAllElements(this.state.initialLibs, this.state.selectedLibIds);			
+		const sameSubsets = shareAllElements(this.state.initialSubsets, this.state.selectedSubsetIds);
+		
+		let publicSubsets = [];
+		this.state.presets.forEach(preset => publicSubsets.push(...preset.subsets));
 		
 		return (
 		<div id="picker">
@@ -147,21 +174,23 @@ class Picker extends React.Component {
 						<div id="libs">
 							{libraries}
 						</div>
-						<button type="submit" onClick={event => this.updateSelectionLibs()} disabled={selectionHasNotChanged}>Save changes in your library selection</button>
+						<button type="submit" onClick={event => this.updateSelectionLibs()} disabled={sameLibs}>Save changes in your selection</button>
 					</form>
 				</section>
 				
 				<section id="presets">
 					<h2>Presets</h2>
 					<p>Specific-purpose compounds selections from in-house libraries</p>
-					<form id="properties-form">
-						{presets}
+					<form id="preset-form">
+						<div id="pres">
+							{presets}
+						</div>
+						<button type="submit" onClick={event => this.updateSelectionSubsets()} disabled={sameSubsets}>Save changes in your selection</button>
 					</form>
-					<button type="submit" onClick={event => this.updateSelectionSubsets()}>Submit</button>
 				</section>
 				
-				<Uploads proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
-				<Stats proposal={this.props.proposal} selectedLibIds={this.state.selectedLibIds}/>
+				<Uploads proposal={this.props.proposal} changeMainPage={this.props.changeMainPage} publicSubsets={publicSubsets}/>
+				<Stats proposal={this.props.proposal} selectedLibIds={this.state.selectedLibIds} selectedSubsetIds={this.state.selectedSubsetIds}/>
 			
 			</main>
 		</div>

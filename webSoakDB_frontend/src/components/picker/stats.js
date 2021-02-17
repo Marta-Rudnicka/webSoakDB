@@ -10,6 +10,7 @@ class Stats extends React.Component {
 		super(props);
 		this.state = { 	
 			selectedPlates: [],
+			selectedSubsets: [],
 			content: [],
 			};
 	}
@@ -18,6 +19,7 @@ class Stats extends React.Component {
 		/* downloads compound data and generates the contents of the stats table */
 		console.log('fired calculate()')
 		let plates = [];
+		let subsets = [];
 		this.props.selectedLibIds.forEach(id => {
 			const apiUrl = 'api/current_plates_stats/' + id + '/';		
 			axios.get(apiUrl)
@@ -30,8 +32,24 @@ class Stats extends React.Component {
 			});
 		});
 		
+		this.props.selectedSubsetIds.forEach(id => {
+			console.log('id: ', id)
+			const apiUrl = 'api/subset_stats/' + id + '/';		
+			axios.get(apiUrl)
+				.then(res => {
+					const addedSubset = res.data;
+					console.log('addedSubset: ', addedSubset )
+					console.log('addedSubset: ', addedSubset )
+					subsets = deepCopyObjectArray(this.state.selectedSubsets);
+					subsets.push(addedSubset);
+					this.setState({selectedSubsets: subsets});
+					this.setState({content: this.generateContent()});
+			});
+		});
+		
 		/* to improve performance with larger data sets */
 		this.setState({selectedPlates: []});
+		this.setState({selectedSubsets: []});
 		
 	}
 	
@@ -46,16 +64,18 @@ class Stats extends React.Component {
 	generateContent(){
 		console.log('fired generateContent()')
 		const allSelection = {libraries : new Set(), plates : new Set (), compounds : [] };
-
+		
+		//FULL LIBRARIES
 		const selectedPlates = this.state.selectedPlates;
-		const rows = selectedPlates.map((plate, index) => {
+	
+		const libRows = selectedPlates.map((plate, index) => {
 			
 			//get sums and means for each property			
-			const stats = get_stats(plate.compounds, dict);
+			const stats = get_stats(plate.compounds, "plate", dict);
 			const NumberOfCompounds = plate.compounds.length;
 			
 			//add the plate data to the stats of the whole selection
-			updateAllSelection(plate.library.id, plate.id, plate.compounds, allSelection)
+			updateAllSelection(plate.library.id, plate.id, getAttributeArray(plate.compounds, "compound"), allSelection)
 			
 			//create cells with mean values
 			const stat_cells = descriptor_names.map((string, index) => {
@@ -66,31 +86,56 @@ class Stats extends React.Component {
 			return <tr key={index}>
 						<td>{plate.library.name}</td>
 						<td>{plate.name}</td>
-						<td>{NumberOfCompounds}</td>
-						<td>{NumberOfCompounds}</td>
+						<td>{NumberOfCompounds} (all)</td>
 						{stat_cells}
 					</tr>
-			});
+		});
+		
+		//SUBSETS
+		const selectedSubsets = this.state.selectedSubsets;
+		const subsetRows = selectedSubsets.map((subset, index) => {
 			
-			//generate page content for overall selection
-			allSelection.stats = get_stats(allSelection.compounds, dict)
+			//get sums and means for each property			
+			const stats = get_stats(subset.compounds, "subset", dict);
+			//const selectedCompounds = subset.compounds.length;
 			
-			const all_stat_cells = descriptor_names.map((string, index) => {
-				return <td key={index}>{allSelection.stats[string]}</td>
-			});
+			//add the plate data to the stats of the whole selection
+			updateAllSelection(subset.library.id, null, subset.compounds, allSelection)
 			
-			const sums = <React.Fragment><td>{allSelection.libraries.size}</td><td>{allSelection.plates.size}</td><td colSpan="2">{allSelection.compounds.length}</td></React.Fragment>
+			//create cells with mean values
+			const stat_cells = descriptor_names.map((string, index) => {
+					return <td key={index}>{stats[string]}</td>
+				});
 			
-			return [rows, sums, all_stat_cells]
+			//create table row for the specific library plate
+			return <tr key={index} className="subset-row">
+						<td>{subset.library.name}</td>
+						<td>N/A</td>
+						<td>{subset.compounds.length}</td>
+						{stat_cells}
+					</tr>
+		});
+			
+		//generate page content for overall selection
+		allSelection.stats = get_stats(allSelection.compounds, "all", dict)
+			
+		const all_stat_cells = descriptor_names.map((string, index) => {
+			return <td key={index}>{allSelection.stats[string]}</td>
+		});
+			
+		const sums = <React.Fragment><td>{allSelection.libraries.size}</td><td>{allSelection.plates.size}</td><td>{allSelection.compounds.length}</td></React.Fragment>
+		
+		return [libRows, subsetRows, sums, all_stat_cells]
 	
-		}
+	}
 	
 
 	render(){
 			
-			const rows = this.state.content[0];
-			const sums = this.state.content[1];
-			const all_stats = this.state.content[2];
+			const libRows = this.state.content[0];
+			const subsetRows = this.state.content[1];
+			const sums = this.state.content[2];
+			const all_stats = this.state.content[3];
 						
 		return (
 		<section id="stats">
@@ -101,20 +146,20 @@ class Stats extends React.Component {
 					<tr>
 						<th>Library</th>
 						<th>Plate</th>
-						<th>Compounds</th>
 						<th>Selected <br />compounds</th>
 						<StatHeaders />						
 					</tr>
 				</thead>
 				<tbody>
-					{rows}
+					{libRows}
+					{subsetRows}
 					<tr>
-						<td colSpan="17"><h3>ALL SELECTION</h3></td>
+						<td colSpan="16"><h3>ALL SELECTION</h3></td>
 					</tr>
 					<tr>
 						<td><strong>Libraries</strong></td>
 						<td><strong>Plates</strong></td>
-						<td colSpan="2"><strong>Selected compounds</strong></td>
+						<td><strong>Selected compounds</strong></td>
 						<StatHeaders />
 					</tr>
 					<tr>

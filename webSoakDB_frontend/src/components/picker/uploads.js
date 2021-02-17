@@ -6,7 +6,7 @@ class Uploads extends React.Component {
 
 	render(){
 		let uploadedLibs = []
-		this.props.proposal.libraries.map(lib => {
+		this.props.proposal.libraries.forEach(lib => {
 			if (!lib.public){
 				uploadedLibs.push(lib);
 				}
@@ -28,15 +28,44 @@ class Uploads extends React.Component {
 			}
 		};
 		
+		let uploadedSubsets = []
+		
+		this.props.proposal.subsets.forEach(subset => {
+			if (!this.props.publicSubsets.includes(subset.id)){
+				uploadedSubsets.push(subset);
+				}
+			});
+			
+		const subsetlist = () => { 
+			if (uploadedSubsets.length > 0){
+				return(
+				<React.Fragment> 
+					<h3>Already uploaded:</h3>
+					<ul className="old-uploads">
+						 {uploadedSubsets.map((subset, index) => <li key={index}>{subset.name}</li>)}
+					</ul>
+				</React.Fragment>
+				); 
+				}
+			else {
+				return "";
+			}
+		};
 		
 		return (
 		<section id="upload">
+		<div className="form-container">
 			<h2>Upload your own library</h2>
 				<OwnLibraryForm proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
 				{liblist()}
+			
+		</div>
+		<div className="form-container">
 			<hr />
 			<h2>Upload cherrypicking list</h2>
 			<CherryPickForm libs={this.props.libs} proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
+				{subsetlist()}
+		</div>
 		</section>
 		)
 	}

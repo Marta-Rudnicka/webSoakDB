@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Library, LibraryPlate, Compounds, SourceWell, Protein, Proposals, Preset, CrystalPlate
+from .models import Library, LibraryPlate, Compounds, SourceWell, Protein, Proposals, Preset, CrystalPlate, LibrarySubset
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView #RetrieveAPIView
 from rest_framework import generics
@@ -7,13 +7,15 @@ from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import (LibrarySerializer, 
 							SourceWellSerializer, 
+							SourceWellStatSerializer,
 							CurrentPlateSerializer, 
 							PresetSerializer, 
 							CrystalPlateSerializer, 
 							ProposalListSerializer, 
 							LibraryPlateSerializer, 
 							LibraryPlateStatSerializer, 
-							ProposalUpdateSerializer,)
+							ProposalUpdateSerializer,
+							LibrarySubsetStatSerializer)
 
 #TODO: change persmissions everywhere; temporarily [AllowAny] for early stages of testing
 
@@ -89,7 +91,7 @@ class PlateCompoundList(generics.ListAPIView):
 		self.plate = get_object_or_404(LibraryPlate, name=self.kwargs['plate'], library__name=self.kwargs['library'])
 		return self.plate.compounds.all()
 	
-	serializer_class = SourceWellSerializer
+	serializer_class = SourceWellStatSerializer
 	permission_classes = [AllowAny]
 
 class CurrentPlateList(generics.ListAPIView):
@@ -111,11 +113,24 @@ class LibCurrentPlatesStatList(generics.ListAPIView):
 	#list all current plates, with details about compounds (for stats)
 	def get_queryset(self):
 		self.library = get_object_or_404(Library, id=self.kwargs['pk'])
-		print('self.library: ', self.library)
 		return self.library.plates.filter(current=True);
 	serializer_class = LibraryPlateStatSerializer	
 	permission_classes = [AllowAny]
 
+class LibPlatesList(generics.ListAPIView):
+	#list all plates, with details about compounds (for stats)
+	def get_queryset(self):
+		self.library = get_object_or_404(Library, name=self.kwargs['library'])
+		return self.library.plates.all();
+	serializer_class = LibraryPlateSerializer	
+	permission_classes = [AllowAny]
+
+
+class SubsetStatList(generics.RetrieveAPIView):
+	#get subset data with details about compounds (for stats)
+	queryset = LibrarySubset.objects.all()
+	serializer_class = LibrarySubsetStatSerializer	
+	permission_classes = [AllowAny]
 
 class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
 	queryset = Proposals.objects.all()	

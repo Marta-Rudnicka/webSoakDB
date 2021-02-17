@@ -9,7 +9,7 @@ class PresetOption extends React.Component {
 		const desc = this.props.description
 		return (
 			<div className="preset">
-				<input type="checkbox" value={id} name="preset_ids" onChange={event => this.props.handleCheckboxChange(event)}/>
+				<input type="checkbox" value={id} name="preset_ids" onChange={event => this.props.handleCheckboxChange(event)} defaultChecked={this.props.defaultChecked}/>
 														   			 
 				<label htmlFor="{id}">{name} </label>
 					<div className="show-on-hover">Description...

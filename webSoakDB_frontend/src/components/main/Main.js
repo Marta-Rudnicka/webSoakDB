@@ -21,20 +21,16 @@ class Main extends Component {
 
 		this.updateLibrarySelection = this.updateLibrarySelection.bind(this);
 		this.updateSubsetSelection = this.updateSubsetSelection.bind(this);
+		this.trackUnsavedChanges = this.trackUnsavedChanges.bind(this);
 		this.state = {
 			page: 'Home',
+			lookup_args: [],
+			unsavedChanges: false,
 		}
 	}
-	
-	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.libSelection !== this.props.libSelection) {
-			this.setState({libSelection : this.props.libSelection});
-		}
-	}
-
 	
 	changeMainPage(page, safe){
-		if (['Home', 'Picker', 'Summary'].includes(page)){
+		if (['Home', 'Picker', 'Summary', 'PlateLookup'].includes(page)){
 			if (safe){
 				this.setState({page: page});
 			}
@@ -52,26 +48,46 @@ class Main extends Component {
 	mainPage(){
 		switch(this.state.page){
 			case 'Home':
+				//this.setState({lookup_args: []});
 				return <Home key="home" handleClick={this.changeMainPage}/>
 				break;
 			case 'Picker':
+				//this.setState({lookup_args: []});
 				return <Picker 
 						key="picker" 
 						showPlate={this.showPlate} 
 						proposal={this.props.proposal} 
 						updateLibrarySelection={this.updateLibrarySelection} 
 						updateSubsetSelection={this.updateSubsetSelection} 
-						changeMainPage={this.changeMainPage} 
+						changeMainPage={this.changeMainPage}
+						trackUnsavedChanges={this.trackUnsavedChanges}
+						initialLibs={this.state.initialLibs}
+						initialSubsets={this.state.initialSubsets}
 						/>
 				break;
 			case 'Summary':
-				return <Summary key="summary" showPlate={this.showPlate} proposal={this.props.proposal} libSelection={this.props.libSelection} updateLibrarySelection={this.updateLibrarySelection}/>
+				//this.setState({lookup_args: []});
+				return <Summary key="summary" showPlate={this.showPlate} 
+						proposal={this.props.proposal} 
+						libSelection={this.props.libSelection} 
+						updateLibrarySelection={this.updateLibrarySelection}
+						changeMainPage={this.changeMainPage}
+						trackUnsavedChanges={this.trackUnsavedChanges}
+						/>
+				break;
+			case 'PlateLookup':
+				return <PlateLookup library={this.state.lookup_args[0]} 
+							plate={this.state.lookup_args[1]} 
+							current={this.state.lookup_args[2]} 
+							showPlate={this.showPlate}
+							lookup_args={this.state.lookup_args}/>
 				break;
 		}
 	}
 	
-	showPlate(library, plate, current){
-		this.setState({page: <PlateLookup library={library} plate={plate} current={current} />});
+	showPlate(library, plate){
+		this.setState({lookup_args: [library, plate]})
+		this.setState({page: 'PlateLookup'});
 	}
 	
 	updateLibrarySelection(idArray, page){
@@ -98,6 +114,10 @@ class Main extends Component {
 		this.props.logIn(this.props.proposal.name);
 	}
 	
+	trackUnsavedChanges(idArray, collectionType){
+		
+		this.setState({unsavedChanges: bool})
+	}
 	
     render() {
 		const content = this.mainPage();
@@ -105,9 +125,9 @@ class Main extends Component {
         return (
          <div>
 			<nav>
-				<span className="pseudo-link" onClick={event => this.changeMainPage('Home', true)}>Home | </span>
-				<span className="pseudo-link" onClick={() => this.changeMainPage('Picker', true)}> Select compounds |</span>
-				<span className="pseudo-link" onClick={event => this.changeMainPage('Summary', true)}>Selection summary | </span>
+				<span className="pseudo-link" onClick={event => this.changeMainPage('Home', !this.state.unsavedChanges)}>Home | </span>
+				<span className="pseudo-link" onClick={() => this.changeMainPage('Picker', !this.state.unsavedChanges)}> Select compounds |</span>
+				<span className="pseudo-link" onClick={event => this.changeMainPage('Summary', !this.state.unsavedChanges)}>Selection summary | </span>
 				<span className="pseudo-link" onClick={event => this.props.logIn(null)}>Log out | </span>
 			</nav>
 			{content}

@@ -3,15 +3,19 @@ import React from 'react';
 class LibraryOption extends React.Component {
 
 	render(){
-		const libname = this.props.plate.library.name;
-		const platename = this.props.plate.name;
+		const lib = this.props.plate.library;
+		const plate = this.props.plate;
 		
 		return (
 			<div className="library">
-				<input type="checkbox" value={this.props.plate.library.id} name="lib_ids" defaultChecked={this.props.defaultChecked} onChange={event => this.props.handleCheckboxChange(event)} />
-				<label htmlFor={this.props.plate.library.id}>{libname} </label>
+				<input type="checkbox" 
+					value={this.props.plate.library.id} 
+					name="lib_ids" defaultChecked={this.props.defaultChecked} 
+					onChange={event => this.props.handleCheckboxChange(event)} 
+				/>
+				<label htmlFor={this.props.plate.library.id}>{lib.name} </label>
 				<br />
-				<span className="pseudo-link" onClick={event => this.props.showPlate(libname, platename, true)} >See compounds</span>
+				<span className="pseudo-link" onClick={event => this.props.showPlate(lib, plate)} >See compounds</span>
 			</div>
 		)
 	}
