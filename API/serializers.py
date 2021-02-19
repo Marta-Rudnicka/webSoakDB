@@ -34,6 +34,7 @@ class LibrarySubsetSerializer(serializers.Serializer):
 	library = LibrarySerializer()
 	name = serializers.CharField(max_length = 64)
 	origin = serializers.CharField(max_length = 256)
+	size = serializers.IntegerField()
 
 '''
 class SourceWellSerializer(serializers.ModelSerializer):
@@ -54,10 +55,11 @@ class ProteinSerializer(serializers.ModelSerializer):
 		fields = ['id', 'proposal', 'name', 'space_group', 'a', 'b', 'c', 'alpha', 'beta', 'gamma']
 
  
-class PresetSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Preset
-		fields = ['id', 'name', 'description', 'subsets']
+class PresetSerializer(serializers.Serializer):
+	id = serializers.IntegerField()
+	name = serializers.CharField(max_length=32)
+	description = serializers.CharField(max_length=256)
+	subsets = LibrarySubsetSerializer(many=True)
 
 class CrystalPlateSerializer(serializers.ModelSerializer):
 	class Meta:

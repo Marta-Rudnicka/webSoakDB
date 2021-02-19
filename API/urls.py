@@ -7,10 +7,12 @@ urlpatterns = [
 	path("library_list/", views.LibraryList.as_view(), name="library_list"),
 	path("library_detail/<int:pk>/", views.LibraryDetail.as_view(), name="library_detail"),
 	path("compounds/<str:library>/<str:plate>/", views.PlateCompoundList.as_view(), name="api_lib"),
+#	path("compounds/preset/<int:pk>/", views.ListPresetCompounds.as_view(), name="preset_lookup"),
 	path("in_house_library_list/", views.InHouseLibraryList.as_view(), name="in_house_library_list"),
 	path("all_library_plates_list/", views.AllPlateList.as_view(), name="all_library_plates_list"),
 	path("plates_list/<str:library>/", views.LibPlatesList.as_view(), name="all_library_plates_list"),
 	path("preset_list/", views.PresetList.as_view(), name="preset_list"),
+	path("preset_detail/<int:pk>/", views.PresetDetail.as_view(), name="preset_detail"),
 	path("proposals/", views.ProposalList.as_view(), name="proposals"),
 	path("proposals/<str:name>/", views.ProposalDetail.as_view(), name="proposal_detail"),
 	

@@ -5,15 +5,14 @@ export function mean(array){
 	/*returns arithmetic mean of all the numbers in an array; throws 
 	 * error if fed something else than numbers */
 	let sum = 0;
-	let items = 0;
-	array.forEach(number => {
-		if (isNaN(parseFloat(number))){
+	let i = array.length;
+	while(--i >= 0 ) {
+		if (isNaN(parseFloat(array[i]))){
 			throw "Error in mean(): Not a number!"
 		}
-		sum = sum + number;
-		items ++;
-	});
-	return sum/items;
+		sum += array[i];
+	}
+	return sum/array.length;
 }
 
 
@@ -22,14 +21,15 @@ export function getAttributeArray(array, attr){
 	/* returns an array of values of the attribute $attr of objects
 	 * in $array*/
 	let outputArray = [];
-	array.forEach(item => {
-		if (item[attr] !== undefined){
-			outputArray.push(item[attr]);
+	let i = array.length;
+	while(--i >= 0 ) {
+		if (array[i][attr] !== undefined){
+			outputArray.push(array[i][attr]);
 		}
 		else {
-			console.log('getAttributeArray: Undefined value of ', attr, ' for ', item, '!');
-		}
-	});
+			console.log('getAttributeArray: Undefined value of ', attr, ' for ', array[i], '!');
+		}	
+	}
 	return outputArray;
 }
 
@@ -72,12 +72,29 @@ export function addUniqueCompounds(oldArray, newArray){
 	//const compounds = getAttributeArray(oldArray, "compound")
 	const ids = getAttributeArray(oldArray, "id");
 	let idSet = new Set();
+	let i = ids.length;
+	
+	while(--i >= 0){
+		idSet.add(parseInt(ids[i]))
+	}
+	/*
 	ids.forEach(id => idSet.add(parseInt(id)));
+	*/
+	i = newArray.length;
+	while(--i >= 0){
+		if (!idSet.has(newArray[i].id)){
+			oldArray.push(newArray[i]);
+			idSet.add(parseInt(newArray[i].id));
+		}
+	}
+	
+	/*
 	newArray.forEach(compound => {
 		if (!idSet.has(compound.id)){
 			oldArray.push(compound);
 			idSet.add(parseInt(compound.id));
 		}
 	});
+	*/
 	return oldArray;
 }

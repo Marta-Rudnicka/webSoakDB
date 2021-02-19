@@ -11,11 +11,11 @@ class LibraryOption extends React.Component {
 				<input type="checkbox" 
 					value={this.props.plate.library.id} 
 					name="lib_ids" defaultChecked={this.props.defaultChecked} 
-					onChange={event => this.props.handleCheckboxChange(event)} 
+					onChange={event => this.props.handleCheckboxChange(event, this.props.unsaved)} 
 				/>
 				<label htmlFor={this.props.plate.library.id}>{lib.name} </label>
 				<br />
-				<span className="pseudo-link" onClick={event => this.props.showPlate(lib, plate)} >See compounds</span>
+				<span className="pseudo-link" onClick={event => this.props.showPlate(lib, plate, true, false)} >See compounds</span>
 			</div>
 		)
 	}

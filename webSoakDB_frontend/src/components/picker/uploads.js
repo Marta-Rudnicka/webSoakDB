@@ -3,10 +3,25 @@ import OwnLibraryForm from './own_lib_form.js';
 import CherryPickForm from './cherrypick_form.js';
 
 class Uploads extends React.Component {
+	
+	constructor(props){
+		super(props)
+		
+		this.state = {
+			proposal : this.props.proposal,
+		}
+	}
+	
+	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.proposal !== this.props.proposal) {
+			this.setState({proposal : this.props.proposal});
+			console.log('this.props.proposal.libraries: ', this.props.proposal.libraries)
+		}
+	}
 
 	render(){
 		let uploadedLibs = []
-		this.props.proposal.libraries.forEach(lib => {
+		this.state.proposal.libraries.forEach(lib => {
 			if (!lib.public){
 				uploadedLibs.push(lib);
 				}
@@ -30,7 +45,7 @@ class Uploads extends React.Component {
 		
 		let uploadedSubsets = []
 		
-		this.props.proposal.subsets.forEach(subset => {
+		this.state.proposal.subsets.forEach(subset => {
 			if (!this.props.publicSubsets.includes(subset.id)){
 				uploadedSubsets.push(subset);
 				}
@@ -56,15 +71,25 @@ class Uploads extends React.Component {
 		<section id="upload">
 		<div className="form-container">
 			<h2>Upload your own library</h2>
-				<OwnLibraryForm proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
-				{liblist()}
-			
+				<OwnLibraryForm 
+					proposal={this.props.proposal} 
+					refreshAfterUpload={this.props.refreshAfterUpload}
+					detectUnsavedChanges={this.props.detectUnsavedChanges}
+					trackUnsavedChanges={this.props.trackUnsavedChanges}
+				/>
+					{liblist()}			
 		</div>
 		<div className="form-container">
 			<hr />
 			<h2>Upload cherrypicking list</h2>
-			<CherryPickForm libs={this.props.libs} proposal={this.props.proposal} changeMainPage={this.props.changeMainPage}/>
-				{subsetlist()}
+			<CherryPickForm 
+				libs={this.props.libs}
+				proposal={this.props.proposal} 
+				refreshAfterUpload={this.props.refreshAfterUpload} 
+				detectUnsavedChanges={this.props.detectUnsavedChanges}
+				trackUnsavedChanges={this.props.trackUnsavedChanges}
+			/>
+					{subsetlist()}
 		</div>
 		</section>
 		)

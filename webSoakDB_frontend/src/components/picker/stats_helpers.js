@@ -9,17 +9,10 @@ export const dict = descriptor_names.map(function(name, index) {
 });
 
 export function get_stats(collection, colType, dictionary){
-	console.log('Fired get_stats with: ', collection, colType)
 	let stats = {}
 	let compounds;
-	if (colType === "plate"){
-		console.log ('detected as plate')
-		compounds =  getAttributeArray(collection, "compound");
-	}
-	else {
-		console.log('detected as not plate')
-		compounds = collection;
-	}
+	compounds = collection;
+	
 	const properties = getAttributeArray(compounds, "properties");
 	collection.forEach(compound => {
 		dictionary.forEach(item =>{
@@ -30,10 +23,7 @@ export function get_stats(collection, colType, dictionary){
 	return stats;
 }
 
-export function updateAllSelection(libraryId, plateId, compounds, allSelection){
+export function updateAllSelection(libraryId, compounds, allSelection){
 	allSelection.libraries.add(parseInt(libraryId));
-	if (plateId){
-		allSelection.plates.add(parseInt(plateId));
-	}
 	allSelection.compounds = addUniqueCompounds(allSelection.compounds, compounds);
 }

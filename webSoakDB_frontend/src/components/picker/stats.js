@@ -8,114 +8,128 @@ import { descriptor_names, get_stats, updateAllSelection, dict } from './stats_h
 class Stats extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { 	
-			selectedPlates: [],
-			selectedSubsets: [],
+		this.state = {
+			libraries: [], 	
+			libraryStats: [],
+			subsetStats: [],
 			content: [],
+			disabled : false,
 			};
 	}
 	
 	calculate(){
 		/* downloads compound data and generates the contents of the stats table */
-		console.log('fired calculate()')
-		let plates = [];
+		this.setState({disabled : true});
+		let libraries = [];
 		let subsets = [];
-		this.props.selectedLibIds.forEach(id => {
-			const apiUrl = 'api/current_plates_stats/' + id + '/';		
+		this.state.libraries.forEach(library => {	
+			const apiUrl = 'api/current_plates_stats/' + library.id + '/';
 			axios.get(apiUrl)
 				.then(res => {
-					const addedPlate = res.data;
-					plates = deepCopyObjectArray(this.state.selectedPlates);
-					plates.push(...addedPlate);
-					this.setState({selectedPlates: plates});
+					const compounds = res.data;
+					stats =  JSON.parse(JSON.stringify(this.state.libraryStats));
+					const addedLib = {id : library.id, name : library.name, compounds : compounds}
+					libraries.push(addedLib);
+					this.setState({libraryStats: libraries});
 					this.setState({content: this.generateContent()});
-			});
-		});
+				})
+		});		
 		
 		this.props.selectedSubsetIds.forEach(id => {
-			console.log('id: ', id)
 			const apiUrl = 'api/subset_stats/' + id + '/';		
 			axios.get(apiUrl)
 				.then(res => {
 					const addedSubset = res.data;
-					console.log('addedSubset: ', addedSubset )
-					console.log('addedSubset: ', addedSubset )
-					subsets = deepCopyObjectArray(this.state.selectedSubsets);
+					subsets = deepCopyObjectArray(this.state.subsetStats);
 					subsets.push(addedSubset);
-					this.setState({selectedSubsets: subsets});
+					this.setState({subsetStats: subsets});
 					this.setState({content: this.generateContent()});
 			});
 		});
 		
-		/* to improve performance with larger data sets */
-		this.setState({selectedPlates: []});
-		this.setState({selectedSubsets: []});
-		
+		/* flush data (to improve performance with larger data sets) */
+		console.log('reached the end of calculate')
+	}
+	
+	uploadLibraryData(){
+		libs = []
+		this.props.selectedLibIds.forEach(id => {
+			const apiUrl = 'api/library_detail/' + id + '/';
+			axios.get(apiUrl)
+				.then(res => {
+					const newLib = res.data;
+					libs.push(newLib)
+				});
+			});
+		this.setState({libraries : libs});
+	}
+	
+	componentDidMount(){
+		this.uploadLibraryData();
 	}
 	
 	componentDidUpdate(prevProps) {
- 
-		if (this.props.selectedLibs !== prevProps.selectedLibs) {
-			this.setState({selectedPlates: []});
-			this.componentDidMount();
+		if (this.props.selectedLibIds !== prevProps.selectedLibIds) {
+			this.uploadLibraryData();
 		}
 	}
 	
 	generateContent(){
-		console.log('fired generateContent()')
-		const allSelection = {libraries : new Set(), plates : new Set (), compounds : [] };
+		const allSelection = {libraries : new Set(), compounds : [] };
+		let libRows = null
 		
-		//FULL LIBRARIES
-		const selectedPlates = this.state.selectedPlates;
-	
-		const libRows = selectedPlates.map((plate, index) => {
-			
-			//get sums and means for each property			
-			const stats = get_stats(plate.compounds, "plate", dict);
-			const NumberOfCompounds = plate.compounds.length;
-			
-			//add the plate data to the stats of the whole selection
-			updateAllSelection(plate.library.id, plate.id, getAttributeArray(plate.compounds, "compound"), allSelection)
-			
-			//create cells with mean values
-			const stat_cells = descriptor_names.map((string, index) => {
-					return <td key={index}>{stats[string]}</td>
-				});
-			
-			//create table row for the specific library plate
-			return <tr key={index}>
-						<td>{plate.library.name}</td>
-						<td>{plate.name}</td>
-						<td>{NumberOfCompounds} (all)</td>
-						{stat_cells}
-					</tr>
-		});
+		if(this.state.libraryStats){
+			libRows = this.state.libraryStats.map((lib, index) => {
+				
+				//get sums and means for each property		
+				const stats = get_stats(lib.compounds, "subset", dict);
+				const NumberOfCompounds = lib.compounds.length;
+				
+				//add the plate data to the stats of the whole selection
+				updateAllSelection(lib.id, lib.compounds, allSelection)
+				
+				//create cells with mean values
+				const stat_cells = descriptor_names.map((string, index) => {
+						return <td key={index}>{stats[string]}</td>
+					});
+				
+				//create table row for the specific library plate
+				return <tr key={index}>
+							<td>{lib.name}</td>
+							<td>{NumberOfCompounds} (all)</td>
+							{stat_cells}
+						</tr>
+			});
+			//this.setState({libraryStats : [] });
+		}
+		
 		
 		//SUBSETS
-		const selectedSubsets = this.state.selectedSubsets;
-		const subsetRows = selectedSubsets.map((subset, index) => {
-			
-			//get sums and means for each property			
-			const stats = get_stats(subset.compounds, "subset", dict);
-			//const selectedCompounds = subset.compounds.length;
-			
-			//add the plate data to the stats of the whole selection
-			updateAllSelection(subset.library.id, null, subset.compounds, allSelection)
-			
-			//create cells with mean values
-			const stat_cells = descriptor_names.map((string, index) => {
-					return <td key={index}>{stats[string]}</td>
-				});
-			
-			//create table row for the specific library plate
-			return <tr key={index} className="subset-row">
-						<td>{subset.library.name}</td>
-						<td>N/A</td>
-						<td>{subset.compounds.length}</td>
-						{stat_cells}
-					</tr>
-		});
-			
+		const subsetStats = this.state.subsetStats;
+		let subsetRows = null;
+		if(subsetStats){
+			subsetRows = subsetStats.map((subset, index) => {
+				
+				//get sums and means for each property			
+				const stats = get_stats(subset.compounds, "subset", dict);
+				//const selectedCompounds = subset.compounds.length;
+				
+				//add the plate data to the stats of the whole selection
+				updateAllSelection(subset.library.id, subset.compounds, allSelection)
+				
+				//create cells with mean values
+				const stat_cells = descriptor_names.map((string, index) => {
+						return <td key={index}>{stats[string]}</td>
+					});
+				
+				//create table row for the specific library plate
+				return <tr key={index} className="subset-row">
+							<td>{subset.library.name}</td>
+							<td>{subset.compounds.length}</td>
+							{stat_cells}
+						</tr>
+			});
+		}
 		//generate page content for overall selection
 		allSelection.stats = get_stats(allSelection.compounds, "all", dict)
 			
@@ -123,29 +137,41 @@ class Stats extends React.Component {
 			return <td key={index}>{allSelection.stats[string]}</td>
 		});
 			
-		const sums = <React.Fragment><td>{allSelection.libraries.size}</td><td>{allSelection.plates.size}</td><td>{allSelection.compounds.length}</td></React.Fragment>
+		const sums = <React.Fragment><td>{allSelection.libraries.size}</td><td>{allSelection.compounds.length}</td></React.Fragment>
+		
+		//if done, flush the data (improves performance)
+		if (this.state.subsetStats.length === this.props.selectedSubsetIds.length && 
+				this.state.libraryStats.length === this.state.libraries.length){
+				this.setState({subsetStats : [], libraryStats : [], disabled : false});
+		}
 		
 		return [libRows, subsetRows, sums, all_stat_cells]
-	
 	}
 	
 
 	render(){
+		
+		let className = null;
+		const items = this.props.selectedLibIds.length + this.props.selectedSubsetIds.length
+		const stats = this.state.libraryStats.length + this.state.subsetStats.length
+		
+		if(stats > 0 && items > stats){
+			className = 'changed';
+		}
 			
-			const libRows = this.state.content[0];
-			const subsetRows = this.state.content[1];
-			const sums = this.state.content[2];
-			const all_stats = this.state.content[3];
+		const libRows = this.state.content[0];
+		const subsetRows = this.state.content[1];
+		const sums = this.state.content[2];
+		const all_stats = this.state.content[3];
 						
 		return (
-		<section id="stats">
+		<section id="stats" className={className}>
 			<h2>Statistics for the current selection</h2>
-			<button id="stat-calculator" onClick={event => this.calculate()}>(Re)calculate</button>
+			<button id="stat-calculator" onClick={event => this.calculate()} disabled={this.state.disabled}>(Re)calculate</button>
 			<table id="library-stats">
 				<thead>
 					<tr>
 						<th>Library</th>
-						<th>Plate</th>
 						<th>Selected <br />compounds</th>
 						<StatHeaders />						
 					</tr>
@@ -158,7 +184,6 @@ class Stats extends React.Component {
 					</tr>
 					<tr>
 						<td><strong>Libraries</strong></td>
-						<td><strong>Plates</strong></td>
 						<td><strong>Selected compounds</strong></td>
 						<StatHeaders />
 					</tr>

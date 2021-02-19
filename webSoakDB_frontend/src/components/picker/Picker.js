@@ -27,6 +27,7 @@ class Picker extends React.Component {
 			unsavedChanges: false,
 			
 		}
+		this.detectUnsavedChanges = this.detectUnsavedChanges.bind(this);
 		this.handleChangeLib = this.handleChangeLib.bind(this);
 		this.handleChangePreset = this.handleChangePreset.bind(this);
 		this.updateSelectionLibs = this.updateSelectionLibs.bind(this);
@@ -67,12 +68,14 @@ class Picker extends React.Component {
 		const found = selectedLibIdsCopy.find(item => item === parseInt(id));
 		selectedLibIdsCopy.splice(selectedLibIdsCopy.indexOf(found), 1);
 		this.setState({selectedLibIds : selectedLibIdsCopy});
+		this.handleUnsavedChanges(selectedLibIdsCopy, null)
 	}
 	
 	addLibraryToSelected(id){
 		const selectedLibIdsCopy = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);
 		selectedLibIdsCopy.push(parseInt(id));
 		this.setState({selectedLibIds : selectedLibIdsCopy});
+		this.handleUnsavedChanges(selectedLibIdsCopy, null);
 	}
 	
 	removePresetFromSelected(id){
@@ -83,6 +86,7 @@ class Picker extends React.Component {
 			selectedSubsetIdsCopy.splice(selectedSubsetIdsCopy.indexOf(found), 1);
 		});
 		this.setState({selectedSubsetIds : selectedSubsetIdsCopy});
+		this.handleUnsavedChanges(null, selectedSubsetIdsCopy);
 	}
 	
 	addPresetToSelected(id){
@@ -90,9 +94,10 @@ class Picker extends React.Component {
 		const selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);
 		selectedSubsetIdsCopy.push(...addedPreset.subsets);
 		this.setState({selectedSubsetIds : selectedSubsetIdsCopy});
+		this.handleUnsavedChanges(null, selectedSubsetIdsCopy);
 	}
 
-	handleChangeLib(event){
+	handleChangeLib(event, unsaved){
 		if(event.target.checked === true){
 			this.addLibraryToSelected(event.target.value);
 		}
@@ -101,7 +106,7 @@ class Picker extends React.Component {
 		}
 	}
 	
-	handleChangePreset(event){
+	handleChangePreset(event, unsaved){
 		if(event.target.checked === true){
 			this.addPresetToSelected(event.target.value);
 		}
@@ -111,28 +116,70 @@ class Picker extends React.Component {
 	}
 	
 	updateSelectionLibs(){
-		this.props.updateLibrarySelection(this.state.selectedLibIds, 'Picker');
+		this.handleUnsavedChanges(this.state.initialLibs, this.state.selectedSubsetIds )
+		this.props.updateLibrarySelection(this.state.selectedLibIds);//, 'Picker');
+		
 	}
 	
 	updateSelectionSubsets(){
-		this.props.updateSubsetSelection(this.state.selectedSubsetIds, 'Picker');
+		this.handleUnsavedChanges(this.state.selectedLibIds, this.state.initialSubsets )
+		this.props.updateSubsetSelection(this.state.selectedSubsetIds);//, 'Picker');
+		
 	}
 	
 	presetAreadySelected(preset){
 		if (this.state.selectedSubsetIds.includes(preset.subsets[0])){
-			console.log('presetAreadySelected returns true')
 			return true;
-			
 		}
 		else{
-			console.log('presetAreadySelected returns false')
 			return false;
 			
 		}
 	}
 	
+	handleUnsavedChanges(newLibs, newSubsets){
+	/*detects unsaved changes and passes them to trackUnsavedChanges
+	 *if caller function does not change library selection, pass null for newLibs 
+	 *if caller function is supposed to ignore changes in library selection (e.g.
+	 * while saving changes in the db), pass this.state.initialLibIds for newLibs
+	 * (and the same for subset selection and newSubsets arg)*/
+
+	 	this.props.trackUnsavedChanges(this.detectUnsavedChanges(newLibs, newSubsets));
+	}
+	
+	detectUnsavedChanges(newLibs, newSubsets){
+	/*determine if newLibs and newSubsets are different from the saved 
+	 * selection of compounds; if both args are null, compares current selection
+	 * to the saved one */
+	  	
+		let currentLibs = this.state.selectedLibIds;
+		let currentSubsets = this.state.selectedSubsetIds;
+		if (newLibs){
+			currentLibs = newLibs;
+		}
+		if (newSubsets){
+			currentSubsets = newSubsets;
+		}		
+		if (shareAllElements(currentLibs, this.state.initialLibs) && shareAllElements(currentSubsets, this.state.initialSubsets)){
+			return false;
+		}
+		else {
+			console.log('detected unsaved changes')
+			return true;
+		}
+	}
+	
 	
 	render() {
+		let sameLibs
+		if (!shareAllElements(this.state.initialLibs, this.state.selectedLibIds)){
+			sameLibs = 'changed';
+		}
+		let sameSubsets
+		if (!shareAllElements(this.state.initialSubsets, this.state.selectedSubsetIds)){
+			sameSubsets = 'changed';
+		}
+		const unsaved = !(sameLibs && sameSubsets)
 		
 		const libraries = this.state.currentLibPlates.map((plate, index) => { 
 			return <LibraryOption 
@@ -141,24 +188,24 @@ class Picker extends React.Component {
 				showPlate={this.props.showPlate}
 				handleCheckboxChange = {this.handleChangeLib}
 				defaultChecked={this.state.selectedLibIds.includes(plate.library.id)}
+				unsaved={unsaved}
 				/>;
 		});
 		
 		const presets = this.state.presets.map((preset, index) => {
 			return <PresetOption
 				key={index}
-				id={preset.id}
-				name = {preset.name}
+				preset = {preset}
 				handleCheckboxChange = {this.handleChangePreset}
-				description = {preset.description}
 				defaultChecked={this.presetAreadySelected(preset)}
+				showPlate={this.props.showPlate}
+				unsaved={unsaved}
 				/>}
 		)
 		
 		const proposalLibs =  this.props.proposal.libraries;
 		
-		const sameLibs = shareAllElements(this.state.initialLibs, this.state.selectedLibIds);			
-		const sameSubsets = shareAllElements(this.state.initialSubsets, this.state.selectedSubsetIds);
+		
 		
 		let publicSubsets = [];
 		this.state.presets.forEach(preset => publicSubsets.push(...preset.subsets));
@@ -167,30 +214,41 @@ class Picker extends React.Component {
 		<div id="picker">
 			<h1>Select compounds for {this.props.proposal.name}</h1>
 			<main id="main-picker">
-				<section id="libraries">
+				<section id="libraries" className={sameLibs}>
 					<h2>XChem in-house fragment libraries</h2>
 					
 					<form id="libform" >
 						<div id="libs">
 							{libraries}
 						</div>
-						<button type="submit" onClick={event => this.updateSelectionLibs()} disabled={sameLibs}>Save changes in your selection</button>
+						<button type="submit" onClick={event => this.updateSelectionLibs()}>Save changes in your selection</button>
 					</form>
 				</section>
 				
-				<section id="presets">
+				<section id="presets" className={sameSubsets}>
 					<h2>Presets</h2>
 					<p>Specific-purpose compounds selections from in-house libraries</p>
 					<form id="preset-form">
 						<div id="pres">
 							{presets}
 						</div>
-						<button type="submit" onClick={event => this.updateSelectionSubsets()} disabled={sameSubsets}>Save changes in your selection</button>
+						<button type="submit" onClick={event => this.updateSelectionSubsets()}>Save changes in your selection</button>
 					</form>
 				</section>
 				
-				<Uploads proposal={this.props.proposal} changeMainPage={this.props.changeMainPage} publicSubsets={publicSubsets}/>
-				<Stats proposal={this.props.proposal} selectedLibIds={this.state.selectedLibIds} selectedSubsetIds={this.state.selectedSubsetIds}/>
+				<Uploads proposal={this.props.proposal} 
+					changeMainPage={this.props.changeMainPage} 
+					publicSubsets={publicSubsets} 
+					refreshAfterUpload={this.props.refreshAfterUpload}
+					detectUnsavedChanges={this.detectUnsavedChanges}
+					proposal={this.props.proposal}
+					trackUnsavedChanges={this.props.trackUnsavedChanges}
+				/>
+				<Stats 
+					proposal={this.props.proposal} 
+					selectedLibIds={this.state.selectedLibIds} 
+					selectedSubsetIds={this.state.selectedSubsetIds}
+				/>
 			
 			</main>
 		</div>

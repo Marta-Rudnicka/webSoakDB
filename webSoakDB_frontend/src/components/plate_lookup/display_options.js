@@ -4,7 +4,7 @@ const display_options = [
 			["show_smiles", "SMILES"],
 			["show_structure", "2D Structure"],
 			["show_concentration", "Concentration"],
-			["show_mw", "Molecular Weight"],
+			["show_mol_wt", "Molecular Weight"],
 			["show_tpsa", "TPSA"],
 			["show_logp", "LogP"],
 			["show_heavy_atom_count", "Heavy Atom Count"],

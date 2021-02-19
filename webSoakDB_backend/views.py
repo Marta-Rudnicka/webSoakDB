@@ -78,3 +78,7 @@ def upload_user_subset(request):
 				print('Invalid data - no upload')
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+
+
+def dummy(request):
+	return render(request, "webSoakDB_backend/dummy.html");

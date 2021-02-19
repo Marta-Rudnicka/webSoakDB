@@ -1,17 +1,17 @@
 import React from 'react';
 
-const proposal = "Test proposal x"
+//const proposal = "Test proposal x"
 
 class Home extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		this.state = {proposal: proposal};
+	//	this.state = {proposal: proposal};
 	}
 	render() {
 		return (
 		<div id="home">
-			<h1>SoakDB home - {this.state.proposal}</h1>
+			<h1>SoakDB home - {this.props.proposal.name}</h1>
 			<main>
 			<section id="prep">
 				<h2>Prepararation</h2>
@@ -31,13 +31,13 @@ class Home extends React.Component {
 				<h2>Experiment</h2>
 				<ul>
 					<li>
-						<p><a href="/playground/dummy">Solvent characterization application</a> </p><p> software used for managing the solvent characterisation process in the lab</p>
+						<p><a href="/dummy" target="_blank" >Solvent characterization application</a> </p><p> software used for managing the solvent characterisation process in the lab</p>
 					</li>
 					<li>
-						<p><a href="/playground/dummy">Compound screen application</a> </p><p> software used for managing the experiment in the lab</p>
+						<p><a href="/dummy" target="_blank">Compound screen application</a> </p><p> software used for managing the experiment in the lab</p>
 					</li>
 					<li>
-						<p><a href="/playground/dummy">Data summary</a> </p><p> the place to see and download all the data produced in your experiment (at any stage)</p>
+						<p><a href="/dummy" target="_blank">Data summary</a> </p><p> the place to see and download all the data produced in your experiment (at any stage)</p>
 					</li>
 				</ul>
 			</section>

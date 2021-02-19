@@ -5,7 +5,6 @@ class DataTable extends React.Component {
 	
 	render() {
 		const rows = this.props.compounds.map((compound, index) => {
-			//console.log('compound: ', compound,)
 		return <TableRow
 			key = {index +1}
 			counter = {index + 1}

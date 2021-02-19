@@ -21,6 +21,13 @@ class CherryPickForm extends React.Component {
       });
 	}
 	
+	submit() {
+		const unsavedChanges = this.props.detectUnsavedChanges(null, null);
+		document.forms["own_subset"].requestSubmit();
+		setTimeout(() => {this.props.refreshAfterUpload()}, 2000);
+		this.props.trackUnsavedChanges(unsavedChanges);
+	}
+	
 	render(){
 		const options = this.state.libs.map((lib, index) => 
 			 <option key={index} value={lib.id}>{lib.name}</option>
@@ -41,7 +48,7 @@ class CherryPickForm extends React.Component {
 
 			<label htmlFor="id_data_file">Upload your selection:</label> 
 			<input type="file" name="data_file" required id="id_data_file" />
-			<button type="submit">Upload and add to your selection</button>
+			<button type="submit" onClick={ ()=> this.submit()}>Upload and add to your selection</button>
 		</form>
 		);
 	}

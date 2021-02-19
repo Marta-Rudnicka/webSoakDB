@@ -30,7 +30,7 @@ class LibraryInTable extends React.Component {
 			<React.Fragment>
 				<td>{plate.name}</td>
 				<td>{plate.size}</td>
-				<td><span className="pseudo-link" onClick={event => showPlate(library.name, plate.name, true)}>See compounds</span></td>
+				<td><span className="pseudo-link" onClick={event => showPlate(plate.library, plate, true, false)}>See compounds</span></td>
 			</React.Fragment>
 			)
 		}

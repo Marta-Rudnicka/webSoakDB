@@ -20,7 +20,9 @@ class App extends Component {
 	
 	logIn(name){
 		console.log('Logging in');
-		event.preventDefault();	
+		if(event){
+			event.preventDefault();	
+		}
 		if (name){
 			const proposalApiUrl = 'api/proposals/' + name;
 			axios.get(proposalApiUrl)

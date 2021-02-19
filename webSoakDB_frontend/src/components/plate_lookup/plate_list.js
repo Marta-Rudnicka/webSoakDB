@@ -9,7 +9,6 @@ class PlateList extends React.Component {
 		this.state={
 			plates: [],
 		}
-	
 	}
 	
 	componentDidMount() {
@@ -31,7 +30,7 @@ class PlateList extends React.Component {
 				if (plate.current){
 					current = '(current)';
 				}
-				return <li key={index}><span className="pseudo-link" onClick={event => this.props.showPlate(plate.library, plate)}>{plate.name}</span>{current}</li>;
+				return <li key={index}><span className="pseudo-link" onClick={event => this.props.showPlate(plate.library, plate, true, false)}>{plate.name}</span>{current}</li>;
 			});
 			
 			return (
@@ -43,7 +42,6 @@ class PlateList extends React.Component {
 			);
 		}
 		else{
-			console.log('No alternative libraries')
 			return null;
 		}
 	}
