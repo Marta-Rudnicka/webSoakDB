@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 
 class SubsetTable extends React.Component {
 	
@@ -16,9 +15,9 @@ class SubsetTable extends React.Component {
 		
 		if (this.props.selectedSubsets.length>0){			
 			return(
-				<section>
+				<React.Fragment>
 					<h2>Selections from libraries (cherrypicked compounds)</h2>
-					<table className="summary-table">
+					<table className="table table-bordered" id="table">
 						<thead>
 							<tr>
 								<th>Library</th>
@@ -32,7 +31,7 @@ class SubsetTable extends React.Component {
 							{rows}
 						</tbody>
 					</table>
-				</section>
+				</React.Fragment>
 			)
 		}
 		else {

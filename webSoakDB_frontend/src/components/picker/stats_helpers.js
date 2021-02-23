@@ -11,9 +11,8 @@ export const dict = descriptor_names.map(function(name, index) {
 export function get_stats(collection, colType, dictionary){
 	let stats = {}
 	let compounds;
-	compounds = collection;
 	
-	const properties = getAttributeArray(compounds, "properties");
+	const properties = getAttributeArray(collection, "properties");
 	collection.forEach(compound => {
 		dictionary.forEach(item =>{
 			stats[item[1]] = getAttributeArray(properties, item[0]);

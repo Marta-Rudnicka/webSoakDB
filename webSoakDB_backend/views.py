@@ -82,3 +82,6 @@ def upload_user_subset(request):
 
 def dummy(request):
 	return render(request, "webSoakDB_backend/dummy.html");
+
+def formatting(request):
+	return render(request, "webSoakDB_backend/formatting-help.html");

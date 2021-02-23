@@ -81,9 +81,10 @@ class Summary extends React.Component {
 		return (
 			<div id="all">
 				<h1>Selected Compounds for {this.props.proposal.name} </h1>
+				<main id="summary-main">
 				<section className={this.state.libClass}>
 					<h2>Whole libraries</h2>
-					<table className="summary-table">
+					<table className="table table-bordered" id="table">
 						<thead>
 							<tr>
 								<th>Library</th>
@@ -112,7 +113,9 @@ class Summary extends React.Component {
 					<button onClick={event => this.saveChanes()}>Save changes </button>
 					<button onClick={event => this.undoChages()}>Undo unsaved changes </button>
 				</div>
+			</main>
 			</div>
+			
 		); 
 	}
 }

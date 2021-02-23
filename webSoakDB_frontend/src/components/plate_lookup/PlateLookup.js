@@ -1,13 +1,11 @@
 import React from 'react';
 import ExportBar from './export_bar.js';
-//import DataTable from './data_table.js';
 import PlateList from './plate_list.js';
 import TableHeader from './table_header.js';
 import TableRow from './table_row.js';
-//import {descriptor_names} from '../picker/stats_helper';
 import axios from 'axios';
 import {display_options} from './display_options.js';
-import { deepCopyObjectArray, getAttributeArray, mean } from  '../../actions/stat_functions.js';
+import { deepCopyObjectArray } from  '../../actions/stat_functions.js';
 
 
 class PlateLookup extends React.Component {
@@ -55,7 +53,7 @@ class PlateLookup extends React.Component {
 	
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.lookup_args !== this.props.lookup_args) {
-			uploadDataFromAPI()
+			this.uploadDataFromAPI()
 		}
 		
 		if (prevState.subsets !== this.state.subsets){
@@ -178,7 +176,8 @@ class PlateLookup extends React.Component {
 					
 					
 				</div>
-				<table className="datatable">
+				<table data-toggle="table" data-pagination="true"
+  data-search="true" className="table table-bordered table-hover" id="table">
 					<caption>
 						Compound list ({this.state.compounds.length} items)
 					</caption>

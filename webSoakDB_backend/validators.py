@@ -107,7 +107,7 @@ def row_is_valid(row, line, error_log, well_names, codes):
 		
 	try:
 		smiles = row[2]
-		if smiles != "":
+		if smiles != "" and smiles != " ":
 			if not smiles_is_valid(smiles, line, error_log):
 				valid_row = False
 	except (IndexError):

@@ -27,7 +27,7 @@ class Stats extends React.Component {
 			axios.get(apiUrl)
 				.then(res => {
 					const compounds = res.data;
-					stats =  JSON.parse(JSON.stringify(this.state.libraryStats));
+					let stats =  JSON.parse(JSON.stringify(this.state.libraryStats));
 					const addedLib = {id : library.id, name : library.name, compounds : compounds}
 					libraries.push(addedLib);
 					this.setState({libraryStats: libraries});
@@ -40,19 +40,16 @@ class Stats extends React.Component {
 			axios.get(apiUrl)
 				.then(res => {
 					const addedSubset = res.data;
-					subsets = deepCopyObjectArray(this.state.subsetStats);
+					let subsets = deepCopyObjectArray(this.state.subsetStats);
 					subsets.push(addedSubset);
 					this.setState({subsetStats: subsets});
 					this.setState({content: this.generateContent()});
 			});
 		});
-		
-		/* flush data (to improve performance with larger data sets) */
-		console.log('reached the end of calculate')
 	}
 	
 	uploadLibraryData(){
-		libs = []
+		let libs = []
 		this.props.selectedLibIds.forEach(id => {
 			const apiUrl = 'api/library_detail/' + id + '/';
 			axios.get(apiUrl)
@@ -100,7 +97,6 @@ class Stats extends React.Component {
 							{stat_cells}
 						</tr>
 			});
-			//this.setState({libraryStats : [] });
 		}
 		
 		
@@ -112,7 +108,6 @@ class Stats extends React.Component {
 				
 				//get sums and means for each property			
 				const stats = get_stats(subset.compounds, "subset", dict);
-				//const selectedCompounds = subset.compounds.length;
 				
 				//add the plate data to the stats of the whole selection
 				updateAllSelection(subset.library.id, subset.compounds, allSelection)
@@ -166,9 +161,9 @@ class Stats extends React.Component {
 						
 		return (
 		<section id="stats" className={className}>
-			<h2>Statistics for the current selection</h2>
+			<h2>Statistics for the current selection (including unsaved items)</h2>
 			<button id="stat-calculator" onClick={event => this.calculate()} disabled={this.state.disabled}>(Re)calculate</button>
-			<table id="library-stats">
+			<table id="library-stats" className="table table-bordered" >
 				<thead>
 					<tr>
 						<th>Library</th>
@@ -184,7 +179,7 @@ class Stats extends React.Component {
 					</tr>
 					<tr>
 						<td><strong>Libraries</strong></td>
-						<td><strong>Selected compounds</strong></td>
+						<td><strong>Unique selected compounds</strong></td>
 						<StatHeaders />
 					</tr>
 					<tr>

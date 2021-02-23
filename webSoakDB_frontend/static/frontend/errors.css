@@ -15,13 +15,11 @@ div {
 	padding-bottom: 30px;
 }
 
-/*
-code.rdkit-err {
-	/*font-size: 3em;
-	background: blue;
-	color: red;
-}*/
-
 h1 {
 	text-align: center;
+}
+
+.example {
+	display: grid;
+	grid-template-columns: 40% 60%;
 }

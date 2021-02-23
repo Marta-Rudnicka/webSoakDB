@@ -6,14 +6,12 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import (LibrarySerializer, 
-							SourceWellSerializer, 
 							SourceWellStatSerializer,
 							CurrentPlateSerializer, 
 							PresetSerializer, 
 							CrystalPlateSerializer, 
 							ProposalListSerializer, 
 							LibraryPlateSerializer, 
-							LibraryPlateStatSerializer, 
 							ProposalUpdateSerializer,
 							LibrarySubsetStatSerializer,
 							CompoundsStatSerializer)
@@ -33,16 +31,10 @@ class LibraryDetail(generics.RetrieveAPIView):
 	queryset = Library.objects.all()
 	serializer_class = LibrarySerializer
 	permission_classes = [AllowAny]
-	#lookup_field = 'name'
 
 class InHouseLibraryList(generics.ListAPIView):
 	queryset = Library.objects.filter(public=True)
 	serializer_class = LibrarySerializer
-	permission_classes = [AllowAny]
-
-class AllPlateList(generics.ListAPIView):
-	queryset = LibraryPlate.objects.all()
-	serializer_class = CurrentPlateSerializer
 	permission_classes = [AllowAny]
 
 class PresetList(generics.ListAPIView):
@@ -63,7 +55,6 @@ class CrystalsInPlates(generics.ListAPIView):
 
 class ProposalList(generics.ListAPIView):
 	queryset = Proposals.objects.all()	
-	#lookup_field = "name"
 	serializer_class = ProposalListSerializer
 	permission_classes = [AllowAny]
 
@@ -72,26 +63,6 @@ class ProposalDetail(generics.RetrieveUpdateAPIView):
 	lookup_field = "name"
 	serializer_class = ProposalListSerializer
 	permission_classes = [AllowAny]
-
-
-class ProposalPlateList(generics.ListAPIView):
-#lists current library plates for libraries selected for the proposal
-#both in-house and user libraries
-	def get_queryset(self):
-		self.plate_list = []
-		self.proposal = get_object_or_404(Proposals, name=self.kwargs['name'])
-		self.libraries = self.proposal.libraries.all()
-		for library in self.libraries:
-			self.plates = LibraryPlate.objects.filter(library=library, current=True)
-			for plate in self.plates:
-				self.plate_list.append(plate)
-		return self.plate_list		
-	serializer_class = LibraryPlateStatSerializer	
-	permission_classes = [AllowAny]
-	lookup_field = 'name'
-
-
-
 
 class PlateCompoundList(generics.ListAPIView):
 	
@@ -152,11 +123,6 @@ class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
 	serializer_class = ProposalUpdateSerializer
 	permission_classes = [AllowAny]
 	
-'''class UpdateSubsetSelection(generics.RetrieveUpdateAPIView):
-	queryset = Proposals.objects.all()	
-	lookup_field = "name"
-	serializer_class = SubsetSerializer
-	permission_classes = [AllowAny]'''
 	
 class CurrentPlatesForLib(generics.ListAPIView):
 	def get_queryset(self):
@@ -164,11 +130,3 @@ class CurrentPlatesForLib(generics.ListAPIView):
 		return LibraryPlate.objects.filter(library=library, current=True)
 	serializer_class = CurrentPlateSerializer
 	permission_classes = [AllowAny]
-
-'''
-class ListPresetCompounds(generics.ListAPIView):
-	def get_queryset(self):
-		preset = get_object_or_404(Preset, id=self.kwargs['pk'])
-		subsets = preset.subsets.all()
-		compounds = list(itertools.chain.from_iterable([x.compounds.all() for x in plates]))
-'''

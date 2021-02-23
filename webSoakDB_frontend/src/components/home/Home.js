@@ -1,12 +1,9 @@
 import React from 'react';
 
-//const proposal = "Test proposal x"
-
 class Home extends React.Component {
 	
 	constructor(props) {
 		super(props);
-	//	this.state = {proposal: proposal};
 	}
 	render() {
 		return (

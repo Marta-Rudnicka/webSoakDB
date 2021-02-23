@@ -15,7 +15,6 @@ class Uploads extends React.Component {
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.proposal !== this.props.proposal) {
 			this.setState({proposal : this.props.proposal});
-			console.log('this.props.proposal.libraries: ', this.props.proposal.libraries)
 		}
 	}
 
@@ -43,10 +42,15 @@ class Uploads extends React.Component {
 			}
 		};
 		
+		let publicSubsets = []
+		this.props.presets.forEach(preset => {
+			preset.subsets.forEach(subset=> publicSubsets.push(subset.id));
+		});
+		
 		let uploadedSubsets = []
 		
 		this.state.proposal.subsets.forEach(subset => {
-			if (!this.props.publicSubsets.includes(subset.id)){
+			if (!publicSubsets.includes(subset.id)){
 				uploadedSubsets.push(subset);
 				}
 			});
@@ -69,28 +73,32 @@ class Uploads extends React.Component {
 		
 		return (
 		<section id="upload">
-		<div className="form-container">
-			<h2>Upload your own library</h2>
-				<OwnLibraryForm 
+			<div className="form-container">
+				<h2>Upload your own library</h2>
+					<OwnLibraryForm 
+						proposal={this.props.proposal} 
+						refreshAfterUpload={this.props.refreshAfterUpload}
+						detectUnsavedChanges={this.props.detectUnsavedChanges}
+						trackUnsavedChanges={this.props.trackUnsavedChanges}
+					/>
+						{liblist()}			
+			</div>
+			<div className="form-container">
+				<hr />
+				<h2>Upload cherrypicking list</h2>
+				<CherryPickForm 
+					libs={this.props.libs}
 					proposal={this.props.proposal} 
-					refreshAfterUpload={this.props.refreshAfterUpload}
+					refreshAfterUpload={this.props.refreshAfterUpload} 
 					detectUnsavedChanges={this.props.detectUnsavedChanges}
 					trackUnsavedChanges={this.props.trackUnsavedChanges}
 				/>
-					{liblist()}			
-		</div>
-		<div className="form-container">
-			<hr />
-			<h2>Upload cherrypicking list</h2>
-			<CherryPickForm 
-				libs={this.props.libs}
-				proposal={this.props.proposal} 
-				refreshAfterUpload={this.props.refreshAfterUpload} 
-				detectUnsavedChanges={this.props.detectUnsavedChanges}
-				trackUnsavedChanges={this.props.trackUnsavedChanges}
-			/>
-					{subsetlist()}
-		</div>
+						{subsetlist()}
+			</div>
+			<div id="formatting-help">
+				<hr />
+				<a href="uploads/formatting_help/" target="_blank">CSV formatting help</a>
+			</div>
 		</section>
 		)
 	}

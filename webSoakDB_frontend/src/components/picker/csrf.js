@@ -1,7 +1,6 @@
 //Based on: https://www.techiediaries.com/django-react-forms-csrf-axios/
 
 import React from 'react';
-//import axios from 'axios';
 
 function getCookie(name) {
     let cookieValue = null;

@@ -1,6 +1,5 @@
 import React from 'react';
 
-//function App() {
 class TableHeader extends React.Component {
 	render() {
 		return(

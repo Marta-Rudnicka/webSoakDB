@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Formatting help</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://bootswatch.com/4/cosmo/bootstrap.min.css"> 
+    <link rel="stylesheet" href="{% static "frontend/errors.css" %}"> 
+	<link rel="stylesheet" href="{% static "frontend/prep.css" %}">
+</head>
+<body lang="en">
+	<h1>CSV Formatting Guide for WebSoakDB uploads</h1>
+	<button class="close-button">Close</button>
+	<main>
+		<p>The CSV file containing the compound data for your own library plate or selection must be formatted in a specific way to be accepted.
+		If you try to submit incorrectly formatted file, or your data does not make sense, you will get a list of all the errors identified, and you will
+		be prompted to correct and re-upload your file. Formatting details are provided below:</p>
+		<ul>
+			<li><a href="#libs">Your own library plate</a></li>
+			<li><a href="#cherrypick">Selection from an in-house library plate ('cherry-picking list')</a></li>
+			<li><a href="#q1">Can I cherry-pick from my own library?</a></li>
+			<li><a href="#q2">How to leave a blank field at the end of the line using a spreadsheet editor (e.g. MS Excel?)</a></li>
+			<li><a href="#q3">Quotes, string delimiters, newlines etc.</a></li>
+		</ul>
+	<h2 id="libs">Your own library plate</h2>
+		<p>The CSV file with library data should have <strong>no headers</strong> and contain the following data fields, in the following order:
+			<ol>
+				<li><strong>compound code</strong> - a string of characters that uniquely identifies your compound; does not necessarily need to be called code in your data source</li>
+				<li><strong>well</strong> - the name of the well where the compound is located (e.g. 'E7'); case and leading zeros do not matter ('e07' would be valid, too)</li>
+				<li><strong>SMILES string</strong>(optional) - if not provided, leave a blank field</li>
+				<li><strong>Concentration</strong>(optional) - only numbers or decimal points accepted, no other characters (e.g. no units); no need to leave a blank field</li>
+			</ol>
+		</p>
+		<h4>Examples of correctly formatted entries</h4>
+			<label>all data:</label>
+			<div class="example">
+				<code>
+					NCL-00023819,A1,BrC1=CNN=C1,100<br>
+					NCL-00023818,A2,IC1=CNN=C1,100<br>
+					NCL-00023820,A3,BrC1=CON=C1,100<br>
+					NCL-00023823,A4,NC1=NC=CC(Br)=C1,100<br>
+				</code>
+				<img src="{% static "uploads/lib-data-all.png" %}">
+			</div>
+			<label>no concentration:</label>
+			<div class="example">
+			<code>
+				NCL-00023819,A1,BrC1=CNN=C1<br>
+				NCL-00023818,A2,IC1=CNN=C1<br>
+				NCL-00023820,A3,BrC1=CON=C1<br>
+				NCL-00023823,A4,NC1=NC=CC(Br)=C1<br>
+			</code>
+			<img src="{% static "uploads/libs-no-conc.png" %}">
+			</div>
+			<label>no SMILES strings or concentration:</label>
+			<div class="example">
+			<code>
+				NCL-00023819,A1,<br>
+				NCL-00023818,A2,<br>
+				NCL-00023820,A3,<br>
+				NCL-00023823,A4,<br>
+			</code>
+			<img src="{% static "uploads/libs-min.png" %}">
+			</div>
+			<label>no smiles string, but with concentration</label>
+			<div class="example">
+			<code>
+				NCL-00023819,A1,,100<br>
+				NCL-00023818,A2,,100<br>
+				NCL-00023820,A3,,100<br>
+				NCL-00023823,A4,,100<br>
+			</code>
+			<img src="{% static "uploads/no-smiles.png" %}">
+			</div>
+		</p>
+		<h2 id="cherrypick">Selection from an in-house library plate ('cherry-picking list')</h2>
+			<p>To use only selected compounds from an in-house library, you need to upload a CSV fle with a list of those compounds. The file should have <strong>no headers</strong> 
+			and contain only the following data fields, in the following order:
+			<ol>
+				<li><strong>compound code</strong></li>
+				<li><strong>SMILES string</strong></li>
+			</ol>
+			The location of a compound may differ between individual library plates, so the well name should not be provided. The application will find the locations later, based on 
+			the library plate used.
+		</p>
+		<h4>Example of correctly formatted entries:</h4>
+			<div class="example">
+				<code>
+					NCL-00023819,BrC1=CNN=C1<br>
+					NCL-00023818,IC1=CNN=C1<br>
+					NCL-00023820,BrC1=CON=C1<br>
+					NCL-00023823,NC1=NC=CC(Br)=C1<br>
+				</code>
+				<img src="{% static "uploads/cherry.png" %}">
+			</div>
+		</p>
+		<p>The easiest way to create such file is to download CSV library data from this application and delete unneeded rows and columns.</p>
+		<p>To download the data, click on the 'See compounds' link under the name of the selected library in the 'XChem in-house fragment libraries' section. Export buttons can be found
+		on the left-hand panel next to the table with compound data. If there are more than one plates marked as current, you will need to download all of them to have the full list
+		of available compounds in a library.</p>
+		<h2 id="q1">Can I cherry-pick from my own library?</h2>
+		<p>Yes, but you cannot submit a cherry-picking list for your own library.</p>
+		<p>If you do not want to use some of the compounds in your own plate, remove the data related to those compounds from the CSV file with your library data.</p>
+		<h2 id="q2">How to leave a blank field at the end of the line using a spreadsheet editor (e.g. MS Excel?)</h2>
+		<p>The easiest way is to put a space in one of fields of the 'blank' column (warning: this solution is specific to this application; may not work elsewhere).</p>
+		<h2 id="q3">Quotes, string delimiters, newlines etc.</h2>
+		<p>The application will automatically detect this kind of formatting details, so as long the file is consistent, it should not cause issues. For example, data below would be accepted too:</p>
+		<div class="example">
+			<code>
+				"NCL-00023819","A1","BrC1=CNN=C1","100"<br>
+				"NCL-00023818","A2","IC1=CNN=C1","100"<br>
+				"NCL-00023820","A3","BrC1=CON=C1","100"<br>
+				"NCL-00023823","A4","NC1=NC=CC(Br)=C1","100"<br>
+
+			</code>
+		</div>
+	</main>
+	<button class="close-button">Close</button>
+	<script>document.querySelectorAll('.close-button').forEach(button => addEventListener('click', ()=>close()));</script>
+</body>

@@ -19,7 +19,6 @@ class App extends Component {
 	
 	
 	logIn(name){
-		console.log('Logging in');
 		if(event){
 			event.preventDefault();	
 		}
@@ -46,8 +45,8 @@ class App extends Component {
 		}
 		
         return (
-         <div>  
-			{app}
+         <div id="content"> 
+				{app}
         </div>
         )
     }

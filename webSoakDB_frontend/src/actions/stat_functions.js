@@ -69,7 +69,6 @@ export function addUniqueCompounds(oldArray, newArray){
 	 * Compound objects with different ids share SMILES string
 	 * */
 	
-	//const compounds = getAttributeArray(oldArray, "compound")
 	const ids = getAttributeArray(oldArray, "id");
 	let idSet = new Set();
 	let i = ids.length;
@@ -77,9 +76,7 @@ export function addUniqueCompounds(oldArray, newArray){
 	while(--i >= 0){
 		idSet.add(parseInt(ids[i]))
 	}
-	/*
-	ids.forEach(id => idSet.add(parseInt(id)));
-	*/
+
 	i = newArray.length;
 	while(--i >= 0){
 		if (!idSet.has(newArray[i].id)){
@@ -87,14 +84,5 @@ export function addUniqueCompounds(oldArray, newArray){
 			idSet.add(parseInt(newArray[i].id));
 		}
 	}
-	
-	/*
-	newArray.forEach(compound => {
-		if (!idSet.has(compound.id)){
-			oldArray.push(compound);
-			idSet.add(parseInt(compound.id));
-		}
-	});
-	*/
 	return oldArray;
 }

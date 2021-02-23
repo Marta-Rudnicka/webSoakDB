@@ -1,5 +1,4 @@
 import React from 'react';
-import Libraries from './libraries.js';
 import LibraryOption from './library_option.js';
 import Presets from './presets.js';
 import Uploads from './uploads.js';
@@ -17,14 +16,13 @@ class Picker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			//presets: presets,
 			selectedLibIds: getAttributeArray(this.props.proposal.libraries, "id"),
 			initialLibs: getAttributeArray(this.props.proposal.libraries, "id"),
 			selectedSubsetIds: getAttributeArray(this.props.proposal.subsets, "id"),
 			initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
 			currentLibPlates: [],
 			presets: [],
-			unsavedChanges: false,
+			//unsavedChanges: false,
 			
 		}
 		this.detectUnsavedChanges = this.detectUnsavedChanges.bind(this);
@@ -54,6 +52,7 @@ class Picker extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.proposal !== this.props.proposal) {
+			console.log('Proposal changed')
 			this.setState({
 				selectedLibIds : getAttributeArray(this.props.proposal.libraries, "id"), 
 				initialLibs: getAttributeArray(this.props.proposal.libraries, "id"),
@@ -92,7 +91,7 @@ class Picker extends React.Component {
 	addPresetToSelected(id){
 		const addedPreset = this.state.presets.find(preset => preset.id === parseInt(id))
 		const selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);
-		selectedSubsetIdsCopy.push(...addedPreset.subsets);
+		addedPreset.subsets.forEach(subset => selectedSubsetIdsCopy.push(subset.id));
 		this.setState({selectedSubsetIds : selectedSubsetIdsCopy});
 		this.handleUnsavedChanges(null, selectedSubsetIdsCopy);
 	}
@@ -123,17 +122,17 @@ class Picker extends React.Component {
 	
 	updateSelectionSubsets(){
 		this.handleUnsavedChanges(this.state.selectedLibIds, this.state.initialSubsets )
-		this.props.updateSubsetSelection(this.state.selectedSubsetIds);//, 'Picker');
+		console.log('subset ids: ', this.state.selectedSubsetIds)
+		this.props.updateSubsetSelection(this.state.selectedSubsetIds);
 		
 	}
 	
 	presetAreadySelected(preset){
-		if (this.state.selectedSubsetIds.includes(preset.subsets[0])){
+		if (this.state.selectedSubsetIds.includes(preset.subsets[0].id)){
 			return true;
 		}
 		else{
 			return false;
-			
 		}
 	}
 	
@@ -164,7 +163,6 @@ class Picker extends React.Component {
 			return false;
 		}
 		else {
-			console.log('detected unsaved changes')
 			return true;
 		}
 	}
@@ -243,6 +241,7 @@ class Picker extends React.Component {
 					detectUnsavedChanges={this.detectUnsavedChanges}
 					proposal={this.props.proposal}
 					trackUnsavedChanges={this.props.trackUnsavedChanges}
+					presets={this.state.presets}
 				/>
 				<Stats 
 					proposal={this.props.proposal} 

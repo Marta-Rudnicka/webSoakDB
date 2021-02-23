@@ -12,10 +12,10 @@ class LibraryPlateSerializer(serializers.ModelSerializer):
 		fields = ['id', 'library', 'name', 'current', 'size']
 		depth = 1
 
-class LibraryPlateWithCompoundsSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = LibraryPlate
-		fields = ['library', 'name', 'current', 'compounds', 'size']
+#class LibraryPlateWithCompoundsSerializer(serializers.ModelSerializer):
+#	class Meta:
+#		model = LibraryPlate
+#		fields = ['library', 'name', 'current', 'compounds', 'size']
 
 
 class CurrentPlateSerializer(serializers.ModelSerializer):
@@ -42,12 +42,12 @@ class SourceWellSerializer(serializers.ModelSerializer):
 		model = SourceWell
 		fields = ['library_plate', 'well', 'compound', 'concentration']
 		depth = 1
-'''
+
 class SourceWellSerializer(serializers.Serializer):
 	well = serializers.CharField(max_length=4)
 	compound = CompoundSerializer()
 	concentration = serializers.IntegerField()
-		
+'''		
 		
 class ProteinSerializer(serializers.ModelSerializer):
 	class Meta:

@@ -14,15 +14,14 @@ class Main extends Component {
 	
 	constructor(props){
 		super(props);
-		
-		
+
 		this.changeMainPage = this.changeMainPage.bind(this);
 		this.showPlate = this.showPlate.bind(this);
-
 		this.refreshAfterUpload = this.refreshAfterUpload.bind(this);
 		this.updateLibrarySelection = this.updateLibrarySelection.bind(this);
 		this.updateSubsetSelection = this.updateSubsetSelection.bind(this);
 		this.trackUnsavedChanges = this.trackUnsavedChanges.bind(this);
+		
 		this.state = {
 			page: 'Home',
 			lookup_args: {},
@@ -90,13 +89,12 @@ class Main extends Component {
 	}
 	
 	showPlate(library, collection, is_a_plate, is_a_preset){
-		console.log('showPlate input: ', library, collection, is_a_plate, is_a_preset)
 		this.setState({lookup_args: {library : library, collection : collection, is_a_plate: is_a_plate, is_a_preset : is_a_preset}});
 		this.setState({page: 'PlateLookup'});
 		this.trackUnsavedChanges(false);
 	}
 	
-	updateLibrarySelection(idArray){//, page){
+	updateLibrarySelection(idArray){
 		event.preventDefault()
 		const apiUrl='api/update_proposal_selection/' + this.props.proposal.name + '/';
 		axios.patch(apiUrl, {libraries: idArray}) 
@@ -108,7 +106,7 @@ class Main extends Component {
 		this.props.logIn(this.props.proposal.name);
 	}
 	
-	updateSubsetSelection(idArray){//, page){
+	updateSubsetSelection(idArray){
 		event.preventDefault()
 		const apiUrl='api/update_proposal_selection/' + this.props.proposal.name + '/';
 		axios.patch(apiUrl, {subsets: idArray}) 
@@ -117,19 +115,15 @@ class Main extends Component {
 			console.log(error)
 		})
 		
-		this.props.logIn(this.props.proposal.name);
+		setTimeout(() => {this.props.logIn(this.props.proposal.name)}, 1000);
 	}
 	
 	refreshAfterUpload(){
-		//this.trackUnsavedChanges(false);
-		this.props.logIn(this.props.proposal.name);
-		//this.changeMainPage('Picker', true);
-		
+		this.props.logIn(this.props.proposal.name);	
 	}
 	
-	//to be able to give warning when user risks discarding changes
+	//to give warning when user risks discarding changes
 	trackUnsavedChanges(bool){
-		console.log('fired trackUnsavedChanges with ', bool)
 		this.setState({unsavedChanges: bool})
 	}
 	
@@ -137,6 +131,7 @@ class Main extends Component {
 		const content = this.mainPage();
 		
         return (
+		<div id="all-container">
          <div>
 			<nav>
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Home', !this.state.unsavedChanges)}>Home | </span>
@@ -146,6 +141,7 @@ class Main extends Component {
 			</nav>
 			{content}
         </div>
+       </div>
         )
     }
 }
