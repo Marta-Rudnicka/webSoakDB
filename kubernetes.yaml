@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webSoakDB-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webSoakDB
+  template:
+    metadata:
+      labels:
+        app: webSoakDB
+    spec:
+      securityContext:
+        runAsUser: __CHANGE__
+        runAsGroup: __CHANGE__
+      volumes:
+      - name: dls
+        hostPath:
+          path: /dls
+          type: Directory
+      containers:
+      - name: webSoakDB
+        securityContext:
+            privileged: false
+        image: gcr.io/diamond-privreg/xchemapps/webSoakDB:latest
+        ports:
+        - name: http
+          containerPort: 8000
+        volumeMounts:
+        - mountPath: /dls
+          name: dls
+          mountPropagation: HostToContainer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webSoakDB-service
+spec:
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: webSoakDB
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: webSoakDB-ingress
+  annotations:
+    nginx.org/websocket-services: "webSoakDB-service"
+spec:
+  tls:
+  - hosts:
+    - web_soak_db
+  rules:
+  - host: web_soak_db
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: webSoakDB-service
+          servicePort: 8000
