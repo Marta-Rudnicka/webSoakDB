@@ -69,6 +69,7 @@ def selection_is_valid(file_name, error_log, library_id):
 	try:
 		with open(file_name, newline='') as csvfile:
 			dialect = csv.Sniffer().sniff(csvfile.read(1024))
+			dialect.delimiter = ',' #because Sniffer gets confused with SMILES strings and requires manual correction
 			csvfile.seek(0)
 			compound_reader = csv.reader(csvfile, dialect)
 			line = 1

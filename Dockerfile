@@ -7,8 +7,6 @@ FROM informaticsmatters/rdkit-python3-debian:Release_2019_03
 
 USER root
 
-RUN whoami
-
 RUN apt-get update && apt-get install -y gnupg2
 
 RUN \

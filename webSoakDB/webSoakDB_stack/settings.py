@@ -26,7 +26,10 @@ SECRET_KEY = 'FprflpUfVtgFJc1AU3tzFvHgvbWGVeUD6vf4IxXp6s1aEYHgYd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'xchemspa.diamond.ac.uk',
+	'127.0.0.1',
+]
 
 
 # Application definition

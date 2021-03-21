@@ -43,6 +43,12 @@ nav {
 	font-size: 1.2em;
 }
 
+caption {
+	caption-side: top;
+	border: solid 1px;
+	font-size: 1.2em;
+	text-align: center;
+}
 /*same as actual Bootstrap links; throw out after implementing react routers*/
 span.pseudo-link {
 	color:#2780e3;
@@ -61,8 +67,15 @@ span.pseudo-link {
 tfoot {
 	font-weight: bold;
 }
-
+/*
 #picker main {
+	display: grid;
+	grid-template: auto auto / 40% 35% 25%;
+	grid-gap: 1em;
+}
+*/
+
+#main-picker {
 	display: grid;
 	grid-template: auto auto / 40% 35% 25%;
 	grid-gap: 1em;

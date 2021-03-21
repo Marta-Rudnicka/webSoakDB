@@ -230,7 +230,7 @@ class Crystal(models.Model):
 
     crystal_name = models.CharField(max_length=255, blank=True, null=True, db_index=True) # changed to allow null: a crystal enters database before it is assigned name
     target = models.ForeignKey(Target, blank=True, null=True, on_delete=models.CASCADE)
-    compound = models.ForeignKey(Compounds, on_delete=models.CASCADE, null=True, blank=True)
+#    compound = models.ForeignKey(Compounds, on_delete=models.CASCADE, null=True, blank=True)
     visit = models.ForeignKey(SoakdbFiles, blank=True, null=True, on_delete=models.CASCADE) # blank/null temporarily added
     product = models.CharField(max_length=255, blank=True, null=True)
 
@@ -265,7 +265,7 @@ class Crystal(models.Model):
 #        if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
 #            app_label = 'xchem_db'
         db_table = 'crystal'
-        unique_together = ('crystal_name', 'visit', 'compound', 'product')
+        unique_together = ('crystal_name', 'visit', 'product')
 
 #new class FILL WITH PROPER OPTIONS!!!!
 class SolventNotes(models.Model):
