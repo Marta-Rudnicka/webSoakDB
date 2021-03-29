@@ -7,7 +7,7 @@ from .models import Library, Compounds, SourceWell, LibraryPlate, Protein, Propo
 
 
 class SourceWellAdmin(admin.ModelAdmin):
-    list_display = ("library_plate", "well", "compound", "concentration")
+    list_display = ("id", "library_plate", "well", "compound", "concentration", "active", "deactivation_date")
 
 class LibraryPlateAdmin(admin.ModelAdmin):
     list_display = ("id", "library", "name", "last_tested", "current")

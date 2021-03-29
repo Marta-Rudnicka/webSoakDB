@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+{% load static %}
+	{% block main %}
+	<script>
+		function findAndCheck(str){
+			const feedback = document.getElementById("finder-feedback");
+			const row =  document.getElementById('w-' + str.toUpperCase());
+			if (!row){
+				feedback.innerHTML = "No such well in the plate map: <strong>" + str.toUpperCase() + "</strong>";
+			}
+			
+			if (row.className === "inactive-row"){
+				feedback.innerHTML = "<strong>" + str.toUpperCase() + "</strong> is already inactive";
+			}
+			else {
+				const input = row.querySelector('input');
+				input.checked = true;
+				moveToTop(input.id);
+				feedback.innerHTML = "Selected <strong>" + str.toUpperCase() + "</strong> for deactivation";
+			}
+		}
+		
+		function selectToDeactivate(){
+			const value = document.getElementById("well").value;
+			findAndCheck(value);
+			document.getElementById("well").value="";
+		}
+		
+		function moveToTop(id){
+			const box = document.getElementById(id);
+			if (box.checked===true) {
+				const firstLine = document.getElementById('first-line');
+				const row = box.closest('tr');
+				const parentNode = firstLine.parentNode
+				setTimeout(function() {parentNode.insertBefore(row, firstLine.nextElementSibling)}, 300);
+			}
+		}
+		
+		document.addEventListener('DOMContentLoaded', () => {
+		
+			document.querySelectorAll('#table input').forEach(box => { 
+				box.checked = false;
+				box.addEventListener('click', () => moveToTop(box.id));
+			});
+			
+			document.getElementById('well').addEventListener('change', () => selectToDeactivate());
+
+		});
+	</script>
+	
+	<main id="update-plate">
+		<h2>Plate update: </h2>
+		<h1>{{plate.library.name}} - {{ plate.name }}</h1>
+		<section>
+			
+			<div id="finder" >		
+				<h3>Mark as inactive:</h3>
+				<label>Type in well name and press 'Enter':</label>
+				<input type="text" id="well">
+				<div id="finder-feedback"></div>
+			</div>
+			<hr>
+			<div>
+				<h3>Edit plate data:</h3>
+				<form method="post" action="/inventory/edit-plate/">
+					{% csrf_token %}
+					<input type="hidden" name="id" value="{{ plate.id }}">
+					<table>
+					{{ plate_form.as_table }}
+					</table>
+					<button type="submit">Save changes</button>
+				</form>
+							
+			</div>
+			
+			
+			<div>
+				<h3>Delete {{plate.library.name}} : {{ plate.name }}</h3>
+				<form method="post" action="/inventory/delete-plate/" id="delete-{{plate.id}}">
+					{% csrf_token %}
+					<input type="hidden" name="id" value="{{plate.id}}">
+					<button type="submit" class="delete-button"  onclick="submitDelete('{{plate.id}}', '{{plate.name}}')">Delete plate</button>
+				</form>
+			</div>
+		</section>
+		<section>
+			<form method="post" action="/inventory/deactivate-compounds/">
+				{% csrf_token %}
+				<input type="hidden" name="plate_id" value="{{plate.id}}">
+				<button type="submit">Mark selected compounds as inactive</button>
+				<table class="table table-bordered table-hover" id="table">
+					<caption>Compounds</caption>
+					<thead>
+						<tr>
+							<th>Select to<br>deactivate</th>
+							<th>Well</th>
+							<th>Code</th>
+							<th>SMILES</th>
+							<th>Concentration</th>
+							<th>Active</th>
+							<th>Deactivated on:</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+						<tr id="first-line" class="hidden"><td></td></tr>
+						{% for compound in plate.compounds.all %}
+						{% if compound.active %}
+							<tr id="w-{{compound.well}}" class="active-row">
+								<td>
+									<input type="checkbox" name="{{compound.id}}" id="{{compound.id }}">
+								</td>
+						{% else %}
+							<tr id="w-{{compound.well}}" class="inactive-row">
+								<td></td>
+						{% endif%}
+							
+							<td><div>{{compound.well}}</div></td>
+							<td>{{compound.compound.code}}</td>
+							<td>{{compound.compound.smiles}}</td>
+							<td>{{compound.concentration}}</td>
+							{% if compound.active %}
+								<td>Active</td>
+							{% else %}
+								<td>
+									<p class="show-on-hover">Inactive (more<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+									</svg>)</p>
+									<div>
+									<strong>Active in:</strong><br>
+									{% comment %} 
+										<!--
+										The horrible nested thing below stands for:
+											
+											<p>location</p> for location in alternatives[compound.id]
+										
+										...because Django template language doesn't support dictionary lookups
+										-->
+									{% endcomment %}
+										{% for id, alts in alternatives.items %} 
+											{% for location in alts %}
+												{% if id == compound.id %}
+													<p>{{location}}</p>
+												{% endif %}
+											{% endfor %}
+										{% endfor %}</td>
+									</div>
+							{% endif %}
+							
+							{% if compound.deactivation_date%}
+								<td>{{compound.deactivation_date|date:"d M Y" }}</td>
+							{% else %}
+								<td></td>
+							{% endif %}
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</form>
+		</section>
+		<section>
+			<div id="stats">
+				<h3>Plate information</h3>
+				<table class="table">
+					<tbody>
+						<tr><td>Library</td><td>{{ plate.library.name }}</td></tr>
+						<tr><td>Barcode</td><td>{{ plate.name }}</td></tr>
+						<tr><td>Last updated</td><td>{{ plate.last_tested }}</td></tr>
+						<tr><td>Current</td><td>{% if plate.current %} Yes {% else %} No {% endif %}</td></tr>
+					</tbody>
+				</table>				
+			</div>
+			<div id="stats">
+				<h3>Number of compounds in plate</h3>
+				<table class="table">
+					<tbody>
+						<tr><td>All</td><td>{{ plate.compounds.all|length }}</td></tr>
+						<tr><td>Available</td><td>{{ active_count }}</td></tr>
+						<tr><td>Unavailable</td><td>{{ inactive_count }}</td></tr>
+						<tr><td>Availability</td><td>{{ availability }}%</td></tr>
+					</tbody>
+				</table>				
+			</div>
+		</section>
+	</main>
+	{% endblock %}

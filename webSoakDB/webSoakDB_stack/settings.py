@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'webSoakDB_backend',
     'webSoakDB_frontend',
     'rest_framework',
-    'API'
+    'API',
+    'inventory',
 ]
 
 MIDDLEWARE = [

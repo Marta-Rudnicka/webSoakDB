@@ -137,6 +137,7 @@ class Main extends Component {
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Home', !this.state.unsavedChanges)}>Home | </span>
 				<span className="pseudo-link" onClick={() => this.changeMainPage('Picker', !this.state.unsavedChanges)}> Select compounds |</span>
 				<span className="pseudo-link" onClick={event => this.changeMainPage('Summary', !this.state.unsavedChanges)}>Selection summary | </span>
+				<a href="/inventory/">Inventory | </a>
 				<span className="pseudo-link" onClick={event => this.props.logIn(null)}>Log out | </span>
 			</nav>
 			{content}

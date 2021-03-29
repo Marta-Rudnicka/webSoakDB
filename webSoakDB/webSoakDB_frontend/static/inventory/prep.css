@@ -1,0 +1,88 @@
+body {
+	padding: 0;
+	margin: auto auto;
+	max-width: 2500px;
+}
+
+section {
+	display: block;
+	background: #f6f6f6;
+	padding: 3px;
+	margin: 5px;
+	position: relative;
+}
+
+button {
+	border-width: 1px;
+	border-color: #ec0000;
+}
+
+h1, h2, h3 {
+	text-align: center;
+	padding-bottom: 0.5em;
+	padding-top: 0.5em;
+}
+
+h1 {
+	text-decoration: underline;
+	text-decoration-color: #ec0000;
+}
+
+h2 {
+	font-size: 1.5em;
+}
+
+h3 {
+	font-size: 1.2em;
+}
+
+nav {
+	font-size: 1.2em;
+}
+
+caption {
+	caption-side: top;
+	border: solid 1px;
+	font-size: 1.2em;
+	text-align: center;
+}
+
+.show-on-hover {
+	/*background: aliceblue;*/
+	background-image: linear-gradient(white, aliceblue);
+}
+
+.show-on-hover ~ div {
+	/*visibility: hidden;*/
+	overflow: hidden;
+	height: 0;
+	max-height: 0;
+}
+
+.show-on-hover:hover ~ div {
+	visibility: visibile;
+	opacity: 1;
+	height: 100%;
+	max-height: 200px;
+	transition: max-height 0.5s linear;
+}
+
+
+thead th{
+    position: webkit-sticky;
+	position: sticky;
+	background: white;
+	top: 0;
+	padding: 0;
+}
+
+.hidden {
+	display: none;
+}
+
+button.small-button {
+	width: 100%;
+	padding: 1px;
+	margin: 1px;
+	font-size: 0.8em;
+}

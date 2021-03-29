@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('webSoakDB_backend.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('API.urls')),
+    path('inventory/', include('inventory.urls')),
 ]

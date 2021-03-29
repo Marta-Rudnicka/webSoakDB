@@ -21,6 +21,10 @@ class Home extends React.Component {
 						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Summary", true)}>Summary</span> </p>
 						<p> the place to see and manage your protein and compound data</p>
 					</li>
+					<li>
+						<p><a href="/inventory/">Inventory management</a> </p>
+						<p>The place to manage XChem in-house libraries, plates etc.</p>
+					</li>
 				</ul>
 			</section>
 			

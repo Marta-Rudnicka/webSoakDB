@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% load static %}
+	{% block main %}
+	<h1>XChem inventory management</h1>
+	<main id="index">
+		<section>
+				<h2><a href="plates">Manage library plates</a></h2>
+				<p>Add, edit, update and remove library plates. View how availability of compounds changed over time.</p>
+		</section>
+		<section>
+				<h2><a href="libraries">Manage libraries</a></h2>
+				<p>Add, edit, and remove libraries</p>
+		</section>
+
+		<section>
+				<h2><a href="presets">Manage presets</a></h2>
+				<p>Add, edit, and remove presets</p>
+		</section>
+	</main>
+	{% endblock %}

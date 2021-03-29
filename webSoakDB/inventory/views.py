@@ -1,0 +1,429 @@
+from django.shortcuts import render
+from django.http import HttpResponse
+from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset
+from django.http import HttpResponseRedirect, HttpRequest
+from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm
+from webSoakDB_backend.validators import data_is_valid, selection_is_valid
+from webSoakDB_backend.helpers import upload_plate, upload_subset
+from datetime import date, datetime
+from django.core.files.storage import FileSystemStorage
+from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy
+import string
+
+
+#VIEWS DISPLAYING PAGES (HANDLING GET REQUESTS)
+def index(request):
+	'''shows inventory home page'''
+	return render(request, "inventory/inventory-index.html")
+
+def libraries(request):
+	'''shows the the list of in-house libraries, provides forms to add and edit libraries'''
+	libraries = Library.objects.filter(public=True).order_by("name")
+	library_form = LibraryForm()
+	form_dict = {}
+	for lib in libraries:
+		form_dict[lib] = LibraryForm(initial={"name": lib.name, "for_industry": lib.for_industry})
+		
+	return render(request, "inventory/libraries.html", {"libraries": libraries, "library_form": library_form, "form_dict" : form_dict})
+	
+
+def plates(request):
+	'''shows the list of all in-house library plates, provides links to edit plates and track compound usage, provides form to create new plate'''
+	libraries = Library.objects.filter(public=True).order_by("name")
+	
+	plate_form = LibraryPlateForm()
+		
+	return render(request, "inventory/plates.html", {"libraries": libraries, "plate_form" : plate_form})
+
+def presets(request):
+	'''shows the list of all presets, provides forms to edit a preset, delete a preset, create a new preset'''
+	presets = Preset.objects.all().order_by("name")
+	new_preset_form = NewPresetForm()
+	
+	#produce a set of all compounds missing from the current library plates (only for libraries used in any of the presets)
+	missing_compounds = set()
+	
+	for preset in presets:
+		for subset in preset.subsets.all():
+			current = LibraryPlate.objects.filter(library=subset.library.id, current=True)
+			#print('preset: ', preset.name, 'subset of: ', subset.library.name, 'current: ', current)
+			
+			for plate in current:
+				m = plate.compounds.filter(active=False).all()
+				missing_compounds = {(int(plate.id), int(c.compound.id)) for c in m} | missing_compounds
+				
+	# tip: the info from which plate the compound is missing is needed for libraries that share the same compounds,
+	# which happens when there are different versons of the same library for different solvents. Otherwise, e.g., 
+	# a compound that is missing from the current plate DSI DMSO would be recorded as missing also in the current
+	# plates of DSI EG, even if it's still available in the EG plate
+	
+	#make copy of presets data, and add information about availability of the compounds in the current library plates
+	presets_copy = [fake_preset_copy(preset, missing_compounds) for preset in presets]
+	
+	#produce a dictionary that matches each presets with appropriate form to edit this preset
+	form_dict = {}
+	all_libs = {(library.id, library.name) for library in Library.objects.filter(public=True)}
+	
+	for p in presets_copy:
+		#generate lists of valid library choices for the preset
+		old_libs_set = {(s.library_id, s.library_name) for s in p.subsets}
+		new_libs = [("", "Select library...")] + list(all_libs - old_libs_set)
+		old_libs = [("", "Select library...")] + list(old_libs_set)
+		
+		form_dict[p] = EditPresetForm(old_libs=old_libs, new_libs=new_libs, initial={
+			"name": p.name, 
+			"description": p.description, 
+			"new_library": "", 
+			"new_compound_list": None, 
+			"edited_library": "",
+			"updated_compound_list": None,
+			"delete_library": "",
+			})
+				
+	return render(request, "inventory/presets.html", {
+		"presets": presets_copy, 
+		"new_preset_form": new_preset_form,
+		"form_dict" : form_dict,
+		})
+
+def update_plate(request, pk):
+	'''show information about compounds in plate, provides forms to edit plate data, delete a plate, and deactivate compounds'''
+	plate = LibraryPlate.objects.get(pk=pk)
+	compounds_count = plate.compounds.all().count()
+	
+	#for compounds that are missing, find in which library plates they are still available
+	alternatives = {}
+	
+	for compound in plate.compounds.all():
+		if not compound.active:
+			c = Compounds.objects.get(code=compound.compound.code, smiles = compound.compound.smiles)
+			alts = [( w.library_plate.library.name + ' : ' + w.library_plate.name ) for w in c.locations.filter(library_plate__library__public = True) if w.active ]
+			alternatives[compound.id] = alts
+	
+	#generate info about availablity of compounds
+	if compounds_count > 0:
+		active_count = plate.compounds.filter(active=True).count()
+		inactive_count = plate.compounds.filter(active=False).count()
+		availability = round(active_count / compounds_count * 100)
+	else:
+		active_count, inactive_count, availability = 0, 0, 0
+	
+	#generate form to update the basic information about the plate
+	plate_form = PlateUpdateForm(initial={"library" : plate.library.id, "barcode" : plate.name, "current" : plate.current})
+		
+	return render(request, "inventory/update_plate.html", {
+		"plate": plate, 
+		"plate_form" : plate_form, 
+		"active_count" : active_count, 
+		"inactive_count" : inactive_count,
+		"availability" : availability,
+		"alternatives" : alternatives,
+		})
+
+def track_usage(request, pk, date, mode):
+	'''Shows information about availability of compounds in the plate on a given date in three ways: availability statistics,
+	a list of compounds on a given date with availability info, and a table graphically representing a physical plate with the
+	locations of the active and inactive compounds. There are two modes: general view, which shows everything, and graphical view, 
+	in which some of the page elements are hidden to bring the graphical representation of a plate to the top of the page. The 
+	mode argument is passed to the template and used as id of the <main> HTML element. The difference between the page layouts 
+	in different modes is determined by the CSS used for the children of the <main> element '''
+	
+	plate = LibraryPlate.objects.get(pk=pk)
+	compounds = fake_compounds_copy(plate.compounds.all()) #make a copy of the data to edit it without touching the db
+	timestamp = datetime.strptime(date, "%Y-%m-%d").date() #make a datetime object based on the url
+	change_dates = get_change_dates(compounds, plate) #produce the list of all dates on which any compounds were deactivated
+	
+	#generate strings needed to switch between the general and the graphic view
+	if mode == "general-view":
+		switch_view = "graphic view"
+		switch_view_url = "graphic-view"
+	else:
+		switch_view = "general view"
+		switch_view_url = "general-view"
+	
+	#activate all the compounds that were still active on the inspected date
+	for c in compounds:
+		if c.deactivation_date and c.deactivation_date > timestamp:
+			c.active = True
+	
+	#decide what size the table graphically representing the library plate should be
+	size = get_plate_size(plate.compounds.all())
+	rows = size['rows']
+	columns = size['columns']
+	
+	#produce basic usage statistics
+	usage_stats = get_usage_stats(compounds)
+		
+	return render(request, "inventory/track_usage.html", {
+		"change_dates": change_dates,
+		"compounds" : compounds,
+		"plate": plate, 
+		"date" : date,
+		"timestamp" : timestamp,
+		"active_count" : usage_stats['active'], 
+		"inactive_count" : usage_stats['inactive'],
+		"availability" : usage_stats['availability'],
+		"columns" : columns,
+		"rows": rows,
+		"main_id" : mode,
+		"switch_view": switch_view,
+		"switch_view_url": switch_view_url,
+		})
+
+#FORM ACTION VIEWS (HANDLING POST REQUESTS)
+def add_library(request):
+	form = LibraryForm(request.POST)
+	
+	if request.method == "POST":	
+		if form.is_valid():
+			name = form.cleaned_data['name']
+			for_industry = form.cleaned_data['for_industry']
+			print('name: ', name, ", for_industry: ", for_industry)
+			Library.objects.create(name=name, for_industry=for_industry, public=True)
+
+			return HttpResponseRedirect('../libraries')
+
+def add_plate(request):
+	today = str(date.today())
+	
+	if request.method == "POST":
+		form = LibraryPlateForm(request.POST, request.FILES)
+		
+		if form.is_valid():
+			log = []
+			fs = FileSystemStorage()
+			source = request.FILES["plate_map"]
+			filename = fs.save(source.name, source)
+			if data_is_valid(filename, log):
+				
+				barcode = form.cleaned_data['barcode']
+				library_id = form.cleaned_data['library']
+				current = form.cleaned_data['current']
+				library = Library.objects.get(pk=library_id)
+				today = str(date.today())
+				
+				plate = LibraryPlate.objects.create(library = library, name = barcode, current = current, last_tested = today)
+				
+				upload_plate(filename, plate)
+				fs.delete(filename)
+				
+				return HttpResponseRedirect('../plates')
+			else:
+				
+				fs.delete(filename)
+				
+				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+		else:
+			print('invalid form')
+			print(form.errors)
+			return HttpResponseRedirect('../plates')
+
+def add_preset(request):
+	if request.method == "POST":
+		print('REQUEST: ', request)
+		form = NewPresetForm(data=request.POST, files=request.FILES)
+		if form.is_valid():
+			print('FILES: ', request.FILES)
+			log = []
+			fs = FileSystemStorage()
+			source = request.FILES["new_compound_list"]
+			library_id = form.cleaned_data['new_library']
+			filename = fs.save(source.name, source)
+			print('library_id: ', library_id, 'description: ', form.cleaned_data['description'], 'preset_name:', form.cleaned_data['name'])
+			if selection_is_valid(filename, log, library_id):
+				library = Library.objects.get(pk=library_id)
+				description = form.cleaned_data['description']
+				preset_name = form.cleaned_data['name']
+			
+				#create new Subset object and upload data to it
+				subset_name = library.name + " selection"
+				origin = "preset: " + preset_name
+				first_subset = upload_subset(filename, library_id, subset_name, origin)
+				print('create subset: ', library_id, subset_name, origin)
+				fs.delete(filename)
+								
+				#create preset object
+				preset = Preset.objects.create(name=preset_name, description=description)
+				preset.subsets.add(first_subset)
+				preset.save()
+				print('create preset: ', preset_name, description)
+				
+#			return HttpResponseRedirect('../presets/')
+				return HttpResponseRedirect('../presets/')
+			else:
+				fs.delete(filename)
+				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+		else:
+			print(form.errors)
+			return render(request, 'inventory/presets.html', {'form_errors' : form.errors})
+
+def edit_preset(request):
+	if request.method == "POST":
+	
+		#create lists of valid library choices
+		preset = Preset.objects.get(pk=request.POST["id"])
+		all_libs = {(library.id, library.name) for library in Library.objects.filter(public=True)}
+		old_libs_set = {(s.library.id, s.library.name) for s in preset.subsets.all()}
+		new_libs = [("", "Select library...")] + list(all_libs - old_libs_set)
+		old_libs = [("", "Select library...")] + list(old_libs_set)
+		
+		#create form object
+		form = EditPresetForm(data=request.POST, files=request.FILES, old_libs=old_libs, new_libs=new_libs)
+		#https://django-gotchas.readthedocs.io/en/latest/forms.html <-- explanation for the weird kwargs; 
+		
+		if form.is_valid():
+			
+			#check if upload files are valid (uses webSoakDB_backend/validators.py)
+			new_library = form.cleaned_data["new_library"]
+			new_compound_list = request.FILES.get("new_compound_list")
+			edited_library = form.cleaned_data["edited_library"]
+			deleted_library = form.cleaned_data["deleted_library"]
+			updated_compound_list = request.FILES.get("updated_compound_list")
+			fs_new, fs_edit = None, None
+			
+			if new_compound_list:
+				fs_new =  FileSystemStorage()
+				filename_new = fs_new.save(new_compound_list.name, new_compound_list) 
+			if updated_compound_list:
+				fs_edit =  FileSystemStorage()
+				filename_edit = fs_edit.save(updated_compound_list.name, updated_compound_list)
+				
+			log = []
+			if ( new_compound_list and not selection_is_valid(filename_new, log, new_library)) or (updated_compound_list and not selection_is_valid(filename_edit, log, edited_library)):
+				if fs_new:
+					fs_new.delete(filename_new)
+				if fs_edit:
+					fs_edit.delete(filename_edit)
+				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+			
+			#update submitted data
+			preset.name = form.cleaned_data["name"]
+			preset.description = form.cleaned_data["description"]
+			
+			if new_compound_list:
+				
+				#create new Subset object and upload data to it
+				library = Library.objects.get(pk=new_library)
+				subset_name = library.name + " selection"
+				origin = "preset: " + preset.name
+				new_subset = upload_subset(filename_new, library.id, subset_name, origin)
+				fs_new.delete(filename_new)
+				
+				#add new subset to preset
+				preset.subsets.add(new_subset)
+			
+			if updated_compound_list:
+				
+				#find and remove old list
+				library = Library.objects.get(pk=edited_library)
+				old_subset = preset.subsets.get(library = library)
+				preset.subsets.remove(old_subset)	
+				
+				#create new Subset object and upload data to it
+				library = Library.objects.get(pk=edited_library)
+				subset_name = library.name + " selection"
+				origin = "preset: " + preset.name
+				new_subset = upload_subset(filename_edit, library.id, subset_name, origin)
+				fs_edit.delete(filename_edit)
+				
+				#add new subset to preset
+				preset.subsets.add(new_subset)
+				
+			if deleted_library:
+				library = Library.objects.get(pk=deleted_library)
+				deleted_subset = preset.subsets.get(library = library)
+				preset.subsets.remove(deleted_subset)	
+			
+			preset.save()
+			return HttpResponseRedirect('../presets/')
+		else:
+			return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})			
+
+def edit_library(request):
+	form = LibraryForm(request.POST)
+	
+	if request.method == "POST":	
+		if form.is_valid():
+			pk = request.POST.get('id')
+			name = form.cleaned_data['name']
+			for_industry = form.cleaned_data['for_industry']
+			lib = Library.objects.get(pk=pk)
+			lib.name=name
+			lib.for_industry=for_industry
+			lib.save()
+
+			return HttpResponseRedirect('../libraries')
+
+def edit_plate(request):
+	form = PlateUpdateForm(request.POST)
+	
+	if request.method == "POST":	
+		if form.is_valid():
+			pk = request.POST.get('id')
+			library_id = form.cleaned_data['library']
+			library = Library.objects.get(pk=library_id)
+			barcode = form.cleaned_data['barcode']
+			current = form.cleaned_data['current']
+			print("pk: ", pk, ", library: ", library, ", barcode : ", barcode, ", current: ", current)
+			plate = LibraryPlate.objects.get(pk=pk)
+			plate.library = library
+			plate.name = barcode
+			plate.current = current
+			plate.save()
+			
+			redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
+			return HttpResponseRedirect(redirect_url)
+
+def update_preset(request):
+	pass
+
+def delete_library(request):
+	#form = LibraryForm(request.POST)
+	
+	if request.method == "POST":	
+		pk = request.POST.get('id')
+		lib = Library.objects.get(pk=pk)
+		if len(lib.plates.all()) == 0:
+			print('Good to delete')
+			lib.delete()
+			return HttpResponseRedirect('../libraries/')
+		else:
+			print('Cannot be deleted')
+			return HttpResponseRedirect('../library-deletion-error/')
+
+def delete_plate(request):
+	if request.method == "POST":	
+		pk = request.POST.get('id')
+		plate = LibraryPlate.objects.get(pk=pk)
+		plate.delete()
+		return HttpResponseRedirect('../plates/')
+
+def delete_preset(request):
+	if request.method == "POST":	
+		pk = request.POST.get('id')
+		preset = Preset.objects.get(pk=pk)
+		preset.delete()
+		return HttpResponseRedirect('../presets/')
+
+def library_deletion_error(request):
+	return render(request, "inventory/library_deletion_error.html");
+
+def dummy(request):
+	return render(request, "webSoakDB_backend/dummy.html");
+
+def deactivate_compounds(request):
+	if request.method == "POST":
+		today = str(date.today())
+		plate = LibraryPlate.objects.get(pk=request.POST.get('plate_id'))
+		redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
+		plate.last_tested = today
+		plate.save()
+		for key in request.POST:
+			if key != 'csrfmiddlewaretoken' and key != "plate_id":
+				compound = SourceWell.objects.get(pk=key)
+				print(compound)
+				compound.active = False
+				compound.deactivation_date = today
+				compound.save()
+			
+		return HttpResponseRedirect(redirect_url)

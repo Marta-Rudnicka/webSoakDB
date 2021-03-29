@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% load static %}
+	{% block main %}
+	<h1>Error</h1>
+	<main id="error">
+		<section>
+			<p>You were prevented from deleting a library, because the dabase still stores the information about library plates belonging to this library.</p>
+			<p>If you are sure you want to delete this library, go to <a href="/inventory/plates/">plate management</a> and delete all its plates first</p>
+			<p><a href="/inventory/libraries">Go back</a></p>
+		</section>
+	</main>
+	{% endblock %}
