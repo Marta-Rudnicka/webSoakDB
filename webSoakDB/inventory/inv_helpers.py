@@ -133,3 +133,10 @@ def get_usage_stats(queryset):
 	return {"count" : count, "active" : active, "inactive" : inactive, "availability" : availability }
 	
 
+def current_library_selection(boolean):
+	if boolean == True:
+		first_tuple = [("", "Select library...")]
+	else:
+		first_tuple = []
+		
+	return  first_tuple + [(library.id, library.name) for library in Library.objects.filter(public=True)]

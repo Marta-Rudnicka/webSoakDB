@@ -108,7 +108,7 @@
 									<form class="" action="../delete-preset/" method="post" id="delete-{{preset.id}}">
 										{% csrf_token %}
 										<input type="hidden" value="{{preset.id}}" name="id" >
-										<button type="submit" value="Submit" class="delete-button"  onclick="submitDelete('{{library.id}}', '{{library.name}}')">Delete {{preset.name}}</button>
+										<button type="submit" value="Submit" class="delete-button"  onclick="submitDelete('{{preset.id}}', '{{preset.name}}')">Delete {{preset.name}}</button>
 									</form>
 								
 								</div>

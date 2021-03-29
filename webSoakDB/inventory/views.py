@@ -7,7 +7,7 @@ from webSoakDB_backend.validators import data_is_valid, selection_is_valid
 from webSoakDB_backend.helpers import upload_plate, upload_subset
 from datetime import date, datetime
 from django.core.files.storage import FileSystemStorage
-from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy
+from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy, current_library_selection
 import string
 
 
@@ -30,15 +30,16 @@ def libraries(request):
 def plates(request):
 	'''shows the list of all in-house library plates, provides links to edit plates and track compound usage, provides form to create new plate'''
 	libraries = Library.objects.filter(public=True).order_by("name")
-	
-	plate_form = LibraryPlateForm()
+#	libs = current_library_selection(True) #[("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True)]
+	plate_form = LibraryPlateForm(libs=current_library_selection(True))
 		
 	return render(request, "inventory/plates.html", {"libraries": libraries, "plate_form" : plate_form})
 
 def presets(request):
 	'''shows the list of all presets, provides forms to edit a preset, delete a preset, create a new preset'''
 	presets = Preset.objects.all().order_by("name")
-	new_preset_form = NewPresetForm()
+	all_libs = current_library_selection(False) #{(library.id, library.name) for library in Library.objects.filter(public=True)}
+	new_preset_form = NewPresetForm(libs=([("", "Select library...")] + all_libs))
 	
 	#produce a set of all compounds missing from the current library plates (only for libraries used in any of the presets)
 	missing_compounds = set()
@@ -62,12 +63,12 @@ def presets(request):
 	
 	#produce a dictionary that matches each presets with appropriate form to edit this preset
 	form_dict = {}
-	all_libs = {(library.id, library.name) for library in Library.objects.filter(public=True)}
 	
 	for p in presets_copy:
 		#generate lists of valid library choices for the preset
 		old_libs_set = {(s.library_id, s.library_name) for s in p.subsets}
-		new_libs = [("", "Select library...")] + list(all_libs - old_libs_set)
+		#new_libs = [("", "Select library...")] + list(all_libs - old_libs_set)
+		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
 		old_libs = [("", "Select library...")] + list(old_libs_set)
 		
 		form_dict[p] = EditPresetForm(old_libs=old_libs, new_libs=new_libs, initial={
@@ -109,7 +110,9 @@ def update_plate(request, pk):
 		active_count, inactive_count, availability = 0, 0, 0
 	
 	#generate form to update the basic information about the plate
-	plate_form = PlateUpdateForm(initial={"library" : plate.library.id, "barcode" : plate.name, "current" : plate.current})
+	#libraries = Library.objects.filter(public=True).order_by("name")
+	libs = current_library_selection(True) #[("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True).order_by("name")]
+	plate_form = PlateUpdateForm(libs=libs, initial={"library" : plate.library.id, "barcode" : plate.name, "current" : plate.current})
 		
 	return render(request, "inventory/update_plate.html", {
 		"plate": plate, 
@@ -187,7 +190,7 @@ def add_plate(request):
 	today = str(date.today())
 	
 	if request.method == "POST":
-		form = LibraryPlateForm(request.POST, request.FILES)
+		form = LibraryPlateForm(data=request.POST, files=request.FILES, libs=current_library_selection(True))
 		
 		if form.is_valid():
 			log = []
@@ -220,8 +223,7 @@ def add_plate(request):
 
 def add_preset(request):
 	if request.method == "POST":
-		print('REQUEST: ', request)
-		form = NewPresetForm(data=request.POST, files=request.FILES)
+		form = NewPresetForm(data=request.POST, files=request.FILES, libs=current_library_selection(True))
 		if form.is_valid():
 			print('FILES: ', request.FILES)
 			log = []
@@ -262,9 +264,10 @@ def edit_preset(request):
 	
 		#create lists of valid library choices
 		preset = Preset.objects.get(pk=request.POST["id"])
-		all_libs = {(library.id, library.name) for library in Library.objects.filter(public=True)}
+		all_libs = current_library_selection(False)#{(library.id, library.name) for library in Library.objects.filter(public=True)}
 		old_libs_set = {(s.library.id, s.library.name) for s in preset.subsets.all()}
-		new_libs = [("", "Select library...")] + list(all_libs - old_libs_set)
+		#new_libs = [("", "Select library...")] + list(all_libs - old_libs_set)
+		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
 		old_libs = [("", "Select library...")] + list(old_libs_set)
 		
 		#create form object
@@ -353,9 +356,11 @@ def edit_library(request):
 			lib.save()
 
 			return HttpResponseRedirect('../libraries')
+	else:
+		return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})	
 
 def edit_plate(request):
-	form = PlateUpdateForm(request.POST)
+	form = PlateUpdateForm(data=request.POST, libs=current_library_selection(True))
 	
 	if request.method == "POST":	
 		if form.is_valid():
@@ -373,6 +378,8 @@ def edit_plate(request):
 			
 			redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
 			return HttpResponseRedirect(redirect_url)
+		else:
+			return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})	
 
 def update_preset(request):
 	pass

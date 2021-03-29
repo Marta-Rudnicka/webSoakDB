@@ -31,7 +31,7 @@
 			<select id="show-from-lib" name="library" onchange="showLibrary(value)">
 				<option value="all" selected>All libraries</option>
 				{% for library in libraries %}
-					{% if library.plates.all|length > 0 %}
+					{% if library.plates.all %}
 						<option value={{library.id}}>{{library.name}}</option>
 					{% endif %}
 				{% endfor %}
