@@ -1,20 +1,39 @@
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+#from django.db import DoesNotExist
 from django.http import HttpResponse
 from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset
 from django.http import HttpResponseRedirect, HttpRequest
-from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm
+from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm
 from webSoakDB_backend.validators import data_is_valid, selection_is_valid
 from webSoakDB_backend.helpers import upload_plate, upload_subset
 from datetime import date, datetime
 from django.core.files.storage import FileSystemStorage
 from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy, current_library_selection
 import string
+import re
+from .dt import get_well_dictionary
 
+fake_well_dictionary = {} #
 
 #VIEWS DISPLAYING PAGES (HANDLING GET REQUESTS)
 def index(request):
 	'''shows inventory home page'''
 	return render(request, "inventory/inventory-index.html")
+
+def dispense_testing(request):
+	'''shows inventory home page'''
+	rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+	columns = [ '0' + str(i) for i in range(1, 10)] + ['10', '11', '12']
+	
+	
+	l = [('A', 'B', 'C', 'D'), ('E', 'F', 'G', 'H')]
+	
+	return render(request, "inventory/dispense-testing.html", {
+		'columns': columns,
+		'rows': rows,
+		'l': l,
+	})
 
 def libraries(request):
 	'''shows the the list of in-house libraries, provides forms to add and edit libraries'''
@@ -113,6 +132,7 @@ def update_plate(request, pk):
 	#libraries = Library.objects.filter(public=True).order_by("name")
 	libs = current_library_selection(True) #[("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True).order_by("name")]
 	plate_form = PlateUpdateForm(libs=libs, initial={"library" : plate.library.id, "barcode" : plate.name, "current" : plate.current})
+	dt_map_form = DTMapForm()
 		
 	return render(request, "inventory/update_plate.html", {
 		"plate": plate, 
@@ -121,6 +141,7 @@ def update_plate(request, pk):
 		"inactive_count" : inactive_count,
 		"availability" : availability,
 		"alternatives" : alternatives,
+		"dt_map_form" : dt_map_form,
 		})
 
 def track_usage(request, pk, date, mode):
@@ -434,3 +455,50 @@ def deactivate_compounds(request):
 				compound.save()
 			
 		return HttpResponseRedirect(redirect_url)
+
+def dispense_testing_map(request):
+	rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+	columns = [ '0' + str(i) for i in range(1, 10)] + ['10', '11', '12']
+	errors = []
+	
+	form = DTMapForm(request.POST, request.FILES)
+	
+	if request.method == "POST":
+		if form.is_valid():
+			source = request.FILES["dt_map"]
+			if not re.fullmatch('(.*)+\.csv$', source.name):
+				return render(request, "inventory/dispense-testing.html", {"errors": ["Invalid file: the well map must be a csv file."], "filename" : source.name})
+			
+			pk = request.POST.get('id')
+			fs = FileSystemStorage()
+			source = request.FILES["dt_map"]
+			filename = fs.save(source.name, source)
+			dt_dict = get_well_dictionary(filename)
+			fs.delete(filename)
+			plate=LibraryPlate.objects.get(pk=pk)
+			
+			if not isinstance(dt_dict, dict):
+				return render(request, "inventory/dispense-testing.html", {"errors": dt_dict, "plate": plate, "filename" : source.name})
+				
+			compounds = plate.compounds.all()
+			data = []
+			for key in dt_dict:
+				try:
+					dw = key
+					sw = dt_dict[key]
+					c =  compounds.get(well=sw)
+					active = c.active
+					code = c.compound.code
+					_id = c.id
+					data.append((dw, sw, active, code, _id))
+				except(ObjectDoesNotExist):
+					errors.append("Invalid mapping: this source plate has no compound recorded in well " + sw)
+			
+			if errors != []:
+				data = None
+				rows = None
+				columns = None
+					
+			return render(request, "inventory/dispense-testing.html", {"errors": errors, "data" : data, "rows": rows, "columns": columns, "plate": plate, "filename" : filename})
+		else:
+			return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})	

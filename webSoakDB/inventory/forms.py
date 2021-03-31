@@ -47,3 +47,6 @@ class EditPresetForm(NewPresetForm):
 		self.fields['edited_library'] = forms.ChoiceField(choices = old_libs, label='Update selection from:', required=False)
 		self.fields['updated_compound_list'] = forms.FileField(label='Upload new compound list for selected library', required=False)
 		self.fields['deleted_library'] = forms.ChoiceField(choices = old_libs, label='Delete selection from:', required=False, widget=forms.Select(attrs={'class': 'delete-button'}))
+
+class DTMapForm(forms.Form):
+	dt_map = forms.FileField(label='Upload mapping file', required=False)

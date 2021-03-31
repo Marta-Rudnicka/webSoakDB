@@ -52,7 +52,18 @@
 		<h2>Plate update: </h2>
 		<h1>{{plate.library.name}} - {{ plate.name }}</h1>
 		<section>
-			
+			<div id="dt">
+				<h3>Dispense testing</h3>
+				<form method="post" action="/inventory/dispense-testing-map/" enctype="multipart/form-data">
+					{% csrf_token %}
+					<input type="hidden" name="id" value="{{ plate.id }}">
+					<table>
+					{{ dt_map_form.as_table }}
+					</table>
+					<button type="submit">Submit</button>
+				</form>
+			</div>
+			<hr>
 			<div id="finder" >		
 				<h3>Mark as inactive:</h3>
 				<label>Type in well name and press 'Enter':</label>

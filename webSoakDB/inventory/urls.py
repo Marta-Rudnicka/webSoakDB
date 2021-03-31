@@ -17,6 +17,8 @@ urlpatterns = [
 	path("deactivate-compounds/", views.deactivate_compounds, name="deactivate-compounds"),
 	path("edit-plate/", views.edit_plate, name="edit-plate"),
 	path("track-usage/<int:pk>/<str:date>/<str:mode>/", views.track_usage, name="track-usage"),
+	path("dispense-testing/", views.dispense_testing, name="dispense-testing"),
+	path("dispense-testing-map/", views.dispense_testing_map, name="dispense-testing-map"),
 	
 	path("presets/", views.presets, name="presets"),
 	path("add-preset/", views.add_preset, name="add-preset"),

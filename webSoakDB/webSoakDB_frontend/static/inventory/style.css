@@ -108,8 +108,8 @@ main#plates {
 }
 
 #finder {
-	background: aliceblue;
-	border: solid #ec0000 3px;
+/*	background: aliceblue;
+	border: solid #ec0000 3px;*/
 	padding: 5px;
 }
 
@@ -282,4 +282,96 @@ textarea {
 	font-size: 1.5em;
 	padding-bottom: 5px;
 	background: aliceblue;
+}
+
+div.drop-group-container {
+	background: #f6f6f6;
+	height: 95px;
+	width: 95px;
+}
+
+
+div.drop-group-container:hover {
+	background: white;
+	border: solid 1px #ec0000;
+	border-radius: 8px;
+	transform: scale(1.5);
+}
+
+div.drop-group {
+	font-size: 1.2em;
+	font-weight: bold;
+	text-align: center;
+	
+}
+
+div.drops {
+	display: grid;
+	grid-template: 1fr 1fr / 1fr 1fr;
+	background: white;
+	height: 65px;
+	width: 65px;
+	/*background: blue;*/
+	margin: auto;
+	border: solid gray 1px;
+	border-radius: 5px;
+}
+
+div.drops:hover {
+	background: aliceblue;
+	
+}
+
+.drops label, .drops input {
+	margin: 1px;
+	padding: 0;
+	width: auto;
+	font-weight: bold;
+
+}
+
+input:hover {
+	background: red;
+	border: solid 1px red;
+}
+
+#xp th, td.row-header{
+	position: inherit;
+	background: #b5ddff;
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: bold;
+	padding: 10px;
+	border: solid black 2px;
+}
+
+#dispense-testing {
+	display: grid;
+	grid-template-columns: auto auto;
+}
+
+span.well-representation {
+	height: 16px;
+	width: 16px;
+	padding: 0;
+	margin: 0;
+}
+
+.drops input:checked {
+	filter: invert(100%) hue-rotate(18deg) brightness(1.1);
+}
+
+#dt-summary {
+	display: grid;
+	grid-template: min-content auto / 1fr 1fr;
+	grid-gap: 1em;
+}
+
+#dt-summary h1 {
+	grid-column: 1/3;
+}
+
+.error-log {
+	color: #ec0000;
+	font-size: 2em;
 }
