@@ -1,4 +1,6 @@
 import React from 'react';
+import {Link} from "react-router-dom";
+
 
 class LibraryOption extends React.Component {
 
@@ -15,10 +17,11 @@ class LibraryOption extends React.Component {
 				/>
 				<label htmlFor={this.props.plate.library.id}>{lib.name} </label>
 				<br />
-				<span className="pseudo-link" onClick={event => this.props.showPlate(lib, plate, true, false)} >See compounds</span>
+				<Link to={"/compounds/plate/" + this.props.plate.id + "/"} >See compounds</Link>
 			</div>
 		)
 	}
 }
 
+//<span className="pseudo-link" onClick={event => this.props.showPlate(lib, plate, true, false)} >See compounds</span>
 export default LibraryOption;

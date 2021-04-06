@@ -28,7 +28,7 @@
 		<section id="library-list">	
 			<h2>Library plates</h2>
 			<label>Choose library to show plates from:</label>
-			<select id="show-from-lib" name="library" onchange="showLibrary(value)">
+			<select class="table-filter" name="library" onchange="showLibrary(value)">
 				<option value="all" selected>All libraries</option>
 				{% for library in libraries %}
 					{% if library.plates.all %}

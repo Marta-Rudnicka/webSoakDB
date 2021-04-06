@@ -97,7 +97,7 @@ class Uploads extends React.Component {
 			</div>
 			<div id="formatting-help">
 				<hr />
-				<a href="uploads/formatting_help/" target="_blank">CSV formatting help</a>
+				<a href="/uploads/formatting_help/" target="_blank">CSV formatting help</a>
 			</div>
 		</section>
 		)

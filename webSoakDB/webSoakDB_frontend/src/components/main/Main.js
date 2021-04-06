@@ -130,7 +130,7 @@ class Main extends Component {
     render() {
 		const content = this.mainPage();
 		
-        return (
+ /*       return (
 		<div id="all-container">
          <div>
 			<nav>
@@ -144,7 +144,25 @@ class Main extends Component {
         </div>
        </div>
         )
-    }
+    }*/
+    
+		return (
+		<div id="all-container">
+         <div>
+			<nav>
+				<a href="/home/">Home | </a>
+				<a href="/selection/">Home | </a>
+				<a href="/summary/">Home | </a>
+				<a href="/inventory/">Inventory | </a>
+				<span className="pseudo-link" onClick={event => this.props.logIn(null)}>Log out | </span>
+			</nav>
+			{content}
+        </div>
+       </div>
+		
+		
+		);
+	}
 }
 
 export default Main;

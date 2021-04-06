@@ -1,41 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
 	{% block main %}
-	<script>
-		function findAndCheck(str){
-			const feedback = document.getElementById("finder-feedback");
-			const row =  document.getElementById('w-' + str.toUpperCase());
-			if (!row){
-				feedback.innerHTML = "No such well in the plate map: <strong>" + str.toUpperCase() + "</strong>";
-			}
-			
-			if (row.className === "inactive-row"){
-				feedback.innerHTML = "<strong>" + str.toUpperCase() + "</strong> is already inactive";
-			}
-			else {
-				const input = row.querySelector('input');
-				input.checked = true;
-				moveToTop(input.id);
-				feedback.innerHTML = "Selected <strong>" + str.toUpperCase() + "</strong> for deactivation";
-			}
-		}
-		
-		function selectToDeactivate(){
-			const value = document.getElementById("well").value;
-			findAndCheck(value);
-			document.getElementById("well").value="";
-		}
-		
-		function moveToTop(id){
-			const box = document.getElementById(id);
-			if (box.checked===true) {
-				const firstLine = document.getElementById('first-line');
-				const row = box.closest('tr');
-				const parentNode = firstLine.parentNode
-				setTimeout(function() {parentNode.insertBefore(row, firstLine.nextElementSibling)}, 300);
-			}
-		}
-		
+	<script>		
 		document.addEventListener('DOMContentLoaded', () => {
 		
 			document.querySelectorAll('#table input').forEach(box => { 
@@ -46,6 +12,8 @@
 			document.getElementById('well').addEventListener('change', () => selectToDeactivate());
 
 		});
+	
+	
 	</script>
 	
 	<main id="update-plate">
@@ -100,7 +68,13 @@
 				<input type="hidden" name="plate_id" value="{{plate.id}}">
 				<button type="submit">Mark selected compounds as inactive</button>
 				<table class="table table-bordered table-hover" id="table">
-					<caption>Compounds</caption>
+					<caption>Compounds
+						<select class="table-filter" onchange="filterRows(value)">
+				<option value="all" selected>All</option>
+				<option value="active-only">Available only</option>
+				<option value="inactive-only">Unvailable only</option>
+			</select>
+					</caption>
 					<thead>
 						<tr>
 							<th>Select to<br>deactivate</th>
@@ -108,14 +82,14 @@
 							<th>Code</th>
 							<th>SMILES</th>
 							<th>Concentration</th>
-							<th>Active</th>
+							<th>Available</th>
 							<th>Deactivated on:</th>
 						</tr>
 					</thead>
 					<tbody>
 						
 						<tr id="first-line" class="hidden"><td></td></tr>
-						{% for compound in plate.compounds.all %}
+						{% for compound in compounds %}
 						{% if compound.active %}
 							<tr id="w-{{compound.well}}" class="active-row">
 								<td>
@@ -131,10 +105,10 @@
 							<td>{{compound.compound.smiles}}</td>
 							<td>{{compound.concentration}}</td>
 							{% if compound.active %}
-								<td>Active</td>
+								<td>Available</td>
 							{% else %}
 								<td>
-									<p class="show-on-hover">Inactive (more<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+									<p class="show-on-hover">Unavailable (more<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
 									<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
 									</svg>)</p>
 									<div>

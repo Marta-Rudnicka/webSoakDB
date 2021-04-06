@@ -26,7 +26,7 @@ class TableRow extends React.Component {
 		
 		let general_cells;
 		
-		if (this.props.lookup_args.is_a_plate){
+		if (this.props.is_a_plate){
 			general_cells = (
 				<React.Fragment>
 					<td className={classes.show_well} >{this.props.compound.well}</td>
@@ -54,7 +54,7 @@ class TableRow extends React.Component {
 		
 		const stat_cells = descriptor_names.map((option, index) => {
 				let value 
-				if (this.props.lookup_args.is_a_plate) {
+				if (this.props.is_a_plate) {
 					value = this.props.compound.compound.properties[option];
 				}
 				else {
@@ -70,7 +70,7 @@ class TableRow extends React.Component {
 		
 		let library_cell = null;
 		
-		if (this.props.lookup_args.is_a_preset){
+		if (this.props.is_a_preset){
 			library_cell = <td className={classes.show_library}>{(this.props.compound.library !== undefined) ? this.props.compound.library : '...'}</td>
 		}
 		

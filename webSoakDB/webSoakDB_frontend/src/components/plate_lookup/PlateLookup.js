@@ -6,6 +6,7 @@ import TableRow from './table_row.js';
 import axios from 'axios';
 import {display_options} from './display_options.js';
 import { deepCopyObjectArray } from  '../../actions/stat_functions.js';
+import {Link } from "react-router-dom";
 
 
 class PlateLookup extends React.Component {
@@ -14,18 +15,20 @@ class PlateLookup extends React.Component {
 		super(props);
 		this.toggleDisplay = this.toggleDisplay.bind(this);
 		this.state = {
+			collection: null,
 			compounds: [],
 			subsets: [],
 			display : {
-				show_well: this.props.lookup_args.is_a_plate,
-				show_library: this.props.lookup_args.is_a_preset,
+				show_well: this.props.is_a_plate,
+				show_library: this.props.is_a_preset,
 				show_code: true, 
 				show_smiles: true, 
 				show_structure: false, 
-				show_concentration: this.props.lookup_args.is_a_plate, 
-				show_mol_wt: !this.props.lookup_args.is_a_plate, 
-				show_tpsa: !this.props.lookup_args.is_a_plate, 
-				show_logp: !this.props.lookup_args.is_a_plate,
+				show_concentration: this.props.is_a_plate, 
+				show_mol_wt: !this.props.is_a_plate, 
+				show_tpsa: !this.props.is_a_plate,
+				show_logp: !this.props.is_a_plate,
+				show_logp: false,
 				show_heavy_atom_count: false,
 				show_heavy_atom_mol_wt: false,
 				show_nhoh_count: false,
@@ -52,9 +55,9 @@ class PlateLookup extends React.Component {
 	}
 	
 	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.lookup_args !== this.props.lookup_args) {
+		if (prevProps !== this.props) {
 			this.uploadDataFromAPI()
-		}
+	}
 		
 		if (prevState.subsets !== this.state.subsets){
 			this.state.subsets.forEach(subset =>{
@@ -64,7 +67,7 @@ class PlateLookup extends React.Component {
 	}
 	
 	uploadSubset(id, libName){
-		const apiUrl = 'api/subset_stats/' + id + '/';
+		const apiUrl = '/api/subset_stats/' + id + '/';
 		
 		const compounds = axios.get(apiUrl)
 			.then(res => {
@@ -79,70 +82,99 @@ class PlateLookup extends React.Component {
 	}
 	
 	uploadDataFromAPI() {
-				
+			
 		//for library plate
-		if (this.props.lookup_args.is_a_plate) {
-			const library = this.props.lookup_args.library.name;
-			const plate = this.props.lookup_args.collection.name;
-			const apiUrl = 'api/compounds/' + library + '/' + plate;
+		if (this.props.is_a_plate) {
+			let apiUrl = '/api/compounds/' + this.props.id + '/';
 			
 			axios.get(apiUrl)
 				.then(res => {
 				const compounds = res.data;
 				this.setState({ compounds });
-		  });
+			});
+			
+			apiUrl = '/api/plate_detail/' + this.props.id + '/';
+			
+			axios.get(apiUrl)
+				.then(res => {
+				const collection = res.data;
+				this.setState({ collection });
+			});
+			
+			
 		}
 		//for a single cherrypicking list
-		else if (!this.props.lookup_args.is_a_preset) {
-			const compounds = this.uploadSubset(this.props.lookup_args.collection.id, null)
+		else if (!this.props.is_a_preset) {
+			const compounds = this.uploadSubset(this.props.id, null)
+			
+			const apiUrl = '/api/subset_stats/' + this.props.id + '/';
+			
+			axios.get(apiUrl)
+				.then(res => {
+				const collection = res.data;
+				console.log('Setting collection')
+				this.setState({ collection });
+			});
 		}
 		//for a preset
 		else {
-			const apiUrl = 'api/preset_detail/' + this.props.lookup_args.collection.id + '/';
+			console.log('Found preset');
+			const apiUrl = '/api/preset_detail/' + this.props.id + '/';
 			
 			let subsets = [];
 			
 			axios.get(apiUrl)
 				.then(res => {
-				subsets = res.data.subsets;
-				this.setState({subsets})
+				const subsets = res.data.subsets;
+				this.setState({subsets});
+				const collection = res.data;
+				this.setState({collection});
 			});
 		}
 	}
 	
 	
 	render() {
-		let library = this.props.lookup_args.collection.library;
-		if (this.props.lookup_args.is_a_preset){
-			library = 'Preset';
+		let collection = null;
+		let name = null;
+		let current ="";
+		if (this.state.collection){
+			collection = this.state.collection;
+			if (this.state.collection.library){
+				name = collection.library.name; 
+			}
+			if (this.state.collection.current){
+				current = "(current)"; 
+			}
 		}
 		
-		const collection = this.props.lookup_args.collection;
-		let current =""
-		if (this.props.lookup_args.is_a_plate && this.props.lookup_args.is_a_preset){
+		if (this.props.is_a_preset){
+			name = 'Preset';
+		}
+		
+		
+		if (this.props.is_a_plate && this.props.is_a_preset){
 			console.log('ERROR in this.props : both is_a_plate and is_a_preset are set to true!!! May cause unexpected behaviour')
 		
 		}
 		
-		if (this.props.lookup_args.collection.current){
-			current = "(current)"; 
-			}
+		
 		
 		//Create show buttons for hidden columns. For subsets and presets, don't make show buttons for well and concentration.
 		let buttons = display_options.map((option, index) => {
-			if ((this.props.lookup_args.is_a_plate) || (option[0] !== 'show_well' && option[0] !=='show_concentration')){
+			if ((this.props.is_a_plate) || (option[0] !== 'show_well' && option[0] !=='show_concentration')){
 				return <button key={index} className={this.state.display[option[0]] ? "hidden" : "small-button"} onClick={event => this.toggleDisplay(option[0])}>Show {option[1]}</button>
 			}
 		});
 		
 		let extra_button = null;
-		if (this.props.lookup_args.is_a_preset){
+		if (this.props.is_a_preset){
 			extra_button = <button key="0" className={this.state.display.show_library ? "hidden" : "small-button"} onClick={event => this.toggleDisplay(show_library)}>Show Library</button>
 		}
 		
 		let plateList = null;
-		if (this.props.lookup_args.is_a_plate){
-			plateList = <PlateList library={library} showPlate={this.props.showPlate} />;
+		if (this.props.is_a_plate && collection && collection.library){
+			plateList = <PlateList library={collection.library} />;
 		}
 		
 		let rows = null;
@@ -154,15 +186,18 @@ class PlateLookup extends React.Component {
 					counter = {index + 1}
 					compound={compound}
 					display = {this.state.display}
-					lookup_args = {this.props.lookup_args}
+					is_a_plate = {this.props.is_a_plate}
+					is_a_preset = {this.props.is_a_preset}
 				/>
 			});
 		}
 		
 		return (
 		<div id="plate-lookup">
-				<h1>{library.name} </h1>
-				<h2>{collection.name} {current}</h2>	
+			
+				<h1>{name ? name : ""} </h1>
+				<h2>{collection ? collection.name : ""} {current}</h2>	
+	
 			<main>
 				<div className="sidebar-div">
 					<div>
@@ -176,15 +211,14 @@ class PlateLookup extends React.Component {
 					
 					
 				</div>
-				<table data-toggle="table" data-pagination="true"
-  data-search="true" className="table table-bordered table-hover" id="table">
+				<table data-toggle="table" data-pagination="true" data-search="true" className="table table-bordered table-hover" id="table">
 					<caption>
 						Compound list ({this.state.compounds.length} items)
 					</caption>
 					<TableHeader
 						display = {this.state.display}
 						onButtonClick = {this.toggleDisplay}
-						lookup_args={this.props.lookup_args}
+						is_a_preset={this.props.is_a_preset}
 					/>
 					<tbody id="datatable-body">
 						{rows}

@@ -32,7 +32,7 @@ class Picker extends React.Component {
 	}
 	
 	componentDidMount() {
-		const libApiUrl = 'api/library_selection_list/';
+		const libApiUrl = '/api/library_selection_list/';
 		
 		axios.get(libApiUrl)
 			.then(res => {
@@ -40,7 +40,7 @@ class Picker extends React.Component {
 			this.setState({ currentLibPlates });
       });
       
-      const presetApiUrl = 'api/preset_list/';
+      const presetApiUrl = '/api/preset_list/';
 		
 		axios.get(presetApiUrl)
 			.then(res => {
@@ -115,14 +115,15 @@ class Picker extends React.Component {
 	}
 	
 	updateSelectionLibs(){
-		this.handleUnsavedChanges(this.state.initialLibs, this.state.selectedSubsetIds )
+		console.log('fired updateSelectionLibs');
+		event.preventDefault();
+		this.handleUnsavedChanges(this.state.initialLibs, this.state.selectedSubsetIds);
 		this.props.updateLibrarySelection(this.state.selectedLibIds);//, 'Picker');
 		
 	}
 	
 	updateSelectionSubsets(){
-		this.handleUnsavedChanges(this.state.selectedLibIds, this.state.initialSubsets )
-		console.log('subset ids: ', this.state.selectedSubsetIds)
+		this.handleUnsavedChanges(this.state.selectedLibIds, this.state.initialSubsets);
 		this.props.updateSubsetSelection(this.state.selectedSubsetIds);
 		
 	}
@@ -142,7 +143,7 @@ class Picker extends React.Component {
 	 *if caller function is supposed to ignore changes in library selection (e.g.
 	 * while saving changes in the db), pass this.state.initialLibIds for newLibs
 	 * (and the same for subset selection and newSubsets arg)*/
-
+		console.log('fired handleUnsavedChanges')
 	 	this.props.trackUnsavedChanges(this.detectUnsavedChanges(newLibs, newSubsets));
 	}
 	
@@ -182,8 +183,7 @@ class Picker extends React.Component {
 		const libraries = this.state.currentLibPlates.map((plate, index) => { 
 			return <LibraryOption 
 				key={index} 
-				plate={plate} 
-				showPlate={this.props.showPlate}
+				plate={plate}
 				handleCheckboxChange = {this.handleChangeLib}
 				defaultChecked={this.state.selectedLibIds.includes(plate.library.id)}
 				unsaved={unsaved}
@@ -196,7 +196,6 @@ class Picker extends React.Component {
 				preset = {preset}
 				handleCheckboxChange = {this.handleChangePreset}
 				defaultChecked={this.presetAreadySelected(preset)}
-				showPlate={this.props.showPlate}
 				unsaved={unsaved}
 				/>}
 		)
@@ -219,7 +218,7 @@ class Picker extends React.Component {
 						<div id="libs">
 							{libraries}
 						</div>
-						<button type="submit" onClick={event => this.updateSelectionLibs()}>Save changes in your selection</button>
+						<button type="submit" onClick={event => this.updateSelectionLibs(event)}>Save changes in your selection</button>
 					</form>
 				</section>
 				
@@ -234,8 +233,7 @@ class Picker extends React.Component {
 					</form>
 				</section>
 				
-				<Uploads proposal={this.props.proposal} 
-					changeMainPage={this.props.changeMainPage} 
+				<Uploads proposal={this.props.proposal}
 					publicSubsets={publicSubsets} 
 					refreshAfterUpload={this.props.refreshAfterUpload}
 					detectUnsavedChanges={this.detectUnsavedChanges}

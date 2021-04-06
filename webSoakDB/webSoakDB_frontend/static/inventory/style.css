@@ -278,7 +278,7 @@ textarea {
 	height: 6em;
 }
 
-#show-from-lib {
+.table-filter {
 	font-size: 1.5em;
 	padding-bottom: 5px;
 	background: aliceblue;

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
 class PresetOption extends React.Component {
 
@@ -17,7 +18,7 @@ class PresetOption extends React.Component {
 														   			 
 				<label htmlFor="{id}">{name} </label>
 				<br/>
-				<span className="pseudo-link" onClick={() => this.props.showPlate(null, this.props.preset, false, true)}>See compounds</span>
+				<Link to={"/compounds/preset/" + this.props.preset.id + "/"}>See compounds</Link>
 					<div className="show-on-hover">Description...
 						
 					</div>

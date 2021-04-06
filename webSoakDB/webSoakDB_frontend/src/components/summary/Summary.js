@@ -22,7 +22,7 @@ class Summary extends React.Component {
 	
 	
 	componentDidMount() {
-		const apiUrl = 'api/proposals/' + this.props.proposal.name;
+		const apiUrl = '/api/proposals/' + this.props.proposal.name + '/';
 		
 		axios.get(apiUrl)
 			.then(res => {
@@ -51,13 +51,14 @@ class Summary extends React.Component {
 		this.setState({subsetClass: "changed"})
 	}
 	
-	undoChages(){
+	undoChanges(){
 		this.componentDidMount();
 		this.props.trackUnsavedChanges(false);
 		this.setState({libClass : null, subsetClass : null});
 	}
 	
-	saveChanes(){
+	saveChanges(){
+		console.log('fired saveChanges in Summary');
 		this.props.updateLibrarySelection(getAttributeArray(this.state.selectedLibs, "id"));
 		this.props.updateSubsetSelection(getAttributeArray(this.state.selectedSubsets, "id"));
 		this.props.trackUnsavedChanges(false);
@@ -74,7 +75,7 @@ class Summary extends React.Component {
 						key={index} 
 						library={library} 
 						handleClick={this.removeLibrary}
-						showPlate={this.props.showPlate} />		
+						/>		
 			});
 		}
 		
@@ -103,15 +104,13 @@ class Summary extends React.Component {
 				<section className={this.state.subsetClass}>
 					<SubsetTable 
 						selectedSubsets={this.state.selectedSubsets} 
-						lookup_args={this.props.lookup_args} 
-						handleClick={this.removeSubset} 
-						showPlate={this.props.showPlate}
+						handleClick={this.removeSubset}
 					/>
 				</section>
 				<div>
 				
-					<button onClick={event => this.saveChanes()}>Save changes </button>
-					<button onClick={event => this.undoChages()}>Undo unsaved changes </button>
+					<button onClick={event => this.saveChanges()}>Save changes </button>
+					<button onClick={event => this.undoChanges()}>Undo unsaved changes </button>
 				</div>
 			</main>
 			</div>

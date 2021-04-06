@@ -14,7 +14,7 @@ class TableHeader extends React.Component {
 	
 	render() {
 		let extra = null;
-		if (this.props.lookup_args.is_a_preset){
+		if (this.props.is_a_preset){
 			extra = <th className={this.props.display.show_library ? "" : "hidden"}>
 						Library	<br />
 						<button className="in-table" onClick={event => this.props.onButtonClick(show_library)}>Hide</button>

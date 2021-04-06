@@ -23,6 +23,6 @@
 		{% endfor %}
 		{% endautoescape %}
 	</main>
-	<button id="close-button">Close</button>
-	<script>document.getElementById('close-button').addEventListener('click', ()=>close());</script>
+	<button id="back">Go back</button>
+	<script>document.getElementById('back').addEventListener('click', ()=>window.history.back())</script>
 </body>

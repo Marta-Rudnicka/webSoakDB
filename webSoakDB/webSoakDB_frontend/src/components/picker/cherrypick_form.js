@@ -12,7 +12,7 @@ class CherryPickForm extends React.Component {
 	}
 	
 	componentDidMount() {
-		const apiUrl = 'api/in_house_library_list/';
+		const apiUrl = '/api/in_house_library_list/';
 		
 		axios.get(apiUrl)
 			.then(res => {
@@ -34,7 +34,7 @@ class CherryPickForm extends React.Component {
 		);
 		
 		return (
-		<form className="compound-upload" method="post" action="uploads/subset_upload_form/" id="own_subset" encType="multipart/form-data" target="_blank">
+		<form className="compound-upload" method="post" action="/uploads/subset_upload_form/" id="own_subset" encType="multipart/form-data">
 			<CSRFToken />
 			<input type="hidden" name="proposal" value={this.props.proposal.name} />
 			<label htmlFor="id_lib_id">Select library:</label> 

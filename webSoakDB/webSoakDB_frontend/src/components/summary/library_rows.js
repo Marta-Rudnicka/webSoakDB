@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link } from "react-router-dom";
 import axios from 'axios';
 
 class LibraryInTable extends React.Component {
@@ -9,7 +10,7 @@ class LibraryInTable extends React.Component {
 	}
 	
 	componentDidMount() {
-		const apiUrl = 'api/current_plates_list/' + this.props.library.id + '/';
+		const apiUrl = '/api/current_plates_list/' + this.props.library.id + '/';
 		
 		axios.get(apiUrl)
 			.then(res => {
@@ -30,7 +31,7 @@ class LibraryInTable extends React.Component {
 			<React.Fragment>
 				<td>{plate.name}</td>
 				<td>{plate.size}</td>
-				<td><span className="pseudo-link" onClick={event => showPlate(plate.library, plate, true, false)}>See compounds</span></td>
+				<td><Link to={"/compounds/plate/" + plate.id + "/"}>See compounds</Link></td>
 			</React.Fragment>
 			)
 		}

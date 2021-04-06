@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-#from django.db import DoesNotExist
 from django.http import HttpResponse
 from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset
 from django.http import HttpResponseRedirect, HttpRequest
@@ -136,6 +135,7 @@ def update_plate(request, pk):
 		
 	return render(request, "inventory/update_plate.html", {
 		"plate": plate, 
+		"compounds" : plate.compounds.all().order_by("deactivation_date"),
 		"plate_form" : plate_form, 
 		"active_count" : active_count, 
 		"inactive_count" : inactive_count,
@@ -447,7 +447,7 @@ def deactivate_compounds(request):
 		plate.last_tested = today
 		plate.save()
 		for key in request.POST:
-			if key != 'csrfmiddlewaretoken' and key != "plate_id":
+			if key != 'csrfmiddlewaretoken' and key != "plate_id" and key != "":
 				compound = SourceWell.objects.get(pk=key)
 				print(compound)
 				compound.active = False

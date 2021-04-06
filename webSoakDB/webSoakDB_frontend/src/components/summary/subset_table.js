@@ -1,4 +1,6 @@
 import React from 'react';
+import {Link } from "react-router-dom";
+
 
 class SubsetTable extends React.Component {
 	
@@ -8,7 +10,7 @@ class SubsetTable extends React.Component {
 				<td>{subset.name}</td>
 				<td>{subset.origin}</td>
 				<td>{subset.size}</td>
-				<td><span className="pseudo-link" onClick={event => this.props.showPlate(subset.library, subset, false, false)}>See compounds</span></td>
+				<td><Link to={"/compounds/subset/" + subset.id + "/"}>See compounds</Link></td>
 				<td><button onClick={event => this.props.handleClick(subset.id)}>Remove</button></td>
 			</tr>
 		);

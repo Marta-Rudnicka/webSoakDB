@@ -6,9 +6,10 @@ urlpatterns = [
 	#general purpose generic endpoints:
 	path("library_list/", views.LibraryList.as_view(), name="library_list"),
 	path("library_detail/<int:pk>/", views.LibraryDetail.as_view(), name="library_detail"),
-	path("compounds/<str:library>/<str:plate>/", views.PlateCompoundList.as_view(), name="api_lib"),
+	path("compounds/<int:pk>/", views.PlateCompoundList.as_view(), name="api_lib"),
 	path("in_house_library_list/", views.InHouseLibraryList.as_view(), name="in_house_library_list"),
 	path("plates_list/<str:library>/", views.LibPlatesList.as_view(), name="all_library_plates_list"),
+	path("plate_detail/<int:pk>/", views.PlateDetail.as_view(), name="plate_detail"),
 	path("preset_list/", views.PresetList.as_view(), name="preset_list"),
 	path("preset_detail/<int:pk>/", views.PresetDetail.as_view(), name="preset_detail"),
 	path("proposals/", views.ProposalList.as_view(), name="proposals"),

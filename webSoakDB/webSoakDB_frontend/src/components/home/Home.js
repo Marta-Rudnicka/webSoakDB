@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 class Home extends React.Component {
 	
@@ -14,15 +15,15 @@ class Home extends React.Component {
 				<h2>Prepararation</h2>
 				<ul>
 					<li>
-						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Picker", true)}>Selection of compounds</span> </p>
+						<p><Link to="/selection/">Selection of compounds</Link></p>
 						<p>the place to select libraries, cherry-pick compounds, and upload the data of your own library</p>
 					</li>
 					<li>
-						<p><span className="pseudo-link" onClick={() => this.props.handleClick("Summary", true)}>Summary</span> </p>
+						<p><Link to="/summary/">Summary</Link></p>
 						<p> the place to see and manage your protein and compound data</p>
 					</li>
 					<li>
-						<p><a href="/inventory/">Inventory management</a> </p>
+						<p><a href="/inventory/">Inventory management</a></p>
 						<p>The place to manage XChem in-house libraries, plates etc.</p>
 					</li>
 				</ul>

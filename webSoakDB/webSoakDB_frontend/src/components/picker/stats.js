@@ -23,7 +23,7 @@ class Stats extends React.Component {
 		let libraries = [];
 		let subsets = [];
 		this.state.libraries.forEach(library => {	
-			const apiUrl = 'api/current_plates_stats/' + library.id + '/';
+			const apiUrl = '/api/current_plates_stats/' + library.id + '/';
 			axios.get(apiUrl)
 				.then(res => {
 					const compounds = res.data;
@@ -36,7 +36,7 @@ class Stats extends React.Component {
 		});		
 		
 		this.props.selectedSubsetIds.forEach(id => {
-			const apiUrl = 'api/subset_stats/' + id + '/';		
+			const apiUrl = '/api/subset_stats/' + id + '/';		
 			axios.get(apiUrl)
 				.then(res => {
 					const addedSubset = res.data;
@@ -51,7 +51,7 @@ class Stats extends React.Component {
 	uploadLibraryData(){
 		let libs = []
 		this.props.selectedLibIds.forEach(id => {
-			const apiUrl = 'api/library_detail/' + id + '/';
+			const apiUrl = '/api/library_detail/' + id + '/';
 			axios.get(apiUrl)
 				.then(res => {
 					const newLib = res.data;

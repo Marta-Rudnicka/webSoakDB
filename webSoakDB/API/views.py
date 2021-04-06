@@ -32,6 +32,11 @@ class LibraryDetail(generics.RetrieveAPIView):
 	serializer_class = LibrarySerializer
 	permission_classes = [AllowAny]
 
+class PlateDetail(generics.RetrieveAPIView):
+	queryset = LibraryPlate.objects.all()
+	serializer_class = LibraryPlateSerializer
+	permission_classes = [AllowAny]
+
 class InHouseLibraryList(generics.ListAPIView):
 	queryset = Library.objects.filter(public=True)
 	serializer_class = LibrarySerializer
@@ -67,8 +72,8 @@ class ProposalDetail(generics.RetrieveUpdateAPIView):
 class PlateCompoundList(generics.ListAPIView):
 	
 	def get_queryset(self):
-		self.library = get_object_or_404(Library, name=self.kwargs['library'])
-		self.plate = get_object_or_404(LibraryPlate, name=self.kwargs['plate'], library__name=self.kwargs['library'])
+		self.plate = get_object_or_404(LibraryPlate, pk=self.kwargs['pk'])
+		
 		return self.plate.compounds.all()
 	
 	serializer_class = SourceWellStatSerializer
