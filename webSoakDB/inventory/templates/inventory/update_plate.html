@@ -2,7 +2,7 @@
 {% load static %}
 	{% block main %}
 	<script>		
-		document.addEventListener('DOMContentLoaded', () => {
+	/*	document.addEventListener('DOMContentLoaded', () => {
 		
 			document.querySelectorAll('#table input').forEach(box => { 
 				box.checked = false;
@@ -13,7 +13,7 @@
 
 		});
 	
-	
+	*/
 	</script>
 	
 	<main id="update-plate">
@@ -32,11 +32,14 @@
 				</form>
 			</div>
 			<hr>
-			<div id="finder" >		
+<!--			<div id="finder" >		
 				<h3>Mark as inactive:</h3>
 				<label>Type in well name and press 'Enter':</label>
 				<input type="text" id="well">
 				<div id="finder-feedback"></div>
+			</div> -->
+			<div id="download">
+				<a href="/downloads/plate-map/{{ plate.id }}/" download>Download plate map (with available compounds only)</a>
 			</div>
 			<hr>
 			<div>

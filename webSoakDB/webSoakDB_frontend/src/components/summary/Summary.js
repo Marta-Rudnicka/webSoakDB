@@ -4,6 +4,7 @@ import CollectionRow from './collection_row.js';
 import TableHeader from './th.js';
 import LibraryInTable from './library_rows.js';
 import SubsetTable from './subset_table.js';
+import ExportForm from './export_form.js';
 import { deepCopyObjectArray, getAttributeArray, mean } from  '../../actions/stat_functions.js';
 import axios from 'axios';
 
@@ -58,7 +59,6 @@ class Summary extends React.Component {
 	}
 	
 	saveChanges(){
-		console.log('fired saveChanges in Summary');
 		this.props.updateLibrarySelection(getAttributeArray(this.state.selectedLibs, "id"));
 		this.props.updateSubsetSelection(getAttributeArray(this.state.selectedSubsets, "id"));
 		this.props.trackUnsavedChanges(false);
@@ -83,7 +83,7 @@ class Summary extends React.Component {
 			<div id="all">
 				<h1>Selected Compounds for {this.props.proposal.name} </h1>
 				<main id="summary-main">
-				<section className={this.state.libClass}>
+				<section id="whole" className={this.state.libClass}>
 					<h2>Whole libraries</h2>
 					<table className="table table-bordered" id="table">
 						<thead>
@@ -101,17 +101,21 @@ class Summary extends React.Component {
 						</tbody>
 					</table>
 				</section>
-				<section className={this.state.subsetClass}>
+				<section id="subsets" className={this.state.subsetClass}>
 					<SubsetTable 
 						selectedSubsets={this.state.selectedSubsets} 
 						handleClick={this.removeSubset}
 					/>
+					<div>
+						<button onClick={event => this.saveChanges()}>Save changes </button>
+						<button onClick={event => this.undoChanges()}>Undo unsaved changes </button>
+					</div>
 				</section>
-				<div>
-				
-					<button onClick={event => this.saveChanges()}>Save changes </button>
-					<button onClick={event => this.undoChanges()}>Undo unsaved changes </button>
-				</div>
+				<section id="exports">					
+					<div>
+						<ExportForm proposal={this.props.proposal} />
+					</div>
+				</section>
 			</main>
 			</div>
 			

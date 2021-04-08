@@ -16,4 +16,6 @@ urlpatterns = [
     path('uploads/subset_upload_form/', views.upload_user_subset, name="subset_upload_form"),
     path('dummy/', views.dummy, name="dummy"),
     path('uploads/formatting_help/', views.formatting, name="formatting_help"),
+    path('downloads/plate-map/<int:pk>/', views.download_current_plate_map, name="download_plate_map"),
+    path('downloads/export-for-soakdb/', views.export_selection_for_soakdb, name="export_for_soakdb"),
 ]

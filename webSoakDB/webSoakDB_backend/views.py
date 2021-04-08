@@ -4,10 +4,12 @@ from django.http import HttpResponse
 from .forms import LibraryPlateForm, ExternalLibraryForm, SubsetForm
 from datetime import date
 from .validators import data_is_valid, selection_is_valid
-from .helpers import upload_plate, upload_subset
+from .helpers import upload_plate, upload_subset, import_full_libraries, import_library_parts, export_form_is_valid
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect
 from API.models import Proposals, Library, LibraryPlate, LibrarySubset
+import mimetypes
+from slugify import slugify
 
 def upload_user_library(request):
 	today = str(date.today())
@@ -79,7 +81,50 @@ def upload_user_subset(request):
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
 
+def download_current_plate_map(request, pk):
+	
+	plate = LibraryPlate.objects.get(pk=pk)
+	compounds = plate.compounds.filter(active=True)
+	
+	with open('files/plate-map.csv', 'r+') as f:
+		f.truncate(0)
+		for compound in compounds:
+			line = compound.compound.code + ',' + compound.well + ',' + compound.compound.smiles + ','
+			if compound.concentration:
+				line += str(compound.concentration)
+			line += "\n"
+			f.write(line)
+		f.close()
+	
+	
+	with open('files/plate-map.csv', 'r+') as f:
+		filename = slugify(plate.library.name) + '-' + slugify(plate.name) + '-map-' + str(date.today()) + '.csv'
+		response = HttpResponse(f, content_type='text/csv')
+		response['Content-Disposition'] = "attachment; filename=%s" % filename
+		return response
 
+def export_selection_for_soakdb(request):
+	if request.method == "POST":
+		if not export_form_is_valid(request.POST):
+			error_str = ["Application error:  cannot generate download file. Please report to developers. You should never see this message unless you manually edit the HTML in the browser"]
+			return render(request, "webSoakDB_backend/error_log.html", {'error_log': error_str})
+		
+		prop = request.POST.get('proposal', False)
+		source_wells = import_full_libraries(prop) + import_library_parts(prop, request.POST)
+		
+		with open('files/soakdb-export.csv', 'r+') as f:
+			f.truncate(0)
+			for c in source_wells:
+				line = c.library_plate.name + ',' + c.well + ',' + c.library_plate.library.name + ',' + c.compound.smiles + ',' + c.compound.code + "\n"
+				f.write(line)
+			f.close()
+		
+		with open('files/soakdb-export.csv', 'r+') as f:
+			filename = prop + '-' + 'soakDB-source-export-' + str(date.today()) + '.csv'
+			response = HttpResponse(f, content_type='text/csv')
+			response['Content-Disposition'] = "attachment; filename=%s" % filename
+			return response
+		 
 def dummy(request):
 	return render(request, "webSoakDB_backend/dummy.html");
 

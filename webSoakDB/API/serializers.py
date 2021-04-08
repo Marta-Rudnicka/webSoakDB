@@ -5,6 +5,7 @@ class LibrarySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Library
 		fields = ['id', 'name', 'for_industry', 'public', 'plates']
+		depth = 1
 
 class LibraryPlateSerializer(serializers.ModelSerializer):
 	class Meta:

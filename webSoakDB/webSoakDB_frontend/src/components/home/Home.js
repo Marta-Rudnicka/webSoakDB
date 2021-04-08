@@ -9,7 +9,7 @@ class Home extends React.Component {
 	render() {
 		return (
 		<div id="home">
-			<h1>SoakDB home - {this.props.proposal.name}</h1>
+			<h1>XChemSPA home - {this.props.proposal.name}</h1>
 			<main>
 			<section id="prep">
 				<h2>Prepararation</h2>

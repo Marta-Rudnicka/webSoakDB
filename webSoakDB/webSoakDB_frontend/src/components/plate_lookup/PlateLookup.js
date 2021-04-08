@@ -206,7 +206,7 @@ class PlateLookup extends React.Component {
 						{buttons}
 					</div>
 					
-					<ExportBar />
+					<ExportBar id={this.props.id} />
 					{plateList}
 					
 					

@@ -6,9 +6,7 @@ class ExportBar extends React.Component {
 		return (
 			<div>
 				<h3>Export data as:</h3>
-				[not implemented yet]
-				<button className="small-button" id="csv-export">csv file</button>
-				<button className="small-button" id="other-export">some other format</button>
+				<a href={'/downloads/plate-map/' + this.props.id + '/'} download><button className="small-button" id="csv-export">CSV plate map</button></a>
 			</div>
 		);
 	}

@@ -18,7 +18,7 @@ class OwnLibraryForm extends React.Component {
 				<label htmlFor="id_name">Enter library name: </label> 
 				<input type="text" name="name" required id="id_name" />
 				
-				<label htmlFor="id_data_file">Upload compound data:</label> 
+				<label htmlFor="id_data_file">Upload plate map:</label> 
 				<input type="file" name="data_file" required id="id_data_file" />
 				<button type="submit" onClick={() => this.submit()}>Upload and add to your selection</button>
 			</form>
