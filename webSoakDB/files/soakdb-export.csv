@@ -1,771 +1,145 @@
-test_plate_current,F07,DSI Poised DMSO,CCC(=O)NC1CCNC1,Z1650040241
-test_plate_current,F08,DSI Poised DMSO,CC(N)CN1CCOCC1,Z818732104
-test_plate_current,F09,DSI Poised DMSO,CC=1C=CC(C)=C(OC(=O)C=2C=CN=CC2)C1,Z30891796
-test_plate_current,F10,DSI Poised DMSO,CN1CCN(CCN)CC1(C)C,Z1992316315
-test_plate_current,F11,DSI Poised DMSO,CC1=NC=C(CN2CCNCC2)S1,Z1171217421
-test_plate_current,F12,DSI Poised DMSO,CC(=O)NC1CCC(N)CC1,Z1787158625
-test_plate_current,F13,DSI Poised DMSO,COC=1C=CC=C(CN2CCC(CC2)C(=O)N)C1,Z2856434854
-test_plate_current,F14,DSI Poised DMSO,CC1=CC(=NS1)C(=O)NCC2CCCO2,Z1881545321
-test_plate_current,F15,DSI Poised DMSO,CC(=O)N1CCCC2(C1)CCCCCC2,Z1275599911
-test_plate_current,F16,DSI Poised DMSO,CCC=1C=CC=CC1NC(=O)C=2SN=NC2C,Z89385775
-test_plate_current,F17,DSI Poised DMSO,CC1=NOC(C)=C1C(=O)NCCC2=CCCCC2,Z69092635
-test_plate_current,F18,DSI Poised DMSO,CC1(C)CCCN1CCN,Z1741815708
-test_plate_current,F19,DSI Poised DMSO,CCN1C=C(NC(=O)C2CCC2)C=N1,Z373768900
-test_plate_current,F20,DSI Poised DMSO,CCC1=NN=C(NC(=O)C(F)(F)F)S1,Z275156196
-test_plate_current,F21,DSI Poised DMSO,CC(C)(CO)NC(=O)C=1C=CC=C(Cl)C1,Z68299550
-test_plate_current,F22,DSI Poised DMSO,CNC(=O)C1=C(C)ON=C1C=2C=CC(F)=CC2,Z363104204
-test_plate_current,F23,DSI Poised DMSO,FC=1C=CC=C(CN2CCOCC2)C1,Z2856434791
-test_plate_current,F24,DSI Poised DMSO,CN1N=NC(NC(=O)C2=CC=3C=CC=CC3O2)=N1,Z57292378
-test_plate_current,F25,DSI Poised DMSO,O=C(CC1CCCCC1)NC=2C=CC=NC2,Z31792168
-test_plate_current,F26,DSI Poised DMSO,CN(C)C(=O)C=1C=CC=C(C)C1C,Z32014663
-test_plate_current,F27,DSI Poised DMSO,CC1=NN=C(CN2CCC=C(F)C2)S1,Z1619978933
-test_plate_current,F28,DSI Poised DMSO,CC(C)C=1C=CC(=CC1)C(=O)NC=2C=CC=CN2,Z85525355
-test_plate_current,F29,DSI Poised DMSO,C[C@@H]1C[C@H]1C(=O)NCCC=2C=CC(Cl)=CC2,Z1802166390
-test_plate_current,F30,DSI Poised DMSO,C(NC1CC1)C2CCOC2,Z818727262
-test_plate_current,F31,DSI Poised DMSO,CC(=O)N1CCOC(CO)C1,Z1454840342
-test_plate_current,F32,DSI Poised DMSO,C[C@H](O)CNC(=O)NC=1C=CC=CC1,Z1563512128
-test_plate_current,F33,DSI Poised DMSO,CCCN1C(NC(=O)CC)=NC=2C=CC=CC12,Z29077827
-test_plate_current,F34,DSI Poised DMSO,CC(=O)NC=1C=CC(NC(=O)[C@H]2CC2(C)C)=CC1,Z1505719304
-test_plate_current,F35,DSI Poised DMSO,COC(=O)C=1C=CC=C(NS(=O)(=O)C)C1,Z24758179
-test_plate_current,F36,DSI Poised DMSO,CC(=O)C=1C=CC(OC(F)F)=CC1,Z55671900
-test_plate_current,F37,DSI Poised DMSO,CC(C)CNC(=O)C=1C=CC=2C=CC=CC2C1,Z32385991
-test_plate_current,F38,DSI Poised DMSO,C1=NN=NN1C=2C=CC(=CC2)C=3C=CC=CC3,Z57479285
-test_plate_current,F39,DSI Poised DMSO,CNC(=O)CN(C)C1CCCCCC1,Z204776284
-test_plate_current,F40,DSI Poised DMSO,CN1C=CC(=N1)C(=O)NC[C@@H]2CCCO2,Z2643472210
-test_plate_current,F41,DSI Poised DMSO,CC=1C=CC(=CC1)N2CCN(CC2)C(=O)N,Z1650868495
-test_plate_current,G07,DSI Poised DMSO,COCC(=O)NC1=NN=C(C)S1,Z263785508
-test_plate_current,G08,DSI Poised DMSO,COC=1C=CC(C)=CC1NC(=O)CN,Z235341991
-test_plate_current,G09,DSI Poised DMSO,O=C(NCC1=NC=2C=CC=CC2N1)C3=CC=CO3,Z26781964
-test_plate_current,G10,DSI Poised DMSO,CC1CCNC(C1)C(=O)N,Z1741785925
-test_plate_current,G11,DSI Poised DMSO,CC1=CSC(CNC(=O)C=2C=CNN2)=N1,Z466628048
-test_plate_current,G12,DSI Poised DMSO,CC(C)N1C=C(N=N1)C(=O)O,Z2510259379
-test_plate_current,G13,DSI Poised DMSO,OC(=O)CC=1C=CC(=CC1)C=2C=CC=CC2,Z2856434779
-test_plate_current,G14,DSI Poised DMSO,CNC(=O)C=1C=CC=C(N1)C(=O)O,Z1816233707
-test_plate_current,G15,DSI Poised DMSO,O=C(NC=1C=CC=CN1)C=2C=NC=CN2,Z85525386
-test_plate_current,G16,DSI Poised DMSO,ClC=1C=CC=C(C1)N2CCN(CC#N)CC2,Z2856434806
-test_plate_current,G17,DSI Poised DMSO,COC=1C=CC(CCC2(C)NC(=O)NC2=O)=CC1,Z56772132
-test_plate_current,G18,DSI Poised DMSO,CCN1N=CC=C1CNC,Z2856434839
-test_plate_current,G19,DSI Poised DMSO,CC(OC=1C=CC(C#N)=CC1)C(=O)N,Z19739650
-test_plate_current,G20,DSI Poised DMSO,C[C@@H](CO)NC=1N=CC(Cl)=CC1F,Z1432018343
-test_plate_current,G21,DSI Poised DMSO,O=C(NCCC=1C=CC=CC1)NC2CCCCC2,Z44585920
-test_plate_current,G22,DSI Poised DMSO,CN(C(=O)C1CCNC1)C=2C=CC=CC2,Z2447286438
-test_plate_current,G23,DSI Poised DMSO,COCC(=O)NCC1=NC=2C=CC=CC2N1,Z111529496
-test_plate_current,G24,DSI Poised DMSO,CN1C=C(C(=O)N)C(=N1)C(F)F,Z1515654336
-test_plate_current,G25,DSI Poised DMSO,CSC1=NSC(NC(=O)C)=N1,Z26804467
-test_plate_current,G26,DSI Poised DMSO,CC1CCOC1C(=O)NC2=CN=NS2,Z1827602749
-test_plate_current,G27,DSI Poised DMSO,CC1(C)CN(CCO1)C(=O)CC(F)(F)F,Z394039592
-test_plate_current,G28,DSI Poised DMSO,CN1N=NC(NC(=O)C=2C=CC(F)=CC2)=N1,Z57292433
-test_plate_current,G29,DSI Poised DMSO,CC(=O)NC=1C=CC(=CC1)C2=CSC(N)=N2,Z48847594
-test_plate_current,G30,DSI Poised DMSO,COC=1C=CC(CNC(=O)C2=CSN=N2)=CC1,Z741218268
-test_plate_current,G31,DSI Poised DMSO,CC(NC(=O)C)C1=NN=C2C=CC=CN12,Z131516158
-test_plate_current,G32,DSI Poised DMSO,CC=1C=CC=CC1OCC(=O)NC=2N=CC=CN2,Z53834613
-test_plate_current,G33,DSI Poised DMSO,O=C(NC=1C=CC(=CC1)N2C=NN=N2)C3CCC3,Z26552420
-test_plate_current,G34,DSI Poised DMSO,CC(=O)N1CCN(CC1)C=2C=CC(Cl)=CC2,Z275165822
-test_plate_current,G35,DSI Poised DMSO,CC(=O)N1CCCC(C1)C(=O)N,Z220816104
-test_plate_current,G36,DSI Poised DMSO,CS(=O)(=O)NC1CCCC1,Z53825479
-test_plate_current,G37,DSI Poised DMSO,FC(F)N1C=CN=C1CN2CCNCC2,Z2444672448
-test_plate_current,G38,DSI Poised DMSO,O=C(NC=1C=CC=2N=CC=CC2C1)C=3C=CC=CC3,Z453319206
-test_plate_current,G39,DSI Poised DMSO,FC=1C=CC(NC2CCOCC2)=NC1,Z1172243962
-test_plate_current,G40,DSI Poised DMSO,CC=1C=CC=C(NC=2N=CN=C3N(C)N=CC23)C1,Z56983806
-test_plate_current,G41,DSI Poised DMSO,CN(C(=O)C)C=1C=CC=CC1C(=O)O,Z223688272
-test_plate_current,H07,DSI Poised DMSO,CCN1C=C(CNC(=O)C=2C=CC=NC2)C=N1,Z275181224
-test_plate_current,H08,DSI Poised DMSO,CC(C)(O)CN1CC[C@H](N)C1,Z2429435052
-test_plate_current,H09,DSI Poised DMSO,CC(C)N(C)S(=O)(=O)N1CCOC(C)C1,Z416341642
-test_plate_current,H10,DSI Poised DMSO,CNC1CCN(C1=O)C=2C=CC=CC2F,Z1186029914
-test_plate_current,H11,DSI Poised DMSO,CC(=O)N1CCC(CC1)C2=CNC=3C=CC=CC23,Z223388508
-test_plate_current,H12,DSI Poised DMSO,NC(=O)N1CCN(CC1)C(=O)C2=CC=CO2,Z198194396
-test_plate_current,H13,DSI Poised DMSO,CCOC(=O)C1=CC(=NO1)C=2C=CC(F)=CC2,Z2106600670
-test_plate_current,H14,DSI Poised DMSO,[O-]C(=O)C=1C=CC=CC1OC(F)(F)F,Z2856434778
-test_plate_current,H15,DSI Poised DMSO,COC=1C=CC(NC(=O)NC=2C=CN=CC2)=CC1,Z321318226
-test_plate_current,H16,DSI Poised DMSO,O=C(NC=1C=CC(=CC1)N2CCOCC2)C3CC3,Z30485868
-test_plate_current,H17,DSI Poised DMSO,CCC1=NOC(C)=C1C(=O)NC=2C=C(C)ON2,Z117233350
-test_plate_current,H18,DSI Poised DMSO,NC(=O)C1=CNC(=N1)C2CC2,Z1407672867
-test_plate_current,H19,DSI Poised DMSO,COC(=O)N1CCN(CC1)C=2C=CC(F)=CC2,Z192955056
-test_plate_current,H20,DSI Poised DMSO,CCNC(=O)C=1C=CC(NS(=O)(=O)C)=CC1,Z57614330
-test_plate_current,H21,DSI Poised DMSO,CCOC(=O)C=1C=CC(F)=CC1F,Z53836105
-test_plate_current,H22,DSI Poised DMSO,CN1N=C(C(=O)N)C=2C=CC=CC12,Z2697514548
-test_plate_current,H23,DSI Poised DMSO,CNC1CCCN(C1)C=2C=CC=NN2,Z1139246057
-test_plate_current,H24,DSI Poised DMSO,CN1C=C(CNC(=O)C2=CC=CO2)C=N1,Z275179758
-test_plate_current,H25,DSI Poised DMSO,C(CN1CCOCC1)SC=2C=CC=CC2,Z2856434865
-test_plate_current,H26,DSI Poised DMSO,COC=1C=CC(=CC1)N2CC(CC2=O)C(=O)N,Z57324924
-test_plate_current,H27,DSI Poised DMSO,C(NC=1C=CN=CC1)C2CCCO2,Z1267882044
-test_plate_current,H28,DSI Poised DMSO,CC1=CC(=NO1)C(=O)NC=2C=CC=3NC=CC3C2,Z1190787729
-test_plate_current,H29,DSI Poised DMSO,CN(C)S(=O)(=O)N1CCN(C)CC1,Z2735592898
-test_plate_current,H30,DSI Poised DMSO,CN1CCC[C@H](C1)OC(=O)C2=CC=CO2,Z2940170964
-test_plate_current,H31,DSI Poised DMSO,CC1CCN(CCN)CC1,Z1245580461
-test_plate_current,H32,DSI Poised DMSO,CC1=CC(NC(=O)CCC2CCCCC2)=NO1,Z86949053
-test_plate_current,H33,DSI Poised DMSO,CS(=O)(=O)NCCC=1C=CC=CC1,Z45617795
-test_plate_current,H34,DSI Poised DMSO,OCC1=CN(N=N1)C=2C=CC(Cl)=C(Cl)C2,Z1891776064
-test_plate_current,H35,DSI Poised DMSO,CCN1C=C(CCO)C=N1,Z1674937530
-test_plate_current,H36,DSI Poised DMSO,CCN1C=CC(CNC)=N1,Z2856434888
-test_plate_current,H37,DSI Poised DMSO,CC(C)C(=O)N1CCC(CC=2C=CC=CC2)CC1,Z30162334
-test_plate_current,H38,DSI Poised DMSO,O=C1CN(CC=2C=CC=CC2)CC(=O)N1,Z2856434910
-test_plate_current,H39,DSI Poised DMSO,CC1CN(C)CCC1NC=2C=NN(C)C2,Z1694504496
-test_plate_current,H40,DSI Poised DMSO,CC(C)NC(=O)CN1CCCNCC1,Z1262254278
-test_plate_current,H41,DSI Poised DMSO,CCCC(=O)NC=1C=CC=NC1Cl,Z240654968
-test_plate_current,I07,DSI Poised DMSO,COC=1C=CC(NC=2N=CN=C3NC=NC23)=CC1,Z276545932
-test_plate_current,I08,DSI Poised DMSO,CS(=O)(=O)N1CCC(O)CC1,Z1247413608
-test_plate_current,I09,DSI Poised DMSO,OC=1C=CC(NC(=O)C=2C=CC(Cl)=CC2)=CC1,Z56346825
-test_plate_current,I10,DSI Poised DMSO,CCOC=1C=CC(=CC1)C(=O)NC=2C=CC=CC2,Z27782760
-test_plate_current,I11,DSI Poised DMSO,O=C(COC=1C=CC=CC1)NC2CCCCC2,Z19735904
-test_plate_current,I12,DSI Poised DMSO,CCOC(=O)C=1C=NNC1,Z1124201124
-test_plate_current,I13,DSI Poised DMSO,CCN(CC)C1=CC(C)=NC2=NC=NN12,Z56791867
-test_plate_current,I14,DSI Poised DMSO,CN(C)C=1C=CN=CC1,Z2856434762
-test_plate_current,I15,DSI Poised DMSO,CC=1C=CC(NC(=O)C=2C=CC=CC2C)=C(O)C1,Z33452282
-test_plate_current,I16,DSI Poised DMSO,CC(CS(=O)(=O)N)C=1C=CC=CC1,Z1407673036
-test_plate_current,I17,DSI Poised DMSO,CC(=O)N1CCN(CC1)C(=O)N,Z90122368
-test_plate_current,I18,DSI Poised DMSO,CC(=O)NC(C)(C1CC1)C(=O)O,Z1259162160
-test_plate_current,I19,DSI Poised DMSO,CC(OC=1C=CC(Cl)=CC1)C(=O)N,Z19727416
-test_plate_current,I20,DSI Poised DMSO,CC(N)C1=CN(N=N1)C=2C=CC=CC2,Z2527301677
-test_plate_current,I21,DSI Poised DMSO,CS(=O)(=O)CC1=NC=2C=CC=CC2N1,Z126932614
-test_plate_current,I22,DSI Poised DMSO,FC(F)(F)CC(=O)N1CCNCC1,Z1262246195
-test_plate_current,I23,DSI Poised DMSO,COC=1C=CC(CNC(=O)C=2C=NC=CN2)=CC1,Z30871350
-test_plate_current,I24,DSI Poised DMSO,CC(C)N1C=NC(=C1)S(=O)(=O)N,Z1509882419
-test_plate_current,I25,DSI Poised DMSO,NC(=O)C=1C=CC(NC(=O)C=2C=NC=CN2)=CC1,Z30242120
-test_plate_current,I26,DSI Poised DMSO,COC(=O)NC=1SC(C)=NC1C=2C=CC=CC2,Z979145504
-test_plate_current,I27,DSI Poised DMSO,COCC(=O)NC=1C(C)=CC(C)=CC1C,Z57260516
-test_plate_current,I28,DSI Poised DMSO,CC[C@H](CO)NC(=O)NC=1C=CC(Cl)=CC1,Z1593306637
-test_plate_current,I29,DSI Poised DMSO,FC=1C=CC(NC(=O)NCC2=CC=CO2)=CC1,Z44584202
-test_plate_current,I30,DSI Poised DMSO,CC(=O)NC=1C=CC(CC(=O)N)=CC1,Z87615031
-test_plate_current,I31,DSI Poised DMSO,CCOC=1C=CC=CC1N2CCNCC2,Z425387594
-test_plate_current,I32,DSI Poised DMSO,CC(=O)NC=1C=CC(C)=C2NCCCC12,Z1650168321
-test_plate_current,I33,DSI Poised DMSO,O=C(CC=1C=CC=CC1)N2CCC=3C=CC=CC23,Z30624464
-test_plate_current,I34,DSI Poised DMSO,COCC(=O)NC=1C=CC(O)=CC1,Z943693514
-test_plate_current,I35,DSI Poised DMSO,CN(C)S(=O)(=O)C=1C(C)=NNC1C,Z94597856
-test_plate_current,I36,DSI Poised DMSO,CC(N)C=1C=CC(=CC1)C=2C=NC=NC2,Z1696822287
-test_plate_current,I37,DSI Poised DMSO,FC=1C=CC(NC(=O)NC=2C=CC(F)=CC2)=CC1,Z44586758
-test_plate_current,I38,DSI Poised DMSO,CC1=NNC(C)=C1C=2C=CC=CC2N,Z1270312110
-test_plate_current,I39,DSI Poised DMSO,CC1=NN=C(NC(=O)N2CCOCC2)S1,Z410633222
-test_plate_current,I40,DSI Poised DMSO,NC(=O)C(O)C1CCOCC1,Z1312590981
-test_plate_current,I41,DSI Poised DMSO,CC=1C=CC(CC(=O)NC2=NC=CS2)=CC1,Z90713255
-test_plate_current,J07,DSI Poised DMSO,CN1CCN(CC1)C(=O)C2CCCN2,Z241832786
-test_plate_current,J08,DSI Poised DMSO,CC1CCCCN1CCN,Z1245580425
-test_plate_current,J09,DSI Poised DMSO,CNC(=O)NCC=1C(F)=CC=CC1Cl,Z933840894
-test_plate_current,J10,DSI Poised DMSO,CC1CCCN(C1)C(=O)CO,Z228585534
-test_plate_current,J11,DSI Poised DMSO,C(NC=1C=CC=CN1)C2CCNC2,Z1262327505
-test_plate_current,J12,DSI Poised DMSO,CNCC(=O)NC=1C=C(C)C=CN1,Z927746322
-test_plate_current,J13,DSI Poised DMSO,CC(C)(C)NC(=O)N1CCC(CC1)C(=O)N,Z44603686
-test_plate_current,J14,DSI Poised DMSO,CC=1C=CC=C(CN2CCOCC2)C1,Z2856434862
-test_plate_current,J15,DSI Poised DMSO,CC(C)NC(=O)N(C)CC=1C=NN(C)C1,Z183344018
-test_plate_current,J16,DSI Poised DMSO,O=C(COC=1C=CC=CC1)N2CCNC(=O)C2,Z31602870
-test_plate_current,J17,DSI Poised DMSO,CCN1C=C(C=N1)C(=O)NCC=2C=CC(F)=CC2,Z1203107138
-test_plate_current,J18,DSI Poised DMSO,C(C1CCNCC1)C2=NC(=NO2)C3CC3,Z2442270563
-test_plate_current,J19,DSI Poised DMSO,CC(C)(C)N1CC(O)C1,Z2856434900
-test_plate_current,J20,DSI Poised DMSO,CCC(=O)NC1=C(OC=2C=CC=CC12)C(=O)N,Z108545814
-test_plate_current,J21,DSI Poised DMSO,O=C(NCC1=CC=CO1)NC2CCCCC2,Z44584192
-test_plate_current,J22,DSI Poised DMSO,NCC=1C=CC=CC1OC(F)(F)F,Z2856434776
-test_plate_current,J23,DSI Poised DMSO,O=C(CCCC=1C=CC=CC1)N2CCOCC2,Z419995480
-test_plate_current,J24,DSI Poised DMSO,CCC(=O)NC1=NN=C(S1)C2CCCCC2,Z165063492
-test_plate_current,J25,DSI Poised DMSO,CC(C)C=1C=CC(CN2CCC(O)CC2)=CC1,Z2856434874
-test_plate_current,J26,DSI Poised DMSO,COCC1CN(CCO1)C=2C=CC=CN2,Z1272480091
-test_plate_current,J27,DSI Poised DMSO,FC(F)OCC(=O)N1CCCC2(CC2)C1,Z2074076908
-test_plate_current,J28,DSI Poised DMSO,CC(=O)NC1=CC=CC2=NON=C12,Z2027158783
-test_plate_current,J29,DSI Poised DMSO,CC=1C=CC(CN2CCS(=O)(=O)CC2)=CC1,Z2856434929
-test_plate_current,J30,DSI Poised DMSO,FC=1C=CC=C(CN2CCCS2(=O)=O)C1,Z729352906
-test_plate_current,J31,DSI Poised DMSO,COC(=O)CNC(=O)C1CCCCC1,Z18618496
-test_plate_current,J32,DSI Poised DMSO,O=C(CSC=1C=CC=CC1)NC2CCCCC2,Z19751622
-test_plate_current,J33,DSI Poised DMSO,CCC(CC)C(=O)NC1=NC=CS1,Z28173817
-test_plate_current,J34,DSI Poised DMSO,CC(=O)NCCC1=CNC=2C=CC(F)=CC12,Z1220452176
-test_plate_current,J35,DSI Poised DMSO,CC(C)(N)CN1CCCC1,Z1741966630
-test_plate_current,J36,DSI Poised DMSO,FC=1C=CC=CC1NCC=2C=CNN2,Z1545196403
-test_plate_current,J37,DSI Poised DMSO,CC=1C=CC=CC1OCC(=O)NC=2C=CC=CC2,Z19733979
-test_plate_current,J38,DSI Poised DMSO,COC=1C=CC(Cl)=CC1C(=O)NCC(C)C,Z32386228
-test_plate_current,J39,DSI Poised DMSO,CC1=NC(CC(=O)N2CCOCC2)=CS1,Z31720228
-test_plate_current,J40,DSI Poised DMSO,CC1=CN=C(NC(=O)CCC2CCCC2)S1,Z29325421
-test_plate_current,J41,DSI Poised DMSO,OC=1C=CC(NC(=O)CCC=2C=CC=CC2)=CC1,Z69118333
-test_plate_current,K07,DSI Poised DMSO,ClC=1C=CC(=CC1)C(=O)N2CCSCC2,Z437584380
-test_plate_current,K08,DSI Poised DMSO,CC(=O)NC=1C=C(C=CC1F)C(=O)O,Z364328788
-test_plate_current,K09,DSI Poised DMSO,N#CC=1C=CC(CN2C=NC=3C=CC=CC23)=CC1,Z26333434
-test_plate_current,K10,DSI Poised DMSO,CNC(=O)CNC=1N=CN=C2SC=CC12,Z52584368
-test_plate_current,K11,DSI Poised DMSO,CC(N1CCN(CC1)S(=O)(=O)C)C(=O)N,Z134785326
-test_plate_current,K12,DSI Poised DMSO,CC(=O)NC=1C=NC=CC1C,Z1129283193
-test_plate_current,K13,DSI Poised DMSO,NC=1C=CC(=CC1)S(=O)(=O)NC=2C=CC=CN2,Z271004858
-test_plate_current,K14,DSI Poised DMSO,CCNCC=1C=CC=C2NC=CC12,Z1137725943
-test_plate_current,K15,DSI Poised DMSO,CC=1C=C(ON1)C(=O)NC=2C=CN(C)N2,Z240297434
-test_plate_current,K16,DSI Poised DMSO,CC(=O)NCC=1C=NNC1,Z383325512
-test_plate_current,K17,DSI Poised DMSO,CCCC1=CC(=O)OC=2C=C(OC(=O)C)C=CC12,Z29634868
-test_plate_current,K18,DSI Poised DMSO,FC=1C=CC=CC1CNC=2C=NNC2,Z1454310449
-test_plate_current,K19,DSI Poised DMSO,CN(CC=1C=CC=C(F)C1)S(=O)(=O)N,Z300245038
-test_plate_current,K20,DSI Poised DMSO,CCNC=1C=CC(=CC1F)S(=O)(=O)C,Z2142244288
-test_plate_current,K21,DSI Poised DMSO,CN1C(CNC2CCCCC2)=NC=3C=CC=CC13,Z2856434855
-test_plate_current,K22,DSI Poised DMSO,CCC1=CC(=O)N2N=C(NC)SC2=N1,Z1896598013
-test_plate_current,K23,DSI Poised DMSO,CC1=NOC(NC(=O)CC2CCCC2)=N1,Z729726784
-test_plate_current,K24,DSI Poised DMSO,CC(OC=1C=CC=CC1F)C(=O)O,Z65532537
-test_plate_current,K25,DSI Poised DMSO,OC(=O)C=1C=CC(OCC=2C=CC=CC2)=CC1,Z2856434845
-test_plate_current,K26,DSI Poised DMSO,CC(=O)NCC1(O)CCCC1,Z1203329531
-test_plate_current,K27,DSI Poised DMSO,OC=1N=CC(N2CCCCC2)=C(O)N1,Z277468432
-test_plate_current,K28,DSI Poised DMSO,OC=1C=CC=CC1CNC2=NC=3C=CC=CC3N2,Z1587220559
-test_plate_current,K29,DSI Poised DMSO,COC=1C=CC(NCC=2C=CC=CC2O)=CC1,Z56943440
-test_plate_current,K30,DSI Poised DMSO,CC(=O)N1CCC(N)CC1,Z90664455
-test_plate_current,K31,DSI Poised DMSO,CC(C)N(C)C=1N=CN=C2N(C)N=CC12,Z328695024
-test_plate_current,K32,DSI Poised DMSO,O=C(NCC=1C=CC(C#N)=CC1)N2CCOCC2,Z509756472
-test_plate_current,K33,DSI Poised DMSO,COC=1C=C(CN)C=C(OC)C1OC,Z1741959530
-test_plate_current,K34,DSI Poised DMSO,COCC1=CC(=NO1)C(=O)N,Z1273141646
-test_plate_current,K35,DSI Poised DMSO,CC(C)C(=O)NCC1=NC=2C=CC=CC2N1,Z26781943
-test_plate_current,K36,DSI Poised DMSO,CCS(=O)(=O)NCC=1C=CC=2OCOC2C1,Z53860899
-test_plate_current,K37,DSI Poised DMSO,CNC(C)C=1C=CC(F)=CC1,Z166605480
-test_plate_current,K38,DSI Poised DMSO,NC=1C=CC=C(OCC=2C=CC=CC2)C1,Z933326822
-test_plate_current,K39,DSI Poised DMSO,CC=1N=CSC1C(=O)N2CCNC(=O)C2,Z422344882
-test_plate_current,K40,DSI Poised DMSO,CC=1C=CC(NC=2N=CN=C3NN=CC23)=CC1,Z57101343
-test_plate_current,K41,DSI Poised DMSO,CS(=O)(=O)N1CCCC(C1)C(=O)O,Z133632670
-test_plate_current,L07,DSI Poised DMSO,CCC1=CC=C(S1)C(=O)NCC=2C=NN(C)C2,Z804566442
-test_plate_current,L08,DSI Poised DMSO,NC(=O)N1CCN(CC1)C=2C=CC(F)=CC2,Z198194394
-test_plate_current,L09,DSI Poised DMSO,C(N1CCOCC1)C2=NC(=NO2)C3CC3,Z295848548
-test_plate_current,L10,DSI Poised DMSO,C(NCC=1C=CN=CC1)C2=CC=CS2,Z2856434816
-test_plate_current,L11,DSI Poised DMSO,CCOC(=O)C=1SC(=NC1C)C=2C=NC=CN2,Z735557654
-test_plate_current,L12,DSI Poised DMSO,O=C(CC#N)N1CCC(CC=2C=CC=CC2)CC1,Z1688493887
-test_plate_current,L13,DSI Poised DMSO,OC(=O)C=1C=CC=C(NC(=O)C2=CC=NO2)C1,Z2856434931
-test_plate_current,L14,DSI Poised DMSO,COCC1=NN=C(N)S1,Z57478994
-test_plate_current,L15,DSI Poised DMSO,FC=1C=CC(NC(=O)NN2C=NN=C2)=C(F)C1,Z56259192
-test_plate_current,L16,DSI Poised DMSO,ClC=1C=CC=C(C1)C(=O)NC=2C=CON2,Z86622311
-test_plate_current,L17,DSI Poised DMSO,O=S1(=O)CCN(CC2=CC=CO2)CC1,Z2856434926
-test_plate_current,L18,DSI Poised DMSO,CCN1N=C(CC1=O)C(F)(F)F,Z1268152398
-test_plate_current,L19,DSI Poised DMSO,O=C(NC[C@H]1CCCO1)N2CCOCC2,Z2064898127
-test_plate_current,L20,DSI Poised DMSO,CCC(CC)C(=O)NC=1C=CC=CC1O,Z1331830630
-test_plate_current,L21,DSI Poised DMSO,COC=1C=CC(NC(=O)NC2=CC=CS2)=CN1,Z1152242726
-test_plate_current,L22,DSI Poised DMSO,CNCC=1C=CN=CC1,Z2856434786
-test_plate_current,L23,DSI Poised DMSO,CCC1=NC(=NO1)C2CCCN2,Z1350579414
-test_plate_current,L24,DSI Poised DMSO,CN1N=CC(Cl)=C1C(=O)N2CCCCC2,Z275179946
-test_plate_current,L25,DSI Poised DMSO,COCCNC1CCN(CC1)C(=O)C,Z2856434813
-test_plate_current,L26,DSI Poised DMSO,[O-]C(=O)COCC=1C=CC=CC1,Z2856434906
-test_plate_current,L27,DSI Poised DMSO,CC(NC1CC1)C=2C=CC=NC2,Z1263529721
-test_plate_current,L28,DSI Poised DMSO,COC(=O)NC1=NC=2C(C)=CC=CC2S1,Z192981502
-test_plate_current,L29,DSI Poised DMSO,CC=1C(Cl)=CC=CC1NC(=O)[C@@H]2CCCO2,Z1545312521
-test_plate_current,L30,DSI Poised DMSO,COC(=O)C=1C=CN=CC1,Z19684186
-test_plate_current,L31,DSI Poised DMSO,CC1=NC(CN2CCC(CN)CC2)=CS1,Z1259335913
-test_plate_current,L32,DSI Poised DMSO,ClC=1C=CC(NC(=O)NN2C=NN=C2)=CC1,Z56259166
-test_plate_current,L33,DSI Poised DMSO,FC=1C=CC(=CC1)N2CCN(CC2)C(=O)C3CC3,Z30620520
-test_plate_current,L34,DSI Poised DMSO,CNCC=1C=CC(=CC1)C(F)(F)F,Z2856434809
-test_plate_current,L35,DSI Poised DMSO,C(C1CCOCC1)N2CCNCC2,Z1267773591
-test_plate_current,L36,DSI Poised DMSO,CC1CCN(CC1)C=2C=CC(N)=CC2Cl,Z57345491
-test_plate_current,L37,DSI Poised DMSO,CC(=O)N1CCC(CC1)C#N,Z952656810
-test_plate_current,L38,DSI Poised DMSO,CC(O)CNC1CCCCC1,Z2856434893
-test_plate_current,L39,DSI Poised DMSO,CC1CCCC1NCCO,Z1396419547
-test_plate_current,L40,DSI Poised DMSO,CC(C)N1CCN(CC1)C(=O)C(C)C,Z106307058
-test_plate_current,L41,DSI Poised DMSO,OCC1CCN(CC1)C=2N=CC=CN2,Z645232558
-test_plate_current,M07,DSI Poised DMSO,NC(=O)C1CCN(CCC=2C=CC=CC2)CC1,Z2856434897
-test_plate_current,M08,DSI Poised DMSO,CNC=1C=CC=CC1S(=O)(=O)C,Z285782452
-test_plate_current,M09,DSI Poised DMSO,CC(=O)NC=1C=CC=CC1O,Z57040482
-test_plate_current,M10,DSI Poised DMSO,CC(C)C=1N=CC(Cl)=C(N1)C(=O)N,Z906021418
-test_plate_current,M11,DSI Poised DMSO,NC=1C=CC=CC1OCC=2C=CC=CC2,Z336089202
-test_plate_current,M12,DSI Poised DMSO,OCC1=CN(N=N1)C=2C=CC(Cl)=CC2,Z1374778753
-test_plate_current,M13,DSI Poised DMSO,CCOC=1C=CC(NC(=O)C=2C=NC=CN2)=CC1,Z27808049
-test_plate_current,M14,DSI Poised DMSO,CS(=O)(=O)CC(O)C=1C=CC=CC1,Z822382694
-test_plate_current,M15,DSI Poised DMSO,NC(=O)C1CCN(CC1)C(=O)C2CCCCC2,Z32399948
-test_plate_current,M16,DSI Poised DMSO,ONC(=O)C=1C=CC=2C=CC=CC2N1,Z59181945
-test_plate_current,M17,DSI Poised DMSO,CC(=O)C=1C=CC(=CC1)N2CCC(CC2)C(=O)N,Z126933926
-test_plate_current,M18,DSI Poised DMSO,CC(=O)NC=1C=CC=C(F)C1C(=O)O,Z1229798311
-test_plate_current,M19,DSI Poised DMSO,COC(=O)C=1C=CC=CC1NC(=O)N2CCCC2,Z281077318
-test_plate_current,M20,DSI Poised DMSO,CNC=1N=CC=C(OC)N1,Z281802060
-test_plate_current,M21,DSI Poised DMSO,O=C(N1CCNCC1)C=2C=CN=CC2,Z126932654
-test_plate_current,M22,DSI Poised DMSO,CC=1C=C(N=C(C)N1)N2CCNCC2,Z274575916
-test_plate_current,M23,DSI Poised DMSO,CC=1C=C2N=CN(CC(=O)N)C2=CC1C,Z26251905
-test_plate_current,M24,DSI Poised DMSO,CC(=O)NC=1C=CC=CC1CC(=O)O,Z1444783243
-test_plate_current,M25,DSI Poised DMSO,COC=1C=CC(=CC1)C(=O)C2CCNCC2,Z1741973467
-test_plate_current,M26,DSI Poised DMSO,CC=1C=CC=CC1CC(=O)N,Z52214433
-test_plate_current,M27,DSI Poised DMSO,CC=1OC=CC1C(=O)NC=2C=CN=CC2,Z136583524
-test_plate_current,M28,DSI Poised DMSO,NC(=O)C=1C=CN=C(NC2CC=CC2)C1,Z1416571195
-test_plate_current,M29,DSI Poised DMSO,CN(C)C(=O)NC=1C=CC(=CC1)S(=O)(=O)N,Z123856654
-test_plate_current,M30,DSI Poised DMSO,CC(N1CCNCC1)C=2C=CC=CC2F,Z2466069494
-test_plate_current,M31,DSI Poised DMSO,NCC1=CC(=NO1)C=2C=CC=CC2,Z425449682
-test_plate_current,M32,DSI Poised DMSO,CC1=CSC(CNC(=O)C2CCC2)=N1,Z212122838
-test_plate_current,M33,DSI Poised DMSO,O=C(NC=1C=CC=CC1)NC=2C=CC=NC2,Z44592329
-test_plate_current,M34,DSI Poised DMSO,CCC(=O)NC=1C=CC=2NC(=O)NC2C1,Z26794351
-test_plate_current,M35,DSI Poised DMSO,CCOC=1C=CC(=CN1)C(=O)N,Z458894644
-test_plate_current,M36,DSI Poised DMSO,CC1=NC=2C=CC=CC2N1CCC(=O)N,Z53116498
-test_plate_current,M37,DSI Poised DMSO,CC(=O)NC1=NC=C(CC=2C=CC=C(C)C2)S1,Z57080305
-test_plate_current,M38,DSI Poised DMSO,CN(C)C(=O)N1CCN(CC1)C(=O)N(C)C,Z57475068
-test_plate_current,M39,DSI Poised DMSO,C1=CSC(=C1)C2=NC=CN2,Z744754722
-test_plate_current,M40,DSI Poised DMSO,COC=1C=CC(NC2=NCCN2)=CC1,Z57186564
-test_plate_current,M41,DSI Poised DMSO,NC(=O)C=1C=CC=CC1NC(=O)C=2C=CN=CC2,Z91797745
-test_plate_current,N07,DSI Poised DMSO,O=C(N1CCCCCC1)C=2C=CC=3OCOC3C2,Z31432226
-test_plate_current,N08,DSI Poised DMSO,CC(=O)NCC1CNCCO1,Z1269638430
-test_plate_current,N09,DSI Poised DMSO,CN(CCO)S(=O)(=O)C=1C=CC(N)=CC1,Z1673618163
-test_plate_current,N10,DSI Poised DMSO,COC(C)C1=NC(=CS1)C=2C=NOC2C,Z1945710531
-test_plate_current,N11,DSI Poised DMSO,CC1CN(CCN1)C=2C=CC=C(C)N2,Z1267885772
-test_plate_current,N12,DSI Poised DMSO,CC(=O)N1CC(C1)C(=O)O,Z1868430535
-test_plate_current,N13,DSI Poised DMSO,C[C@H](O)CNCC=1C=CC=2OCOC2C1,Z2856434941
-test_plate_current,N14,DSI Poised DMSO,CC1=NN(CC=2C(C)=NOC2C)C(=O)S1,Z1899842917
-test_plate_current,N15,DSI Poised DMSO,CC1CN(CC=2N=NSC2Cl)C(C)CO1,Z354992234
-test_plate_current,N16,DSI Poised DMSO,OC=1N=CC(NCCC=2C=CC=CC2)=C(O)N1,Z57744604
-test_plate_current,N17,DSI Poised DMSO,ClC=1C=CC(COC(=O)C=2C=CC=NC2)=CC1,Z57515803
-test_plate_current,N18,DSI Poised DMSO,CNCCC1CCCCC1,Z2856434901
-test_plate_current,N19,DSI Poised DMSO,CC(C)NCC=1C=CC(=CC1)N(C)C,Z2856434894
-test_plate_current,N20,DSI Poised DMSO,COC(=O)NC=1C=CC(CC=2C=CN=CC2)=CC1,Z57190020
-test_plate_current,N21,DSI Poised DMSO,CC=1C=CC(NC(=O)C=2C=CC=C(F)C2)=CC1O,Z1430613393
-test_plate_current,N22,DSI Poised DMSO,FC=1C=CC=NC1NCC2CCOCC2,Z1373430305
-test_plate_current,N23,DSI Poised DMSO,CC1CCN(CC1)C(=O)CC(F)(F)F,Z316425948
-test_plate_current,N24,DSI Poised DMSO,OC=1C=CC=CC1CN2CCOCC2,Z2856434887
-test_plate_current,N25,DSI Poised DMSO,OC=1C=CC(CCNC(=O)C=2C=CC=CN2)=CC1,Z730649594
-test_plate_current,N26,DSI Poised DMSO,CC(C)C(N)C(=O)N1CCOCC1,Z927400026
-test_plate_current,N27,DSI Poised DMSO,CC1(CC1)S(=O)(=O)N2CCC=C(F)C2,Z2277255954
-test_plate_current,N28,DSI Poised DMSO,COC(=O)C=1C=CC(=CC1)S(=O)(=O)N,Z18197050
-test_plate_current,N29,DSI Poised DMSO,FC=1C=CC=C(NC(=O)COC=2C=CC=CC2)C1,Z19735192
-test_plate_current,N30,DSI Poised DMSO,C[1C@@H]1CC[1C@@H](O1)C(=O)N2CCC=C(F)C2,Z2272040604
-test_plate_current,N31,DSI Poised DMSO,CCCN1N=CC=C1C=2C=CN=CC2,Z1381484542
-test_plate_current,N32,DSI Poised DMSO,CC(NS(=O)(=O)C)C=1C=CC=CC1Cl,Z133729708
-test_plate_current,N33,DSI Poised DMSO,CC(=O)NC=1C=CC(NC=2C=CC=CC2)=CC1,Z68404778
-test_plate_current,N34,DSI Poised DMSO,CN1CCN(CC1)C(=O)NC=2C=CC=CC2,Z2856434890
-test_plate_current,N35,DSI Poised DMSO,CN(C)C(=O)N1CCOCC21CCOC2,Z1998104358
-test_plate_current,N36,DSI Poised DMSO,COCC(=O)NCC=1C=CC(C)=CC1,Z33297786
-test_plate_current,N37,DSI Poised DMSO,C1CCC(CC1)C2=NC(=NO2)C=3C=CN=CC3,Z57715447
-test_plate_current,N38,DSI Poised DMSO,NC(=O)C=1C=CC(NC(=O)[C@@H]2CCCO2)=CC1,Z1545313172
-test_plate_current,N39,DSI Poised DMSO,CC1=NOC(CN2CCC(CO)CC2)=N1,Z416877194
-test_plate_current,N40,DSI Poised DMSO,CC=1C=CSC1CNC(C)(C)CO,Z2856434821
-test_plate_current,N41,DSI Poised DMSO,CC1CCN(CC1)C(=O)C2=CC=3C=CC=CC3O2,Z32665176
-test_plate_current,O07,DSI Poised DMSO,NC(=O)C=1C=CC(OCC=2C=CC=CC2)=CC1,Z26312102
-test_plate_current,O08,DSI Poised DMSO,CC(C)NC1=NC=2C=CC=CC2N1,Z2467208649
-test_plate_current,O09,DSI Poised DMSO,CNC(=O)C=1C=CC(CS(=O)(=O)C)=CC1,Z30272045
-test_plate_current,O10,DSI Poised DMSO,CN(C)S(=O)(=O)C=1C=NNC1,Z805551440
-test_plate_current,O11,DSI Poised DMSO,CC1CN(CCO1)C(=O)CN2C=CC=N2,Z217038356
-test_plate_current,O12,DSI Poised DMSO,CC(=O)NC=1C=CN=CC1C,Z1148747945
-test_plate_current,O13,DSI Poised DMSO,CN(C)C=1C=CC(CNN2C=NN=C2)=CC1,Z57258487
-test_plate_current,O14,DSI Poised DMSO,N#CC=1C=CC(=CN1)N2CCCOCC2,Z1348371854
-test_plate_current,O15,DSI Poised DMSO,CNC(=O)C1=CN=C(C)S1,Z969560582
-test_plate_current,O16,DSI Poised DMSO,CS(=O)(=O)NCCC=1C=CC(F)=CC1,Z45705015
-test_plate_current,O17,DSI Poised DMSO,NC=1C=CC=CC1N2CCOCC2,Z56785490
-test_plate_current,O18,DSI Poised DMSO,CC1(C)CN(C(=O)NCC2CC2)C1(C)C,Z1328078283
-test_plate_current,O19,DSI Poised DMSO,CC1=CSC(NCC2CCCO2)=N1,Z48852953
-test_plate_current,O20,DSI Poised DMSO,CN1CCN(CC1=O)C=2N=CC=CC2F,Z1373445602
-test_plate_current,O21,DSI Poised DMSO,O=C(CC#N)NC1CCCCC1,Z56813508
-test_plate_current,O22,DSI Poised DMSO,C1=CSC(=N1)C2=NN=CN2,Z2027049478
-test_plate_current,O23,DSI Poised DMSO,COC=1C=CC(Br)=CC1CNC(=O)C,Z955369596
-test_plate_current,O24,DSI Poised DMSO,CC=1C=C(C)N=C(NC(=O)NC=2C=CC=CC2)C1,Z1693429442
-test_plate_current,O25,DSI Poised DMSO,CC(C)CC(=O)NC=1C=CC(NC(=O)C)=CC1,Z27653940
-test_plate_current,O26,DSI Poised DMSO,CCCC1=NN=C(NC(=O)C=2C=CC=CN2)S1,Z52425517
-test_plate_current,O27,DSI Poised DMSO,CC=1C=CC(CNC(=O)C2CCC2)=CN1,Z437516460
-test_plate_current,O28,DSI Poised DMSO,OC=1C=CC(CN2CCC=3C=CC=CC3C2)=CC1,Z2856434812
-test_plate_current,O29,DSI Poised DMSO,CC=1SC(N)=NC1C=2C=CC(C)=C(C)C2,Z48847633
-test_plate_current,O30,DSI Poised DMSO,CNC(=O)C=1C=CC=C2C=CNC12,Z1273312153
-test_plate_current,O31,DSI Poised DMSO,FC=1C=CC=CC1C(=O)NC2=NN=CS2,Z86417414
-test_plate_current,O32,DSI Poised DMSO,O=C(NCCN1CCCC1=O)NC=2C=CC=CC2,Z2472938267
-test_plate_current,O33,DSI Poised DMSO,NC(=O)C1CCN(CC1)C(=O)NC=2C=CC=CC2,Z33545544
-test_plate_current,O34,DSI Poised DMSO,CC=1C=CC=CC1N2C=C(N=N2)C(=O)O,Z2327226104
-test_plate_current,O35,DSI Poised DMSO,OC=1C=CC(CNC2CCCCC2)=CC1,Z2241127906
-test_plate_current,O36,DSI Poised DMSO,CC(=O)C=1C=CC=C(NC(=O)C(F)(F)F)C1,Z57111868
-test_plate_current,O37,DSI Poised DMSO,CCS(=O)(=O)N1CCC(CC1)C(=O)O,Z53825020
-test_plate_current,O38,DSI Poised DMSO,CC(=O)NCCC=1C=CC(=CC1)S(=O)(=O)N,Z30857828
-test_plate_current,O39,DSI Poised DMSO,CC(=O)C=1C=CC(NC(=O)CN2CCCC2)=CC1,Z2856434916
-test_plate_current,O40,DSI Poised DMSO,CCOC(=O)C=1SC(=NC1C)N(C)C(=O)C,Z1230032143
-test_plate_current,O41,DSI Poised DMSO,OCC=1C=CC=CC1N2CCOCC2,Z235361235
-test_plate_current,P07,DSI Poised DMSO,O[C@@H]1CCN(CC=2C=CC(Cl)=CC2)C1,Z2856434858
-test_plate_current,P08,DSI Poised DMSO,CC(C)C1=NN=C(NCC(C)(C)C)S1,Z1461982627
-test_plate_current,P09,DSI Poised DMSO,CC(N)C(=O)N1CCCCC1C,Z927412236
-test_plate_current,P10,DSI Poised DMSO,NC=1N=CC=C(N1)C=2C=CC(Cl)=CC2,Z363993198
-test_plate_current,P11,DSI Poised DMSO,ClC=1N=CC=CC1C(=O)NC2=NN=CN2,Z275154304
-test_plate_current,P12,DSI Poised DMSO,CCC1=NC(=NO1)C=2C=CC(Cl)=CC2,Z57792053
-test_plate_current,P13,DSI Poised DMSO,O=C(NC=1C=CC=2NC(=O)NC2C1)C3=CC=CO3,Z26794338
-test_plate_current,P14,DSI Poised DMSO,FC=1C=CC(CNCC=2C=CC=CC2)=CC1,Z2856434783
-test_plate_current,P15,DSI Poised DMSO,O=C(NCC1CC1)NC=2C=CC=3OCCC3C2,Z413792090
-test_plate_current,P16,DSI Poised DMSO,CCOC(=O)NC=1SC=CC1C(=O)N,Z64450924
-test_plate_current,P17,DSI Poised DMSO,CCC1CCC(CC1)NC[C@H]2CCCO2,Z2856434866
-test_plate_current,P18,DSI Poised DMSO,CN1CCN(CC1)C(=O)C2CCCO2,Z31432964
-test_plate_current,P19,DSI Poised DMSO,CC(=O)N1CCCC(O)(C1)C(=O)O,Z2293643386
-test_plate_current,P20,DSI Poised DMSO,CCN1C(NC(=O)C)=NC=2C=CC=CC12,Z68639747
-test_plate_current,P21,DSI Poised DMSO,CCOC(=O)NC=1C=CC=C(Cl)C1,Z31697001
-test_plate_current,P22,DSI Poised DMSO,COC=1C=CC=2NC=C(CN(C)C)C2C1,Z2856434938
-test_plate_current,P23,DSI Poised DMSO,CCOC(=O)N1CCOCC1,Z31721097
-test_plate_current,P24,DSI Poised DMSO,CS(=O)(=O)NC=1C=CC(=CC1)C=2C=CC=CC2,Z45641455
-test_plate_current,P25,DSI Poised DMSO,COC(=O)CNC(=O)C=1C=C(C)ON1,Z375990520
-test_plate_current,P26,DSI Poised DMSO,CNC(C)C=1SC(C)=NC1C,Z1266823232
-test_plate_current,P27,DSI Poised DMSO,CC(CC=1C(C)=NOC1C)C(=O)N(C)C,Z1246465616
-test_plate_current,P28,DSI Poised DMSO,COC=1C=CC(CN2CCOCC2)=CC1OC,Z2856434878
-test_plate_current,P29,DSI Poised DMSO,CCC=1C=CC(OCC(=O)N2CCCCC2)=CC1,Z18839017
-test_plate_current,P30,DSI Poised DMSO,COC=1C=CC(CN)=CC1OC,Z2856434917
-test_plate_current,P31,DSI Poised DMSO,CC(CO)N(C)C=1N=CC(Cl)=CN1,Z1546887028
-test_plate_current,P32,DSI Poised DMSO,CN1N=NC(NC(=O)C=2C=CC(Cl)=CC2)=N1,Z57292434
-test_plate_current,P33,DSI Poised DMSO,CC(=O)N1CCC(CC1)NCCC=2C=CC=CC2,Z2856434883
-test_plate_current,P34,DSI Poised DMSO,CN1CCC[C@@H]1CO,Z2856434905
-test_plate_current,P35,DSI Poised DMSO,CN(CC1CCOC1)C=2N=CN=CC2Cl,Z1787627869
-test_plate_current,P36,DSI Poised DMSO,CC1=NC=CN1CC=2C=CC=C(C#N)C2,Z319545618
-test_plate_current,P37,DSI Poised DMSO,CN1CCN(CC1)C(=O)C=2C=CC(F)=C(F)C2,Z2856434829
-test_plate_current,P38,DSI Poised DMSO,CCOC(=O)CN1CCCCC1,Z2856434773
-test_plate_current,P39,DSI Poised DMSO,CC(=O)N1CCCNCC1,Z168883358
-test_plate_current,P40,DSI Poised DMSO,CCN(CC)C(=O)C1=CC(C)=NO1,Z135439900
-test_plate_current,P41,DSI Poised DMSO,CC(C)N1CCN(CC1)C(=O)C2=CC=CS2,Z2856434826
-test_plate_current,Q07,DSI Poised DMSO,OCC=1C=CC(=CC1)N2C=NC=3C=CC=CC23,Z235449082
-test_plate_current,Q08,DSI Poised DMSO,NC(=O)C=1C=CC(NC(=O)C=2C=CC=CC2)=CC1,Z30242076
-test_plate_current,Q09,DSI Poised DMSO,NC(=O)C=1C=CC(NC(=O)C2CCCC2)=CC1,Z30242133
-test_plate_current,Q10,DSI Poised DMSO,CN(C)C(=O)CNC=1C=CC=CC1,Z104584152
-test_plate_current,Q11,DSI Poised DMSO,COC(=O)C=1C=CC(NC(=O)C2CCCC2)=CC1,Z28226359
-test_plate_current,Q12,DSI Poised DMSO,CNC=1N=CC(=CC1Cl)C(F)(F)F,Z54628157
-test_plate_current,Q13,DSI Poised DMSO,CC=1C(Cl)=CC=CC1NC(=O)CN,Z85956652
-test_plate_current,Q14,DSI Poised DMSO,CC(=O)NC=1C=CC(OC=2N=CC=CN2)=CC1,Z54571979
-test_plate_current,Q15,DSI Poised DMSO,FC=1C=CC=C(NC(=O)C=2C=NC=CN2)C1,Z28143241
-test_plate_current,Q16,DSI Poised DMSO,CN1CCCC=2C=CC(=CC12)S(=O)(=O)N,Z1367324110
-test_plate_current,Q17,DSI Poised DMSO,CCCC(=O)NCC1=NC=2C=CC=CC2N1,Z26781952
-test_plate_current,Q18,DSI Poised DMSO,CC(N)C=1C=CC(=CC1)N2CCOCC2,Z1259341012
-test_plate_current,Q19,DSI Poised DMSO,FC=1C=CC(OCC(=O)N2CCCC2)=CC1,Z19735067
-test_plate_current,Q20,DSI Poised DMSO,CC(=O)NC1CNC=2C=CC=CC2C1,Z1492796719
-test_plate_current,Q21,DSI Poised DMSO,CCC1=NN=C(NC(=O)C=2C=NC=CN2)S1,Z26824727
-test_plate_current,Q22,DSI Poised DMSO,CC1CCC(CC1)NC2CCC(O)CC2,Z2241963319
-test_plate_current,Q23,DSI Poised DMSO,O=C(CCC1CCCC1)NC=2C=CC=C(C#N)C2,Z26548228
-test_plate_current,Q24,DSI Poised DMSO,CNC1(CCCC1)C(=O)N,Z1348559502
-test_plate_current,Q25,DSI Poised DMSO,CC(C)C(=O)NC=1C=CC=C(C#N)C1,Z26548083
-test_plate_current,Q26,DSI Poised DMSO,OC=1C=CC=C(NC(=O)NC=2C=CC(F)=CC2)C1,Z55290386
-test_plate_current,Q27,DSI Poised DMSO,CCNC(=O)NC=1C=C(C)ON1,Z56880342
-test_plate_current,Q28,DSI Poised DMSO,CC(C)NC(=O)N(C)C1CCS(=O)(=O)C1,Z445856640
-test_plate_current,Q29,DSI Poised DMSO,CNS(=O)(=O)C=1C=CC=CC1Cl,Z45527714
-test_plate_current,Q30,DSI Poised DMSO,CC1CN(CCO1)C(=O)C=2C=NC=CN2,Z212851096
-test_plate_current,Q31,DSI Poised DMSO,CS(=O)(=O)NC=1C=CC(CN)=CC1,Z426041412
-test_plate_current,Q32,DSI Poised DMSO,FC=1C=CC(NC(=O)CN2CCCC2)=CC1,Z2856434942
-test_plate_current,Q33,DSI Poised DMSO,O=C(NC=1C=CC(C#N)=CC1)C2=CC=CS2,Z30612387
-test_plate_current,Q34,DSI Poised DMSO,CNC1CCCN(C1=O)C=2C=CC=CC2,Z1212984951
-test_plate_current,Q35,DSI Poised DMSO,CC(C)C=1C=CC(NC(=O)N2CCOCC2)=CC1,Z208334100
-test_plate_current,Q36,DSI Poised DMSO,OC1CN(C1)C(C=2C=CC=CC2)C=3C=CC=CC3,Z1741964527
-test_plate_current,Q37,DSI Poised DMSO,COC(=O)C=1SC=CC1NC(=O)C2CC2,Z109092588
-test_plate_current,Q38,DSI Poised DMSO,CC(=O)C=1C=CC=C(NC(=O)N2CCOCC2)C1,Z274555794
-test_plate_current,Q39,DSI Poised DMSO,OC(=O)CCN1CCCCC1,Z53115945
-test_plate_current,Q40,DSI Poised DMSO,C1CC2(CCN(C2)C=3C=NC=CN3)CO1,Z1401276297
-test_plate_current,Q41,DSI Poised DMSO,C(C#CC=1C=CC=CC1)N2CCCCC2,Z57257264
-test_plate_current,R07,DSI Poised DMSO,CN1C=CC(NCC=2C=CC=CC2)=N1,Z1401333862
-test_plate_current,R08,DSI Poised DMSO,OCCN1CCOCC1,Z2856434843
-test_plate_current,R09,DSI Poised DMSO,COC(=O)C1CCN(CC1)C(=O)NC(C)(C)C,Z44567722
-test_plate_current,R10,DSI Poised DMSO,CN(C)CC=1C=CC(C#N)=CC1,Z2856434815
-test_plate_current,R11,DSI Poised DMSO,CNC1CCCCC1S(=O)(=O)C,Z1259161657
-test_plate_current,R12,DSI Poised DMSO,CC(=O)N1C[C@H](O)C[C@@H]1C(=O)O,Z1824511473
-test_plate_current,R13,DSI Poised DMSO,COC(=O)[C@@H]1C[C@@H](O)CN1C(=O)C2=CC=CO2,Z1614545742
-test_plate_current,R14,DSI Poised DMSO,C1CC1C2=NOC(=N2)C3CCNC3,Z2177153697
-test_plate_current,R15,DSI Poised DMSO,ClC=1C=CC=C(CN2CCOCC2)C1,Z2856434856
-test_plate_current,R16,DSI Poised DMSO,COC=1C=CC=2SC(N)=NC2C1,Z1954800564
-test_plate_current,R17,DSI Poised DMSO,O=C(NC1=NC=CS1)[C@@H]2C[C@H]2C=3C=CC=CC3,Z2064107709
-test_plate_current,R18,DSI Poised DMSO,CN1C=C(OC=2N=CN=CC2Cl)C=N1,Z1918536193
-test_plate_current,R19,DSI Poised DMSO,CCOC(=O)C1CCN(CC1)C=2C=NC=CN2,Z31217395
-test_plate_current,R20,DSI Poised DMSO,CN(CCC#N)S(=O)(=O)C=1C=CC(C)=CC1,Z45515569
-test_plate_current,R21,DSI Poised DMSO,CCCC(=O)NC=1N=NN(CC)N1,Z57475877
-test_plate_current,R22,DSI Poised DMSO,COC=1C=CC(NCC=2C=CC(F)=CC2)=CC1,Z57328997
-test_plate_current,R23,DSI Poised DMSO,CC(=O)NCCC=1C=CC=CC1C,Z52314092
-test_plate_current,R24,DSI Poised DMSO,CCC1=NN=C(NC(=O)CN(C)C)S1,Z2856434846
-test_plate_current,R25,DSI Poised DMSO,COC=1C=CC=CC1N2CCN(CC#N)CC2,Z2856434807
-test_plate_current,R26,DSI Poised DMSO,CC(C)C(N)C1=NC(C)=NO1,Z1267773566
-test_plate_current,R27,DSI Poised DMSO,CC1C(O)CCCN1CC=2C=CC=CC2,Z2217052426
-test_plate_current,R28,DSI Poised DMSO,CC=1C=C(C)N=C(NC=2C=CC=CC2)N1,Z285675722
-test_plate_current,R29,DSI Poised DMSO,FC=1C=CC(CC(=O)NC=2C=CC(F)=CC2)=CC1,Z27805986
-test_plate_current,R30,DSI Poised DMSO,CCC1=NC=C(CNC)S1,Z1267773633
-test_plate_current,R31,DSI Poised DMSO,CC1CN(CCC1N)S(=O)(=O)C,Z1346370629
-test_plate_current,R32,DSI Poised DMSO,OC(=O)CN1CCC(CC1)C=2C=CC=CC2,Z287148438
-test_plate_current,R33,DSI Poised DMSO,CC(C)(C)CC(=O)NC=1C=CC(F)=CC1F,Z30802768
-test_plate_current,R34,DSI Poised DMSO,C[C@H](O)CNCC=1C(Cl)=CC=CC1Cl,Z2856434909
-test_plate_current,R35,DSI Poised DMSO,CCNCC1=CN(C)N=N1,Z1271660837
-test_plate_current,R36,DSI Poised DMSO,COCC(=O)NCC=1C=CC=CC1,Z31478538
-test_plate_current,R37,DSI Poised DMSO,CNC(=O)CCC1CCCCC1,Z32016974
-test_plate_current,R38,DSI Poised DMSO,CC=1C=CC(OCC(=O)N2CCOCC2)=C(C)C1,Z17497990
-test_plate_current,R39,DSI Poised DMSO,CCN(CCO)C=1C=CC(N)=CC1,Z752989138
-test_plate_current,R40,DSI Poised DMSO,COC=1C=CC(CNC2CCCC2)=CC1,Z2856434940
-test_plate_current,R41,DSI Poised DMSO,O=C(C1CC1)N2CCN(CC2)C(=O)C3=CC=CO3,Z32327641
-test_plate_current,S07,DSI Poised DMSO,NC(=O)C=1C=NC(=NC1)C(F)(F)F,Z1745658474
-test_plate_current,S08,DSI Poised DMSO,NC(=O)C1CCC(F)(F)CC1,Z1526748660
-test_plate_current,S09,DSI Poised DMSO,COC=1C=CC=2C=NNC(=O)C2C1OC,Z102895082
-test_plate_current,S10,DSI Poised DMSO,CC(=O)NC=1C=CC=C(C(=O)O)C1C,Z364368134
-test_plate_current,S11,DSI Poised DMSO,CNC(=O)C=1C=CC(=CC1)S(=O)(=O)N,Z165170770
-test_plate_current,S12,DSI Poised DMSO,NC(=O)C=1C=NN(CCO)C1,Z1562205518
-test_plate_current,S13,DSI Poised DMSO,CN1CCN(CC1)C(=O)NC=2C=CC(F)=CC2,Z2856434944
-test_plate_current,S14,DSI Poised DMSO,CC=1C=C(F)C=CC1CS(=O)(=O)N,Z1849009686
-test_plate_current,S15,DSI Poised DMSO,CC(C)OC=1C=CC(=CC1)C2=CSC(N)=N2,Z969560308
-test_plate_current,S16,DSI Poised DMSO,CNS(=O)(=O)C=1C=CC=C(C)C1F,Z1639162606
-test_plate_current,S17,DSI Poised DMSO,NC=1C=C(C=CC1N2CCCCC2)C(F)(F)F,Z56792776
-test_plate_current,S18,DSI Poised DMSO,CN1C=C(C(=O)N)C(=N1)C2CCCNC2,Z2377835233
-test_plate_current,S19,DSI Poised DMSO,CC(C)NC(=O)C=1C=CNN1,Z381729066
-test_plate_current,S20,DSI Poised DMSO,CC=1N=CSC1C(=O)N2CCCNCC2,Z803153598
-test_plate_current,S21,DSI Poised DMSO,FC=1C=CC(CCNC(=O)C2=CC=CO2)=CC1,Z26769872
-test_plate_current,S22,DSI Poised DMSO,CS(=O)(=O)NCC1CCNCC1,Z1741966151
-test_plate_current,S23,DSI Poised DMSO,FC=1C=CC=C(F)C1C(=O)N2CCCC2,Z54226006
-test_plate_current,S24,DSI Poised DMSO,CC(=O)NC1=CC(=CC(=C1)C(=O)N)C(=O)N,Z33486130
-test_plate_current,S25,DSI Poised DMSO,CC(=O)C=1C=CC(OCC(=O)O)=CC1,Z2856434937
-test_plate_current,S26,DSI Poised DMSO,CCN(C)C(=O)C=1C=CC=C(N)C1,Z2092370954
-test_plate_current,S27,DSI Poised DMSO,CCNC(=O)C=1C=CC(N(C)C)=C(F)C1,Z907784200
-test_plate_current,S28,DSI Poised DMSO,CC=1C=CC(=CC1C)C(=O)NC2=NN=CN2,Z2856434827
-test_plate_current,S29,DSI Poised DMSO,CNCC1COC=2C=CC=CC2O1,Z1891773476
-test_plate_current,S30,DSI Poised DMSO,NC(=O)C=1C=C(C=CN1)N2CCCC2,Z145119960
-test_plate_current,S31,DSI Poised DMSO,CCC(=O)NC=1C=CC(=CC1)S(=O)(=O)N,Z27682767
-test_plate_current,S32,DSI Poised DMSO,CC1=CSC(NC(=O)NC=2C=CC=C(C)C2)=N1,Z44602971
-test_plate_current,S33,DSI Poised DMSO,OC=1C=CC(CN2CCCC2)=C3C=CC=NC13,Z2856434902
-test_plate_current,S34,DSI Poised DMSO,NC(=S)NC=1C=CC=CC1OC(F)(F)F,Z291279160
-test_plate_current,S35,DSI Poised DMSO,ClC=1SN=NC1CN2CCOCC2,Z2856434925
-test_plate_current,S36,DSI Poised DMSO,CNC(=O)C=1C=CC=CC1NC(=O)C2=CC=CO2,Z30272547
-test_plate_current,S37,DSI Poised DMSO,CS(=O)(=O)NC1CCNCC1,Z212045094
-test_plate_current,S38,DSI Poised DMSO,O=C(NC1=NN=C(S1)C2=CC=CO2)C3CC3,Z165141116
-test_plate_current,S39,DSI Poised DMSO,NC(=O)NC=1C=CC(=CC1)C=2C=CC=CC2,Z198195774
-test_plate_current,S40,DSI Poised DMSO,FC=1C=CC(CNC(=O)NC=2C=CC=CC2)=CC1,Z44609285
-test_plate_current,S41,DSI Poised DMSO,CCC(=O)NC=1C=CC=C(N)C1C,Z235361315
-test_plate_current,T07,DSI Poised DMSO,C(CC=1C=CC=CC1)NC2=NC=3C=CC=CC3N2,Z57299529
-test_plate_current,T08,DSI Poised DMSO,CC(C)CC(=O)NCC=1C=CC=2OCOC2C1,Z27695365
-test_plate_current,T09,DSI Poised DMSO,CNS(=O)(=O)CC1CCCCC1,Z1003207278
-test_plate_current,T10,DSI Poised DMSO,NC(=S)NC=1C=CC(OC(F)(F)F)=CC1,Z1741960769
-test_plate_current,T11,DSI Poised DMSO,CCOC(=O)NCC=1C=CC=CC1,Z31478129
-test_plate_current,T12,DSI Poised DMSO,N#CCCN1CCOCC1,Z2856434767
-test_plate_current,T13,DSI Poised DMSO,COC=1C=CC(=CC1)C(=O)NCC(=O)N,Z33546965
-test_plate_current,T14,DSI Poised DMSO,CC=1C=NC=C(NCC=2C=CN=CC2)C1,Z1478435544
-test_plate_current,T15,DSI Poised DMSO,OC=1C=CC=C(CN2CCSCC2)C1,Z2856434857
-test_plate_current,T16,DSI Poised DMSO,CC=1OC=CC1C(=O)NC=2C=C(ON2)C(C)(C)C,Z1086293874
-test_plate_current,T17,DSI Poised DMSO,CCOC(=O)C=1C=COC1,Z293079056
-test_plate_current,T18,DSI Poised DMSO,OC=1C=CC=CC1C2=NC(=NO2)C=3C=CC=CC3,Z276351322
-test_plate_current,T19,DSI Poised DMSO,CC(O)COC=1C=CC=C(F)C1,Z1250132544
-test_plate_current,T20,DSI Poised DMSO,CN1C=C(Cl)C(=N1)C(=O)NC2CCCC2,Z275151340
-test_plate_current,T21,DSI Poised DMSO,C1CCN(CC1)C2=NOC(=N2)C3=CC=CS3,Z1623890017
-test_plate_current,T22,DSI Poised DMSO,OCC1CN(CC=2C=CC=CC2)CCO1,Z1259086950
-test_plate_current,T23,DSI Poised DMSO,CC1COCCN1CCN,Z1263811695
-test_plate_current,T24,DSI Poised DMSO,CC(C)C(=O)NC=1N=NN(C)N1,Z57292369
-test_plate_current,T25,DSI Poised DMSO,CC(C)NCC1=NC(=NO1)C=2C=CC(C)=CC2,Z2856434849
-test_plate_current,T26,DSI Poised DMSO,COC=1C=CC(=CC1)C(N)C(=O)O,Z56755722
-test_plate_current,T27,DSI Poised DMSO,CCOC=1C(F)=CC=CC1C(=O)N(C)C,Z1273312142
-test_plate_current,T28,DSI Poised DMSO,O=C(NC1=NC=2C=CC=CC2N1)C3CCCCC3,Z27666218
-test_plate_current,T29,DSI Poised DMSO,FC=1C=CC(CNCC=2C=CC(C#N)=CC2)=CC1,Z2856434851
-test_plate_current,T30,DSI Poised DMSO,NCC=1C=CC(=CC1)C2=CC=CS2,Z2856434805
-test_plate_current,T31,DSI Poised DMSO,CC1CNCCN1CCO,Z1741794237
-test_plate_current,T32,DSI Poised DMSO,CCOC=1C=CC(=CC1)C(=O)NC=2C=C(C)ON2,Z86948938
-test_plate_current,T33,DSI Poised DMSO,CN1CCN(CC1)C(=O)COC=2C=CC(C)=CC2,Z2856434836
-test_plate_current,T34,DSI Poised DMSO,C(C1CCCCN1)N2C=CN=N2,Z1891776952
-test_plate_current,T35,DSI Poised DMSO,C(NC1CCNC1)C=2C=CC=CC2,Z1827898537
-test_plate_current,T36,DSI Poised DMSO,CN1CCN(CC1)C=2C=CC(C#N)=CC2,Z2856434840
-test_plate_current,T37,DSI Poised DMSO,CC(=O)N1CCN(CCCC=2C=CC=CC2)CC1,Z2856434884
-test_plate_current,T38,DSI Poised DMSO,CC(=O)NC=1C=CC=C(NC(=O)N)C1,Z198195770
-test_plate_current,T39,DSI Poised DMSO,CCNC=1N=CC=CC1C,Z1992316287
-test_plate_current,T40,DSI Poised DMSO,CC(=O)NCC1=CN=CS1,Z1667545918
-test_plate_current,T41,DSI Poised DMSO,CN(CCC=1C=CC=CN1)C(=O)C=2C=CC=CC2,Z68277692
-test_plate_current,U07,DSI Poised DMSO,O=C1NC=C(NCC=2C=CC=CC2)C(=O)N1,Z111666026
-test_plate_current,U08,DSI Poised DMSO,CC(=O)N1CC=2C=CC(N)=CC2C1,Z1354416068
-test_plate_current,U09,DSI Poised DMSO,CCC=1C=CC(NC(=O)C=2C=NC=CN2)=CC1,Z30917949
-test_plate_current,U10,DSI Poised DMSO,CN(C)C(=O)C=1C=CC(F)=CC1Br,Z100642432
-test_plate_current,U11,DSI Poised DMSO,COC=1C=CC=C(C1)C(N)CC(=O)O,Z335451386
-test_plate_current,U12,DSI Poised DMSO,CC(N)C1=NC(CC=2C=CC=CC2)=NO1,Z2442288995
-test_plate_current,U13,DSI Poised DMSO,N(C1=NN=CS1)C=2C=CC=CC2,Z56347187
-test_plate_current,U14,DSI Poised DMSO,CC(=O)NC=1C=CC(F)=C(C1)C(=O)O,Z364321922
-test_plate_current,U15,DSI Poised DMSO,CNC(=O)C1=NC=2C=CC=CC2C(=O)N1,Z332370018
-test_plate_current,U16,DSI Poised DMSO,CS(=O)(=O)C1=NC=CN1CC2=CSC=N2,Z1328968520
-test_plate_current,U17,DSI Poised DMSO,CC(C)(C)C(=O)NCCC1=NC=2C=CC=CC2N1,Z111716368
-test_plate_current,U18,DSI Poised DMSO,CC(C)NC=1C=CC=NC1,Z1259341037
-test_plate_current,U19,DSI Poised DMSO,CCC(=O)NC1=NC(C)=CS1,Z30820160
-test_plate_current,U20,DSI Poised DMSO,CCS(=O)(=O)NC=1C=CC=CC1F,Z53825177
-test_plate_current,U21,DSI Poised DMSO,COC=1C=CC=C(C1)C(=O)NC=2C=CC=CC2F,Z28290384
-test_plate_current,U22,DSI Poised DMSO,NC=1N=CN=CC1C=2C=CC(Cl)=CC2,Z1262398388
-test_plate_current,U23,DSI Poised DMSO,COC=1C=CC=2N=C(NC(=O)C3CC3)SC2C1,Z27678561
-test_plate_current,U24,DSI Poised DMSO,CCN(CC)S(=O)(=O)C=1C=CC(C)=CC1,Z45516134
-test_plate_current,U25,DSI Poised DMSO,ClC=1C=CC(CC(=O)NC=2N=CC=CN2)=CC1,Z203581214
-test_plate_current,U26,DSI Poised DMSO,CC1=NN(C)C(C)=C1CN2CCNCC2,Z1263820300
-test_plate_current,U27,DSI Poised DMSO,O=C(CCC1CCCCC1)N2CCOCC2,Z31721798
-test_plate_current,U28,DSI Poised DMSO,CCNC(=O)C1=CNN=N1,Z755044716
-test_plate_current,U29,DSI Poised DMSO,CC=1C=CC=C(C1)C(=O)NC=2C=CC(C)=CC2O,Z33452549
-test_plate_current,U30,DSI Poised DMSO,CCNC=1C=CC(C)=NN1,Z1267773786
-test_plate_current,U31,DSI Poised DMSO,CC=1N=C(C)N(CCC(=O)O)N1,Z274553586
-test_plate_current,U32,DSI Poised DMSO,OC=1C=CC(CN2CCOCC2)=C3C=CC=NC13,Z2856434798
-test_plate_current,U33,DSI Poised DMSO,CC1=CC(NC(=O)CSC=2C=CC=CC2)=NO1,Z19750454
-test_plate_current,U34,DSI Poised DMSO,CC1=CN=C(S1)N2CCNCC2,Z1741975423
-test_plate_current,U35,DSI Poised DMSO,CS(=O)(=O)NC1(CCCCC1)C(=O)O,Z133622412
-test_plate_current,U36,DSI Poised DMSO,CC=1C=CC(CS(=O)(=O)N)=CC1F,Z1703168683
-test_plate_current,U37,DSI Poised DMSO,CCCN1N=NN=C1NC(=O)C2=CC=CO2,Z57446103
-test_plate_current,U38,DSI Poised DMSO,CC(=O)NC=1C=CC(OC(=O)N2CCCC2)=CC1,Z274555566
-test_plate_current,U39,DSI Poised DMSO,CNS(=O)(=O)CC=1C=C(C)ON1,Z763030030
-test_plate_current,U40,DSI Poised DMSO,CC1=CC(=NO1)C2CCCN2S(=O)(=O)C,Z319891284
-test_plate_current,U41,DSI Poised DMSO,CC1=CC(NC(=O)COC=2C=CC(C)=CC2)=NO1,Z19731563
-test_plate_current,V07,DSI Poised DMSO,CC=1N=CC=C(N1)N2CCC(N)CC2,Z1333043417
-test_plate_current,V08,DSI Poised DMSO,CN(C)CC1=NC(=NO1)C2(N)CCCC2,Z1259339735
-test_plate_current,V09,DSI Poised DMSO,CC(CO)(CO)NC(=O)NC=1C=CC=CC1,Z57472297
-test_plate_current,V10,DSI Poised DMSO,CC1=NC(CN2C=CC(C)=CC2=O)=CS1,Z1134990241
-test_plate_current,V11,DSI Poised DMSO,CC=1C=CC(NC(=O)C2CCCO2)=NC1,Z71580604
-test_plate_current,V12,DSI Poised DMSO,CC=1C=CC(CC(=O)NC[C@@H]2CCCO2)=CC1,Z2064898339
-test_plate_current,V13,DSI Poised DMSO,FC(F)(F)C(=O)NC=1C=CC=C(Cl)C1,Z111810692
-test_plate_current,V14,DSI Poised DMSO,CN(C(=O)[C@H]1CC1(C)C)C=2C=CC=NC2,Z1506050651
-test_plate_current,V15,DSI Poised DMSO,CC1=NN=C(S1)N2CCCCC2,Z1251207602
-test_plate_current,V16,DSI Poised DMSO,CS(=O)(=O)N1CCC(CC1)C(=O)NC2CC2,Z227998000
-test_plate_current,V17,DSI Poised DMSO,O=C(CC1CCCCC1)NN2C=NN=C2,Z57261895
-test_plate_current,V18,DSI Poised DMSO,CNCC=1C=CC=C(Cl)C1,Z2856434770
-test_plate_current,V19,DSI Poised DMSO,CN(C1CCCCCC1)S(=O)(=O)C,Z216450634
-test_plate_current,V20,DSI Poised DMSO,CC1=NN(C)C(C)=C1NC(=O)CC#N,Z1688504114
-test_plate_current,V21,DSI Poised DMSO,CC=1C=CC=C(C1)C(=O)N2CCC(CC2)C(=O)N,Z32400357
-test_plate_current,V22,DSI Poised DMSO,CC(C)NC=1N=CC=CN1,Z31190928
-test_plate_current,V23,DSI Poised DMSO,CN(CC=1C=C(C)ON1)C(=O)NC2CC2,Z369936976
-test_plate_current,V24,DSI Poised DMSO,CCC(=O)NC=1C=CC(=CC1)N2CCC(C)CC2,Z57344995
-test_plate_current,V25,DSI Poised DMSO,CC=1OC=CC1C(=O)N2CCC=3C=CC=CC23,Z89307993
-test_plate_current,V26,DSI Poised DMSO,CN(C(=O)C)C=1C=CC=NC1,Z1203252645
-test_plate_current,V27,DSI Poised DMSO,CC1=NC=C(CNC=2C=NC=C(F)C2)S1,Z1983897532
-test_plate_current,V28,DSI Poised DMSO,COC(=O)NC=1C=C(C)N(N1)C=2C=CC=CC2,Z1581680287
-test_plate_current,V29,DSI Poised DMSO,O=C(NCCC1=CCCCC1)C=2C=NC=CN2,Z69091635
-test_plate_current,V30,DSI Poised DMSO,COC=1C=CC(NC(=O)CN)=CC1,Z1449748885
-test_plate_current,V31,DSI Poised DMSO,CC1=NSC(=N1)N2CCCNCC2,Z1578665941
-test_plate_current,V32,DSI Poised DMSO,COCC(=O)NC=1C=CC=CC1,Z31504642
-test_plate_current,V33,DSI Poised DMSO,COCC(=O)NC1=NC(=CS1)C=2C=CC=CC2,Z62645406
-test_plate_current,V34,DSI Poised DMSO,O=C(N1CCOCC1)C2=CSN=N2,Z741055844
-test_plate_current,V35,DSI Poised DMSO,CCNC1CCN(CC1)C=2C=CN=CC2,Z2065616520
-test_plate_current,V36,DSI Poised DMSO,FC=1C=CC=CC1CNC2CCOCC2,Z823455846
-test_plate_current,V37,DSI Poised DMSO,FC=1C=CC=CC1C(=O)NCCC=2C=CN=CC2,Z1310876699
-test_plate_current,V38,DSI Poised DMSO,CC1=CC(=NO1)C(=O)NCC2=CC=CS2,Z29692148
-test_plate_current,V39,DSI Poised DMSO,C(N1CCC(CC1)N2C=CC=C2)C=3C=CC=CC3,Z2856434898
-test_plate_current,V40,DSI Poised DMSO,FC=1C=CC(CNC[C@H]2CCCO2)=CC1,Z2856434824
-test_plate_current,V41,DSI Poised DMSO,CC=1C=CC=C(NC(=O)CN2CCOCC2)C1C,Z2856434834
-test_plate_current,W07,DSI Poised DMSO,CN1C=C(C(=O)O)C(=N1)C=2C=CN=CC2,Z815264062
-test_plate_current,W08,DSI Poised DMSO,COC=1C=CC=NC1C#N,Z1955122823
-test_plate_current,W09,DSI Poised DMSO,C1CN(CCO1)C2=NC=3C=CC=CC3S2,Z56767623
-test_plate_current,W10,DSI Poised DMSO,CN(C1CC(O)C1)C=2C=C(C)N=C(C)N2,Z1675346324
-test_plate_current,W11,DSI Poised DMSO,FC=1C=C(C#N)C=CC1N2CCNCC2,Z939944666
-test_plate_current,W12,DSI Poised DMSO,CC(C)(C(=O)N)C=1C=CC=CC1,Z270979606
-test_plate_current,W13,DSI Poised DMSO,CC=1C=CC(CNC(=O)CC2=CC=CS2)=CC1,Z28429411
-test_plate_current,W14,DSI Poised DMSO,CN(C)C(=O)C1(CC1)C(=O)O,Z1874937335
-test_plate_current,W15,DSI Poised DMSO,CS(=O)(=O)N1CCN(CC2=CC=CO2)CC1.OC(=O)C(=O)O,Z2241115980
-test_plate_current,W16,DSI Poised DMSO,CC(=O)NCC1=NC=CN1,Z1203191681
-test_plate_current,W17,DSI Poised DMSO,CN(C)CCN1C(=O)C=2C=CC=CC2C1=O,Z2856434895
-test_plate_current,W18,DSI Poised DMSO,CC(O)C(=O)NCC=1C=CC=CN1,Z1551688335
-test_plate_current,W19,DSI Poised DMSO,CCOC=1N=CC=CC1C(=O)N,Z272156568
-test_plate_current,W20,DSI Poised DMSO,CN(C)CC1=CC=C(O1)C(=O)O,Z359352902
-test_plate_current,W21,DSI Poised DMSO,CC=1C=CC=C(C1)C(=O)NCC(=O)O,Z56827661
-test_plate_current,W22,DSI Poised DMSO,CCOC=1C=CC(=CC1)C(C)N,Z210803634
-test_plate_current,W23,DSI Poised DMSO,COC=1C=CC(=CC1)C(=O)NC=2C=CC=CC2F,Z28290321
-test_plate_current,W24,DSI Poised DMSO,CC(=O)NC=1C=CC=2NC(=O)NC2C1,Z26794305
-test_plate_current,W25,DSI Poised DMSO,NC=1C=CC(=CC1)S(=O)(=O)NC=2C=CC=CC2,Z56923284
-test_plate_current,W26,DSI Poised DMSO,N[C@H]1CCN(C1)S(=O)(=O)C=2C=CC=CC2,Z2443429438
-test_plate_current,W27,DSI Poised DMSO,CN(C)C(=O)COC=1C=CC=CC1C,Z19733482
-test_plate_current,W28,DSI Poised DMSO,CN(C)C=1C=CC(=CC1)C(=O)NC=2C=CN=CC2,Z85517292
-test_plate_current,W29,DSI Poised DMSO,OC=1C=CC=CC1NC(=O)COC=2C=CC=CC2,Z68195082
-test_plate_current,W30,DSI Poised DMSO,CNC=1N=CC=NC1C#N,Z1896597864
-test_plate_current,W31,DSI Poised DMSO,CCC(=O)NCC1=NN=C2CCCCN12,Z438067480
-test_plate_current,W32,DSI Poised DMSO,CC(=O)NCC1(CCOCC1)C=2C=CC=CC2,Z384468096
-test_plate_current,W33,DSI Poised DMSO,CCC=1C=CC(=CC1)C=2N=C(N)SC2C,Z48847639
-test_plate_current,W34,DSI Poised DMSO,COC(=O)COC=1C=CC(C#N)=CC1,Z19234337
-test_plate_current,W35,DSI Poised DMSO,CC1=C(C=NN1C)C(=O)NCC2CCC2,Z396380540
-test_plate_current,W36,DSI Poised DMSO,O=C(NCCC=1C=CN=CC1)NC2CCCCC2,Z111507846
-test_plate_current,W37,DSI Poised DMSO,NNC(=O)C=1C=CC(OCC=2C=CC=CC2)=CC1,Z58982727
-test_plate_current,W38,DSI Poised DMSO,CN1CCC(OC=2C=CC=C(F)C2)C1=O,Z1217960891
-test_plate_current,W39,DSI Poised DMSO,CCOC(=O)CN1CCS(=O)(=O)CC1,Z2856434920
-test_plate_current,W40,DSI Poised DMSO,COC(=O)C1CCN(CC(=O)N)CC1,Z2856434804
-test_plate_current,W41,DSI Poised DMSO,O=C1NC=C(N2CCOCC2)C(=O)N1,Z57282999
-test_plate_current,X07,DSI Poised DMSO,CN(C)C(=O)OCCN1C=CN=C1,Z1722836661
-test_plate_current,X08,DSI Poised DMSO,FC=1C=CC=C(CNCC2=CC=CO2)C1,Z2737076969
-test_plate_current,X09,DSI Poised DMSO,CN(CC1=CC=C(C)O1)CC=2C=CC=CC2,Z2856434896
-test_plate_current,X10,DSI Poised DMSO,COC=1C=CC(=CC1)C(N)C=2C=CC=CC2,Z2574937229
-test_plate_current,X11,DSI Poised DMSO,CC(NC(=O)C=1C=CC=C(C)N1)C2CC2,Z287256168
-test_plate_current,X12,DSI Poised DMSO,CN(C)C=1N=CN=C2SC(C)=C(C)C12,Z31222641
-test_plate_current,X13,DSI Poised DMSO,OC=1N=CC(NC2CCCCC2)=C(O)N1,Z57283017
-test_plate_current,X14,DSI Poised DMSO,CN1C=CC(=N1)C(=O)NC=2C=CC=C(C2)C(=O)[O-],Z2856434892
-test_plate_current,X15,DSI Poised DMSO,COC=1C=CC(C)=CC1NC(=O)NN2C=NN=C2,Z2234920345
-test_plate_current,X16,DSI Poised DMSO,CC1CCN(CC2=CNC=3C=CC=CC23)CC1,Z2856434912
-test_plate_current,X17,DSI Poised DMSO,CC1=NC(=NO1)C=2C=CC=CC2,Z57791725
-test_plate_current,X18,DSI Poised DMSO,N[C@@H]1CCCN(C1)C(=O)CCC(F)(F)F,Z1818332938
-test_plate_current,X19,DSI Poised DMSO,C(NC1CCCC1)C2CCCO2,Z90504169
-test_plate_current,X20,DSI Poised DMSO,C(NC1=NC=2C=CC=CC2N1)C3=CC=CO3,Z57299526
-test_plate_current,X21,DSI Poised DMSO,CC=1NC=NC1CN2CCC=3C=CC=CC3C2,Z2856434879
-test_plate_current,X22,DSI Poised DMSO,CC=1C=C(F)C=C(C1)S(=O)(=O)N,Z1324080698
-test_plate_current,X23,DSI Poised DMSO,CC(O)CN1C=CN=C1C,Z1362754425
-test_plate_current,X24,DSI Poised DMSO,CCOC=1C=CC=C(C1)C(=O)NC=2N=NN(C)N2,Z57292400
-test_plate_current,X25,DSI Poised DMSO,CCN1CCC(CC1)NC=2C=CC=CC2F,Z2856434868
-test_plate_current,X26,DSI Poised DMSO,CC1=NC(CN2C[C@@H](F)C[C@H]2CN)=CS1,Z2444997446
-test_plate_current,X27,DSI Poised DMSO,CC1=NC(C(=O)N2CCCC2)=C(C)S1,Z1497321453
-test_plate_current,X28,DSI Poised DMSO,OC=1C=CC=CC1CN2CCC=3C=CC=CC3C2,Z2856434881
-test_plate_current,X29,DSI Poised DMSO,CC(C)(C)C1CCN(CC1)C(=O)C=2C=CC=CC2,Z1217741507
-test_plate_current,X30,DSI Poised DMSO,CC1=NOC(CC(N)C=2C=CC=CC2)=N1,Z2442269480
-test_plate_current,X31,DSI Poised DMSO,CCC(NC)C=1C=CN=CC1,Z1250132788
-test_plate_current,X32,DSI Poised DMSO,CN1N=CC=C1C(=O)NCC2=CC=CS2,Z915492990
-test_plate_current,X33,DSI Poised DMSO,COC=1C=CC(CC(=O)NC2=NN=CS2)=CC1,Z86416929
-test_plate_current,X34,DSI Poised DMSO,CNCC=1C=CC=C(OC)N1,Z1603775714
-test_plate_current,X35,DSI Poised DMSO,CNC1(CO)CCOCC1,Z1169060901
-test_plate_current,X36,DSI Poised DMSO,C[C@@H](CO)N(C)C=1N=CC=CC1F,Z2017168803
-test_plate_current,X37,DSI Poised DMSO,CC1CCN(CC1)C(=O)CCCC=2C=CC=CC2,Z419884046
-test_plate_current,X38,DSI Poised DMSO,CS(=O)(=O)N1CCC[C@@H]1CN,Z1713595338
-test_plate_current,X39,DSI Poised DMSO,CC1CCCN(CC1)C(=O)C2=CSC=N2,Z1101755952
-test_plate_current,X40,DSI Poised DMSO,CC1CCC=2C=CC=CC2N1C(=O)C,Z28870646
-test_plate_current,X41,DSI Poised DMSO,CC(C)COC=1C=CC(=CC1)C(=O)N2CCCC2,Z31480458
-test_plate_current,Y07,DSI Poised DMSO,NC(=O)C1CCN(CC1)C(=O)CC#N,Z57627041
-test_plate_current,Y08,DSI Poised DMSO,COC=1C=CC=CC1C2=NN=CO2,Z1359419878
-test_plate_current,Y09,DSI Poised DMSO,FC=1C=CC(CN2C=NC=3C=CC=CC23)=CC1,Z26333448
-test_plate_current,Y10,DSI Poised DMSO,CC1=NN(C(=O)C1)C=2C=CC=CC2,Z50145861
-test_plate_current,Y11,DSI Poised DMSO,FC=1C=CC(CC(=O)NC2CCCCC2)=CC1,Z31484539
-test_plate_current,Y12,DSI Poised DMSO,CC=1C=CC(C(=O)N)=C(F)C1,Z1343633025
-test_plate_current,Y13,DSI Poised DMSO,CNC(=O)CN1CCNCC1,Z85934875
-test_plate_current,Y14,DSI Poised DMSO,CC=1NNC(=O)C1CCO,Z1259155959
-test_plate_current,Y15,DSI Poised DMSO,CC(OC=1C=CC(=CC1)C=2C=CC=CC2)C(=O)O,Z111782404
-test_plate_current,Y16,DSI Poised DMSO,NC(=O)C1CCCN2C=CN=C12,Z1324853681
-test_plate_current,Y17,DSI Poised DMSO,ClC=1C=CC=C(NC(=O)CN2CCCC2)C1,Z2735692823
-test_plate_current,Y18,DSI Poised DMSO,CCN(CC)C=1C=CC=C(O)C1,Z2856434814
-test_plate_current,Y19,DSI Poised DMSO,COC=1C=C(NC(=O)C)C(OC)=CC1Cl,Z26968795
-test_plate_current,Y20,DSI Poised DMSO,COC=1C=CC=C2NC(=O)CCCC12,Z1507502062
-test_plate_current,Y21,DSI Poised DMSO,COC=1C=CC(CNC(=O)CC#N)=CC1,Z190662888
-test_plate_current,Y22,DSI Poised DMSO,OC1CCN(CC=2C=CSC2)CC1,Z2856434899
-test_plate_current,Y23,DSI Poised DMSO,CCNC=1C=CC(C#N)=CN1,Z219104216
-test_plate_current,Y24,DSI Poised DMSO,CN(C1CCC1)C=2C=CC(=NN2)C(=O)N,Z1349163663
-test_plate_current,Y25,DSI Poised DMSO,CC(=O)NC=1C=CC=CC1OCC=2C=CC=CC2,Z26365442
-test_plate_current,Y26,DSI Poised DMSO,CN1CCN(CC1)C(=O)CO,Z228585842
-test_plate_current,Y27,DSI Poised DMSO,CC(N)C=1C=CC(NC(=O)C2CC2)=CC1,Z1891773393
-test_plate_current,Y28,DSI Poised DMSO,CC(=O)NC=1C=C2OCOC2=CC1C,Z1635496816
-test_plate_current,Y29,DSI Poised DMSO,CC=1C=C(ON1)C(=O)NCC2CCOC2,Z384361454
-test_plate_current,Y30,DSI Poised DMSO,CC=1C=CC=C(NC(=O)[C@@H]2CCCN2)N1,Z1267881672
-test_plate_current,Y31,DSI Poised DMSO,CNC=1N=CC=CN1,Z54628578
-test_plate_current,Y32,DSI Poised DMSO,NC(=O)C=1C=CC=2NCCC2C1,Z2434225559
-test_plate_current,Y33,DSI Poised DMSO,CCC(C)NC(=O)C=1C=CC=CC1N,Z56040660
-test_plate_current,Y34,DSI Poised DMSO,CN(CC(=O)O)C(=O)C=1C=CC(F)=CC1,Z85895198
-test_plate_current,Y35,DSI Poised DMSO,CC(C)(C)NC(=O)CN1C=CC(=N1)C(F)(F)F,Z55009317
-test_plate_current,Y36,DSI Poised DMSO,CC(CC=1C=CC(Br)=CC1)C(=O)N,Z1551999220
-test_plate_current,Y37,DSI Poised DMSO,CC(=O)NC1=CC(C)=NN1,Z239136710
-test_plate_current,Y38,DSI Poised DMSO,OC=1C=CC(NC(=O)N2CCOCC2)=CC1,Z274554872
-test_plate_current,Y39,DSI Poised DMSO,CCC(=O)NC=1C=CC(C)=CC1O,Z33452106
-test_plate_current,Y40,DSI Poised DMSO,CC(N)C(=O)NC1=CC(=NN1)C(F)(F)F,Z1622626423
-test_plate_current,Y41,DSI Poised DMSO,COC=1C=CC=CC1NC(=O)C2=CC=C(C)S2,Z27797417
-test_plate_current,Z07,DSI Poised DMSO,CNC(C)C=1C=NN(C)C1,Z1437171658
-test_plate_current,Z08,DSI Poised DMSO,CNC(=O)C1CNCCO1,Z1636723439
-test_plate_current,Z09,DSI Poised DMSO,CC=1C=CC=CC1CNC2=NN=NN2C,Z57778470
-test_plate_current,Z10,DSI Poised DMSO,CC(=O)NCCN1CCCCCC1,Z169226638
-test_plate_current,Z11,DSI Poised DMSO,CC(O)CCN1C=CC=N1,Z1613492358
-test_plate_current,Z12,DSI Poised DMSO,C(N1CCNCC1)C2=CSC=N2,Z812517112
-test_plate_current,Z13,DSI Poised DMSO,FC=1C=CC=C(F)C1C(=O)N2CCCCCC2,Z54226095
-test_plate_current,Z14,DSI Poised DMSO,CC(C)N1CCCC(CO)C1,Z103740620
-test_plate_current,Z15,DSI Poised DMSO,CC1OCCN(C1C)C2=NC(C)=NS2,Z1439422127
-test_plate_current,Z16,DSI Poised DMSO,COC(=O)NC1=NN=C(CC2CCCC2)S1,Z1119505742
-test_plate_current,Z17,DSI Poised DMSO,CC=1C=CC(NC(=O)C2=CC=CO2)=CC1O,Z1430613384
-test_plate_current,Z18,DSI Poised DMSO,O=C(NCCC1=CC=CS1)C2CCCCC2,Z29191465
-test_plate_current,Z19,DSI Poised DMSO,CC1CN(C(C)CO1)C(=O)C=2C=NSN2,Z768399682
-test_plate_current,Z20,DSI Poised DMSO,O=C(NC=1C=CC=NC1)C=2C=NN3C=CC=NC23,Z296054478
-test_plate_current,Z21,DSI Poised DMSO,O=C(COC=1C=CC=CC1)N2CCCC2,Z19735981
-test_plate_current,Z22,DSI Poised DMSO,CC(C)(O)CNC1CCOCC1,Z1103351268
-test_plate_current,Z23,DSI Poised DMSO,CCNC(=O)CN1CC(C)OCC1C,Z355728146
-test_plate_current,Z24,DSI Poised DMSO,CC=1C=CSC1C(=O)NCC=2C=CC(C)=CC2,Z28429425
-test_plate_current,Z25,DSI Poised DMSO,FC=1C=CC=C(C1)C(=O)NCC=2C=CC=CC2,Z27749656
-test_plate_current,Z26,DSI Poised DMSO,CC(C)NC(=O)C=1C=C(C)N(C)N1,Z733898630
-test_plate_current,Z27,DSI Poised DMSO,CC1(C)CN(CC1O)C=2N=CC=CC2F,Z1929757385
-test_plate_current,Z28,DSI Poised DMSO,C(N1CCCCCC1)C2=CNC=3C=CC=CC23,Z2856434848
-test_plate_current,Z29,DSI Poised DMSO,CC(C)(CO)NC(=O)NC=1C=CC(Cl)=CC1,Z123970702
-test_plate_current,Z30,DSI Poised DMSO,C1OC=2C=CC(=CC2O1)C=3C=CNN3,Z2204875953
-test_plate_current,Z31,DSI Poised DMSO,C(N1CCNCC1)C=2C=CON2,Z1263714198
-test_plate_current,Z32,DSI Poised DMSO,CC1COCCN1CC=2C=CC=CC2F,Z369042042
-test_plate_current,Z33,DSI Poised DMSO,CCOC(=O)C1=CC(=NO1)C=2C=CC(C)=CC2,Z793500562
-test_plate_current,Z34,DSI Poised DMSO,CCOC=1C=CC(NC(=O)NC(C)(C)C)=CC1,Z44586802
-test_plate_current,Z35,DSI Poised DMSO,CC(C)C(=O)NCC1CCCNC1,Z1262327459
-test_plate_current,Z36,DSI Poised DMSO,CC(C)NC(=O)C=1C=CC=2C=CC=CC2N1,Z31385861
-test_plate_current,Z37,DSI Poised DMSO,CC(C)C=1C=CC(=CC1)C(=O)NC2=NN=CS2,Z86416893
-test_plate_current,Z38,DSI Poised DMSO,COCC(=O)NC=1C=CC=CC1C(=O)N,Z57260539
-test_plate_current,Z39,DSI Poised DMSO,FC(F)(F)C=1C=CC(CN2CCOCC2)=CC1,Z2856434871
-test_plate_current,Z40,DSI Poised DMSO,CC1CCCCN1C(=O)C=2C=NC=CN2,Z32968340
-test_plate_current,AA07,DSI Poised DMSO,COCC(=O)NC=1C=CC=C(NC(=O)C)C1,Z31735562
-test_plate_current,AA08,DSI Poised DMSO,CC(=O)NC(C1CCOCC1)C(=O)O,Z1891772663
-test_plate_current,AA09,DSI Poised DMSO,COC=1C=C(C=C(OC)C1OC)C(=O)O,Z2734782702
-test_plate_current,AA10,DSI Poised DMSO,CC(=O)NC=1C=CC=NC1C(=O)O,Z1815155460
-test_plate_current,AA11,DSI Poised DMSO,CS(=O)(=O)NC=1C=CC(=CC1)C(=O)N,Z45656995
-test_plate_current,AA12,DSI Poised DMSO,CC(C)C1=NC=CN1CC(=O)O,Z2446040567
-test_plate_current,AA13,DSI Poised DMSO,COC(=O)C=1C=CC(NC(=O)C(F)(F)F)=CC1,Z56767614
-test_plate_current,AA14,DSI Poised DMSO,CCC1=CSC(=N1)C2=CNC=N2,Z1530301542
-test_plate_current,AA15,DSI Poised DMSO,C1CCCC(CC1)NC=2N=CC=CN2,Z31244728
-test_plate_current,AA16,DSI Poised DMSO,CC1CN(C(=O)C)C=2C=CC=C(F)C2O1,Z1730522163
-test_plate_current,AA17,DSI Poised DMSO,CC(=O)NCC=1C=CC(=CC1)S(=O)(=O)N,Z30932204
-test_plate_current,AA18,DSI Poised DMSO,CNC(=O)C1CCCC=2SC(C)=NC12,Z1904249627
-test_plate_current,AA19,DSI Poised DMSO,CC(C)NC(=O)C1=CC(C)=NO1,Z135394292
-test_plate_current,AA20,DSI Poised DMSO,CCNC(=O)N1CCN(CC1)C(=O)C,Z44590919
-test_plate_current,AA21,DSI Poised DMSO,ClC=1C=CC(NC(=O)CC#N)=CC1,Z56837087
-test_plate_current,AA22,DSI Poised DMSO,C1CN(C1)C=2N=CN=C3N=CNC23,Z373221060
-test_plate_current,AA23,DSI Poised DMSO,CC(C)N(C)S(=O)(=O)N1CCNC(=O)C1,Z431807512
-test_plate_current,AA24,DSI Poised DMSO,CC(C)SC1=NN=C(NC(=O)C)S1,Z1134240160
-test_plate_current,AA25,DSI Poised DMSO,CCOC=1C=CC(CC(=O)O)=CC1,Z2856434918
-test_plate_current,AA26,DSI Poised DMSO,CC(=O)N1C[C@H]2CC[C@H]1C=3C=CC=CC23,Z2017861827
-test_plate_current,AA27,DSI Poised DMSO,CC1=CSC(NC(=O)C2CCOCC2)=N1,Z73240835
-test_plate_current,AA28,DSI Poised DMSO,NC(=O)CN1CCN(CC1)C(=O)C2=CC=CO2,Z2856434793
-test_plate_current,AA29,DSI Poised DMSO,CC(C)C(=O)NC=1C=CC(=CC1)N2CCCCC2,Z30595739
-test_plate_current,AA30,DSI Poised DMSO,CC1=NN(C)C=2C(O)=NN=CC12,Z2301438417
-test_plate_current,AA31,DSI Poised DMSO,CC1=NN(C)C(C)=C1CC(=O)N,Z287484230
-test_plate_current,AA32,DSI Poised DMSO,CNC(=O)NC1=NC=2C=CC(OC)=CC2S1,Z371866204
-test_plate_current,AA33,DSI Poised DMSO,CNCC=1C=NN(C1)C=2C=CC=CC2,Z102768020
-test_plate_current,AA34,DSI Poised DMSO,CN1CCN(CC1)C=2C=CC(NC(=O)C)=CC2,Z2856434903
-test_plate_current,AA35,DSI Poised DMSO,CN(CC(=O)O)C(=O)C=1C=CC=CN1,Z1171978788
-test_plate_current,AA36,DSI Poised DMSO,CC(=O)NC=1C=CC(CN2CCOCC2)=CC1,Z2856434875
-test_plate_current,AA37,DSI Poised DMSO,CC(=O)NC=1C=CC(C#N)=CC1,Z30612220
-test_plate_current,AA38,DSI Poised DMSO,COC=1C=CC=C2NC=CC12,Z1429867185
-test_plate_current,AA39,DSI Poised DMSO,CC(NC(=O)C1CCCC1)C(=O)O,Z1238477790
-test_plate_current,AA40,DSI Poised DMSO,CCN1CCN(CC1)C(=O)NC2CCCCC2,Z2856434830
+tst3(test_proposal_2),E08,tst3(test_proposal_2),NC1=CC(=O)NN1,Z1245635875
+tst3(test_proposal_2),E09,tst3(test_proposal_2),C=1C=NNC1,Z1741966780
+tst3(test_proposal_2),E10,tst3(test_proposal_2),BrC=1C=CC=NC1,Z1250132521
+tst3(test_proposal_2),E11,tst3(test_proposal_2),Cl.O=C1N=CC=CN1,Z1201023052
+tst3(test_proposal_2),E12,tst3(test_proposal_2),CN1CCC(O)C1,Z1506115273
+tst3(test_proposal_2),E13,tst3(test_proposal_2),C1CCNC1,Z57834050
+tst3(test_proposal_2),E14,tst3(test_proposal_2),C1=CNN=N1,Z1198386795
+tst3(test_proposal_2),E15,tst3(test_proposal_2),NC=1C=NC=NC1,Z1741970824
+tst3(test_proposal_2),E16,tst3(test_proposal_2),Cl.CCC(=N)N,Z1741969146
+tst3(test_proposal_2),E17,tst3(test_proposal_2),O=C1CNC(=O)N1,Z57131035
+tst3(test_proposal_2),F08,tst3(test_proposal_2),C1CNCCN1,Z1245537944
+tst3(test_proposal_2),F09,tst3(test_proposal_2),NCC(=O)O,Z955123660
+tst3(test_proposal_2),F10,tst3(test_proposal_2),OC(=O)C1CCN1,Z1318268680
+tst3(test_proposal_2),F11,tst3(test_proposal_2),OC(=O)C=1C=CSC1,Z166605460
+tst3(test_proposal_2),F12,tst3(test_proposal_2),O=C1CCC(=O)N1,Z57127349
+tst3(test_proposal_2),F13,tst3(test_proposal_2),NC=1C=CC=CN1,Z275118248
+tst3(test_proposal_2),F14,tst3(test_proposal_2),O=S1(=O)CCN1,Z425449766
+tst3(test_proposal_2),F15,tst3(test_proposal_2),OC1CCCCC1,Z1954801734
+tst3(test_proposal_2),F16,tst3(test_proposal_2),O=C1CCCN1,Z940713508
+tst3(test_proposal_2),F17,tst3(test_proposal_2),OC=1C=CC=CN1,Z1741982125
+tst3(test_proposal_2),G08,tst3(test_proposal_2),CCOC(=O)N,Z33546369
+tst3(test_proposal_2),G09,tst3(test_proposal_2),NC1=NC=CN1.NC1=NC=CN1.OS(=O)(=O)O,Z1741961236
+tst3(test_proposal_2),G10,tst3(test_proposal_2),OCC1CC1,Z1259087003
+tst3(test_proposal_2),G11,tst3(test_proposal_2),Cl.O=C1CCNN1,Z2935001239
+tst3(test_proposal_2),G12,tst3(test_proposal_2),OC=1C=CC=CC1,Z966690946
+tst3(test_proposal_2),G13,tst3(test_proposal_2),NC(=O)CC#N,Z56896153
+tst3(test_proposal_2),G14,tst3(test_proposal_2),NC(=O)C1CCC1,Z33546656
+tst3(test_proposal_2),G15,tst3(test_proposal_2),CC(=O)NC(=O)N,Z1262398400
+tst3(test_proposal_2),G16,tst3(test_proposal_2),NC1=NN=CN1,Z56866006
+tst3(test_proposal_2),G17,tst3(test_proposal_2),OC(=O)C1CCC1,Z1270212509
+tst3(test_proposal_2),H08,tst3(test_proposal_2),C1CNCCOC1,Z1198107508
+tst3(test_proposal_2),H09,tst3(test_proposal_2),NC1CCCC1,Z1741971800
+tst3(test_proposal_2),H10,tst3(test_proposal_2),OC1CS(=O)(=O)C1,Z3241250482
+tst3(test_proposal_2),H11,tst3(test_proposal_2),O=C1CNCCN1,Z56968535
+tst3(test_proposal_2),H12,tst3(test_proposal_2),NC=1C=CN=CC1,Z955123498
+tst3(test_proposal_2),H13,tst3(test_proposal_2),NC=1N=CC=CN1,Z1741968196
+tst3(test_proposal_2),H14,tst3(test_proposal_2),O=C1CCON1,Z3235036808
+tst3(test_proposal_2),H15,tst3(test_proposal_2),N#CC=1C=CON1,Z1436620465
+tst3(test_proposal_2),H16,tst3(test_proposal_2),NCC1CCCO1,Z57127565
+tst3(test_proposal_2),H17,tst3(test_proposal_2),CC(C)C(=NO)N,Z1741972444
+tst3(test_proposal_2),I08,tst3(test_proposal_2),O=C1C=CC=NN1,Z3219959731
+tst3(test_proposal_2),I09,tst3(test_proposal_2),Cl.NC1=CSC(N)=N1,Z234893769
+tst3(test_proposal_2),I10,tst3(test_proposal_2),NC=1C=CC=NN1,Z1480642703
+tst3(test_proposal_2),I11,tst3(test_proposal_2),OCC=1C=CNN1,Z3225843273
+tst3(test_proposal_2),I12,tst3(test_proposal_2),Cl.CC(N)CC(=O)N,Z1459435569
+tst3(test_proposal_2),I13,tst3(test_proposal_2),O=C1CCCCN1,Z1201023039
+tst3(test_proposal_2),I14,tst3(test_proposal_2),Cl.Cl.CN1C=NC(N)=C1,Z2692604705
+tst3(test_proposal_2),I15,tst3(test_proposal_2),Cl.N=C1NCCCN1,Z1954800348
+tst3(test_proposal_2),I16,tst3(test_proposal_2),C1CCOC1,Z955123562
+tst3(test_proposal_2),I17,tst3(test_proposal_2),CC(C)CCCN,Z3219863192
+tst3(test_proposal_2),J08,tst3(test_proposal_2),OP(=O)(O)O,Z1954805639
+tst3(test_proposal_2),J09,tst3(test_proposal_2),C=1C=CN=CC1,Z940713324
+tst3(test_proposal_2),J10,tst3(test_proposal_2),CC(C)NC(=O)N,Z56887677
+tst3(test_proposal_2),J11,tst3(test_proposal_2),BrC=1C=NNC1,Z275169750
+tst3(test_proposal_2),J12,tst3(test_proposal_2),C1=CNC=N1,Z1245636370
+tst3(test_proposal_2),J13,tst3(test_proposal_2),CCC(=O)O,Z955123616
+tst3(test_proposal_2),J14,tst3(test_proposal_2),NC=1C=CNN1,Z241119328
+tst3(test_proposal_2),J15,tst3(test_proposal_2),CC1=NN=NN1,Z56761437
+tst3(test_proposal_2),J16,tst3(test_proposal_2),Cl.C1COCCN1,Z3234810942
+tst3(test_proposal_2),J17,tst3(test_proposal_2),CCC(=O)NO,Z59181971
+tst3(test_proposal_2),K08,tst3(test_proposal_2),O=C1NCCN1,Z1741976468
+tst3(test_proposal_2),K09,tst3(test_proposal_2),CC(O)C(=O)O,Z1741982441
+tst3(test_proposal_2),K10,tst3(test_proposal_2),OB(O)C1CCC1,Z1741980935
+tst3(test_proposal_2),K11,tst3(test_proposal_2),NCC1=COC=N1,Z1962142017
+tst3(test_proposal_2),K12,tst3(test_proposal_2),OCC1CCCN1,Z1333717631
+tst3(test_proposal_2),K13,tst3(test_proposal_2),NCC1CC1,Z1198394159
+tst3(test_proposal_2),K14,tst3(test_proposal_2),N#CC1CC1,Z1245735215
+tst3(test_proposal_2),K15,tst3(test_proposal_2),NC=1C=CON1,Z1741972704
+tst3(test_proposal_2),K16,tst3(test_proposal_2),Cl.NC(=O)C1(N)CC1,Z1415893881
+tst3(test_proposal_2),K17,tst3(test_proposal_2),CC(=O)C(=O)O,Z1741977082
+tst3(test_proposal_2),L08,tst3(test_proposal_2),Cl.CNC(=O)[C@@H](C)N,Z1346385420
+tst3(test_proposal_2),L09,tst3(test_proposal_2),Cl.OC1CNC1,Z1262327449
+tst3(test_proposal_2),L10,tst3(test_proposal_2),Cl.NC1CCNC1=O,Z3234814534
+tst3(test_proposal_2),L11,tst3(test_proposal_2),Cl.CC(N)C#C,Z1954800314
+tst3(test_proposal_2),L12,tst3(test_proposal_2),Cl.CC[C@H](N)C(=O)N,Z1450533799
+tst3(test_proposal_2),L13,tst3(test_proposal_2),Cl.N#CC1=CNC=N1,Z2301685688
+tst3(test_proposal_2),L14,tst3(test_proposal_2),OC=1C=CN=NC1,Z1741975221
+tst3(test_proposal_2),L15,tst3(test_proposal_2),O[C@H]1COC[C@H]1O,Z3235034972
+tst3(test_proposal_2),L16,tst3(test_proposal_2),NCC=1C=CSC1,Z1262255347
+tst3(test_proposal_2),L17,tst3(test_proposal_2),O=S1(=O)CCC1,Z3234823734
+teeeest(test_proposal_2),A1,teeeest(test_proposal_2),CC(=O)NCC(=O)NCC#CBr,NCL-00025345
+teeeest(test_proposal_2),A2,teeeest(test_proposal_2),CC([C@@H](C(NCC#CBr)=O)NC(C)=O)C,NCL-00024897
+teeeest(test_proposal_2),A3,teeeest(test_proposal_2),CC(N[C@H](C(NCC#CBr)=O)Cc1ccc(O)cc1)=O,NCL-00024905
+teeeest(test_proposal_2),A4,teeeest(test_proposal_2),CC[C@@H]([C@@H](C(NCC#CBr)=O)NC(C)=O)C,NCL-00024976
+teeeest(test_proposal_2),A5,teeeest(test_proposal_2),CC(=O)N[C@@H](Cc1ccccc1)C(=O)NCC#CBr,NCL-00024907
+teeeest(test_proposal_2),A6,teeeest(test_proposal_2),CC(=O)N1CCC[C@H]1C(=O)NCC#CBr,NCL-00024977
+teeeest(test_proposal_2),A7,teeeest(test_proposal_2),CC(=O)N[C@@H](CCCCN)C(=O)NCC#CBr,NCL-00024978
+teeeest(test_proposal_2),A8,teeeest(test_proposal_2),O=C(C)N[C@H](C(NCC#CBr)=O)CCSC,NCL-00024979
+teeeest(test_proposal_2),A9,teeeest(test_proposal_2),CC(=O)N[C@@H](CO)C(=O)NCC#CBr,NCL-00025057
+teeeest(test_proposal_2),A10,teeeest(test_proposal_2),C[C@H]([C@@H](C(NCC#CBr)=O)NC(C)=O)O,NCL-00025058
+teeeest(test_proposal_2),A11,teeeest(test_proposal_2),CC(=O)N[C@@H](CCC(=O)O)C(=O)NCC#CBr,NCL-00025059
+teeeest(test_proposal_2),A12,teeeest(test_proposal_2),CC(=O)N[C@@H](CCC(=O)N)C(=O)NCC#CBr,NCL-00025065
+teeeest(test_proposal_2),A13,teeeest(test_proposal_2),C[C@H](NC(=O)C)C(=O)NCC#CBr,NCL-00025067
+teeeest(test_proposal_2),A14,teeeest(test_proposal_2),CC(=O)NCCCC[C@H](NC(=O)C)C(=O)NCC#CBr,NCL-00025066
+teeeest(test_proposal_2),A15,teeeest(test_proposal_2),CC(=O)NCCCC[C@H](NC(=O)C)C(=O)NCc1ccc(cc1)Br,NCL-00025267
+teeeest(test_proposal_2),A16,teeeest(test_proposal_2),CC(N[C@H](C(NCC#CBr)=O)CC(N)=O)=O,NCL-00025412
+teeeest(test_proposal_2),A17,teeeest(test_proposal_2),CC(N[C@H](C(NCC#CBr)=O)CC(O)=O)=O,NCL-00025413
+teeeest(test_proposal_2),A18,teeeest(test_proposal_2),CC(N[C@@H](CC(C)C)C(NCC#CBr)=O)=O,NCL-00024906
+teeeest(test_proposal_2),A19,teeeest(test_proposal_2),CC(N[C@@H](CC1=CNC2=C1C=CC=C2)C(NCC#CBr)=O)=O,NCL-00024982
+teeeest(test_proposal_2),A20,teeeest(test_proposal_2),CC(N[C@@H](CCCC[NH3+])C(NCC#CBr)=O)=O.O=C([O-])C(F)(F)F,NCL-00024978-002
+teeeest(test_proposal_2),A21,teeeest(test_proposal_2),CC(N[C@@H](CC1=C[NH2+]C=N1)C(NCC#CBr)=O)=O.O=C([O-])C(F)(F)F,NCL-00025550
+teeeest(test_proposal_2),A22,teeeest(test_proposal_2),CC(N[C@@H](CCCNC(N)=N)C(NCC#CBr)=O)=O.O=C([O-])C(F)(F)F,NCL-00025551
+schema update test(test_proposal_2),A05,schema update test(test_proposal_2),ClCC(=O)NC(=O)NCC1COc2ccccc2O1,PCM-0102092-001
+schema update test(test_proposal_2),A07,schema update test(test_proposal_2),ClCC(=O)N1CCN(CC1)c2ncccn2,PCM-0102093-001
+schema update test(test_proposal_2),A09,schema update test(test_proposal_2),[O-][N+](=O)c1ccc(cc1)N2CCN(CC2)C(=O)CCl,PCM-0102094-001
+schema update test(test_proposal_2),A11,schema update test(test_proposal_2),Cc1csc(CC(=O)NNC(=O)CCl)n1,PCM-0102095-001
+schema update test(test_proposal_2),A13,schema update test(test_proposal_2),CC(NC(=O)CCl)c1ccc(Cl)c(Cl)c1,PCM-0102096-001
+schema update test(test_proposal_2),A15,schema update test(test_proposal_2),ClCC(=O)Nc1cccc2ncccc12,PCM-0102097-001
+schema update test(test_proposal_2),A17,schema update test(test_proposal_2),Cc1ccc(cc1NC(=O)CCl)[N+](=O)[O-],PCM-0102098-001
+schema update test(test_proposal_2),A19,schema update test(test_proposal_2),Cc1c(C)n(c(NC(=O)CCl)c1C#N)c2ccc(F)cc2,PCM-0102099-001
+schema update test(test_proposal_2),A21,schema update test(test_proposal_2),ClCC(=O)NC(=O)NC1CCS(=O)(=O)C1,PCM-0102100-001
+schema update test(test_proposal_2),A23,schema update test(test_proposal_2),ClCC(=O)Nc1ccc(cc1)c2nnc3CCCCCn23,PCM-0102101-001
+schema update test(test_proposal_2),A25,schema update test(test_proposal_2),Cc1oc(cc1)C2=NN(C(C2)c3occc3)C(=O)CCl,PCM-0102102-001
+schema update test(test_proposal_2),A27,schema update test(test_proposal_2),CCN1CCC(CC1)NC(=O)CCl,PCM-0102103-001
+schema update test(test_proposal_2),A29,schema update test(test_proposal_2),ClCC(=O)Nc1ccc2OC3(CCCCC3)Oc2c1,PCM-0102104-001
+schema update test(test_proposal_2),A31,schema update test(test_proposal_2),CCN(C1CCS(=O)(=O)C1)C(=O)CCl,PCM-0102105-001
+schema update test(test_proposal_2),A33,schema update test(test_proposal_2),C=CC(=O)NC(=O)NC12CC3CC(CC(C3)C1)C2,PCM-0102106-001
+schema update test(test_proposal_2),A35,schema update test(test_proposal_2),ClCC(=O)Nc1c(C#N)c2CCCCc2n1c3ccccc3,PCM-0102107-001
+schema update test(test_proposal_2),A37,schema update test(test_proposal_2),CC(=O)c1sc2nc(C)cc(C)c2c1NC(=O)CCl,PCM-0102108-001
+schema update test(test_proposal_2),A39,schema update test(test_proposal_2),ClCC(=O)NC1CCCCNC1=O,PCM-0102109-001
+schema update test(test_proposal_2),A41,schema update test(test_proposal_2),CC(NC(=O)CCl)c1ccccc1Cl,PCM-0102110-001
+schema update test(test_proposal_2),A43,schema update test(test_proposal_2),Fc1ccc(NC(=O)C=C)cc1,PCM-0102111-001
+no-smiles-lib(test_proposal_2),A05,no-smiles-lib(test_proposal_2),,code-1
+no-smiles-lib(test_proposal_2),A07,no-smiles-lib(test_proposal_2),,code-2
+no-smiles-lib(test_proposal_2),A09,no-smiles-lib(test_proposal_2),,code-3
+no-smiles-lib(test_proposal_2),A11,no-smiles-lib(test_proposal_2),,code-4
+no-smiles-lib(test_proposal_2),A13,no-smiles-lib(test_proposal_2),,code-5
+no-smiles-lib(test_proposal_2),A15,no-smiles-lib(test_proposal_2),,code-6
+no-smiles-lib(test_proposal_2),A17,no-smiles-lib(test_proposal_2),,code-7
+no-smiles-lib(test_proposal_2),A19,no-smiles-lib(test_proposal_2),,code-8
+no-smiles-lib(test_proposal_2),A21,no-smiles-lib(test_proposal_2),,code-9
+no-smiles-lib(test_proposal_2),A23,no-smiles-lib(test_proposal_2),,code-10
+no-smiles-lib(test_proposal_2),A25,no-smiles-lib(test_proposal_2),,code-11
+no-smiles-lib(test_proposal_2),A27,no-smiles-lib(test_proposal_2),,code-12
+no-smiles-lib(test_proposal_2),A29,no-smiles-lib(test_proposal_2),,code-13
+no-smiles-lib(test_proposal_2),A31,no-smiles-lib(test_proposal_2),,code-14
+no-smiles-lib(test_proposal_2),A33,no-smiles-lib(test_proposal_2),,code-15
+no-smiles-lib(test_proposal_2),A35,no-smiles-lib(test_proposal_2),,code-16
+no-smiles-lib(test_proposal_2),A37,no-smiles-lib(test_proposal_2),,code-17
+no-smiles-lib(test_proposal_2),A39,no-smiles-lib(test_proposal_2),,code-18
+no-smiles-lib(test_proposal_2),A41,no-smiles-lib(test_proposal_2),,code-19
+no-smiles-lib(test_proposal_2),A43,no-smiles-lib(test_proposal_2),,code-20
 Plate 1,E08,MiniFrag,NC1=CC(=O)NN1,Z1245635875
 Plate 1,E09,MiniFrag,C=1C=NNC1,Z1741966780
 Plate 1,E10,MiniFrag,BrC=1C=CC=NC1,Z1250132521
@@ -779,15 +153,6 @@ Plate 1,E17,MiniFrag,O=C1CNC(=O)N1,Z57131035
 Plate 1,F08,MiniFrag,C1CNCCN1,Z1245537944
 Plate 1,F09,MiniFrag,NCC(=O)O,Z955123660
 Plate 1,F10,MiniFrag,OC(=O)C1CCN1,Z1318268680
-Plate 1,F11,MiniFrag,OC(=O)C=1C=CSC1,Z166605460
-Plate 1,F12,MiniFrag,O=C1CCC(=O)N1,Z57127349
-Plate 1,F13,MiniFrag,NC=1C=CC=CN1,Z275118248
-Plate 1,F14,MiniFrag,O=S1(=O)CCN1,Z425449766
-Plate 1,F15,MiniFrag,OC1CCCCC1,Z1954801734
-Plate 1,F16,MiniFrag,O=C1CCCN1,Z940713508
-Plate 1,F17,MiniFrag,OC=1C=CC=CN1,Z1741982125
-Plate 1,G08,MiniFrag,CCOC(=O)N,Z33546369
-Plate 1,G09,MiniFrag,NC1=NC=CN1.NC1=NC=CN1.OS(=O)(=O)O,Z1741961236
 Plate 1,G10,MiniFrag,OCC1CC1,Z1259087003
 Plate 1,G11,MiniFrag,Cl.O=C1CCNN1,Z2935001239
 Plate 1,G12,MiniFrag,OC=1C=CC=CC1,Z966690946
@@ -798,16 +163,6 @@ Plate 1,G16,MiniFrag,NC1=NN=CN1,Z56866006
 Plate 1,G17,MiniFrag,OC(=O)C1CCC1,Z1270212509
 Plate 1,H08,MiniFrag,C1CNCCOC1,Z1198107508
 Plate 1,H09,MiniFrag,NC1CCCC1,Z1741971800
-Plate 1,H10,MiniFrag,OC1CS(=O)(=O)C1,Z3241250482
-Plate 1,H11,MiniFrag,O=C1CNCCN1,Z56968535
-Plate 1,H12,MiniFrag,NC=1C=CN=CC1,Z955123498
-Plate 1,H13,MiniFrag,NC=1N=CC=CN1,Z1741968196
-Plate 1,H14,MiniFrag,O=C1CCON1,Z3235036808
-Plate 1,H15,MiniFrag,N#CC=1C=CON1,Z1436620465
-Plate 1,H16,MiniFrag,NCC1CCCO1,Z57127565
-Plate 1,H17,MiniFrag,CC(C)C(=NO)N,Z1741972444
-Plate 1,I08,MiniFrag,O=C1C=CC=NN1,Z3219959731
-Plate 1,I09,MiniFrag,Cl.NC1=CSC(N)=N1,Z234893769
 Plate 1,I10,MiniFrag,NC=1C=CC=NN1,Z1480642703
 Plate 1,I11,MiniFrag,OCC=1C=CNN1,Z3225843273
 Plate 1,I12,MiniFrag,Cl.CC(N)CC(=O)N,Z1459435569
@@ -846,17 +201,51 @@ Plate 1,L14,MiniFrag,OC=1C=CN=NC1,Z1741975221
 Plate 1,L15,MiniFrag,O[C@H]1COC[C@H]1O,Z3235034972
 Plate 1,L16,MiniFrag,NCC=1C=CSC1,Z1262255347
 Plate 1,L17,MiniFrag,O=S1(=O)CCC1,Z3234823734
-test(test_proposal_1),A1,test(test_proposal_1),BrC1=CNN=C1,NCL-00023819
-test(test_proposal_1),A2,test(test_proposal_1),IC1=CNN=C1,NCL-00023818
-test(test_proposal_1),A3,test(test_proposal_1),BrC1=CON=C1,NCL-00023820
-test(test_proposal_1),A4,test(test_proposal_1),NC1=NC=CC(Br)=C1,NCL-00023823
-test(test_proposal_1),A22,test(test_proposal_1),BrC1=CC(OC)=C(CO)C=C1,NCL-00024662
-test(test_proposal_1),A23,test(test_proposal_1),BrC1=CN(CCO)N=C1,NCL-00024671
-test(test_proposal_1),A24,test(test_proposal_1),BrC1=CC(O)=C(C(O)=O)C=C1,NCL-00024667
-test(test_proposal_1),B1,test(test_proposal_1),BrC1=CC(C#N)=C(OC)C=C1,NCL-00024663
-test(test_proposal_1),B2,test(test_proposal_1),BrC1=CN(CCOC)N=C1,NCL-00024673
-test(test_proposal_1),B3,test(test_proposal_1),BrC1=CN(CC(O)=O)N=C1,NCL-00024890
-test(test_proposal_1),B4,test(test_proposal_1),O=C1N(CCO)C=CC(Br)=C1,NCL-00024672
-test(test_proposal_1),B5,test(test_proposal_1),O=C1N(CCOC)C=CC(Br)=C1,NCL-00024387
-test(test_proposal_1),B6,test(test_proposal_1),O=C1N(CC(O)=O)C=CC(Br)=C1,NCL-00024773
-test(test_proposal_1),B7,test(test_proposal_1),BrC1=CC(OC)=C(CC(O)=O)C=C1,NCL-00024665
+plate2,K03,DSI Poised EG,CN1CCN(CCN)CC1(C)C,Z1992316315
+plate2,I02,DSI Poised EG,CC(=O)N1CCCC(C1)C(=O)N,Z220816104
+plate2,M03,DSI Poised EG,CN(C(=O)C)C=1C=CC=CC1C(=O)O,Z223688272
+plate2,F02,DSI Poised EG,NC(=O)C1=CNC(=N1)C2CC2,Z1407672867
+plate2,E10,DSI Poised EG,CN1N=C(C(=O)N)C=2C=CC=CC12,Z2697514548
+plate2,C09,DSI Poised EG,CNC1CCCN(C1)C=2C=CC=NN2,Z1139246057
+plate2,J10,DSI Poised EG,CN1CCC[C@H](C1)OC(=O)C2=CC=CO2,Z2940170964
+plate2,M23,DSI Poised EG,CC1CCN(CCN)CC1,Z1245580461
+plate2,L02,DSI Poised EG,CC(CS(=O)(=O)N)C=1C=CC=CC1,Z1407673036
+plate2,J02,DSI Poised EG,CC(=O)NC(C)(C1CC1)C(=O)O,Z1259162160
+plate2,O09,DSI Poised EG,CN1CCN(CC1)C(=O)C2CCCN2,Z241832786
+plate2,F10,DSI Poised EG,CNCC(=O)NC=1C=C(C)C=CN1,Z927746322
+plate2,M10,DSI Poised EG,CC(=O)NC=1C=NC=CC1C,Z1129283193
+plate2,G10,DSI Poised EG,NC=1C=CC=C(OCC=2C=CC=CC2)C1,Z933326822
+plate2,G02,DSI Poised EG,CC(=O)NC=1C=CC=C(F)C1C(=O)O,Z1229798311
+plate2,B11,DSI Poised EG,CC=1C=C(N=C(C)N1)N2CCNCC2,Z274575916
+plate2,K09,DSI Poised EG,CC=1C=CC=CC1CC(=O)N,Z52214433
+plate2,H02,DSI Poised EG,O=C(CC#N)NC1CCCCC1,Z56813508
+plate2,M09,DSI Poised EG,OCC=1C=CC=CC1N2CCOCC2,Z235361235
+plate2,C11,DSI Poised EG,CC(=O)N1CCCC(O)(C1)C(=O)O,Z2293643386
+plate2,D09,DSI Poised EG,CC1=NC=CN1CC=2C=CC=C(C#N)C2,Z319545618
+plate2,H10,DSI Poised EG,CC(=O)N1CCCNCC1,Z168883358
+plate2,H09,DSI Poised EG,CN1CCCC=2C=CC(=CC12)S(=O)(=O)N,Z1367324110
+plate2,N09,DSI Poised EG,CNC1(CCCC1)C(=O)N,Z1348559502
+plate2,J09,DSI Poised EG,CC(C)C(=O)NC=1C=CC=C(C#N)C1,Z26548083
+plate2,L09,DSI Poised EG,NC(=O)C=1C=NC(=NC1)C(F)(F)F,Z1745658474
+plate2,I10,DSI Poised EG,CC(=O)NC=1C=CC=C(C(=O)O)C1C,Z364368134
+plate2,C02,DSI Poised EG,CC1COCCN1CCN,Z1263811695
+plate2,K10,DSI Poised EG,N(C1=NN=CS1)C=2C=CC=CC2,Z56347187
+plate2,B02,DSI Poised EG,CC=1N=CC=C(N1)N2CCC(N)CC2,Z1333043417
+plate2,O23,DSI Poised EG,CC(O)C(=O)NCC=1C=CC=CN1,Z1551688335
+plate2,L03,DSI Poised EG,OC=1C=CC=CC1NC(=O)COC=2C=CC=CC2,Z68195082
+plate2,I09,DSI Poised EG,CN1N=CC=C1C(=O)NCC2=CC=CS2,Z915492990
+plate2,N10,DSI Poised EG,CS(=O)(=O)N1CCC[C@@H]1CN,Z1713595338
+plate2,E02,DSI Poised EG,COC=1C=CC=CC1C2=NN=CO2,Z1359419878
+plate2,C10,DSI Poised EG,COC=1C=CC=C2NC(=O)CCCC12,Z1507502062
+plate2,K02,DSI Poised EG,CC(C)N1CCCC(CO)C1,Z103740620
+plate2,B09,DSI Poised EG,CC(=O)NCC=1C=CC(=CC1)S(=O)(=O)N,Z30932204
+plate2,D02,DSI Poised EG,FC=1C=CC(CNCC=2C=CC=CC2)=CC1,Z57329001
+plate2,E09,DSI Poised EG,CN(C)C(=O)C1CCCC(N)C1,Z2092396826
+plate2,F09,DSI Poised EG,Cl.CC1CCN(CC1)C=2C=CC(N)=CC2Cl,Z2106602036
+plate2,G09,DSI Poised EG,Cl.CN(C)CC1=CC=C(O1)C(=O)O,Z2805877175
+plate2,B10,DSI Poised EG,CCC(=O)NC=1C=CC(=CC1)C(C)N,Z1245537943
+plate2,D10,DSI Poised EG,O=S(=O)(NC1CCCC1)C2CCOCC2,Z1082839290
+plate2,L10,DSI Poised EG,CN(CCO)C=1C=CC=CN1,Z54633859
+plate2,O10,DSI Poised EG,Cl.NC(=O)C=1C=CC=2NCCC2C1,Z1696091761
+plate2,N23,DSI Poised EG,COC=1C=CC=CC1CN2CCNCC2,Z228584062
+plate2,N03,DSI Poised EG,Cl.FC(F)(F)CC(=O)N1CCNCC1,Z1262246195

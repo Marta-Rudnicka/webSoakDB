@@ -52,7 +52,7 @@
 							{% for plate in library.plates.all %}
 								<tr class="plate-row" data-lib="{{library.id}}">
 									<td>{{ library.name }}</td>
-									<td>{{ plate.name }}</td>
+									<td>{{ plate.barcode }}</td>
 									{% if plate.current %}
 										<td class="highlight">Yes</td>
 										{% else %}

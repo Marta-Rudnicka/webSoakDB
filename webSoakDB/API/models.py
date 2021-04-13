@@ -1,143 +1,93 @@
-#this schema is based on: https://github.com/xchem/xchem_db/tree/main/xchem_db
-# with slight modifications to the old models, and new models added to manage SoakDB-specific data
-
-#ORIGINAL COMMENT FROM XCHEM_DB
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-#  Feel free to rename the models, but don't rename db_table values or field names.
-
 from __future__ import unicode_literals
 from django.db import models
-import os
-
-from rdkit import Chem
-from rdkit.Chem import Descriptors
-from rdkit.Chem import Crippen
-
-#wrappers for RDKit function for better readability
-def mol_wt(smiles):
-	return Descriptors.ExactMolWt(Chem.MolFromSmiles(smiles))
-
-def tpsa(smiles):
-	mol = Chem.MolFromSmiles(smiles)
-	return Chem.rdMolDescriptors.CalcTPSA(mol) 
-
 
 #INVENTORY DATA - mostly SoakDB-only classes
-
 class Protein(models.Model):
-	name = models.CharField(max_length=100,  null=True, blank=True)
-	space_group = models.CharField(max_length=100, null=True, blank=True)
-	a = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-	b = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-	c = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-	alpha = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-	beta = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-	gamma = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    space_group = models.CharField(max_length=100, null=True, blank=True)
+    a = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    b = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    c = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    alpha = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    beta = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    gamma = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
 
-
-
-#modified from original xchem_db model: added code attribute, smiles no longer unique, moved
 class Compounds(models.Model):
     smiles = models.CharField(max_length=255, blank=True, null=True)
-    code = models.CharField(max_length=32,  blank=True, null=True)
-    
-    def properties(self):
-        sanitized_mol = Chem.MolFromSmiles(self.smiles)
-	
-        new_mol = {}
-        new_mol['log_p'] = Crippen.MolLogP(sanitized_mol)
-        new_mol['mol_wt'] = float(Chem.rdMolDescriptors.CalcExactMolWt(sanitized_mol))
-        new_mol['heavy_atom_count'] = Chem.Lipinski.HeavyAtomCount(sanitized_mol)
-        new_mol['heavy_atom_mol_wt'] = float(Descriptors.HeavyAtomMolWt(sanitized_mol))
-        new_mol['nhoh_count'] = Chem.Lipinski.NHOHCount(sanitized_mol)
-        new_mol['no_count'] = Chem.Lipinski.NOCount(sanitized_mol)
-        new_mol['num_h_acceptors'] = Chem.Lipinski.NumHAcceptors(sanitized_mol)
-        new_mol['num_h_donors'] = Chem.Lipinski.NumHDonors(sanitized_mol)
-        new_mol['num_het_atoms'] = Chem.Lipinski.NumHeteroatoms(sanitized_mol)
-        new_mol['num_rot_bonds'] = Chem.Lipinski.NumRotatableBonds(sanitized_mol)
-        new_mol['num_val_electrons'] = Descriptors.NumValenceElectrons(sanitized_mol)
-        new_mol['ring_count'] = Chem.Lipinski.RingCount(sanitized_mol)
-        new_mol['tpsa'] = Chem.rdMolDescriptors.CalcTPSA(sanitized_mol)
+    code = models.CharField(max_length=32, blank=True, null=True)
 
-        return new_mol
-
+    log_p = models.FloatField(blank=True, null=True)
+    mol_wt = models.FloatField(blank=True, null=True)
+    heavy_atom_count = models.IntegerField(blank=True, null=True)
+    heavy_atom_mol_wt = models.FloatField(blank=True, null=True)
+    nhoh_count = models.IntegerField(blank=True, null=True)
+    no_count = models.IntegerField(blank=True, null=True)
+    num_h_acceptors = models.IntegerField(blank=True, null=True)
+    num_h_donors = models.IntegerField(blank=True, null=True)
+    num_het_atoms = models.IntegerField(blank=True, null=True)
+    num_rot_bonds = models.IntegerField(blank=True, null=True)
+    num_val_electrons = models.IntegerField(blank=True, null=True)
+    ring_count = models.IntegerField(blank=True, null=True)
+    tpsa = models.FloatField(blank=True, null=True)
     
-    
-    def molecular_weight(self):
-        return mol_wt(self.smiles)
-    
-    def tpsa(self):
-        return tpsa(self.smiles)
-
     def __str__ (self):
         return self.code
 
-#    class Meta:
-#       if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-#            app_label = 'xchem_db'
-#        db_table = 'compounds'
 
 class Library(models.Model):
+    '''Compound library. If public=True, it is an XChem in-house library, otherwise
+    it is brought in by the user'''
 
-	'''Compound library. If public=True, it is an XChem in-house library, otherwise
-	it is brought in by the user'''
+    name = models.CharField(max_length=100, blank=True, null=True)
+    for_industry = models.BooleanField(default=False)
+    public = models.BooleanField(default=False)
 
-	name = models.CharField(max_length=100)
-	for_industry = models.BooleanField(default=False)
-	public = models.BooleanField(default=False)
-
-	def __str__ (self):
-		return self.name
+    def __str__ (self):
+        return self.name
 
 class LibraryPlate(models.Model):
-
-	'''A library plate. last_tested is either the date of adding the plate
-	to the database, or the last dispense test performed on it'''
+    '''A library plate. last_tested is either the date of adding the plate
+    to the database, or the last dispense test performed on it'''
 		
-	name = models.CharField(max_length=100)
-	library = models.ForeignKey(Library, on_delete=models.PROTECT, related_name="plates" )
-	current = models.BooleanField(default=True) #a newly uploaded plate usually becomes the default one 
-	last_tested =  models.DateField(auto_now=True)
-	unique_together = ['name', 'library']
+    barcode = models.CharField(max_length=100, blank=True, null=True) #string to identify physical plate
+    library = models.ForeignKey(Library, on_delete=models.PROTECT, related_name="plates" )
+    current = models.BooleanField(default=True)
+    last_tested =  models.DateField(auto_now=True)
+    unique_together = ['barcode', 'library']
 
-	#plate_type = models.CharField(max_length=32) #probable addition, maybe foreign key
-	def size(self):
-		return len(self.compounds.all())
+    def size(self):
+        return len(self.compounds.all())
 
-	def __str__ (self):
-		return f"[{self.id}]{self.library}, {self.name}"
+    def __str__ (self):
+        return f"[{self.id}]{self.library}, {self.barcode}"
 
 
 class SourceWell(models.Model):
     '''location of a particular compound in a particular library plate; concentration not always available'''
 
-    compound = models.ForeignKey(Compounds, on_delete=models.CASCADE, related_name="locations")
-    library_plate =  models.ForeignKey(LibraryPlate, on_delete=models.CASCADE, related_name="compounds")
-    well  = models.CharField(max_length=4)
+    compound = models.ForeignKey(Compounds, blank=True, null=True, on_delete=models.CASCADE, related_name="locations")
+    library_plate =  models.ForeignKey(LibraryPlate, blank=True, null=True, on_delete=models.CASCADE, related_name="compounds")
+    well  = models.CharField(max_length=4, blank=True, null=True)
     concentration = models.IntegerField(null=True, blank=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)   
     deactivation_date = models.DateField(blank=True, null=True)
 
     def __str__ (self):
         return f"{self.library_plate}: {self.well}"
-
 
 class LibrarySubset(models.Model):
     '''A selection of compounds from a specific library; always created automatically
     Origin is an automatically generated string to inform how the subset was added to a selection.
     (e.g. if it belongs to a preset, or was uploaded by a user) '''
 
-    name = models.CharField(max_length=100)
-    library = models.ForeignKey(Library, on_delete=models.CASCADE)
-    compounds = models.ManyToManyField(Compounds)
-    origin = models.CharField(max_length=64)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    library = models.ForeignKey(Library, blank=True, null=True, on_delete=models.CASCADE)
+    compounds = models.ManyToManyField(Compounds, blank=True)
+    origin = models.CharField(max_length=64, blank=True, null=True)
+    
     def __str__ (self):
         return f"{self.id}: {self.name} - {self.library.name}"
+    
     def size(self):
         return len(self.compounds.all())
 
@@ -146,11 +96,11 @@ class Preset(models.Model):
     '''A selection of compounds created by the XChem staff for a specific purpose from one
     or more libraries (i.g. a selection of subsets with some metadata describing it)'''
     name = models.CharField(max_length=64, blank=True, null=True)
-    description = models.TextField()
-    subsets = models.ManyToManyField(LibrarySubset)
-
+    description = models.TextField(blank=True, null=True)
+    subsets = models.ManyToManyField(LibrarySubset, blank=True)
 
 #EXPERIMENTAL DATA: old xchem_db models and new addition 
+
 
 
 class Tasks(models.Model):
@@ -158,8 +108,6 @@ class Tasks(models.Model):
     uuid = models.CharField(max_length=37, blank=False, null=False, unique=True, db_index=True)
 
     class Meta:
-#       app_label = 'xchem_db'
-        db_table = 'tasks'
         unique_together = ('task_name', 'uuid')
 
 class Target(models.Model):
@@ -169,26 +117,19 @@ class Target(models.Model):
     # alias = models.CharField(blank=True, null=True)
 
     class Meta:
-#        app_label = 'xchem_db'
         db_table = 'target'
 
 class Reference(models.Model):
     reference_pdb = models.CharField(max_length=255, null=True, default='not_assigned', unique=True)
 
-    class Meta:
-#        if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
- #           app_label = 'xchem_db'
-        db_table = 'reference'
-
-#modified: 'proposal' changed to 'name', added SoakDB-related attributes and __str__
 class Proposals(models.Model):
 
     # TODO - can we refactor this for title [original comment]
-    name = models.CharField(max_length=255, blank=False, null=False, unique=True)
+    proposal = models.CharField(max_length=255, blank=False, null=False, unique=True)
     title = models.CharField(max_length=10, blank=True, null=True)
     fedids = models.TextField(blank=True, null=True)
 
-    #SoakDB-related data
+    #SPA-related data
     industry_user = models.BooleanField(default=True) # just in case false by default - fewer privileges
     protein = models.OneToOneField(Protein, blank=True, null=True, on_delete=models.PROTECT)
     libraries = models.ManyToManyField(Library, blank=True)
@@ -196,12 +137,11 @@ class Proposals(models.Model):
 
     def __str__(self):
          return self.name + "proposal object"
+         
 
-#    class Meta:
-#        if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-#            app_label = 'xchem_db'
-#        db_table = 'proposals'
-
+class Visit(models.Model):
+	visit_name = models.CharField(max_length=32, blank=True, null=True)
+	proposal = models.ForeignKey(Proposals, on_delete=models.CASCADE)
 
 class SoakdbFiles(models.Model):
     filename = models.CharField(max_length=255, blank=False, null=False, unique=True)
@@ -210,21 +150,28 @@ class SoakdbFiles(models.Model):
     visit = models.TextField(blank=False, null=False)
     status = models.IntegerField(blank=True, null=True)
 
-
     class Meta:
- #       if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-  #          app_label = 'xchem_db'
         db_table = 'soakdb_files'
 
-
-
-#new class (SoakDB experimental data)	
+#new class (SPA experimental data)	
 class CrystalPlate(models.Model):
+    name = models.CharField(max_length=100, default="new_plate")
+    drop_volume = models.FloatField(blank=True, null=True)
+    plate_type = models.CharField(max_length=50, blank=True, null=True)
 
-    name = models.CharField(max_length=100)
-    drop_volume = models.FloatField()
-    plate_type = models.CharField(max_length=100) # may be changed to foreign key
 
+#new class (SPA experimental data)	
+class SpaCompound(models.Model):
+    '''Compound data copied from inventory data when the compound is used
+    in the experiment'''
+
+    visit = models.ForeignKey(Visit, blank=True, null=True, on_delete=models.CASCADE)
+    library_name = models.CharField(max_length=100)
+    library_plate = models.CharField(max_length=100)
+    well = models.CharField(max_length=4)
+    code = models.CharField(max_length=100)
+    smiles = models.CharField(max_length=256)
+#    crystal = models.ForeignKey(Crystal, related_name="compounds", on_delete=models.PROTECT, blank=True, null=True) #to allow cocktails
 
 
 #modified: added more attributes    
@@ -232,8 +179,11 @@ class Crystal(models.Model):
 
     crystal_name = models.CharField(max_length=255, blank=True, null=True, db_index=True) # changed to allow null: a crystal enters database before it is assigned name
     target = models.ForeignKey(Target, blank=True, null=True, on_delete=models.CASCADE)
-#    compound = models.ForeignKey(Compounds, on_delete=models.CASCADE, null=True, blank=True)
-    visit = models.ForeignKey(SoakdbFiles, blank=True, null=True, on_delete=models.CASCADE) # blank/null temporarily added
+    #compound = models.ForeignKey(Compounds, on_delete=models.CASCADE, null=True, blank=True) # Compounds is now an inventory model, not used directly in an experiment
+    #visit = models.ForeignKey(SoakdbFiles, blank=True, null=True, on_delete=models.CASCADE) # blank/null temporarily added <---- old
+    soakdb_file = models.ForeignKey(SoakdbFiles, blank=True, null=True, on_delete=models.CASCADE) # replaces old 'visit' field
+    visit = models.ForeignKey(Visit, blank=True, null=True, on_delete=models.CASCADE) # new 'visit' field for experiments made without SoakDB
+    
     product = models.CharField(max_length=255, blank=True, null=True)
 
     # model types
@@ -254,107 +204,91 @@ class Crystal(models.Model):
 
     status = models.CharField(choices=CHOICES, max_length=2, default=PREPROCESSING)
 
-    #added SoakDB attributes
-
-    crystal_plate = models.ForeignKey(CrystalPlate, blank=True, null=True, on_delete=models.PROTECT) #need to do something about nullability
+    #added SPA attributes
+    crystal_plate = models.ForeignKey(CrystalPlate, blank=True, null=True, on_delete=models.PROTECT)
     well = models.CharField(max_length=4,  blank=True, null=True)
-    echo_x = models.IntegerField(blank=True, null=True,) #double-check if it shouldn't be float
-    echo_y = models.IntegerField(blank=True, null=True,) #double-check if it shouldn't be float
-    score = models.IntegerField(blank=True, null=True,)
-#    image -- need to figure out how this will be stored
+    echo_x = models.IntegerField(blank=True, null=True) #double-check if it shouldn't be float
+    echo_y = models.IntegerField(blank=True, null=True) #double-check if it shouldn't be float
+    score = models.IntegerField(blank=True, null=True)
 
     class Meta:
-#        if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-#            app_label = 'xchem_db'
-        db_table = 'crystal'
-        unique_together = ('crystal_name', 'visit', 'product')
+#        unique_together = ('crystal_name', 'visit', 'compound', 'product') <-- old
+        unique_together = ('crystal_name', 'visit', 'product') #removed compound from unique_together to allow for cocktails
 
-#new class FILL WITH PROPER OPTIONS!!!!
+
+class CompoundCombination(models.Model):
+	'''for combisoaks and cocktails'''
+	visit = models.ForeignKey(Visit, blank=True, null=True, on_delete=models.PROTECT)
+	number = models.IntegerField(blank=True, null=True)
+	compounds = models.ManyToManyField(SpaCompound)
+	related_crystals = models.CharField(max_length=64, null=True, blank=True)
+	'''if a combination is based on the result of the previous soak,
+	the crystals based on which the combination is created are recorder
+	as related_crystals'''
+
+
+#new class
 class SolventNotes(models.Model):
-    '''A more organised 'notebook' for conclusions from solvent testing. 
-    For user's reference only - data not to be used in other processes '''
-
-    DMSO = 'DMSO'
-    EG = 'EG'
-    SOLVENT_CHOICES = (
-        (DMSO,  'DMSO'),
-        (EG, 'Ethylene Glycol')
-    )
-    
-    NONE = 'none'
-    CRYO1 = 'c1'
-    CRYO2 = 'c2'
-    CRYO3 = 'c3'
-	
-    CRYO_CHOICES = (
-        (NONE, 'No cryoprotectant'),
-        (CRYO1, 'Some string'),
-        (CRYO2, 'Some other string'),
-        (CRYO3, 'Yet another string'),
-    )
+    '''To store user's notes on conclusions from solvent testing; values
+    not to be processed any further except for reminding the user to 
+    apply cryo'''
     
     proposal = models.ForeignKey(Proposals, on_delete=models.CASCADE)
-    solvent = models.CharField(choices=SOLVENT_CHOICES, max_length=4, default=DMSO)
-    solvent_concentration = models.FloatField(blank=True, null=True, )
-    soak_time = models.DurationField(blank=True, null=True, )
-    cryo = models.CharField(choices=CRYO_CHOICES, max_length=4, default=NONE)
-    cryo_concentration = models.FloatField(blank=True, null=True, default=None)
-    comments = models.TextField(blank=True, null=True, )
+    solvent = models.CharField(max_length=32, blank=True, null=True)
+    solvent_concentration = models.FloatField(blank=True, null=True)
+    soak_time = models.DurationField(blank=True, null=True)
+    cryo = models.CharField(max_length=32, blank=True, null=True)
+    cryo_concentration = models.FloatField(blank=True, null=True)
+    comments = models.TextField(blank=True, null=True)
 
 
-
-#new class (SoakDB experimental data)	
-class SoakDBCompound(models.Model):
-    '''Compound data copied from inventory data when the compound is used
-    in the experiment'''
-
-    proposal = models.ForeignKey(Proposals, related_name="exp_compounds", on_delete=models.CASCADE, blank=True, null=True)
-    library_name = models.CharField(max_length=100)
-    library_plate = models.CharField(max_length=100)
-    well = models.CharField(max_length=4)
-    code = models.CharField(max_length=100)
-    smiles = models.CharField(max_length=256)
-    ############ NEW ##########################
-    crystal = models.ForeignKey(Crystal, related_name="compounds", on_delete=models.PROTECT, blank=True, null=True) #to allow cocktails
-#    concentration = IntegerField(max_length=256) #not sure if needed
-
-
-
-#new class (SoakDB experimental data)	
-class Batch(models.Model):
-    '''A group of crystals that go through soaking and cryo together; most attributed moved from Lab class'''
-    number = models.IntegerField(default=0)
+class SoakAndCryoValues(models.Model):
+    '''abstract class created to manage differences between solvent testing and a screen with compounds;
+    in a regular screen these values are the same for the whole batch, but in solvent characterisation
+    experiments they are individual to each crystal'''    
     crystal_plate = models.ForeignKey(CrystalPlate, blank=True, null=True, on_delete=models.CASCADE)
-
-    #soaking attributes
-    soak_status = models.CharField(max_length=64, blank=True, null=True)
-    soak_time = models.IntegerField(blank=True, null=True)
     solv_frac = models.FloatField(blank=True, null=True)
     stock_conc = models.FloatField(blank=True, null=True)
-
-    #cryo attributes:
     cryo_frac = models.FloatField(blank=True, null=True)
-    cryo_status = models.CharField(max_length=64, blank=True, null=True)
     cryo_stock_frac = models.FloatField(blank=True, null=True)
     cryo_location = models.CharField(max_length=4, blank=True, null=True)
 
+    soak_vol = models.FloatField(blank=True, null=True)
+    expr_conc = models.FloatField(blank=True, null=True) #compound concentration - can we rename?
+    cryo_transfer_vol = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+class SolventBatchData(models.Model):
+    '''data common to the whole batch of crystals in a solvent testing experiment'''    
+    number = models.IntegerField(default=0)
+    soak_status = models.CharField(max_length=64, blank=True, null=True)
+    soak_time = models.IntegerField(blank=True, null=True)
+    cryo_status = models.CharField(max_length=64, blank=True, null=True)
+    
     def batch_name(self):
         return 'Batch-' + self.number + '_' + self.crystal_plate.name #needs verification
+    
+    class Meta:
+        abstract = True
 
-    #based on macros in the original SoakDB file; consulted with Ailsa
-    def soak_vol(self): #supposing it means soak transfer volume -- needs verification
-        min_vol_unit = 2.5
-        volume = (self.crystal_plate.drop_volume * self.solv_frac) / (100 - self.solv_frac)
-        return round(volume /min_vol_unit , 0) * min_vol_unit
+class SolventBatch(SolventBatchData):
+	pass
 
-    def compound_conc(self):
-        concentration = (self.stock_conc * self.soak_vol())/(self.crystal_plate.drop_vol + self.soak_vol)
-        return round(concentration, 1)
+#new class (SPA experimental data)	
+class Batch(SolventBatchData, SoakAndCryoValues):
+    '''A group of crystals that go through soaking and cryo together in a compound screen
+    batch, soak and cryo the same for the whole batch in this kind of experiment'''
+    pass
 
-    def cryo_transfer_vol(self):
-        min_vol_unit = 2.5
-        volume = (self.cryo_frac * self.crystal_plate.drop_volume)/(self.stock_frac - self.cryo_frac)
-        return round(volume /min_vol_unit, 0) * min_vol_unit
+#new class (SPA experimental data)
+class SolventTestingData(SoakAndCryoValues):
+    '''solvent and cryo data for crystals used in solvent testing'''
+
+    solvent_name = models.CharField(max_length=64, blank=True, null=True)
+    batch = models.ForeignKey(SolventBatch, blank=True, null=True, on_delete=models.CASCADE)
+
 
 class DataProcessing(models.Model):
     auto_assigned = models.TextField(blank=True, null=True)
@@ -402,16 +336,9 @@ class DataProcessing(models.Model):
     unit_cell_vol = models.FloatField(blank=True, null=True)
 
     class Meta:
-  #      if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-  #          app_label = 'xchem_db'
         db_table = 'data_processing'
 
-
-
-
-
 class Dimple(models.Model):
-
     crystal_name = models.OneToOneField(Crystal, on_delete=models.CASCADE, unique=True)  # changed to foreign key
     mtz_path = models.CharField(max_length=255, blank=True, null=True)
     pdb_path = models.CharField(max_length=255, blank=True, null=True)
@@ -421,37 +348,34 @@ class Dimple(models.Model):
     reference = models.ForeignKey(Reference, blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
-    #    if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-    #        app_label = 'xchem_db'
-        db_table = 'dimple'
         unique_together = ('pdb_path', 'mtz_path')
 
-#heavily modified; some attributes added, some moved to Batch
 
+#heavily modified; some attributes added, some moved to Batch
 class Lab(models.Model):
 
-    crystal_name = models.OneToOneField(Crystal, on_delete=models.CASCADE, unique=True)  # changed to foreign key
+    crystal_name = models.OneToOneField(Crystal, on_delete=models.CASCADE, unique=True, blank=True, null=True)  # changed to foreign key
+    single_compound = models.ForeignKey(SpaCompound, on_delete=models.CASCADE, null=True, blank=True) # in regular experiments
+    compound_combination = models.ForeignKey(CompoundCombination, on_delete=models.CASCADE, null=True, blank=True) # with combisoaks and cocktails
+
+    #compound = models.OneToOneField(SpaCompound, on_delete=models.CASCADE, unique=True, blank=True, null=True)  #changed to allow cocktails
+    #to access crystal_name now: self.compound.crystal
+        
     data_collection_visit = models.CharField(max_length=64, blank=True, null=True)
-    expr_conc = models.FloatField(blank=True, null=True)
     harvest_status = models.CharField(max_length=64, blank=True, null=True)
     mounting_result = models.CharField(max_length=64, blank=True, null=True)
     mounting_time = models.CharField(max_length=64, blank=True, null=True)
     visit = models.CharField(max_length=64, blank=True, null=True)
 
     #new attributes
-    batch = models.ForeignKey(Batch, blank=True, null=True, on_delete=models.PROTECT)
-    compound = models.ForeignKey(SoakDBCompound, blank=True, null=True, on_delete=models.PROTECT)
+    batch = models.ForeignKey(Batch, blank=True, null=True, on_delete=models.PROTECT) #null for solvent testing
+    solvent_data = models.ForeignKey(SolventTestingData, blank=True, null=True, on_delete=models.PROTECT) #null for compound screen
     puck = models.CharField(max_length=100, blank=True, null=True)
     position = models.CharField(max_length=100, blank=True, null=True)
     pin_barcode = models.CharField(max_length=100, blank=True, null=True)
     arrival_time = models.DateTimeField(blank=True, null=True)
     mounted_timestamp = models.DateTimeField(blank=True, null=True)
     ispyb_status = models.CharField(max_length=100, blank=True, null=True)
-
-    class Meta:
-     #   if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-     #       app_label = 'xchem_db'
-        db_table = 'lab'
 
 #ONLY OLD UNCHANGED MODELS BELOW
 
@@ -483,18 +407,10 @@ class Refinement(models.Model):
     spacegroup = models.TextField(blank=True, null=True)
     status = models.TextField(blank=True, null=True)
 
-    class Meta:
- #       if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
- #           app_label = 'xchem_db'
-        db_table = 'refinement'
-
-
 class PanddaAnalysis(models.Model):
     pandda_dir = models.CharField(max_length=255, unique=True)
 
     class Meta:
-  #      if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-   #         app_label = 'xchem_db'
         db_table = 'pandda_analysis'
 
 
@@ -507,8 +423,6 @@ class PanddaRun(models.Model):
     events_file = models.TextField(blank=True, null=True)
 
     class Meta:
-    #    if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-    #        app_label = 'xchem_db'
         db_table = 'pandda_run'
 
 
@@ -519,8 +433,6 @@ class PanddaStatisticalMap(models.Model):
     pandda_run = models.ForeignKey(PanddaRun, on_delete=models.CASCADE)
 
     class Meta:
-     #   if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-     #       app_label = 'xchem_db'
         db_table = 'pandda_statistical_map'
         unique_together = ('resolution_from', 'resolution_to', 'pandda_run')
 
@@ -536,8 +448,6 @@ class PanddaSite(models.Model):
     site_native_centroid_z = models.FloatField(blank=True, null=True)
 
     class Meta:
-     #   if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-     #       app_label = 'xchem_db'
         db_table = 'pandda_site'
         unique_together = ('pandda_run', 'site')
 
@@ -584,8 +494,6 @@ class PanddaEvent(models.Model):
     ligand_confidence_source = models.CharField(choices=CHOICES, max_length=2, default=NONE)
 
     class Meta:
-     #   if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-     #       app_label = 'xchem_db'
         db_table = 'pandda_event'
         unique_together = ('site', 'event', 'crystal', 'pandda_run')
 
@@ -640,8 +548,6 @@ class PanddaEventStats(models.Model):
     scl_map_rms = models.FloatField(blank=True, null=True)
 
     class Meta:
-      #  if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-      #      app_label = 'xchem_db'
         db_table = 'pandda_event_stats'
 
 
@@ -650,8 +556,6 @@ class MiscFiles(models.Model):
     description = models.TextField()
 
     class Meta:
-      #  if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-      #      app_label = 'xchem_db'
         db_table = 'MiscFiles'
 
 
@@ -665,8 +569,6 @@ class FragalysisTarget(models.Model):
     additional_files = models.ManyToManyField(MiscFiles)
 
     class Meta:
-      #  if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-      #      app_label = 'xchem_db'
         db_table = 'FragalysisTarget'
 
 
@@ -686,8 +588,6 @@ class FragalysisLigand(models.Model):
     modification_date = models.BigIntegerField(blank=False, null=False)
 
     class Meta:
-      #  if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-      #      app_label = 'xchem_db'
         db_table = 'FragalysisLigand'
 
 
@@ -696,11 +596,6 @@ class Ligand(models.Model):
     crystal = models.ForeignKey(Crystal, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE)
     compound = models.ForeignKey(Compounds, on_delete=models.CASCADE)
-
-    class Meta:
-       # if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-       #     app_label = 'xchem_db'
-        db_table = 'ligand'
 
 # Old Review
 class ReviewResponses(models.Model):
@@ -714,8 +609,6 @@ class ReviewResponses(models.Model):
     time_submitted = models.IntegerField(blank=False, null=False)
 
     class Meta:
-       # if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-       #     app_label = 'xchem_db'
         db_table = 'review_responses'
 
 
@@ -731,8 +624,6 @@ class ReviewResponses2(models.Model):
     time_submitted = models.IntegerField(blank=False, null=False)
 
     class Meta:
-      #  if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-      #      app_label = 'xchem_db'
         db_table = 'review_responses_new'
 
 
@@ -743,8 +634,6 @@ class BadAtoms(models.Model):
     comment = models.TextField(blank=False, null=False)
 
     class Meta:
-      #  if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-      #      app_label = 'xchem_db'
         db_table = 'bad_atoms'
 
 
@@ -756,8 +645,3 @@ class MetaData(models.Model):
     pdb_id = models.CharField(max_length=255, blank=True)
     fragalysis_name = models.CharField(max_length=255, unique=True)
     original_name = models.CharField(max_length=255)
-
-    class Meta:
-       # if os.getcwd() != '/dls/science/groups/i04-1/software/luigi_pipeline/pipelineDEV':
-       #     app_label = 'xchem_db'
-        db_table = 'metadata'

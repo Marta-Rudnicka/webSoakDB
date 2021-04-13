@@ -75,7 +75,7 @@ def fake_preset_copy(preset, missing_compounds):
 				if (plate.id, c.id) in missing_compounds:
 					c.available = False
 					subset_copy.unavailable_count += 1
-					c.alternatives = [( w.library_plate.library.name + ' : ' + w.library_plate.name ) for w in compound.locations.filter(library_plate__library__public = True) if w.active ]
+					c.alternatives = [( w.library_plate.library.name + ' : ' + w.library_plate.barcode ) for w in compound.locations.filter(library_plate__library__public = True) if w.active ]
 				subset_copy.compounds.append(c)
 		
 	return preset_copy

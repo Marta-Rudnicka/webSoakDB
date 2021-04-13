@@ -116,7 +116,7 @@ def update_plate(request, pk):
 	for compound in plate.compounds.all():
 		if not compound.active:
 			c = Compounds.objects.get(code=compound.compound.code, smiles = compound.compound.smiles)
-			alts = [( w.library_plate.library.name + ' : ' + w.library_plate.barcode ) for w in c.locations.filter(library_plate__library__public = True) if w.active ]
+			alts = [( w.library_plate.library.name + ' : ' + w.library_plate.name ) for w in c.locations.filter(library_plate__library__public = True) if w.active ]
 			alternatives[compound.id] = alts
 	
 	#generate info about availablity of compounds
@@ -130,7 +130,7 @@ def update_plate(request, pk):
 	#generate form to update the basic information about the plate
 	#libraries = Library.objects.filter(public=True).order_by("name")
 	libs = current_library_selection(True) #[("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True).order_by("name")]
-	plate_form = PlateUpdateForm(libs=libs, initial={"library" : plate.library.id, "barcode" : plate.barcode, "current" : plate.current})
+	plate_form = PlateUpdateForm(libs=libs, initial={"library" : plate.library.id, "barcode" : plate.name, "current" : plate.current})
 	dt_map_form = DTMapForm()
 		
 	return render(request, "inventory/update_plate.html", {
@@ -226,7 +226,7 @@ def add_plate(request):
 				library = Library.objects.get(pk=library_id)
 				today = str(date.today())
 				
-				plate = LibraryPlate.objects.create(library = library, barcode = barcode, current = current, last_tested = today)
+				plate = LibraryPlate.objects.create(library = library, name = barcode, current = current, last_tested = today)
 				
 				upload_plate(filename, plate)
 				fs.delete(filename)
@@ -393,7 +393,7 @@ def edit_plate(request):
 			print("pk: ", pk, ", library: ", library, ", barcode : ", barcode, ", current: ", current)
 			plate = LibraryPlate.objects.get(pk=pk)
 			plate.library = library
-			plate.barcode = barcode
+			plate.name = barcode
 			plate.current = current
 			plate.save()
 			

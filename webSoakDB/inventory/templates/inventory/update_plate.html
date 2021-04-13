@@ -18,7 +18,7 @@
 	
 	<main id="update-plate">
 		<h2>Plate update: </h2>
-		<h1>{{plate.library.name}} - {{ plate.name }}</h1>
+		<h1>{{plate.library.name}} - {{ plate.barcode }}</h1>
 		<section>
 			<div id="dt">
 				<h3>Dispense testing</h3>
@@ -57,11 +57,11 @@
 			
 			
 			<div>
-				<h3>Delete {{plate.library.name}} : {{ plate.name }}</h3>
+				<h3>Delete {{plate.library.name}} : {{ plate.barcode }}</h3>
 				<form method="post" action="/inventory/delete-plate/" id="delete-{{plate.id}}">
 					{% csrf_token %}
 					<input type="hidden" name="id" value="{{plate.id}}">
-					<button type="submit" class="delete-button"  onclick="submitDelete('{{plate.id}}', '{{plate.name}}')">Delete plate</button>
+					<button type="submit" class="delete-button"  onclick="submitDelete('{{plate.id}}', '{{plate.barcode}}')">Delete plate</button>
 				</form>
 			</div>
 		</section>
@@ -152,7 +152,7 @@
 				<table class="table">
 					<tbody>
 						<tr><td>Library</td><td>{{ plate.library.name }}</td></tr>
-						<tr><td>Barcode</td><td>{{ plate.name }}</td></tr>
+						<tr><td>Barcode</td><td>{{ plate.barcode }}</td></tr>
 						<tr><td>Last updated</td><td>{{ plate.last_tested }}</td></tr>
 						<tr><td>Current</td><td>{% if plate.current %} Yes {% else %} No {% endif %}</td></tr>
 					</tbody>

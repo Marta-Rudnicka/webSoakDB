@@ -37,7 +37,7 @@ class SubsetSelect extends React.Component {
 		let selects = null;
 		if (this.state.library){
 			options = this.state.library.plates.map((plate, index) =>
-				<option key={index} value={plate.id}>{plate.name} {plate.current ? '(current)' : ''}</option>
+				<option key={index} value={plate.id}>{plate.barcode} {plate.current ? '(current)' : ''}</option>
 			);
 			if (this.countCurrent() === 1){
 				selects = (<p>
@@ -88,7 +88,7 @@ class ExportForm extends React.Component {
 		return (
 			<form method="post" action="/downloads/export-for-soakdb/">
 				<CSRFToken />
-				<input type="hidden" name="proposal" value={this.props.proposal.name} />
+				<input type="hidden" name="proposal" value={this.props.proposal.proposal} />
 				<legend>Export selection for SoakDB </legend>
 				{ this.props.proposal.subsets.length > 0 ? <p><strong>Select library plates for cherry-picking lists and subsets</strong></p> : null }
 				<table className="table">

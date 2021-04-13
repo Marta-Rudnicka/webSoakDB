@@ -10,7 +10,7 @@ class LibrarySerializer(serializers.ModelSerializer):
 class LibraryPlateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = LibraryPlate
-		fields = ['id', 'library', 'name', 'current', 'size']
+		fields = ['id', 'library', 'barcode', 'current', 'size']
 		depth = 1
 
 #class LibraryPlateWithCompoundsSerializer(serializers.ModelSerializer):
@@ -22,13 +22,28 @@ class LibraryPlateSerializer(serializers.ModelSerializer):
 class CurrentPlateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = LibraryPlate
-		fields = ['id', 'library', 'name', 'size']
+		fields = ['id', 'library', 'barcode', 'size']
 		depth = 1
 
 class CompoundSerializer(serializers.Serializer):
 	class Meta:
 		model = Compounds
-		fields = ['id', 'code', 'smiles', 'properties']
+		fields = ['id', 
+				'code', 
+				'smiles', 
+				"log_p", 
+				"mol_wt", 
+				"heavy_atom_count", 
+				"heavy_atom_mol_wt", 
+				"nhoh_count", 
+				"no_count", 
+				"num_h_acceptors", 
+				"num_h_donors", 
+				"num_het_atoms", 
+				"num_rot_bonds", 
+				"num_val_electrons", 
+				"ring_count", 
+				"tpsa"]
 		
 class LibrarySubsetSerializer(serializers.Serializer):
 	id = serializers.IntegerField()
@@ -69,7 +84,7 @@ class CrystalPlateSerializer(serializers.ModelSerializer):
 		depth=2
 
 class ProposalListSerializer(serializers.Serializer):
-	name = serializers.CharField(max_length=32)
+	proposal = serializers.CharField(max_length=32)
 	#libraries = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 	libraries = LibrarySerializer(many=True)
 	subsets = LibrarySubsetSerializer(many=True)	
@@ -84,7 +99,7 @@ class ProposalListSerializer(serializers.Serializer):
 class CompoundsStatSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Compounds
-		fields = ['id', 'code', 'smiles', 'properties']
+		fields = ['id', 'code', 'smiles', "log_p", "mol_wt", "heavy_atom_count", "heavy_atom_mol_wt", "nhoh_count", "no_count", "num_h_acceptors", "num_h_donors", "num_het_atoms", "num_rot_bonds", "num_val_electrons", "ring_count", "tpsa"]
 		depth: 1
 
 class SourceWellStatSerializer(serializers.Serializer):
@@ -94,16 +109,19 @@ class SourceWellStatSerializer(serializers.Serializer):
 
 class LibraryPlateStatSerializer(serializers.Serializer):
 	id = serializers.IntegerField()
-	name = serializers.CharField(max_length=32)
+	barcode = serializers.CharField(max_length=32)
 	library = LibrarySerializer()
 	compounds = SourceWellStatSerializer(many=True)
 
-class LibrarySubsetStatSerializer(LibraryPlateStatSerializer):
+class LibrarySubsetStatSerializer(serializers.Serializer):
+	id = serializers.IntegerField()
+	name = serializers.CharField(max_length=32)
+	library = LibrarySerializer()
 	compounds = CompoundsStatSerializer(many=True)
 
 #CUSTOM SERIALIZERS FOR COMPOUND SELECTION APP
 class ProposalUpdateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Proposals
-		fields = ["name", "libraries", "subsets"]
-		lookup_field = "name"
+		fields = ["proposal", "libraries", "subsets"]
+		lookup_field = "proposal"

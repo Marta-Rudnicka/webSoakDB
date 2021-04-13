@@ -33,7 +33,7 @@ class ProposalSelection extends React.Component {
 	
 	render(){
 		const options = this.state.proposals.map((proposal, index) => 
-			 <option key={index} value={proposal.name} htmlFor="proposal_name">{proposal.name}</option>
+			 <option key={index} value={proposal.proposal} htmlFor="proposal_name">{proposal.proposal}</option>
 		);
 		
 		let loggedIn = null;

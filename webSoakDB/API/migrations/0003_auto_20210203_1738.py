@@ -407,30 +407,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='API.target'),
         ),
         migrations.CreateModel(
-            name='Lab',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('data_collection_visit', models.CharField(blank=True, max_length=64, null=True)),
-                ('expr_conc', models.FloatField(blank=True, null=True)),
-                ('harvest_status', models.CharField(blank=True, max_length=64, null=True)),
-                ('mounting_result', models.CharField(blank=True, max_length=64, null=True)),
-                ('mounting_time', models.CharField(blank=True, max_length=64, null=True)),
-                ('visit', models.CharField(blank=True, max_length=64, null=True)),
-                ('puck', models.CharField(blank=True, max_length=100, null=True)),
-                ('position', models.CharField(blank=True, max_length=100, null=True)),
-                ('pin_barcode', models.CharField(blank=True, max_length=100, null=True)),
-                ('arrival_time', models.DateTimeField(blank=True, null=True)),
-                ('mounted_timestamp', models.DateTimeField(blank=True, null=True)),
-                ('ispyb_status', models.CharField(blank=True, max_length=100, null=True)),
-                ('batch', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='API.batch')),
-                ('compound', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='API.soakdbcompound')),
-                ('crystal_name', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='API.crystal')),
-            ],
-            options={
-                'db_table': 'lab',
-            },
-        ),
-        migrations.CreateModel(
             name='FragalysisTarget',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -492,23 +468,23 @@ class Migration(migrations.Migration):
             name='panddaevent',
             unique_together={('site', 'event', 'crystal', 'pandda_run')},
         ),
-        migrations.CreateModel(
-            name='Dimple',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('mtz_path', models.CharField(blank=True, max_length=255, null=True)),
-                ('pdb_path', models.CharField(blank=True, max_length=255, null=True)),
-                ('r_free', models.FloatField(blank=True, null=True)),
-                ('res_high', models.FloatField(blank=True, null=True)),
-                ('status', models.TextField(blank=True, null=True)),
-                ('crystal_name', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='API.crystal')),
-                ('reference', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='API.reference')),
-            ],
-            options={
-                'db_table': 'dimple',
-                'unique_together': {('pdb_path', 'mtz_path')},
-            },
-        ),
+#        migrations.CreateModel(
+#            name='Dimple',
+#            fields=[
+#                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+#                ('mtz_path', models.CharField(blank=True, max_length=255, null=True)),
+#                ('pdb_path', models.CharField(blank=True, max_length=255, null=True)),
+#                ('r_free', models.FloatField(blank=True, null=True)),
+#                ('res_high', models.FloatField(blank=True, null=True)),
+#                ('status', models.TextField(blank=True, null=True)),
+#                ('crystal_name', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='API.crystal')),
+#                ('reference', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='API.reference')),
+#            ],
+#            options={
+#                'db_table': 'dimple',
+#                'unique_together': {('pdb_path', 'mtz_path')},
+#            },
+#        ),
         migrations.AlterUniqueTogether(
             name='crystal',
             unique_together={('crystal_name', 'visit', 'compound', 'product')},

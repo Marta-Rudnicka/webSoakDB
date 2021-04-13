@@ -36,7 +36,7 @@ class CherryPickForm extends React.Component {
 		return (
 		<form className="compound-upload" method="post" action="/uploads/subset_upload_form/" id="own_subset" encType="multipart/form-data">
 			<CSRFToken />
-			<input type="hidden" name="proposal" value={this.props.proposal.name} />
+			<input type="hidden" name="proposal" value={this.props.proposal.proposal} />
 			<label htmlFor="id_lib_id">Select library:</label> 
 			<select name="lib_id" id="id_lib_id">
 				<option>...</option>

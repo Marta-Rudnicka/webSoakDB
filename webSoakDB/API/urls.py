@@ -13,7 +13,7 @@ urlpatterns = [
 	path("preset_list/", views.PresetList.as_view(), name="preset_list"),
 	path("preset_detail/<int:pk>/", views.PresetDetail.as_view(), name="preset_detail"),
 	path("proposals/", views.ProposalList.as_view(), name="proposals"),
-	path("proposals/<str:name>/", views.ProposalDetail.as_view(), name="proposal_detail"),
+	path("proposals/<str:proposal>/", views.ProposalDetail.as_view(), name="proposal_detail"),
 	
 	#specific-purpose custom endpoints:
 	

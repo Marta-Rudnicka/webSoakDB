@@ -4,6 +4,9 @@ import csv
 import re
 import django.core.exceptions
 
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+from rdkit.Chem import Crippen
 
 #prepate list of libraries formatted as froms.ChoiceField choices
 def create_lib_selection():
@@ -29,6 +32,7 @@ def get_selection_details(proposal):
 
 #import data from a csv file - should be used after validation with data_is_valid
 def upload_plate(file_name, plate):
+	print('fired upload plate')
 	with open(file_name, newline='') as csvfile:
 		dialect = csv.Sniffer().sniff(csvfile.read(1024))
 		csvfile.seek(0)
@@ -39,6 +43,22 @@ def upload_plate(file_name, plate):
 			except django.core.exceptions.ObjectDoesNotExist:
 				print('Compound not found, creating new one.')
 				compound = Compounds.objects.create(smiles = row[2].strip(), code = row[0].strip())
+				if compound.smiles:
+					sanitized_mol = Chem.MolFromSmiles(compound.smiles)
+					compound.log_p = Crippen.MolLogP(sanitized_mol)
+					compound.mol_wt = float(Chem.rdMolDescriptors.CalcExactMolWt(sanitized_mol))
+					compound.heavy_atom_count = Chem.Lipinski.HeavyAtomCount(sanitized_mol)
+					compound.heavy_atom_mol_wt = float(Descriptors.HeavyAtomMolWt(sanitized_mol))
+					compound.nhoh_count = Chem.Lipinski.NHOHCount(sanitized_mol)		
+					compound.no_count = Chem.Lipinski.NOCount(sanitized_mol)
+					compound.num_h_acceptors = Chem.Lipinski.NumHAcceptors(sanitized_mol)
+					compound.num_h_donors = Chem.Lipinski.NumHDonors(sanitized_mol)
+					compound.num_het_atoms = Chem.Lipinski.NumHeteroatoms(sanitized_mol)
+					compound.num_rot_bonds = Chem.Lipinski.NumRotatableBonds(sanitized_mol)
+					compound.num_val_electrons = Descriptors.NumValenceElectrons(sanitized_mol)
+					compound.ring_count = Chem.Lipinski.RingCount(sanitized_mol)
+					compound.tpsa = Chem.rdMolDescriptors.CalcTPSA(sanitized_mol)
+					compound.save()
 				
 			s_well = SourceWell.objects.create(compound = compound, library_plate = plate, well = row[1].strip())
 			
@@ -72,8 +92,7 @@ def upload_subset(file_name, library_id, name, origin):
 	
 
 def import_full_libraries(proposal):
-	proposal = Proposals.objects.get(name=proposal)
-	#proposal = Proposals.objects.get(proposal=proposal)
+	proposal = Proposals.objects.get(proposal=proposal)
 	full_plates = []
 	
 	for l in proposal.libraries.all():
@@ -102,7 +121,7 @@ def find_source_wells(subset, plate_id):
 		
 
 def import_library_parts(proposal, data):
-	proposal = Proposals.objects.get(name=proposal)
+	proposal = Proposals.objects.get(proposal=proposal)
 	sw = []
 	
 	for s in proposal.subsets.all():
@@ -125,8 +144,7 @@ def export_form_is_valid(post_data):
 			pass
 		elif key=='proposal':
 			try:
-				proposal = Proposals.objects.get(name=post_data.get(key))
-				#proposal = Proposals.objects.get(proposal=post_data.get(key))
+				proposal = Proposals.objects.get(proposal=post_data.get(key))
 				subset_lib_ids = [s.library.id for s in proposal.subsets.all()]
 			except django.core.exceptions.ObjectDoesNotExist:
 				print('No proposal found')

@@ -65,7 +65,7 @@ class ProposalList(generics.ListAPIView):
 
 class ProposalDetail(generics.RetrieveUpdateAPIView):
 	queryset = Proposals.objects.all()	
-	lookup_field = "name"
+	lookup_field = "proposal"
 	serializer_class = ProposalListSerializer
 	permission_classes = [AllowAny]
 
@@ -124,7 +124,7 @@ class SubsetStatList(generics.RetrieveAPIView):
 
 class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
 	queryset = Proposals.objects.all()	
-	lookup_field = "name"
+	lookup_field = "proposal"
 	serializer_class = ProposalUpdateSerializer
 	permission_classes = [AllowAny]
 	

@@ -98,6 +98,7 @@ class PlateLookup extends React.Component {
 			axios.get(apiUrl)
 				.then(res => {
 				const collection = res.data;
+				collection.name = collection.barcode;
 				this.setState({ collection });
 			});
 			

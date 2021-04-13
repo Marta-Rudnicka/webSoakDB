@@ -79,30 +79,30 @@ class App extends Component {
 	updateLibrarySelection(idArray){
 		console.log('fired updateLibrarySelection with', idArray);
 		event.preventDefault()
-		const apiUrl='/api/update_proposal_selection/' + this.state.proposal.name + '/';
+		const apiUrl='/api/update_proposal_selection/' + this.state.proposal.proposal + '/';
 		axios.patch(apiUrl, {libraries: idArray}) 
 		.catch(error => {
 			console.log('updateLibrarySelection: axios error:');
 			console.log(error)
 		})
 		
-		this.logIn(this.state.proposal.name);
+		this.logIn(this.state.proposal.proposal);
 	}
 	
 	updateSubsetSelection(idArray){
 		event.preventDefault()
-		const apiUrl='/api/update_proposal_selection/' + this.state.proposal.name + '/';
+		const apiUrl='/api/update_proposal_selection/' + this.state.proposal.proposal + '/';
 		axios.patch(apiUrl, {subsets: idArray}) 
 		.catch(error => {
 			console.log('updateLibrarySelection: axios error:');
 			console.log(error)
 		})
 		
-		setTimeout(() => {this.logIn(this.state.proposal.name)}, 1000);
+		setTimeout(() => {this.logIn(this.state.proposal.proposal)}, 1000);
 	}
 	
 	refreshAfterUpload(){
-		this.props.logIn(this.state.proposal.name);	
+		this.props.logIn(this.state.proposal.proposal);	
 	}
 	
 	componentDidUpdate(prevProps, prevState) {

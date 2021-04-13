@@ -209,7 +209,7 @@ class Picker extends React.Component {
 		
 		return (
 		<div id="picker">
-			<h1>Select compounds for {this.props.proposal.name}</h1>
+			<h1>Select compounds for {this.props.proposal.proposal}</h1>
 			<main id="main-picker">
 				<section id="libraries" className={sameLibs}>
 					<h2>XChem in-house fragment libraries</h2>

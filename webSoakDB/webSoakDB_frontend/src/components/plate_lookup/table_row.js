@@ -53,20 +53,20 @@ class TableRow extends React.Component {
 		}
 		
 		const stat_cells = descriptor_names.map((option, index) => {
-				let value 
-				if (this.props.is_a_plate) {
-					value = this.props.compound.compound.properties[option];
-				}
-				else {
-					value = this.props.compound.properties[option];
-				}
-				if (value % 1 !== 0){
-					value = value.toFixed(2);
-				}
-				
-				return <td key={index} className={classes[stat_options[index][0]]}>{value}</td>
+			let value 
+			if (this.props.is_a_plate) {
+		
+				value = this.props.compound.compound[option];
+			}
+			else {
+				value = this.props.compound[option];
+			}
+			if (value % 1 !== 0){
+				value = value.toFixed(2);
+			}
 			
-			});
+			return <td key={index} className={classes[stat_options[index][0]]}>{value}</td>
+		});
 		
 		let library_cell = null;
 		

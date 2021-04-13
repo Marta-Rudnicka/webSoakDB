@@ -7,38 +7,41 @@ from .validators import data_is_valid, selection_is_valid
 from .helpers import upload_plate, upload_subset, import_full_libraries, import_library_parts, export_form_is_valid
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect
-from API.models import Proposals, Library, LibraryPlate, LibrarySubset
+from API.models import Library, LibraryPlate, LibrarySubset, Proposals
 import mimetypes
 from slugify import slugify
 
 def upload_user_library(request):
+	print('fired upload user library')
 	today = str(date.today())
 	
 	if request.method == "POST":
 		form = ExternalLibraryForm(request.POST, request.FILES)
 		if form.is_valid():
+			print('form valid')
 			log = []
 			fs = FileSystemStorage()
 			source = request.FILES["data_file"]
 			filename = fs.save(source.name, source)
 			if data_is_valid(filename, log):
-				
+				print('data is valid')
 				#data to be submitted
 				submitted_name = form.cleaned_data['name']
 				proposal_name = form.cleaned_data['proposal']
 				name = submitted_name + '(' + proposal_name + ')'
 				today = str(date.today())
-				
+				print('data: ', submitted_name, proposal_name, name, today)
 				#create new Library and LibraryPlate objects
 				user_lib = Library.objects.create(name=name, public=False, for_industry=True)
-				user_plate = LibraryPlate.objects.create(library = user_lib, name = name, current = True, last_tested = today)
-				
+				user_plate = LibraryPlate.objects.create(library = user_lib, barcode = name, current = True, last_tested = today)
+				print('library and plate created')
 				#upload the compound data for the new library plate
 				upload_plate(filename, user_plate)
+				print('plate created')
 				fs.delete(filename)
 				
 				#add new library to user's proposal
-				proposal = Proposals.objects.get(name=proposal_name)
+				proposal = Proposals.objects.get(proposal=proposal_name)
 				proposal.libraries.add(user_lib)
 				proposal.save()
 			
@@ -47,7 +50,6 @@ def upload_user_library(request):
 			else:
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
-
 
 def upload_user_subset(request):
 	if request.method == "POST":
@@ -70,7 +72,7 @@ def upload_user_subset(request):
 				subset = upload_subset(filename, library_id, name, origin)
 				
 				#add new subset to user's proposal
-				proposal = Proposals.objects.get(name=proposal_name)
+				proposal = Proposals.objects.get(proposal=proposal_name)
 				proposal.subsets.add(subset)
 				proposal.save()
 			
@@ -98,7 +100,7 @@ def download_current_plate_map(request, pk):
 	
 	
 	with open('files/plate-map.csv', 'r+') as f:
-		filename = slugify(plate.library.name) + '-' + slugify(plate.name) + '-map-' + str(date.today()) + '.csv'
+		filename = slugify(plate.library.name) + '-' + slugify(plate.barcode) + '-map-' + str(date.today()) + '.csv'
 		response = HttpResponse(f, content_type='text/csv')
 		response['Content-Disposition'] = "attachment; filename=%s" % filename
 		return response
@@ -115,7 +117,7 @@ def export_selection_for_soakdb(request):
 		with open('files/soakdb-export.csv', 'r+') as f:
 			f.truncate(0)
 			for c in source_wells:
-				line = c.library_plate.name + ',' + c.well + ',' + c.library_plate.library.name + ',' + c.compound.smiles + ',' + c.compound.code + "\n"
+				line = c.library_plate.barcode + ',' + c.well + ',' + c.library_plate.library.name + ',' + c.compound.smiles + ',' + c.compound.code + "\n"
 				f.write(line)
 			f.close()
 		

@@ -4,11 +4,8 @@ from .helpers import create_lib_selection
 from django.forms import formset_factory
 	
 libs = create_lib_selection()
-#proposals = []
-#for proposal in Proposal.objects.all():
-#	proposals.append([proposal.id, proposal.name])
 
-proposals = list([item.id, item.name] for item in Proposals.objects.all())
+proposals = list([item.id, item.proposal] for item in Proposals.objects.all())
 libraries = list([item.id, item.name] for item in Library.objects.filter(public=True))
 
 

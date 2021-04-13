@@ -43,10 +43,10 @@ nav {
 	font-size: 1.2em;
 }
 
-caption {
+table caption {
 	caption-side: top;
 	border: solid 1px;
-	font-size: 1.2em;
+	font-size: 2em;
 	text-align: center;
 }
 /*same as actual Bootstrap links; throw out after implementing react routers*/

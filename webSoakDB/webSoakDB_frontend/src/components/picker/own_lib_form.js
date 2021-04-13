@@ -14,7 +14,7 @@ class OwnLibraryForm extends React.Component {
 		return (
 			<form className="compound-upload" method="post" action="/uploads/library_upload_form/" id="own_lib" encType="multipart/form-data" >
 			<CSRFToken />
-			<input type="hidden" name="proposal" value={this.props.proposal.name} />
+			<input type="hidden" name="proposal" value={this.props.proposal.proposal} />
 				<label htmlFor="id_name">Enter library name: </label> 
 				<input type="text" name="name" required id="id_name" />
 				
