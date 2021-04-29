@@ -3,11 +3,12 @@ import LibraryOption from './library_option.js';
 import Presets from './presets.js';
 import Uploads from './uploads.js';
 import Stats from './stats.js';
-import Graphs from './graphs.js';
+import Graph from './graph.js';
+import GraphTable from './graph_table.js';
 import PresetOption from './preset_option.js';
 import axios from 'axios';
 
-import { deepCopyObjectArray, getAttributeArray, mean, shareAllElements } from  '../../actions/stat_functions.js';
+import { deepCopyObjectArray, removeFromArray, getAttributeArray, mean, shareAllElements, getSubsetIds, sharedItems} from  '../../actions/stat_functions.js';
 
 const proposal = 'Test string';
 
@@ -20,26 +21,20 @@ class Picker extends React.Component {
 			initialLibs: getAttributeArray(this.props.proposal.libraries, "id"),
 			selectedSubsetIds: getAttributeArray(this.props.proposal.subsets, "id"),
 			initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
-			currentLibPlates: [],
 			presets: [],
-			//unsavedChanges: false,
-			
+			currentLibOptions: [],
+			inHouseCompoundCount: 0,			
 		}
+		
 		this.detectUnsavedChanges = this.detectUnsavedChanges.bind(this);
 		this.handleChangeLib = this.handleChangeLib.bind(this);
 		this.handleChangePreset = this.handleChangePreset.bind(this);
-		this.updateSelectionLibs = this.updateSelectionLibs.bind(this);
+		this.saveChanges = this.saveChanges.bind(this);
+		this.selected = this.selected.bind(this);
 	}
 	
 	componentDidMount() {
-		const libApiUrl = '/api/library_selection_list/';
-		
-		axios.get(libApiUrl)
-			.then(res => {
-			const currentLibPlates = res.data;
-			this.setState({ currentLibPlates });
-      });
-      
+	      
       const presetApiUrl = '/api/preset_list/';
 		
 		axios.get(presetApiUrl)
@@ -48,11 +43,17 @@ class Picker extends React.Component {
 			this.setState({ presets });
       });
       
+      const libApiUrl = '/api/current_library_options/';
+		
+		axios.get(libApiUrl)
+			.then(res => {
+			const currentLibOptions = res.data;
+			this.setState({ currentLibOptions })
+      });
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.proposal !== this.props.proposal) {
-			console.log('Proposal changed')
 			this.setState({
 				selectedLibIds : getAttributeArray(this.props.proposal.libraries, "id"), 
 				initialLibs: getAttributeArray(this.props.proposal.libraries, "id"),
@@ -60,149 +61,110 @@ class Picker extends React.Component {
 				initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
 				});
 		}
+		if (prevState.selectedLibIds !== this.state.selectedLibIds
+			|| prevState.presets !== this.state.presets
+			|| prevState.selectedSubsetIds != this.state.selectedSubsetIds
+			|| prevState.currentLibOptions !== this.state.currentLibOptions
+			)
+			{
+				this.updateInHouseCompoundCount();
+				this.props.trackUnsavedChanges(this.detectUnsavedChanges());
+			}
 	}
 	
-	removeLibraryFromSelected(id){
-		const selectedLibIdsCopy = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);
-		const found = selectedLibIdsCopy.find(item => item === parseInt(id));
-		selectedLibIdsCopy.splice(selectedLibIdsCopy.indexOf(found), 1);
-		this.setState({selectedLibIds : selectedLibIdsCopy});
-		this.handleUnsavedChanges(selectedLibIdsCopy, null)
+	handleChangeLib(event){
+	/*add or remove library from temporary (unsaved) selection on checkbox change*/
+		const id = parseInt(event.target.value);
+		
+		if(event.target.checked === true){
+			const newSelectedLibIds = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);
+			newSelectedLibIds.push(parseInt(id));
+			this.setState({selectedLibIds : newSelectedLibIds});
+		}
+		else{
+			const newSelectedLibIds = removeFromArray(this.state.selectedLibIds, [id]);
+			this.setState({selectedLibIds : newSelectedLibIds});
+		}
 	}
 	
-	addLibraryToSelected(id){
-		const selectedLibIdsCopy = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);
-		selectedLibIdsCopy.push(parseInt(id));
-		this.setState({selectedLibIds : selectedLibIdsCopy});
-		this.handleUnsavedChanges(selectedLibIdsCopy, null);
-	}
-	
-	removePresetFromSelected(id){
-		const removedPreset = this.state.presets.find(preset => preset.id === parseInt(id))
-		const selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);	
-		removedPreset.subsets.forEach(subset => {
-			const found = selectedSubsetIdsCopy.find(item => item === parseInt(id));
-			selectedSubsetIdsCopy.splice(selectedSubsetIdsCopy.indexOf(found), 1);
-		});
-		this.setState({selectedSubsetIds : selectedSubsetIdsCopy});
-		this.handleUnsavedChanges(null, selectedSubsetIdsCopy);
-	}
-	
-	addPresetToSelected(id){
-		const addedPreset = this.state.presets.find(preset => preset.id === parseInt(id))
-		const selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);
-		addedPreset.subsets.forEach(subset => selectedSubsetIdsCopy.push(subset.id));
-		this.setState({selectedSubsetIds : selectedSubsetIdsCopy});
-		this.handleUnsavedChanges(null, selectedSubsetIdsCopy);
+	handleChangePreset(event){
+	/*add or remove subsets from temporary (unsaved) selection on preset checkbox change*/
+		const id = parseInt(event.target.value);
+		
+		if(event.target.checked === true){
+			const newSelectedSubsetIds = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);
+			newSelectedSubsetIds.push(...getSubsetIds(this.state, id))
+			this.setState({selectedSubsetIds : newSelectedSubsetIds});
+		}
+		else{
+			const newSelectedSubsetIds = removeFromArray(this.state.selectedSubsetIds, getSubsetIds(this.state, id));
+			this.setState({selectedSubsetIds : newSelectedSubsetIds});
+		}
 	}
 
-	handleChangeLib(event, unsaved){
-		if(event.target.checked === true){
-			this.addLibraryToSelected(event.target.value);
-		}
-		else{
-			this.removeLibraryFromSelected(event.target.value);
-		}
-	}
-	
-	handleChangePreset(event, unsaved){
-		if(event.target.checked === true){
-			this.addPresetToSelected(event.target.value);
-		}
-		else{
-			this.removePresetFromSelected(event.target.value);
-		}
-	}
-	
-	updateSelectionLibs(){
-		console.log('fired updateSelectionLibs');
+	saveChanges(){
 		event.preventDefault();
-		this.handleUnsavedChanges(this.state.initialLibs, this.state.selectedSubsetIds);
-		this.props.updateLibrarySelection(this.state.selectedLibIds);//, 'Picker');
-		
+		this.props.updateSelection(this.state.selectedLibIds, this.state.selectedSubsetIds);	
 	}
-	
-	updateSelectionSubsets(){
-		this.handleUnsavedChanges(this.state.selectedLibIds, this.state.initialSubsets);
-		this.props.updateSubsetSelection(this.state.selectedSubsetIds);
-		
+
+	selected(preset){
+		return this.state.selectedSubsetIds.includes(preset.subsets[0])
 	}
-	
-	presetAreadySelected(preset){
-		if (this.state.selectedSubsetIds.includes(preset.subsets[0].id)){
+
+	detectUnsavedChanges(){
+		if (!shareAllElements(this.state.initialLibs, this.state.selectedLibIds)){
 			return true;
 		}
-		else{
-			return false;
-		}
-	}
-	
-	handleUnsavedChanges(newLibs, newSubsets){
-	/*detects unsaved changes and passes them to trackUnsavedChanges
-	 *if caller function does not change library selection, pass null for newLibs 
-	 *if caller function is supposed to ignore changes in library selection (e.g.
-	 * while saving changes in the db), pass this.state.initialLibIds for newLibs
-	 * (and the same for subset selection and newSubsets arg)*/
-		console.log('fired handleUnsavedChanges')
-	 	this.props.trackUnsavedChanges(this.detectUnsavedChanges(newLibs, newSubsets));
-	}
-	
-	detectUnsavedChanges(newLibs, newSubsets){
-	/*determine if newLibs and newSubsets are different from the saved 
-	 * selection of compounds; if both args are null, compares current selection
-	 * to the saved one */
-	  	
-		let currentLibs = this.state.selectedLibIds;
-		let currentSubsets = this.state.selectedSubsetIds;
-		if (newLibs){
-			currentLibs = newLibs;
-		}
-		if (newSubsets){
-			currentSubsets = newSubsets;
-		}		
-		if (shareAllElements(currentLibs, this.state.initialLibs) && shareAllElements(currentSubsets, this.state.initialSubsets)){
-			return false;
-		}
-		else {
+		if (!shareAllElements(this.state.initialSubsets, this.state.selectedSubsetIds)){
 			return true;
 		}
+		return false;
 	}
 	
+	updateInHouseCompoundCount(){
+		let count = 0;
+		this.state.currentLibOptions.forEach(lib =>{
+			if (this.state.selectedLibIds.includes(lib.id)){
+				count = count + lib.size;
+			}
+		});
+		this.state.presets.forEach(preset =>{
+			const subs = getSubsetIds(this.state, preset.id)
+			if (this.state.selectedSubsetIds.includes(subs[0])){
+				count = count + preset.size;
+			}
+		});
+		this.setState({inHouseCompoundCount: count});
+	}
 	
 	render() {
-		let sameLibs
-		if (!shareAllElements(this.state.initialLibs, this.state.selectedLibIds)){
-			sameLibs = 'changed';
+		let changeStatus = "";
+		if (this.props.unsavedChanges){
+			changeStatus = 'changed';
 		}
-		let sameSubsets
-		if (!shareAllElements(this.state.initialSubsets, this.state.selectedSubsetIds)){
-			sameSubsets = 'changed';
-		}
-		const unsaved = !(sameLibs && sameSubsets)
 		
-		const libraries = this.state.currentLibPlates.map((plate, index) => { 
+		const libraries = this.state.currentLibOptions.map((lib, index) => {
+			const checked =  this.state.selectedLibIds.includes(lib.id)
 			return <LibraryOption 
 				key={index} 
-				plate={plate}
+				lib={lib}
 				handleCheckboxChange = {this.handleChangeLib}
-				defaultChecked={this.state.selectedLibIds.includes(plate.library.id)}
-				unsaved={unsaved}
+				handleChangePreset = {this.handleChangePreset}
+				defaultChecked={this.state.selectedLibIds.includes(lib.id)}
+				selected = {this.selected}
 				/>;
 		});
 		
-		const presets = this.state.presets.map((preset, index) => {
-			return <PresetOption
-				key={index}
-				preset = {preset}
-				handleCheckboxChange = {this.handleChangePreset}
-				defaultChecked={this.presetAreadySelected(preset)}
-				unsaved={unsaved}
-				/>}
+		const otherPresets = this.state.presets.map((preset, index) => {
+			if (preset.subsets.length > 1){
+				return <li key={index}><PresetOption
+					preset = {preset}
+					handleCheckboxChange = {this.handleChangePreset}
+					defaultChecked={this.selected(preset)}
+					/></li>}
+			}
 		)
-		
-		const proposalLibs =  this.props.proposal.libraries;
-		
-		
+	
 		
 		let publicSubsets = [];
 		this.state.presets.forEach(preset => publicSubsets.push(...preset.subsets));
@@ -211,28 +173,25 @@ class Picker extends React.Component {
 		<div id="picker">
 			<h1>Select compounds for {this.props.proposal.proposal}</h1>
 			<main id="main-picker">
-				<section id="libraries" className={sameLibs}>
+				<section id="libraries" className={changeStatus}>
 					<h2>XChem in-house fragment libraries</h2>
+					<button type="submit" onClick={event => this.saveChanges(event)}>Save changes in your selection</button>
+					<p><strong>Compounds selected: {this.state.inHouseCompoundCount}</strong></p>
 					
 					<form id="libform" >
 						<div id="libs">
 							{libraries}
 						</div>
-						<button type="submit" onClick={event => this.updateSelectionLibs(event)}>Save changes in your selection</button>
-					</form>
-				</section>
-				
-				<section id="presets" className={sameSubsets}>
-					<h2>Presets</h2>
-					<p>Specific-purpose compounds selections from in-house libraries</p>
-					<form id="preset-form">
 						<div id="pres">
-							{presets}
+							<p>OTHER PRESETS</p>
+							<ul>
+								{otherPresets}
+							</ul>
 						</div>
-						<button type="submit" onClick={event => this.updateSelectionSubsets()}>Save changes in your selection</button>
 					</form>
+					
 				</section>
-				
+								
 				<Uploads proposal={this.props.proposal}
 					publicSubsets={publicSubsets} 
 					refreshAfterUpload={this.props.refreshAfterUpload}
@@ -241,12 +200,14 @@ class Picker extends React.Component {
 					trackUnsavedChanges={this.props.trackUnsavedChanges}
 					presets={this.state.presets}
 				/>
-				<Stats 
-					proposal={this.props.proposal} 
-					selectedLibIds={this.state.selectedLibIds} 
-					selectedSubsetIds={this.state.selectedSubsetIds}
-				/>
-			
+				<section id="stats">
+					<GraphTable
+						parentState = {this.state}
+						//selectedLibIds = {this.state.selectedLibIds}
+						//currentLibOptions = {this.state.currentLibOptions}
+						//selectedSubsetIds = {this.state.selectedSubsetIds}
+					/>
+				</section>
 			</main>
 		</div>
 		); 
@@ -255,3 +216,5 @@ class Picker extends React.Component {
 }
 
 export default Picker;
+
+//selectedLibIds = {sharedItems(this.state.selectedLibIds, getAttributeArray(this.state.currentLibOptions, "id"))}

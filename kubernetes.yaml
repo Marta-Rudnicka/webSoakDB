@@ -1,7 +1,8 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: xchemspa
+  name: xchemspa-deployment
 spec:
   replicas: 1
   selector:
@@ -10,34 +11,71 @@ spec:
   template:
     metadata:
       labels:
-        app: xchemspa
+    app: xchemspa
     spec:
-      securityContext:
-        runAsUser: 1217611
-        runAsGroup: 1217611
-      volumes:
-      - name: dls
-        hostPath:
-          path: /dls
-          type: Directory
       containers:
-      - name: xchemspa
-        securityContext:
+        -
+          image: "gcr.io/diamond-privreg/soakdb:2.2"
+          name: xchemspa
+          ports:
+            -
+              containerPort: 8000
+              name: http
+          securityContext:
             privileged: false
-        image: gcr.io/diamond-privreg/soakdb:1.0
-        ports:
-      - name: http
-          containerPort: 8000
+#          volumeMounts:
+#            -
+#              mountPath: /dls
+#              mountPropagation: HostToContainer
+#              name: dls
+#      securityContext:
+#        runAsGroup: 1217611
+#        runAsUser: 1217611
+#      volumes:
+#        -
+#          hostPath:
+#            path: /dls
+#            type: Directory
+#          name: dls
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: xchemspa
+  name: xchemspa-service
 spec:
   ports:
-  - name: http
-    port: 8000
-    protocol: TCP
-    targetPort: 8000
+    -
+      name: http
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
   selector:
     app: xchemspa
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.org/websocket-services: xchemspa-service
+  name: xchemspa-ingress
+spec:
+  rules:
+    -
+      host: xchemspa.diamond.ac.uk
+      http:
+    paths:
+          -
+            backend:
+              service:
+                name: xchemspa-service
+                port:
+                  number: 8000
+            path: /
+            pathType: Prefix
+  tls:
+    -
+      hosts:
+    - xchemspa.diamond.ac.uk
+
+                

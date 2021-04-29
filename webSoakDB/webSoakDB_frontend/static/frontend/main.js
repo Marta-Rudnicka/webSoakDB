@@ -345,7 +345,7 @@ eval("\n\nvar bind = __webpack_require__(/*! ./helpers/bind */ \"./node_modules/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"mean\": () => (/* binding */ mean),\n/* harmony export */   \"getAttributeArray\": () => (/* binding */ getAttributeArray),\n/* harmony export */   \"deepCopyObjectArray\": () => (/* binding */ deepCopyObjectArray),\n/* harmony export */   \"shareAllElements\": () => (/* binding */ shareAllElements),\n/* harmony export */   \"addUniqueCompounds\": () => (/* binding */ addUniqueCompounds)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n//helper functions for statistics\n\nfunction mean(array) {\n  /*returns arithmetic mean of all the numbers in an array; throws \n   * error if fed something else than numbers */\n  var sum = 0;\n  var i = array.length;\n\n  while (--i >= 0) {\n    if (isNaN(parseFloat(array[i]))) {\n      throw \"Error in mean(): Not a number!\";\n    }\n\n    sum += array[i];\n  }\n\n  return sum / array.length;\n}\nfunction getAttributeArray(array, attr) {\n  /* returns an array of values of the attribute $attr of objects\n   * in $array*/\n  var outputArray = [];\n  var i = array.length;\n\n  while (--i >= 0) {\n    if (array[i][attr] !== undefined) {\n      outputArray.push(array[i][attr]);\n    } else {\n      console.log('getAttributeArray: Undefined value of ', attr, ' for ', array[i], '!');\n    }\n  }\n\n  return outputArray;\n}\nfunction deepCopyObjectArray(array) {\n  //this sucks; needs to be changed\n  var output = [];\n  array.forEach(function (object) {\n    var objectDeepCopy = JSON.parse(JSON.stringify(object));\n    output.push(objectDeepCopy);\n  });\n  return output;\n}\nfunction shareAllElements(array1, array2) {\n  /*returns true if array1 and array2 contain exactly the same elements;\n   * otherwise returns false; USE ONLY FOR ARRAYS WITH UNIQUE ELEMENTS*/\n  if (array1.length !== array2.length) {\n    return false;\n  }\n\n  var sameElements = true;\n  array1.forEach(function (element) {\n    if (!array2.includes(element)) {\n      sameElements = false;\n    }\n  });\n  return sameElements;\n}\nfunction addUniqueCompounds(oldArray, newArray) {\n  /* Takes in arrays of SourceWell objects. Returns an array that \n   * contains all unique Compounds objects that are attributes in \n   * oldArray and newArray (no duplicates). Warning: that does \n   * not necessary mean  unique chemical compounds! In rare cases \n   * Compound objects with different ids share SMILES string\n   * */\n  var ids = getAttributeArray(oldArray, \"id\");\n  var idSet = new Set();\n  var i = ids.length;\n\n  while (--i >= 0) {\n    idSet.add(parseInt(ids[i]));\n  }\n\n  i = newArray.length;\n\n  while (--i >= 0) {\n    if (!idSet.has(newArray[i].id)) {\n      oldArray.push(newArray[i]);\n      idSet.add(parseInt(newArray[i].id));\n    }\n  }\n\n  return oldArray;\n}\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"mean\": () => (/* binding */ mean),\n/* harmony export */   \"getAttributeArray\": () => (/* binding */ getAttributeArray),\n/* harmony export */   \"deepCopyObjectArray\": () => (/* binding */ deepCopyObjectArray),\n/* harmony export */   \"shareAllElements\": () => (/* binding */ shareAllElements),\n/* harmony export */   \"addUniqueCompounds\": () => (/* binding */ addUniqueCompounds),\n/* harmony export */   \"removeFromArray\": () => (/* binding */ removeFromArray),\n/* harmony export */   \"getSubsetIds\": () => (/* binding */ getSubsetIds),\n/* harmony export */   \"sharedItems\": () => (/* binding */ sharedItems)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n//helper functions for statistics\n\nfunction mean(array) {\n  /*returns arithmetic mean of all the numbers in an array; throws \n   * error if fed something else than numbers */\n  var sum = 0;\n  var i = array.length;\n\n  while (--i >= 0) {\n    if (isNaN(parseFloat(array[i]))) {\n      throw \"Error in mean(): Not a number!\";\n    }\n\n    sum += array[i];\n  }\n\n  return sum / array.length;\n}\nfunction getAttributeArray(array, attr) {\n  /* returns an array of values of the attribute $attr of objects\n   * in $array*/\n  var outputArray = [];\n  var i = array.length;\n\n  while (--i >= 0) {\n    if (array[i][attr] !== undefined) {\n      outputArray.push(array[i][attr]);\n    } else {\n      console.log('getAttributeArray: Undefined value of ', attr, ' for ', array[i], '!');\n    }\n  }\n\n  return outputArray;\n}\nfunction deepCopyObjectArray(array) {\n  //this sucks; needs to be changed\n  var output = [];\n  array.forEach(function (object) {\n    var objectDeepCopy = JSON.parse(JSON.stringify(object));\n    output.push(objectDeepCopy);\n  });\n  return output;\n}\nfunction shareAllElements(array1, array2) {\n  /*returns true if array1 and array2 contain exactly the same elements;\n   * otherwise returns false; USE ONLY FOR ARRAYS WITH UNIQUE ELEMENTS*/\n  if (array1.length !== array2.length) {\n    return false;\n  }\n\n  var sameElements = true;\n  array1.forEach(function (element) {\n    if (!array2.includes(element)) {\n      sameElements = false;\n    }\n  });\n  return sameElements;\n}\nfunction addUniqueCompounds(oldArray, newArray) {\n  /* Takes in arrays of SourceWell objects. Returns an array that \n   * contains all unique Compounds objects that are attributes in \n   * oldArray and newArray (no duplicates). Warning: that does \n   * not necessary mean  unique chemical compounds! In rare cases \n   * Compound objects with different ids share SMILES string\n   * */\n  var ids = getAttributeArray(oldArray, \"id\");\n  var idSet = new Set();\n  var i = ids.length;\n\n  while (--i >= 0) {\n    idSet.add(parseInt(ids[i]));\n  }\n\n  i = newArray.length;\n\n  while (--i >= 0) {\n    if (!idSet.has(newArray[i].id)) {\n      oldArray.push(newArray[i]);\n      idSet.add(parseInt(newArray[i].id));\n    }\n  }\n\n  return oldArray;\n}\nfunction removeFromArray(array, elements_to_remove) {\n  /*Takes in two arrays, $array and $elements_to_remove; returns a copy\n   * of $array without items from  $elements_to_remove*/\n  var arrayCopy = array.slice(0, array.length);\n  elements_to_remove.forEach(function (element) {\n    var found = arrayCopy.find(function (item) {\n      return item === element;\n    });\n    arrayCopy.splice(arrayCopy.indexOf(found), 1);\n  });\n  return arrayCopy;\n}\nfunction getSubsetIds(state, id) {\n  /*takes component state and preset id, returns an array of all subset ids in the preset*/\n  var preset = state.presets.find(function (preset) {\n    return preset.id === parseInt(id);\n  });\n\n  if (Number.isInteger(preset.subsets[0])) {\n    return preset.subsets;\n  }\n\n  return getAttributeArray(preset.subsets, \"id\");\n}\nfunction sharedItems(array1, array2) {\n  var output = [];\n  array1.forEach(function (i) {\n    if (array2.includes(i)) {\n      output.push(i);\n    }\n  });\n  return output;\n}\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js?");
 
 /***/ }),
 
@@ -356,7 +356,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\n/* harmony import */ var _home_Home_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./home/Home.js */ \"./webSoakDB/webSoakDB_frontend/src/components/home/Home.js\");\n/* harmony import */ var _main_Main_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./main/Main.js */ \"./webSoakDB/webSoakDB_frontend/src/components/main/Main.js\");\n/* harmony import */ var _picker_Picker_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./picker/Picker.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/Picker.js\");\n/* harmony import */ var _summary_Summary_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./summary/Summary.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/Summary.js\");\n/* harmony import */ var _main_proposal_selection_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./main/proposal_selection.js */ \"./webSoakDB/webSoakDB_frontend/src/components/main/proposal_selection.js\");\n/* harmony import */ var _plate_lookup_PlateLookup_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./plate_lookup/PlateLookup.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/PlateLookup.js\");\n/* harmony import */ var _url_translator_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./url_translator.js */ \"./webSoakDB/webSoakDB_frontend/src/components/url_translator.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router/esm/react-router.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_10__);\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvar PrivateRoute = /*#__PURE__*/function (_Component) {\n  _inherits(PrivateRoute, _Component);\n\n  var _super = _createSuper(PrivateRoute);\n\n  function PrivateRoute() {\n    _classCallCheck(this, PrivateRoute);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(PrivateRoute, [{\n    key: \"render\",\n    value: function render() {\n      var content = null;\n\n      if (this.props.proposal) {\n        content = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {\n          path: this.props.path\n        }, \" \", this.props.children, \" \");\n      } else {\n        content = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Redirect, {\n          to: \"/\"\n        });\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, content);\n    }\n  }]);\n\n  return PrivateRoute;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\nvar App = /*#__PURE__*/function (_Component2) {\n  _inherits(App, _Component2);\n\n  var _super2 = _createSuper(App);\n\n  function App(props) {\n    var _this;\n\n    _classCallCheck(this, App);\n\n    _this = _super2.call(this, props);\n    _this.logIn = _this.logIn.bind(_assertThisInitialized(_this));\n    _this.updateLibrarySelection = _this.updateLibrarySelection.bind(_assertThisInitialized(_this));\n    _this.updateSubsetSelection = _this.updateSubsetSelection.bind(_assertThisInitialized(_this));\n    _this.trackUnsavedChanges = _this.trackUnsavedChanges.bind(_assertThisInitialized(_this));\n    _this.refreshAfterUpload = _this.refreshAfterUpload.bind(_assertThisInitialized(_this));\n    _this.state = {\n      proposal: null\n    };\n    return _this;\n  }\n\n  _createClass(App, [{\n    key: \"logIn\",\n    value: function logIn(name) {\n      var _this2 = this;\n\n      if (event) {\n        event.preventDefault();\n      }\n\n      if (name) {\n        var proposalApiUrl = '/api/proposals/' + name;\n        axios__WEBPACK_IMPORTED_MODULE_10___default().get(proposalApiUrl).then(function (res) {\n          var proposal = res.data;\n\n          _this2.setState({\n            proposal: proposal\n          });\n        });\n      } else {\n        this.setState({\n          proposal: null\n        });\n      }\n    }\n  }, {\n    key: \"updateLibrarySelection\",\n    value: function updateLibrarySelection(idArray) {\n      console.log('fired updateLibrarySelection with', idArray);\n      event.preventDefault();\n      var apiUrl = '/api/update_proposal_selection/' + this.state.proposal.proposal + '/';\n      axios__WEBPACK_IMPORTED_MODULE_10___default().patch(apiUrl, {\n        libraries: idArray\n      })[\"catch\"](function (error) {\n        console.log('updateLibrarySelection: axios error:');\n        console.log(error);\n      });\n      this.logIn(this.state.proposal.proposal);\n    }\n  }, {\n    key: \"updateSubsetSelection\",\n    value: function updateSubsetSelection(idArray) {\n      var _this3 = this;\n\n      event.preventDefault();\n      var apiUrl = '/api/update_proposal_selection/' + this.state.proposal.proposal + '/';\n      axios__WEBPACK_IMPORTED_MODULE_10___default().patch(apiUrl, {\n        subsets: idArray\n      })[\"catch\"](function (error) {\n        console.log('updateLibrarySelection: axios error:');\n        console.log(error);\n      });\n      setTimeout(function () {\n        _this3.logIn(_this3.state.proposal.proposal);\n      }, 1000);\n    }\n  }, {\n    key: \"refreshAfterUpload\",\n    value: function refreshAfterUpload() {\n      this.props.logIn(this.state.proposal.proposal);\n    }\n  }, {\n    key: \"componentDidUpdate\",\n    value: function componentDidUpdate(prevProps, prevState) {\n      if (prevState.proposal !== this.state.proposal) {\n        console.log('fired componentDidUpdate from App');\n      }\n    } //to give warning when user risks discarding changes\n\n  }, {\n    key: \"trackUnsavedChanges\",\n    value: function trackUnsavedChanges(bool) {\n      console.log('fired trackUnsavedChanges');\n      this.setState({\n        unsavedChanges: bool\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var app;\n\n      if (this.state.proposal) {\n        app = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_main_Main_js__WEBPACK_IMPORTED_MODULE_3__.default, {\n          proposal: this.state.proposal,\n          logIn: this.logIn\n        });\n      } else {\n        app = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_main_proposal_selection_js__WEBPACK_IMPORTED_MODULE_6__.default, {\n          logIn: this.logIn\n        });\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"content\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.BrowserRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"nav\", {\n        className: \"navbar navbar-expand-sm navbar-light bg-light\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", {\n        className: \"nav nav-tabs\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        className: \"navbar-brand\",\n        to: \"/home/\"\n      }, \"Home\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        className: \"navbar-brand\",\n        to: \"/selection/\"\n      }, \"Select compounds\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        className: \"navbar-brand\",\n        to: \"/summary/\"\n      }, \"Selection summary\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        className: \"navbar-brand\",\n        to: \"/\"\n      }, \"Log in/out\")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/home/\",\n        proposal: this.state.proposal\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_home_Home_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n        proposal: this.state.proposal\n      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/selection/\",\n        proposal: this.state.proposal\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_picker_Picker_js__WEBPACK_IMPORTED_MODULE_4__.default, {\n        proposal: this.state.proposal,\n        trackUnsavedChanges: this.trackUnsavedChanges,\n        updateLibrarySelection: this.updateLibrarySelection,\n        updateSubsetSelection: this.updateSubsetSelection,\n        refreshAfterUpload: this.refreshAfterUpload\n      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/summary/\",\n        proposal: this.state.proposal\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_summary_Summary_js__WEBPACK_IMPORTED_MODULE_5__.default, {\n        proposal: this.state.proposal,\n        trackUnsavedChanges: this.trackUnsavedChanges,\n        updateLibrarySelection: this.updateLibrarySelection,\n        updateSubsetSelection: this.updateSubsetSelection\n      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/compounds/:type/:id/\",\n        children: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_url_translator_js__WEBPACK_IMPORTED_MODULE_8__.default, null),\n        proposal: this.state.proposal\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {\n        path: \"/\"\n      }, this.props.proposal ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Redirect, {\n        to: \"/home/\"\n      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_main_proposal_selection_js__WEBPACK_IMPORTED_MODULE_6__.default, {\n        logIn: this.logIn,\n        proposal: this.state.proposal\n      })))));\n    }\n  }]);\n\n  return App;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);\nreact_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(App, null), document.getElementById('app'));\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/App.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\n/* harmony import */ var _home_Home_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./home/Home.js */ \"./webSoakDB/webSoakDB_frontend/src/components/home/Home.js\");\n/* harmony import */ var _main_Main_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./main/Main.js */ \"./webSoakDB/webSoakDB_frontend/src/components/main/Main.js\");\n/* harmony import */ var _picker_Picker_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./picker/Picker.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/Picker.js\");\n/* harmony import */ var _summary_Summary_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./summary/Summary.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/Summary.js\");\n/* harmony import */ var _main_proposal_selection_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./main/proposal_selection.js */ \"./webSoakDB/webSoakDB_frontend/src/components/main/proposal_selection.js\");\n/* harmony import */ var _plate_lookup_PlateLookup_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./plate_lookup/PlateLookup.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/PlateLookup.js\");\n/* harmony import */ var _url_translator_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./url_translator.js */ \"./webSoakDB/webSoakDB_frontend/src/components/url_translator.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router/esm/react-router.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_10__);\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvar PrivateRoute = /*#__PURE__*/function (_Component) {\n  _inherits(PrivateRoute, _Component);\n\n  var _super = _createSuper(PrivateRoute);\n\n  function PrivateRoute() {\n    _classCallCheck(this, PrivateRoute);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(PrivateRoute, [{\n    key: \"render\",\n    value: function render() {\n      var content = null;\n\n      if (this.props.proposal) {\n        content = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {\n          path: this.props.path\n        }, \" \", this.props.children, \" \");\n      } else {\n        content = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Redirect, {\n          to: \"/selection/\"\n        });\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, content);\n    }\n  }]);\n\n  return PrivateRoute;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\nvar App = /*#__PURE__*/function (_Component2) {\n  _inherits(App, _Component2);\n\n  var _super2 = _createSuper(App);\n\n  function App(props) {\n    var _this;\n\n    _classCallCheck(this, App);\n\n    _this = _super2.call(this, props);\n    _this.logIn = _this.logIn.bind(_assertThisInitialized(_this));\n    _this.updateSelection = _this.updateSelection.bind(_assertThisInitialized(_this));\n    _this.trackUnsavedChanges = _this.trackUnsavedChanges.bind(_assertThisInitialized(_this));\n    _this.refreshAfterUpload = _this.refreshAfterUpload.bind(_assertThisInitialized(_this));\n    _this.state = {\n      proposal: null,\n      unsavedChanges: false\n    };\n    return _this;\n  }\n\n  _createClass(App, [{\n    key: \"logIn\",\n    value: function logIn(name) {\n      var _this2 = this;\n\n      if (event) {\n        event.preventDefault();\n      }\n\n      if (name) {\n        var proposalApiUrl = '/api/proposals/' + name;\n        axios__WEBPACK_IMPORTED_MODULE_10___default().get(proposalApiUrl).then(function (res) {\n          var proposal = res.data;\n\n          _this2.setState({\n            proposal: proposal\n          });\n        });\n      } else {\n        this.setState({\n          proposal: null\n        });\n      }\n    }\n  }, {\n    key: \"updateSelection\",\n    value: function updateSelection(libraries, subsets) {\n      var _this3 = this;\n\n      //event.preventDefault();\n      var apiUrl = '/api/update_proposal_selection/' + this.state.proposal.proposal + '/';\n      axios__WEBPACK_IMPORTED_MODULE_10___default().patch(apiUrl, {\n        libraries: libraries,\n        subsets: subsets\n      }).then(function (res) {\n        if (res.status === 200) {\n          _this3.logIn(_this3.state.proposal.proposal);\n        }\n      })[\"catch\"](function (error) {\n        console.log('updateSelection: axios error:');\n        console.log(error);\n        alert('Failed to save changes in your selection due to server error. Please try again.');\n\n        _this3.trackUnsavedChanges(true);\n      });\n    }\n  }, {\n    key: \"refreshAfterUpload\",\n    value: function refreshAfterUpload() {\n      this.props.logIn(this.state.proposal.proposal);\n    }\n  }, {\n    key: \"componentDidUpdate\",\n    value: function componentDidUpdate(prevProps, prevState) {\n      if (prevState.proposal !== this.state.proposal) {\n        console.log('fired componentDidUpdate from App');\n      }\n    }\n  }, {\n    key: \"trackUnsavedChanges\",\n    value: function trackUnsavedChanges(bool) {\n      this.setState({\n        unsavedChanges: bool\n      });\n    }\n  }, {\n    key: \"confirmLeaving\",\n    value: function confirmLeaving(event) {\n      if (this.state.unsavedChanges) {\n        if (!window.confirm(\"You have unsaved changes in your selection. Do you want to discard them and leave this page?\")) {\n          event.preventDefault();\n        } else {\n          this.trackUnsavedChanges(false);\n        }\n      }\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this4 = this;\n\n      /*\tlet app;\n      \tif(this.state.proposal){\n      \t\tapp = <Main proposal={this.state.proposal} logIn={this.logIn} />;\n      \t}\n      \telse{\n      \t\tapp = <ProposalSelection logIn={this.logIn} />;\n      \t}*/\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"content\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.BrowserRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"nav\", {\n        className: \"navbar navbar-expand-sm navbar-light bg-light\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", {\n        className: \"nav nav-tabs\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        onClick: function onClick(e) {\n          return _this4.confirmLeaving(e);\n        },\n        className: \"navbar-brand\",\n        to: \"/selection/home/\"\n      }, \"Home\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        onClick: function onClick(e) {\n          return _this4.confirmLeaving(e);\n        },\n        className: \"navbar-brand\",\n        to: \"/selection/selection/\"\n      }, \"Select compounds\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        onClick: function onClick(e) {\n          return _this4.confirmLeaving(e);\n        },\n        className: \"navbar-brand\",\n        to: \"/selection/summary/\"\n      }, \"Selection summary\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_12__.Link, {\n        onClick: function onClick(e) {\n          return _this4.confirmLeaving(e);\n        },\n        className: \"navbar-brand\",\n        to: \"/selection/\"\n      }, \"Change proposal\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n        className: \"nav-item\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        onClick: function onClick(e) {\n          return _this4.confirmLeaving(e);\n        },\n        className: \"navbar-brand\",\n        href: \"/accounts/logout/\"\n      }, \"Log out\")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/selection/home/\",\n        proposal: this.state.proposal\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_home_Home_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n        proposal: this.state.proposal\n      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/selection/selection/\",\n        proposal: this.state.proposal\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_picker_Picker_js__WEBPACK_IMPORTED_MODULE_4__.default, {\n        proposal: this.state.proposal,\n        trackUnsavedChanges: this.trackUnsavedChanges,\n        updateSelection: this.updateSelection,\n        refreshAfterUpload: this.refreshAfterUpload,\n        unsavedChanges: this.state.unsavedChanges\n      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/selection/summary/\",\n        proposal: this.state.proposal\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_summary_Summary_js__WEBPACK_IMPORTED_MODULE_5__.default, {\n        proposal: this.state.proposal,\n        trackUnsavedChanges: this.trackUnsavedChanges,\n        updateSelection: this.updateSelection\n      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(PrivateRoute, {\n        path: \"/compounds/:type/:id/\",\n        children: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_url_translator_js__WEBPACK_IMPORTED_MODULE_8__.default, null),\n        proposal: this.state.proposal\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {\n        path: \"/selection/\"\n      }, this.props.proposal ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Redirect, {\n        to: \"/selection/home/\"\n      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_main_proposal_selection_js__WEBPACK_IMPORTED_MODULE_6__.default, {\n        logIn: this.logIn,\n        proposal: this.state.proposal\n      })))));\n    }\n  }]);\n\n  return App;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);\nreact_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(App, null), document.getElementById('app'));\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/App.js?");
 
 /***/ }),
 
@@ -367,7 +367,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nvar Home = /*#__PURE__*/function (_React$Component) {\n  _inherits(Home, _React$Component);\n\n  var _super = _createSuper(Home);\n\n  function Home(props) {\n    _classCallCheck(this, Home);\n\n    return _super.call(this, props);\n  }\n\n  _createClass(Home, [{\n    key: \"render\",\n    value: function render() {\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"home\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"XChemSPA home - \", this.props.proposal.proposal), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"prep\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Prepararation\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {\n        to: \"/selection/\"\n      }, \"Selection of compounds\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \"the place to select libraries, cherry-pick compounds, and upload the data of your own library\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {\n        to: \"/summary/\"\n      }, \"Summary\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" the place to see and manage your protein and compound data\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"/inventory/\"\n      }, \"Inventory management\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \"The place to manage XChem in-house libraries, plates etc.\")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"exp\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Experiment\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"/dummy\",\n        target: \"_blank\"\n      }, \"Solvent characterization application\"), \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" software used for managing the solvent characterisation process in the lab\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"/dummy\",\n        target: \"_blank\"\n      }, \"Compound screen application\"), \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" software used for managing the experiment in the lab\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"/dummy\",\n        target: \"_blank\"\n      }, \"Data summary\"), \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" the place to see and download all the data produced in your experiment (at any stage)\"))))));\n    }\n  }]);\n\n  return Home;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Home);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/home/Home.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nvar Home = /*#__PURE__*/function (_React$Component) {\n  _inherits(Home, _React$Component);\n\n  var _super = _createSuper(Home);\n\n  function Home(props) {\n    _classCallCheck(this, Home);\n\n    return _super.call(this, props);\n  }\n\n  _createClass(Home, [{\n    key: \"render\",\n    value: function render() {\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"home\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"XChemSPA home - \", this.props.proposal.proposal), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"prep\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Prepararation\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {\n        to: \"/selection/selection/\"\n      }, \"Selection of compounds\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \"the place to select libraries, cherry-pick compounds, and upload the data of your own library\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {\n        to: \"/selection/summary/\"\n      }, \"Summary\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" the place to see and manage your protein and compound data\")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"exp\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Experiment\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"/dummy\",\n        target: \"_blank\"\n      }, \"Solvent characterization application\"), \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" software used for managing the solvent characterisation process in the lab\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"/dummy\",\n        target: \"_blank\"\n      }, \"Compound screen application\"), \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" software used for managing the experiment in the lab\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"/dummy\",\n        target: \"_blank\"\n      }, \"Data summary\"), \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \" the place to see and download all the data produced in your experiment (at any stage)\"))))));\n    }\n  }]);\n\n  return Home;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Home);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/home/Home.js?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/icons.js":
+/*!**************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/icons.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"ZoomInIcon\": () => (/* binding */ ZoomInIcon),\n/* harmony export */   \"ChevronDown\": () => (/* binding */ ChevronDown),\n/* harmony export */   \"XIcon\": () => (/* binding */ XIcon)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\nvar ZoomInIcon = /*#__PURE__*/function (_Component) {\n  _inherits(ZoomInIcon, _Component);\n\n  var _super = _createSuper(ZoomInIcon);\n\n  function ZoomInIcon() {\n    _classCallCheck(this, ZoomInIcon);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(ZoomInIcon, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"svg\", {\n        xmlns: \"http://www.w3.org/2000/svg\",\n        width: this.props.size,\n        height: this.props.size,\n        onClick: function onClick() {\n          return _this.props.handleClick();\n        },\n        fill: \"currentColor\",\n        className: \"bi bi-zoom-in\",\n        viewBox: \"0 0 16 16\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"path\", {\n        fillRule: \"evenodd\",\n        d: \"M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z\"\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"path\", {\n        d: \"M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z\"\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"path\", {\n        fillRule: \"evenodd\",\n        d: \"M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5z\"\n      }));\n    }\n  }]);\n\n  return ZoomInIcon;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\nvar ChevronDown = /*#__PURE__*/function (_Component2) {\n  _inherits(ChevronDown, _Component2);\n\n  var _super2 = _createSuper(ChevronDown);\n\n  function ChevronDown() {\n    _classCallCheck(this, ChevronDown);\n\n    return _super2.apply(this, arguments);\n  }\n\n  _createClass(ChevronDown, [{\n    key: \"render\",\n    value: function render() {\n      var _this2 = this;\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"svg\", {\n        xmlns: \"http://www.w3.org/2000/svg\",\n        width: this.props.size,\n        height: this.props.size,\n        onClick: function onClick() {\n          return _this2.props.handleClick();\n        },\n        fill: \"currentColor\",\n        className: \"bi bi-chevron-down\",\n        viewBox: \"0 0 16 16\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"path\", {\n        fillRule: \"evenodd\",\n        d: \"M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z\"\n      }));\n    }\n  }]);\n\n  return ChevronDown;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\nvar XIcon = /*#__PURE__*/function (_Component3) {\n  _inherits(XIcon, _Component3);\n\n  var _super3 = _createSuper(XIcon);\n\n  function XIcon() {\n    _classCallCheck(this, XIcon);\n\n    return _super3.apply(this, arguments);\n  }\n\n  _createClass(XIcon, [{\n    key: \"render\",\n    value: function render() {\n      var _this3 = this;\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"svg\", {\n        xmlns: \"http://www.w3.org/2000/svg\",\n        width: this.props.size,\n        height: this.props.size,\n        onClick: function onClick() {\n          return _this3.props.handleClick();\n        },\n        fill: \"currentColor\",\n        className: \"bi bi-x-square\",\n        viewBox: \"0 0 16 16\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"path\", {\n        d: \"M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z\"\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"path\", {\n        d: \"M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z\"\n      }));\n    }\n  }]);\n\n  return XIcon;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/icons.js?");
 
 /***/ }),
 
@@ -389,7 +400,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router/esm/react-router.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\nvar ProposalSelection = /*#__PURE__*/function (_React$Component) {\n  _inherits(ProposalSelection, _React$Component);\n\n  var _super = _createSuper(ProposalSelection);\n\n  function ProposalSelection(props) {\n    var _this;\n\n    _classCallCheck(this, ProposalSelection);\n\n    _this = _super.call(this, props);\n    _this.state = {\n      proposals: [],\n      chosenName: \"\"\n    };\n    _this.getSelection = _this.getSelection.bind(_assertThisInitialized(_this));\n    return _this;\n  }\n\n  _createClass(ProposalSelection, [{\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      var _this2 = this;\n\n      var apiUrl = '/api/proposals/';\n      axios__WEBPACK_IMPORTED_MODULE_1___default().get(apiUrl).then(function (res) {\n        var proposals = res.data;\n\n        _this2.setState({\n          proposals: proposals\n        });\n      });\n      this.props.logIn(null);\n    }\n  }, {\n    key: \"getSelection\",\n    value: function getSelection(e) {\n      this.setState({\n        chosenName: e.target.value\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this3 = this;\n\n      var options = this.state.proposals.map(function (proposal, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"option\", {\n          key: index,\n          value: proposal.proposal,\n          htmlFor: \"proposal_name\"\n        }, proposal.proposal);\n      });\n      var loggedIn = null;\n      loggedIn = this.props.proposal ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__.Redirect, {\n        to: \"/home/\"\n      }) : null;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"Temporary logging page\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, \"This is a temporary page made for testing purposes. Normally, a user will have to log in first using their fed id, and then select the proposal.\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"form\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"legend\", null, \"Choose proposal before browsing other pages\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"label\", {\n        htmlFor: \"proposal_name\"\n      }, \"Select proposal:\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"select\", {\n        name: \"proposal_name\",\n        onChange: function onChange(event) {\n          _this3.getSelection(event);\n        }\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"option\", {\n        value: \"\"\n      }, \"...\"), options)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        onClick: function onClick(event) {\n          return _this3.props.logIn(_this3.state.chosenName);\n        }\n      }, \"Confirm selection\")), loggedIn);\n    }\n  }]);\n\n  return ProposalSelection;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProposalSelection);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/main/proposal_selection.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router/esm/react-router.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\nvar ProposalSelection = /*#__PURE__*/function (_React$Component) {\n  _inherits(ProposalSelection, _React$Component);\n\n  var _super = _createSuper(ProposalSelection);\n\n  function ProposalSelection(props) {\n    var _this;\n\n    _classCallCheck(this, ProposalSelection);\n\n    _this = _super.call(this, props);\n    _this.state = {\n      proposals: [],\n      chosenName: \"\"\n    };\n    _this.getSelection = _this.getSelection.bind(_assertThisInitialized(_this));\n    return _this;\n  }\n\n  _createClass(ProposalSelection, [{\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      var _this2 = this;\n\n      var apiUrl = '/api/proposals/';\n      axios__WEBPACK_IMPORTED_MODULE_1___default().get(apiUrl).then(function (res) {\n        var proposals = res.data;\n\n        _this2.setState({\n          proposals: proposals\n        });\n      });\n      this.props.logIn(null);\n    }\n  }, {\n    key: \"getSelection\",\n    value: function getSelection(e) {\n      this.setState({\n        chosenName: e.target.value\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this3 = this;\n\n      var options = this.state.proposals.map(function (proposal, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"option\", {\n          key: index,\n          value: proposal.proposal,\n          htmlFor: \"proposal_name\"\n        }, proposal.proposal);\n      });\n      var loggedIn = null;\n      loggedIn = this.props.proposal ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__.Redirect, {\n        to: \"/selection/home/\"\n      }) : null;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", {\n        id: \"choose-proposal\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"Proposals\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"form\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"legend\", null, \"Select proposal to manage\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"select\", {\n        name: \"proposal_name\",\n        onChange: function onChange(event) {\n          _this3.getSelection(event);\n        }\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"option\", {\n        value: \"\"\n      }, \"...\"), options)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        onClick: function onClick(event) {\n          return _this3.props.logIn(_this3.state.chosenName);\n        }\n      }, \"Confirm selection\"))), loggedIn);\n    }\n  }]);\n\n  return ProposalSelection;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProposalSelection);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/main/proposal_selection.js?");
 
 /***/ }),
 
@@ -400,7 +411,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _library_option_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./library_option.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/library_option.js\");\n/* harmony import */ var _presets_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./presets.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/presets.js\");\n/* harmony import */ var _uploads_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploads.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/uploads.js\");\n/* harmony import */ var _stats_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stats.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats.js\");\n/* harmony import */ var _graphs_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./graphs.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/graphs.js\");\n/* harmony import */ var _preset_option_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./preset_option.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_7__);\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\nfunction _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }\n\nfunction _nonIterableSpread() { throw new TypeError(\"Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\n\nfunction _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === \"string\") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === \"Object\" && o.constructor) n = o.constructor.name; if (n === \"Map\" || n === \"Set\") return Array.from(o); if (n === \"Arguments\" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }\n\nfunction _iterableToArray(iter) { if (typeof Symbol !== \"undefined\" && Symbol.iterator in Object(iter)) return Array.from(iter); }\n\nfunction _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }\n\nfunction _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\n\n\n\nvar proposal = 'Test string';\n\nvar Picker = /*#__PURE__*/function (_React$Component) {\n  _inherits(Picker, _React$Component);\n\n  var _super = _createSuper(Picker);\n\n  function Picker(props) {\n    var _this;\n\n    _classCallCheck(this, Picker);\n\n    _this = _super.call(this, props);\n    _this.state = {\n      selectedLibIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(_this.props.proposal.libraries, \"id\"),\n      initialLibs: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(_this.props.proposal.libraries, \"id\"),\n      selectedSubsetIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(_this.props.proposal.subsets, \"id\"),\n      initialSubsets: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(_this.props.proposal.subsets, \"id\"),\n      currentLibPlates: [],\n      presets: [] //unsavedChanges: false,\n\n    };\n    _this.detectUnsavedChanges = _this.detectUnsavedChanges.bind(_assertThisInitialized(_this));\n    _this.handleChangeLib = _this.handleChangeLib.bind(_assertThisInitialized(_this));\n    _this.handleChangePreset = _this.handleChangePreset.bind(_assertThisInitialized(_this));\n    _this.updateSelectionLibs = _this.updateSelectionLibs.bind(_assertThisInitialized(_this));\n    return _this;\n  }\n\n  _createClass(Picker, [{\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      var _this2 = this;\n\n      var libApiUrl = '/api/library_selection_list/';\n      axios__WEBPACK_IMPORTED_MODULE_7___default().get(libApiUrl).then(function (res) {\n        var currentLibPlates = res.data;\n\n        _this2.setState({\n          currentLibPlates: currentLibPlates\n        });\n      });\n      var presetApiUrl = '/api/preset_list/';\n      axios__WEBPACK_IMPORTED_MODULE_7___default().get(presetApiUrl).then(function (res) {\n        var presets = res.data;\n\n        _this2.setState({\n          presets: presets\n        });\n      });\n    }\n  }, {\n    key: \"componentDidUpdate\",\n    value: function componentDidUpdate(prevProps, prevState) {\n      if (prevProps.proposal !== this.props.proposal) {\n        console.log('Proposal changed');\n        this.setState({\n          selectedLibIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(this.props.proposal.libraries, \"id\"),\n          initialLibs: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(this.props.proposal.libraries, \"id\"),\n          selectedSubsetIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(this.props.proposal.subsets, \"id\"),\n          initialSubsets: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.getAttributeArray)(this.props.proposal.subsets, \"id\")\n        });\n      }\n    }\n  }, {\n    key: \"removeLibraryFromSelected\",\n    value: function removeLibraryFromSelected(id) {\n      var selectedLibIdsCopy = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);\n      var found = selectedLibIdsCopy.find(function (item) {\n        return item === parseInt(id);\n      });\n      selectedLibIdsCopy.splice(selectedLibIdsCopy.indexOf(found), 1);\n      this.setState({\n        selectedLibIds: selectedLibIdsCopy\n      });\n      this.handleUnsavedChanges(selectedLibIdsCopy, null);\n    }\n  }, {\n    key: \"addLibraryToSelected\",\n    value: function addLibraryToSelected(id) {\n      var selectedLibIdsCopy = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);\n      selectedLibIdsCopy.push(parseInt(id));\n      this.setState({\n        selectedLibIds: selectedLibIdsCopy\n      });\n      this.handleUnsavedChanges(selectedLibIdsCopy, null);\n    }\n  }, {\n    key: \"removePresetFromSelected\",\n    value: function removePresetFromSelected(id) {\n      var removedPreset = this.state.presets.find(function (preset) {\n        return preset.id === parseInt(id);\n      });\n      var selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);\n      removedPreset.subsets.forEach(function (subset) {\n        var found = selectedSubsetIdsCopy.find(function (item) {\n          return item === parseInt(id);\n        });\n        selectedSubsetIdsCopy.splice(selectedSubsetIdsCopy.indexOf(found), 1);\n      });\n      this.setState({\n        selectedSubsetIds: selectedSubsetIdsCopy\n      });\n      this.handleUnsavedChanges(null, selectedSubsetIdsCopy);\n    }\n  }, {\n    key: \"addPresetToSelected\",\n    value: function addPresetToSelected(id) {\n      var addedPreset = this.state.presets.find(function (preset) {\n        return preset.id === parseInt(id);\n      });\n      var selectedSubsetIdsCopy = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);\n      addedPreset.subsets.forEach(function (subset) {\n        return selectedSubsetIdsCopy.push(subset.id);\n      });\n      this.setState({\n        selectedSubsetIds: selectedSubsetIdsCopy\n      });\n      this.handleUnsavedChanges(null, selectedSubsetIdsCopy);\n    }\n  }, {\n    key: \"handleChangeLib\",\n    value: function handleChangeLib(event, unsaved) {\n      if (event.target.checked === true) {\n        this.addLibraryToSelected(event.target.value);\n      } else {\n        this.removeLibraryFromSelected(event.target.value);\n      }\n    }\n  }, {\n    key: \"handleChangePreset\",\n    value: function handleChangePreset(event, unsaved) {\n      if (event.target.checked === true) {\n        this.addPresetToSelected(event.target.value);\n      } else {\n        this.removePresetFromSelected(event.target.value);\n      }\n    }\n  }, {\n    key: \"updateSelectionLibs\",\n    value: function updateSelectionLibs() {\n      console.log('fired updateSelectionLibs');\n      event.preventDefault();\n      this.handleUnsavedChanges(this.state.initialLibs, this.state.selectedSubsetIds);\n      this.props.updateLibrarySelection(this.state.selectedLibIds); //, 'Picker');\n    }\n  }, {\n    key: \"updateSelectionSubsets\",\n    value: function updateSelectionSubsets() {\n      this.handleUnsavedChanges(this.state.selectedLibIds, this.state.initialSubsets);\n      this.props.updateSubsetSelection(this.state.selectedSubsetIds);\n    }\n  }, {\n    key: \"presetAreadySelected\",\n    value: function presetAreadySelected(preset) {\n      if (this.state.selectedSubsetIds.includes(preset.subsets[0].id)) {\n        return true;\n      } else {\n        return false;\n      }\n    }\n  }, {\n    key: \"handleUnsavedChanges\",\n    value: function handleUnsavedChanges(newLibs, newSubsets) {\n      /*detects unsaved changes and passes them to trackUnsavedChanges\n       *if caller function does not change library selection, pass null for newLibs \n       *if caller function is supposed to ignore changes in library selection (e.g.\n       * while saving changes in the db), pass this.state.initialLibIds for newLibs\n       * (and the same for subset selection and newSubsets arg)*/\n      console.log('fired handleUnsavedChanges');\n      this.props.trackUnsavedChanges(this.detectUnsavedChanges(newLibs, newSubsets));\n    }\n  }, {\n    key: \"detectUnsavedChanges\",\n    value: function detectUnsavedChanges(newLibs, newSubsets) {\n      /*determine if newLibs and newSubsets are different from the saved \n       * selection of compounds; if both args are null, compares current selection\n       * to the saved one */\n      var currentLibs = this.state.selectedLibIds;\n      var currentSubsets = this.state.selectedSubsetIds;\n\n      if (newLibs) {\n        currentLibs = newLibs;\n      }\n\n      if (newSubsets) {\n        currentSubsets = newSubsets;\n      }\n\n      if ((0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.shareAllElements)(currentLibs, this.state.initialLibs) && (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.shareAllElements)(currentSubsets, this.state.initialSubsets)) {\n        return false;\n      } else {\n        return true;\n      }\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this3 = this,\n          _React$createElement;\n\n      var sameLibs;\n\n      if (!(0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.shareAllElements)(this.state.initialLibs, this.state.selectedLibIds)) {\n        sameLibs = 'changed';\n      }\n\n      var sameSubsets;\n\n      if (!(0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_8__.shareAllElements)(this.state.initialSubsets, this.state.selectedSubsetIds)) {\n        sameSubsets = 'changed';\n      }\n\n      var unsaved = !(sameLibs && sameSubsets);\n      var libraries = this.state.currentLibPlates.map(function (plate, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_library_option_js__WEBPACK_IMPORTED_MODULE_1__.default, {\n          key: index,\n          plate: plate,\n          handleCheckboxChange: _this3.handleChangeLib,\n          defaultChecked: _this3.state.selectedLibIds.includes(plate.library.id),\n          unsaved: unsaved\n        });\n      });\n      var presets = this.state.presets.map(function (preset, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_preset_option_js__WEBPACK_IMPORTED_MODULE_6__.default, {\n          key: index,\n          preset: preset,\n          handleCheckboxChange: _this3.handleChangePreset,\n          defaultChecked: _this3.presetAreadySelected(preset),\n          unsaved: unsaved\n        });\n      });\n      var proposalLibs = this.props.proposal.libraries;\n      var publicSubsets = [];\n      this.state.presets.forEach(function (preset) {\n        return publicSubsets.push.apply(publicSubsets, _toConsumableArray(preset.subsets));\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"picker\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"Select compounds for \", this.props.proposal.proposal), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", {\n        id: \"main-picker\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"libraries\",\n        className: sameLibs\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"XChem in-house fragment libraries\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"form\", {\n        id: \"libform\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"libs\"\n      }, libraries), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        type: \"submit\",\n        onClick: function onClick(event) {\n          return _this3.updateSelectionLibs(event);\n        }\n      }, \"Save changes in your selection\"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"presets\",\n        className: sameSubsets\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Presets\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \"Specific-purpose compounds selections from in-house libraries\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"form\", {\n        id: \"preset-form\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"pres\"\n      }, presets), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        type: \"submit\",\n        onClick: function onClick(event) {\n          return _this3.updateSelectionSubsets();\n        }\n      }, \"Save changes in your selection\"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_uploads_js__WEBPACK_IMPORTED_MODULE_3__.default, (_React$createElement = {\n        proposal: this.props.proposal,\n        publicSubsets: publicSubsets,\n        refreshAfterUpload: this.props.refreshAfterUpload,\n        detectUnsavedChanges: this.detectUnsavedChanges\n      }, _defineProperty(_React$createElement, \"proposal\", this.props.proposal), _defineProperty(_React$createElement, \"trackUnsavedChanges\", this.props.trackUnsavedChanges), _defineProperty(_React$createElement, \"presets\", this.state.presets), _React$createElement)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_stats_js__WEBPACK_IMPORTED_MODULE_4__.default, {\n        proposal: this.props.proposal,\n        selectedLibIds: this.state.selectedLibIds,\n        selectedSubsetIds: this.state.selectedSubsetIds\n      })));\n    }\n  }]);\n\n  return Picker;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Picker);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/Picker.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _library_option_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./library_option.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/library_option.js\");\n/* harmony import */ var _presets_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./presets.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/presets.js\");\n/* harmony import */ var _uploads_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploads.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/uploads.js\");\n/* harmony import */ var _stats_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stats.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats.js\");\n/* harmony import */ var _graph_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./graph.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js\");\n/* harmony import */ var _graph_table_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./graph_table.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph_table.js\");\n/* harmony import */ var _preset_option_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./preset_option.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\nfunction _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }\n\nfunction _nonIterableSpread() { throw new TypeError(\"Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\n\nfunction _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === \"string\") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === \"Object\" && o.constructor) n = o.constructor.name; if (n === \"Map\" || n === \"Set\") return Array.from(o); if (n === \"Arguments\" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }\n\nfunction _iterableToArray(iter) { if (typeof Symbol !== \"undefined\" && Symbol.iterator in Object(iter)) return Array.from(iter); }\n\nfunction _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }\n\nfunction _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\n\n\n\n\nvar proposal = 'Test string';\n\nvar Picker = /*#__PURE__*/function (_React$Component) {\n  _inherits(Picker, _React$Component);\n\n  var _super = _createSuper(Picker);\n\n  function Picker(props) {\n    var _this;\n\n    _classCallCheck(this, Picker);\n\n    _this = _super.call(this, props);\n    _this.state = {\n      selectedLibIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(_this.props.proposal.libraries, \"id\"),\n      initialLibs: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(_this.props.proposal.libraries, \"id\"),\n      selectedSubsetIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(_this.props.proposal.subsets, \"id\"),\n      initialSubsets: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(_this.props.proposal.subsets, \"id\"),\n      presets: [],\n      currentLibOptions: [],\n      inHouseCompoundCount: 0\n    };\n    _this.detectUnsavedChanges = _this.detectUnsavedChanges.bind(_assertThisInitialized(_this));\n    _this.handleChangeLib = _this.handleChangeLib.bind(_assertThisInitialized(_this));\n    _this.handleChangePreset = _this.handleChangePreset.bind(_assertThisInitialized(_this));\n    _this.saveChanges = _this.saveChanges.bind(_assertThisInitialized(_this));\n    _this.selected = _this.selected.bind(_assertThisInitialized(_this));\n    return _this;\n  }\n\n  _createClass(Picker, [{\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      var _this2 = this;\n\n      var presetApiUrl = '/api/preset_list/';\n      axios__WEBPACK_IMPORTED_MODULE_8___default().get(presetApiUrl).then(function (res) {\n        var presets = res.data;\n\n        _this2.setState({\n          presets: presets\n        });\n      });\n      var libApiUrl = '/api/current_library_options/';\n      axios__WEBPACK_IMPORTED_MODULE_8___default().get(libApiUrl).then(function (res) {\n        var currentLibOptions = res.data;\n\n        _this2.setState({\n          currentLibOptions: currentLibOptions\n        });\n      });\n    }\n  }, {\n    key: \"componentDidUpdate\",\n    value: function componentDidUpdate(prevProps, prevState) {\n      if (prevProps.proposal !== this.props.proposal) {\n        this.setState({\n          selectedLibIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(this.props.proposal.libraries, \"id\"),\n          initialLibs: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(this.props.proposal.libraries, \"id\"),\n          selectedSubsetIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(this.props.proposal.subsets, \"id\"),\n          initialSubsets: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getAttributeArray)(this.props.proposal.subsets, \"id\")\n        });\n      }\n\n      if (prevState.selectedLibIds !== this.state.selectedLibIds || prevState.presets !== this.state.presets || prevState.selectedSubsetIds != this.state.selectedSubsetIds || prevState.currentLibOptions !== this.state.currentLibOptions) {\n        this.updateInHouseCompoundCount();\n        this.props.trackUnsavedChanges(this.detectUnsavedChanges());\n      }\n    }\n  }, {\n    key: \"handleChangeLib\",\n    value: function handleChangeLib(event) {\n      /*add or remove library from temporary (unsaved) selection on checkbox change*/\n      var id = parseInt(event.target.value);\n\n      if (event.target.checked === true) {\n        var newSelectedLibIds = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);\n        newSelectedLibIds.push(parseInt(id));\n        this.setState({\n          selectedLibIds: newSelectedLibIds\n        });\n      } else {\n        var _newSelectedLibIds = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.removeFromArray)(this.state.selectedLibIds, [id]);\n\n        this.setState({\n          selectedLibIds: _newSelectedLibIds\n        });\n      }\n    }\n  }, {\n    key: \"handleChangePreset\",\n    value: function handleChangePreset(event) {\n      /*add or remove subsets from temporary (unsaved) selection on preset checkbox change*/\n      var id = parseInt(event.target.value);\n\n      if (event.target.checked === true) {\n        var newSelectedSubsetIds = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);\n        newSelectedSubsetIds.push.apply(newSelectedSubsetIds, _toConsumableArray((0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getSubsetIds)(this.state, id)));\n        this.setState({\n          selectedSubsetIds: newSelectedSubsetIds\n        });\n      } else {\n        var _newSelectedSubsetIds = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.removeFromArray)(this.state.selectedSubsetIds, (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getSubsetIds)(this.state, id));\n\n        this.setState({\n          selectedSubsetIds: _newSelectedSubsetIds\n        });\n      }\n    }\n  }, {\n    key: \"saveChanges\",\n    value: function saveChanges() {\n      event.preventDefault();\n      this.props.updateSelection(this.state.selectedLibIds, this.state.selectedSubsetIds);\n    }\n  }, {\n    key: \"selected\",\n    value: function selected(preset) {\n      return this.state.selectedSubsetIds.includes(preset.subsets[0]);\n    }\n  }, {\n    key: \"detectUnsavedChanges\",\n    value: function detectUnsavedChanges() {\n      if (!(0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.shareAllElements)(this.state.initialLibs, this.state.selectedLibIds)) {\n        return true;\n      }\n\n      if (!(0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.shareAllElements)(this.state.initialSubsets, this.state.selectedSubsetIds)) {\n        return true;\n      }\n\n      return false;\n    }\n  }, {\n    key: \"updateInHouseCompoundCount\",\n    value: function updateInHouseCompoundCount() {\n      var _this3 = this;\n\n      var count = 0;\n      this.state.currentLibOptions.forEach(function (lib) {\n        if (_this3.state.selectedLibIds.includes(lib.id)) {\n          count = count + lib.size;\n        }\n      });\n      this.state.presets.forEach(function (preset) {\n        var subs = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_9__.getSubsetIds)(_this3.state, preset.id);\n\n        if (_this3.state.selectedSubsetIds.includes(subs[0])) {\n          count = count + preset.size;\n        }\n      });\n      this.setState({\n        inHouseCompoundCount: count\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this4 = this,\n          _React$createElement;\n\n      var changeStatus = \"\";\n\n      if (this.props.unsavedChanges) {\n        changeStatus = 'changed';\n      }\n\n      var libraries = this.state.currentLibOptions.map(function (lib, index) {\n        var checked = _this4.state.selectedLibIds.includes(lib.id);\n\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_library_option_js__WEBPACK_IMPORTED_MODULE_1__.default, {\n          key: index,\n          lib: lib,\n          handleCheckboxChange: _this4.handleChangeLib,\n          handleChangePreset: _this4.handleChangePreset,\n          defaultChecked: _this4.state.selectedLibIds.includes(lib.id),\n          selected: _this4.selected\n        });\n      });\n      var otherPresets = this.state.presets.map(function (preset, index) {\n        if (preset.subsets.length > 1) {\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n            key: index\n          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_preset_option_js__WEBPACK_IMPORTED_MODULE_7__.default, {\n            preset: preset,\n            handleCheckboxChange: _this4.handleChangePreset,\n            defaultChecked: _this4.selected(preset)\n          }));\n        }\n      });\n      var publicSubsets = [];\n      this.state.presets.forEach(function (preset) {\n        return publicSubsets.push.apply(publicSubsets, _toConsumableArray(preset.subsets));\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"picker\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"Select compounds for \", this.props.proposal.proposal), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", {\n        id: \"main-picker\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"libraries\",\n        className: changeStatus\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"XChem in-house fragment libraries\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        type: \"submit\",\n        onClick: function onClick(event) {\n          return _this4.saveChanges(event);\n        }\n      }, \"Save changes in your selection\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"strong\", null, \"Compounds selected: \", this.state.inHouseCompoundCount)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"form\", {\n        id: \"libform\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"libs\"\n      }, libraries), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"pres\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \"OTHER PRESETS\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", null, otherPresets)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_uploads_js__WEBPACK_IMPORTED_MODULE_3__.default, (_React$createElement = {\n        proposal: this.props.proposal,\n        publicSubsets: publicSubsets,\n        refreshAfterUpload: this.props.refreshAfterUpload,\n        detectUnsavedChanges: this.detectUnsavedChanges\n      }, _defineProperty(_React$createElement, \"proposal\", this.props.proposal), _defineProperty(_React$createElement, \"trackUnsavedChanges\", this.props.trackUnsavedChanges), _defineProperty(_React$createElement, \"presets\", this.state.presets), _React$createElement)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"stats\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_graph_table_js__WEBPACK_IMPORTED_MODULE_6__.default, {\n        parentState: this.state //selectedLibIds = {this.state.selectedLibIds}\n        //currentLibOptions = {this.state.currentLibOptions}\n        //selectedSubsetIds = {this.state.selectedSubsetIds}\n\n      }))));\n    }\n  }]);\n\n  return Picker;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Picker); //selectedLibIds = {sharedItems(this.state.selectedLibIds, getAttributeArray(this.state.currentLibOptions, \"id\"))}\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/Picker.js?");
 
 /***/ }),
 
@@ -426,14 +437,36 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/graphs.js":
-/*!**********************************************************************!*\
-  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/graphs.js ***!
-  \**********************************************************************/
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/details.js":
+/*!***********************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/details.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\nvar Graphs = /*#__PURE__*/function (_React$Component) {\n  _inherits(Graphs, _React$Component);\n\n  var _super = _createSuper(Graphs);\n\n  function Graphs() {\n    _classCallCheck(this, Graphs);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(Graphs, [{\n    key: \"render\",\n    value: function render() {\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"graphs\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Summary\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \"--------------------------------------------------------------- Graphs go here ---------------------------------------------------------\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null))));\n    }\n  }]);\n\n  return Graphs;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Graphs);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/graphs.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\n/* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../icons.js */ \"./webSoakDB/webSoakDB_frontend/src/components/icons.js\");\n/* harmony import */ var _graph_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./graph.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js\");\n/* harmony import */ var _properties_dict_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./properties_dict.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/properties_dict.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\nvar Details = /*#__PURE__*/function (_React$Component) {\n  _inherits(Details, _React$Component);\n\n  var _super = _createSuper(Details);\n\n  function Details() {\n    _classCallCheck(this, Details);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(Details, [{\n    key: \"render\",\n    value: function render() {\n      var col = this.props.collection;\n      var id = col.id;\n      var type = this.props.type;\n      var url_type = \"plate\";\n      var url_id = null;\n      var description = null;\n\n      if (type === \"preset\") {\n        url_type = type;\n        url_id = id;\n        description = col.description;\n      }\n\n      if (type === \"library\") {\n        url_id = col.current_plate;\n      }\n\n      var link_url = \"../../compounds/\" + url_type + '/' + url_id + '/';\n      var graphs = Object.keys(_properties_dict_js__WEBPACK_IMPORTED_MODULE_3__.default).map(function (key, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_graph_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n          key: index,\n          id: id,\n          type: type,\n          property: key,\n          caption: _properties_dict_js__WEBPACK_IMPORTED_MODULE_3__.default[key]\n        });\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"library-details\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"x-icon\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_icons_js__WEBPACK_IMPORTED_MODULE_1__.XIcon, {\n        size: \"20\",\n        handleClick: this.props.hideDetails\n      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, col.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h3\", null, \"(\", col.size, \" compounds \", type === \"library\" ? \"currently available\" : null, \") \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {\n        className: \"plate-link\",\n        to: link_url\n      }, \"See the full list of compounds\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h3\", null, \"Compound properties distribution:\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"graphs\"\n      }, graphs)));\n    }\n  }]);\n\n  return Details;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Details);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/details.js?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js":
+/*!*********************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\nvar Graph = /*#__PURE__*/function (_React$Component) {\n  _inherits(Graph, _React$Component);\n\n  var _super = _createSuper(Graph);\n\n  function Graph() {\n    _classCallCheck(this, Graph);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(Graph, [{\n    key: \"render\",\n    value: function render() {\n      var path = './public/' + this.props.type + '/' + this.props.id + '/' + this.props.property + '.svg';\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"figcaption\", null, this.props.caption), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"img\", {\n        src: __webpack_require__(\"./webSoakDB/webSoakDB_frontend/src/components/picker sync recursive ^.*$\")(\"\".concat(path))[\"default\"],\n        className: \"hist-small\",\n        alt: \"failed to load image\"\n      }));\n    }\n  }]);\n\n  return Graph;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Graph);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/graph_table.js":
+/*!***************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/graph_table.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _properties_dict_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties_dict.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/properties_dict.js\");\n/* harmony import */ var _graph_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./graph.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js\");\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n //import {Link} from \"react-router-dom\";\n//import { ChevronDown } from '../icons.js';\n//import Details from './details.js';\n\n\n\n\n\nvar GraphTr = /*#__PURE__*/function (_React$Component) {\n  _inherits(GraphTr, _React$Component);\n\n  var _super = _createSuper(GraphTr);\n\n  function GraphTr() {\n    _classCallCheck(this, GraphTr);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(GraphTr, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var cells = this.props.properties.map(function (p, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          key: index\n        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_graph_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n          id: _this.props.col.id,\n          type: _this.props.type,\n          property: p,\n          caption: _properties_dict_js__WEBPACK_IMPORTED_MODULE_1__.default[p]\n        }));\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"strong\", null, this.props.col.name)), cells);\n    }\n  }]);\n\n  return GraphTr;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\nvar GraphTable = /*#__PURE__*/function (_React$Component2) {\n  _inherits(GraphTable, _React$Component2);\n\n  var _super2 = _createSuper(GraphTable);\n\n  function GraphTable(props) {\n    var _this2;\n\n    _classCallCheck(this, GraphTable);\n\n    _this2 = _super2.call(this, props);\n    _this2.state = {\n      show: [\"mol_wt\", \"log_p\", \"num_h_donors\", \"num_h_acceptors\", \"num_rot_bonds\"],\n      //libs: [],\n      libs: _this2.selectedInHouseLibs(),\n      presets: _this2.selectedPresets()\n    };\n    return _this2;\n  }\n\n  _createClass(GraphTable, [{\n    key: \"componentDidUpdate\",\n    value: function componentDidUpdate(prevProps) {\n      if (this.props.parentState !== prevProps.parentState) {\n        this.setState({\n          libs: this.selectedInHouseLibs(),\n          presets: this.selectedPresets()\n        });\n      }\n    }\n  }, {\n    key: \"manageProperties\",\n    value: function manageProperties(event) {\n      var p = event.target.value;\n\n      if (event.target.checked === true) {\n        var newShow = this.state.show.slice(0, this.state.show.length);\n        newShow.push(p);\n        this.setState({\n          show: newShow\n        });\n      } else {\n        var _newShow = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_3__.removeFromArray)(this.state.show, [p]);\n\n        this.setState({\n          show: _newShow\n        });\n      }\n    }\n  }, {\n    key: \"selectedInHouseLibs\",\n    value: function selectedInHouseLibs() {\n      var _this3 = this;\n\n      var output = [];\n      this.props.parentState.currentLibOptions.forEach(function (l) {\n        if (_this3.props.parentState.selectedLibIds.includes(l.id)) {\n          output.push(l);\n        }\n      });\n      return output;\n    }\n  }, {\n    key: \"selectedPresets\",\n    value: function selectedPresets() {\n      var _this4 = this;\n\n      console.log('firing selectedPresets', this.props.parentState.presets);\n      console.log('this.props.parentState', this.props.parentState);\n      var output = [];\n      this.props.parentState.presets.forEach(function (p) {\n        console.log('checking: ', p);\n        var subs = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_3__.getSubsetIds)(_this4.props.parentState, p.id);\n        console.log('subs: ', subs);\n\n        if (_this4.props.parentState.selectedSubsetIds.includes(subs[0])) {\n          output.push(p);\n        }\n      });\n      console.log('Selected presets output: ', output);\n      return output;\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this5 = this;\n\n      var checkboxes = Object.keys(_properties_dict_js__WEBPACK_IMPORTED_MODULE_1__.default).map(function (key, index) {\n        var checked = false; //if ([\"mol_wt\", \"tpsa\", \"log_p\"].includes(key)){\n\n        if (_this5.state.show.includes(key)) {\n          checked = true;\n        }\n\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n          key: index\n        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"input\", {\n          type: \"checkbox\",\n          value: key,\n          id: key,\n          onChange: function onChange(e) {\n            return _this5.manageProperties(e);\n          },\n          checked: checked\n        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"label\", {\n          htmlFor: key\n        }, _properties_dict_js__WEBPACK_IMPORTED_MODULE_1__.default[key]));\n      });\n      var headers = this.state.show.map(function (prop, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", {\n          key: index\n        }, _properties_dict_js__WEBPACK_IMPORTED_MODULE_1__.default[prop]);\n      });\n      var l_rows = this.state.libs.map(function (lib, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(GraphTr, {\n          key: index,\n          type: \"library\",\n          col: lib,\n          properties: _this5.state.show\n        });\n      });\n      var s_rows = this.state.presets.map(function (p, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(GraphTr, {\n          key: index,\n          type: \"preset\",\n          col: p,\n          properties: _this5.state.show\n        });\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h3\", null, \"Select properties to include: \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"properties\"\n      }, checkboxes), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"table\", {\n        className: \"table\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"thead\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Collection\"), headers)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tbody\", null, l_rows, s_rows)));\n    }\n  }]);\n\n  return GraphTable;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GraphTable);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/graph_table.js?");
 
 /***/ }),
 
@@ -444,7 +477,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nvar LibraryOption = /*#__PURE__*/function (_React$Component) {\n  _inherits(LibraryOption, _React$Component);\n\n  var _super = _createSuper(LibraryOption);\n\n  function LibraryOption() {\n    _classCallCheck(this, LibraryOption);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(LibraryOption, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var lib = this.props.plate.library;\n      var plate = this.props.plate;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"library\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"input\", {\n        type: \"checkbox\",\n        value: this.props.plate.library.id,\n        name: \"lib_ids\",\n        defaultChecked: this.props.defaultChecked,\n        onChange: function onChange(event) {\n          return _this.props.handleCheckboxChange(event, _this.props.unsaved);\n        }\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"label\", {\n        htmlFor: this.props.plate.library.id\n      }, lib.name, \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {\n        to: \"/compounds/plate/\" + this.props.plate.id + \"/\"\n      }, \"See compounds\"));\n    }\n  }]);\n\n  return LibraryOption;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component); //<span className=\"pseudo-link\" onClick={event => this.props.showPlate(lib, plate, true, false)} >See compounds</span>\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LibraryOption);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/library_option.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _details_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./details.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/details.js\");\n/* harmony import */ var _preset_option_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./preset_option.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js\");\n/* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../icons.js */ \"./webSoakDB/webSoakDB_frontend/src/components/icons.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\nvar LibraryOption = /*#__PURE__*/function (_React$Component) {\n  _inherits(LibraryOption, _React$Component);\n\n  var _super = _createSuper(LibraryOption);\n\n  function LibraryOption(props) {\n    var _this;\n\n    _classCallCheck(this, LibraryOption);\n\n    _this = _super.call(this, props);\n    _this.state = {\n      details: false\n    };\n    _this.showDetails = _this.showDetails.bind(_assertThisInitialized(_this));\n    _this.hideDetails = _this.hideDetails.bind(_assertThisInitialized(_this));\n    return _this;\n  }\n\n  _createClass(LibraryOption, [{\n    key: \"showDetails\",\n    value: function showDetails() {\n      this.setState({\n        details: true\n      });\n    }\n  }, {\n    key: \"hideDetails\",\n    value: function hideDetails() {\n      this.setState({\n        details: false\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this2 = this;\n\n      var details = this.state.details ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_details_js__WEBPACK_IMPORTED_MODULE_1__.default, {\n        collection: this.props.lib,\n        type: \"library\",\n        hideDetails: this.hideDetails\n      }) : null;\n      var lib = this.props.lib;\n      var presets = lib.presets.map(function (p, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"li\", {\n          key: index\n        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_preset_option_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n          preset: p,\n          handleCheckboxChange: _this2.props.handleChangePreset,\n          defaultChecked: _this2.props.selected(p)\n        }));\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"library\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"input\", {\n        type: \"checkbox\",\n        id: \"l_\" + this.props.lib.id,\n        value: this.props.lib.id,\n        name: \"lib_ids\",\n        defaultChecked: this.props.defaultChecked,\n        onChange: function onChange(event) {\n          return _this2.props.handleCheckboxChange(event);\n        }\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"label\", {\n        htmlFor: \"l_\" + this.props.lib.id\n      }, lib.name, \" (\", lib.size, \") \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_icons_js__WEBPACK_IMPORTED_MODULE_3__.ChevronDown, {\n        size: \"16\",\n        handleClick: this.showDetails\n      })), details, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"ul\", null, presets));\n    }\n  }]);\n\n  return LibraryOption;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LibraryOption);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/library_option.js?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/library_option_old.js":
+/*!**********************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/library_option_old.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nvar LibraryOption = /*#__PURE__*/function (_React$Component) {\n  _inherits(LibraryOption, _React$Component);\n\n  var _super = _createSuper(LibraryOption);\n\n  function LibraryOption() {\n    _classCallCheck(this, LibraryOption);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(LibraryOption, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var lib = this.props.plate.library;\n      var plate = this.props.plate;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"library\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"input\", {\n        type: \"checkbox\",\n        value: this.props.plate.library.id,\n        name: \"lib_ids\",\n        defaultChecked: this.props.defaultChecked,\n        onChange: function onChange(event) {\n          return _this.props.handleCheckboxChange(event, _this.props.unsaved);\n        }\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"label\", {\n        htmlFor: this.props.plate.library.id\n      }, lib.name, \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {\n        to: \"../../compounds/plate/\" + this.props.plate.id + \"/\"\n      }, \"See compounds\"));\n    }\n  }]);\n\n  return LibraryOption;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component); //<span className=\"pseudo-link\" onClick={event => this.props.showPlate(lib, plate, true, false)} >See compounds</span>\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LibraryOption);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/library_option_old.js?");
 
 /***/ }),
 
@@ -466,7 +510,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nvar PresetOption = /*#__PURE__*/function (_React$Component) {\n  _inherits(PresetOption, _React$Component);\n\n  var _super = _createSuper(PresetOption);\n\n  function PresetOption() {\n    _classCallCheck(this, PresetOption);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(PresetOption, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var id = this.props.preset.id;\n      var name = this.props.preset.name;\n      var desc = this.props.preset.description;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"preset\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"input\", {\n        type: \"checkbox\",\n        value: id,\n        name: \"preset_ids\",\n        onChange: function onChange(event) {\n          return _this.props.handleCheckboxChange(event, _this.props.unsaved);\n        },\n        defaultChecked: this.props.defaultChecked\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"label\", {\n        htmlFor: \"{id}\"\n      }, name, \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {\n        to: \"/compounds/preset/\" + this.props.preset.id + \"/\"\n      }, \"See compounds\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"show-on-hover\"\n      }, \"Description...\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, desc));\n    }\n  }]);\n\n  return PresetOption;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PresetOption);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../icons.js */ \"./webSoakDB/webSoakDB_frontend/src/components/icons.js\");\n/* harmony import */ var _details_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./details.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/details.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\nvar PresetOption = /*#__PURE__*/function (_React$Component) {\n  _inherits(PresetOption, _React$Component);\n\n  var _super = _createSuper(PresetOption);\n\n  function PresetOption(props) {\n    var _this;\n\n    _classCallCheck(this, PresetOption);\n\n    _this = _super.call(this, props);\n    _this.state = {\n      details: false\n    };\n    _this.showDetails = _this.showDetails.bind(_assertThisInitialized(_this));\n    _this.hideDetails = _this.hideDetails.bind(_assertThisInitialized(_this));\n    return _this;\n  }\n\n  _createClass(PresetOption, [{\n    key: \"showDetails\",\n    value: function showDetails() {\n      this.setState({\n        details: true\n      });\n    }\n  }, {\n    key: \"hideDetails\",\n    value: function hideDetails() {\n      this.setState({\n        details: false\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this2 = this;\n\n      var id = this.props.preset.id;\n      var name = this.props.preset.name;\n      var size = this.props.preset.size;\n      var details = this.state.details ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_details_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n        collection: this.props.preset,\n        type: \"preset\",\n        hideDetails: this.hideDetails\n      }) : null;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"input\", {\n        id: \"p_\" + id,\n        type: \"checkbox\",\n        value: id,\n        name: \"preset_ids\",\n        onChange: function onChange(event) {\n          return _this2.props.handleCheckboxChange(event);\n        },\n        defaultChecked: this.props.defaultChecked\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"label\", {\n        htmlFor: \"p_\" + id\n      }, \" \", name, \" (\", size, \") \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_icons_js__WEBPACK_IMPORTED_MODULE_1__.ChevronDown, {\n        size: \"14\",\n        handleClick: this.showDetails\n      })), details);\n    }\n  }]);\n\n  return PresetOption;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PresetOption);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js?");
 
 /***/ }),
 
@@ -478,6 +522,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _preset_option_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./preset_option.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nvar Presets = /*#__PURE__*/function (_React$Component) {\n  _inherits(Presets, _React$Component);\n\n  var _super = _createSuper(Presets);\n\n  function Presets() {\n    _classCallCheck(this, Presets);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(Presets, [{\n    key: \"render\",\n    value: function render() {\n      var presets = this.props.presets.map(function (preset, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_preset_option_js__WEBPACK_IMPORTED_MODULE_1__.default, {\n          key: index,\n          id: preset.id,\n          name: preset.name,\n          description: preset.description\n        });\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"presets\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Presets\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"p\", null, \"Specific-purpose compounds selections from in-house libraries\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"form\", {\n        id: \"properties-form\"\n      }, presets), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", null, \"Submit\"));\n    }\n  }]);\n\n  return Presets;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Presets);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/presets.js?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/properties_dict.js":
+/*!*******************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/properties_dict.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n\nvar properties_dict = {\n  \"mol_wt\": \"Molecular weight\",\n  \"tpsa\": \"TPSA\",\n  \"log_p\": \"LogP\",\n  \"num_val_electrons\": \"Number of valence electrons\",\n  \"num_h_acceptors\": \"Number of hydrogen bond acceptors\",\n  \"num_h_donors\": \"Number of hydrogen bond donors\",\n  \"num_het_atoms\": \"Number of heteroatoms\",\n  \"num_rot_bonds\": \"Number of rotable bonds\",\n  \"ring_count\": \"Number of rings\",\n  \"heavy_atom_count\": \"Number of heavy atoms\",\n  \"heavy_atom_mol_wt\": \"Average molecular weight of heavy atoms\",\n  \"nhoh_count\": \"Number of NH and OH\",\n  \"no_count\": \"Number of nitrogens and oxygens\"\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (properties_dict);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/properties_dict.js?");
 
 /***/ }),
 
@@ -532,7 +587,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _export_bar_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./export_bar.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/export_bar.js\");\n/* harmony import */ var _plate_list_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./plate_list.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/plate_list.js\");\n/* harmony import */ var _table_header_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./table_header.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_header.js\");\n/* harmony import */ var _table_row_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./table_row.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_row.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _display_options_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./display_options.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/display_options.js\");\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }\n\nfunction _nonIterableSpread() { throw new TypeError(\"Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\n\nfunction _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === \"string\") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === \"Object\" && o.constructor) n = o.constructor.name; if (n === \"Map\" || n === \"Set\") return Array.from(o); if (n === \"Arguments\" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }\n\nfunction _iterableToArray(iter) { if (typeof Symbol !== \"undefined\" && Symbol.iterator in Object(iter)) return Array.from(iter); }\n\nfunction _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }\n\nfunction _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }\n\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\n\n\n\n\nvar PlateLookup = /*#__PURE__*/function (_React$Component) {\n  _inherits(PlateLookup, _React$Component);\n\n  var _super = _createSuper(PlateLookup);\n\n  function PlateLookup(props) {\n    var _display;\n\n    var _this;\n\n    _classCallCheck(this, PlateLookup);\n\n    _this = _super.call(this, props);\n    _this.toggleDisplay = _this.toggleDisplay.bind(_assertThisInitialized(_this));\n    _this.state = {\n      collection: null,\n      compounds: [],\n      subsets: [],\n      display: (_display = {\n        show_well: _this.props.is_a_plate,\n        show_library: _this.props.is_a_preset,\n        show_code: true,\n        show_smiles: true,\n        show_structure: false,\n        show_concentration: _this.props.is_a_plate,\n        show_mol_wt: !_this.props.is_a_plate,\n        show_tpsa: !_this.props.is_a_plate,\n        show_logp: !_this.props.is_a_plate\n      }, _defineProperty(_display, \"show_logp\", false), _defineProperty(_display, \"show_heavy_atom_count\", false), _defineProperty(_display, \"show_heavy_atom_mol_wt\", false), _defineProperty(_display, \"show_nhoh_count\", false), _defineProperty(_display, \"show_no_count\", false), _defineProperty(_display, \"show_num_h_acceptors\", false), _defineProperty(_display, \"show_num_h_donors\", false), _defineProperty(_display, \"show_num_het_atoms\", false), _defineProperty(_display, \"show_num_rot_bonds\", false), _defineProperty(_display, \"show_num_val_electrons\", false), _defineProperty(_display, \"show_ring_count\", false), _display)\n    };\n    return _this;\n  }\n\n  _createClass(PlateLookup, [{\n    key: \"toggleDisplay\",\n    value: function toggleDisplay(display_option) {\n      var displayCopy = Object.assign({}, this.state.display);\n      displayCopy[display_option] = !this.state.display[display_option];\n      this.setState({\n        display: displayCopy\n      });\n    }\n  }, {\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      this.uploadDataFromAPI();\n    }\n  }, {\n    key: \"componentDidUpdate\",\n    value: function componentDidUpdate(prevProps, prevState) {\n      var _this2 = this;\n\n      if (prevProps !== this.props) {\n        this.uploadDataFromAPI();\n      }\n\n      if (prevState.subsets !== this.state.subsets) {\n        this.state.subsets.forEach(function (subset) {\n          _this2.uploadSubset(subset.id, subset.library.name);\n        });\n      }\n    }\n  }, {\n    key: \"uploadSubset\",\n    value: function uploadSubset(id, libName) {\n      var _this3 = this;\n\n      var apiUrl = '/api/subset_stats/' + id + '/';\n      var compounds = axios__WEBPACK_IMPORTED_MODULE_5___default().get(apiUrl).then(function (res) {\n        var oldCompounds = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_7__.deepCopyObjectArray)(_this3.state.compounds);\n        var compounds = res.data.compounds;\n\n        if (libName) {\n          compounds.forEach(function (compound) {\n            return compound.library = libName;\n          });\n        }\n\n        compounds.push.apply(compounds, _toConsumableArray(oldCompounds));\n\n        _this3.setState({\n          compounds: compounds\n        });\n      });\n    }\n  }, {\n    key: \"uploadDataFromAPI\",\n    value: function uploadDataFromAPI() {\n      var _this4 = this;\n\n      //for library plate\n      if (this.props.is_a_plate) {\n        var apiUrl = '/api/compounds/' + this.props.id + '/';\n        axios__WEBPACK_IMPORTED_MODULE_5___default().get(apiUrl).then(function (res) {\n          var compounds = res.data;\n\n          _this4.setState({\n            compounds: compounds\n          });\n        });\n        apiUrl = '/api/plate_detail/' + this.props.id + '/';\n        axios__WEBPACK_IMPORTED_MODULE_5___default().get(apiUrl).then(function (res) {\n          var collection = res.data;\n          collection.name = collection.barcode;\n\n          _this4.setState({\n            collection: collection\n          });\n        });\n      } //for a single cherrypicking list\n      else if (!this.props.is_a_preset) {\n          var compounds = this.uploadSubset(this.props.id, null);\n\n          var _apiUrl = '/api/subset_stats/' + this.props.id + '/';\n\n          axios__WEBPACK_IMPORTED_MODULE_5___default().get(_apiUrl).then(function (res) {\n            var collection = res.data;\n            console.log('Setting collection');\n\n            _this4.setState({\n              collection: collection\n            });\n          });\n        } //for a preset\n        else {\n            console.log('Found preset');\n\n            var _apiUrl2 = '/api/preset_detail/' + this.props.id + '/';\n\n            var subsets = [];\n            axios__WEBPACK_IMPORTED_MODULE_5___default().get(_apiUrl2).then(function (res) {\n              var subsets = res.data.subsets;\n\n              _this4.setState({\n                subsets: subsets\n              });\n\n              var collection = res.data;\n\n              _this4.setState({\n                collection: collection\n              });\n            });\n          }\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this5 = this;\n\n      var collection = null;\n      var name = null;\n      var current = \"\";\n\n      if (this.state.collection) {\n        collection = this.state.collection;\n\n        if (this.state.collection.library) {\n          name = collection.library.name;\n        }\n\n        if (this.state.collection.current) {\n          current = \"(current)\";\n        }\n      }\n\n      if (this.props.is_a_preset) {\n        name = 'Preset';\n      }\n\n      if (this.props.is_a_plate && this.props.is_a_preset) {\n        console.log('ERROR in this.props : both is_a_plate and is_a_preset are set to true!!! May cause unexpected behaviour');\n      } //Create show buttons for hidden columns. For subsets and presets, don't make show buttons for well and concentration.\n\n\n      var buttons = _display_options_js__WEBPACK_IMPORTED_MODULE_6__.display_options.map(function (option, index) {\n        if (_this5.props.is_a_plate || option[0] !== 'show_well' && option[0] !== 'show_concentration') {\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n            key: index,\n            className: _this5.state.display[option[0]] ? \"hidden\" : \"small-button\",\n            onClick: function onClick(event) {\n              return _this5.toggleDisplay(option[0]);\n            }\n          }, \"Show \", option[1]);\n        }\n      });\n      var extra_button = null;\n\n      if (this.props.is_a_preset) {\n        extra_button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n          key: \"0\",\n          className: this.state.display.show_library ? \"hidden\" : \"small-button\",\n          onClick: function onClick(event) {\n            return _this5.toggleDisplay(show_library);\n          }\n        }, \"Show Library\");\n      }\n\n      var plateList = null;\n\n      if (this.props.is_a_plate && collection && collection.library) {\n        plateList = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_plate_list_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n          library: collection.library\n        });\n      }\n\n      var rows = null;\n\n      if (this.state.compounds.length > 0) {\n        rows = this.state.compounds.map(function (compound, index) {\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_table_row_js__WEBPACK_IMPORTED_MODULE_4__.default, {\n            key: index + 1,\n            counter: index + 1,\n            compound: compound,\n            display: _this5.state.display,\n            is_a_plate: _this5.props.is_a_plate,\n            is_a_preset: _this5.props.is_a_preset\n          });\n        });\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"plate-lookup\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, name ? name : \"\", \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, collection ? collection.name : \"\", \" \", current), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"sidebar-div\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h3\", null, \"Show more table columns:\"), extra_button, buttons), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_export_bar_js__WEBPACK_IMPORTED_MODULE_1__.default, {\n        id: this.props.id\n      }), plateList), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"table\", {\n        \"data-toggle\": \"table\",\n        \"data-pagination\": \"true\",\n        \"data-search\": \"true\",\n        className: \"table table-bordered table-hover\",\n        id: \"table\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"caption\", null, \"Compound list (\", this.state.compounds.length, \" items)\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_table_header_js__WEBPACK_IMPORTED_MODULE_3__.default, {\n        display: this.state.display,\n        onButtonClick: this.toggleDisplay,\n        is_a_preset: this.props.is_a_preset\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tbody\", {\n        id: \"datatable-body\"\n      }, rows))));\n    }\n  }]);\n\n  return PlateLookup;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PlateLookup);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/PlateLookup.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _export_bar_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./export_bar.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/export_bar.js\");\n/* harmony import */ var _plate_list_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./plate_list.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/plate_list.js\");\n/* harmony import */ var _table_header_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./table_header.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_header.js\");\n/* harmony import */ var _table_row_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./table_row.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_row.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _display_options_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./display_options.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/display_options.js\");\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }\n\nfunction _nonIterableSpread() { throw new TypeError(\"Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\n\nfunction _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === \"string\") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === \"Object\" && o.constructor) n = o.constructor.name; if (n === \"Map\" || n === \"Set\") return Array.from(o); if (n === \"Arguments\" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }\n\nfunction _iterableToArray(iter) { if (typeof Symbol !== \"undefined\" && Symbol.iterator in Object(iter)) return Array.from(iter); }\n\nfunction _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }\n\nfunction _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }\n\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\n\n\n\n\n\n\nvar PlateLookup = /*#__PURE__*/function (_React$Component) {\n  _inherits(PlateLookup, _React$Component);\n\n  var _super = _createSuper(PlateLookup);\n\n  function PlateLookup(props) {\n    var _display;\n\n    var _this;\n\n    _classCallCheck(this, PlateLookup);\n\n    _this = _super.call(this, props);\n    _this.toggleDisplay = _this.toggleDisplay.bind(_assertThisInitialized(_this));\n    _this.state = {\n      collection: null,\n      compounds: [],\n      subsets: [],\n      display: (_display = {\n        show_well: _this.props.is_a_plate,\n        show_library: _this.props.is_a_preset,\n        show_code: true,\n        show_smiles: true,\n        show_structure: true,\n        show_concentration: _this.props.is_a_plate,\n        show_mol_wt: !_this.props.is_a_plate,\n        show_tpsa: !_this.props.is_a_plate,\n        show_logp: !_this.props.is_a_plate\n      }, _defineProperty(_display, \"show_logp\", false), _defineProperty(_display, \"show_heavy_atom_count\", false), _defineProperty(_display, \"show_heavy_atom_mol_wt\", false), _defineProperty(_display, \"show_nhoh_count\", false), _defineProperty(_display, \"show_no_count\", false), _defineProperty(_display, \"show_num_h_acceptors\", false), _defineProperty(_display, \"show_num_h_donors\", false), _defineProperty(_display, \"show_num_het_atoms\", false), _defineProperty(_display, \"show_num_rot_bonds\", false), _defineProperty(_display, \"show_num_val_electrons\", false), _defineProperty(_display, \"show_ring_count\", false), _display)\n    };\n    return _this;\n  }\n\n  _createClass(PlateLookup, [{\n    key: \"toggleDisplay\",\n    value: function toggleDisplay(display_option) {\n      var displayCopy = Object.assign({}, this.state.display);\n      displayCopy[display_option] = !this.state.display[display_option];\n      this.setState({\n        display: displayCopy\n      });\n    }\n  }, {\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      this.uploadDataFromAPI();\n    }\n  }, {\n    key: \"componentDidUpdate\",\n    value: function componentDidUpdate(prevProps, prevState) {\n      var _this2 = this;\n\n      if (prevProps !== this.props) {\n        this.uploadDataFromAPI();\n      }\n\n      if (prevState.subsets !== this.state.subsets) {\n        this.state.subsets.forEach(function (subset) {\n          _this2.uploadSubset(subset.id, subset.library.name);\n        });\n      }\n    }\n  }, {\n    key: \"uploadSubset\",\n    value: function uploadSubset(id, libName) {\n      var _this3 = this;\n\n      var apiUrl = '/api/subset_stats/' + id + '/';\n      var compounds = axios__WEBPACK_IMPORTED_MODULE_5___default().get(apiUrl).then(function (res) {\n        var oldCompounds = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_7__.deepCopyObjectArray)(_this3.state.compounds);\n        var compounds = res.data.compounds;\n\n        if (libName) {\n          compounds.forEach(function (compound) {\n            return compound.library = libName;\n          });\n        }\n\n        compounds.push.apply(compounds, _toConsumableArray(oldCompounds));\n\n        _this3.setState({\n          compounds: compounds\n        });\n      });\n    }\n  }, {\n    key: \"uploadDataFromAPI\",\n    value: function uploadDataFromAPI() {\n      var _this4 = this;\n\n      //for library plate\n      if (this.props.is_a_plate) {\n        var apiUrl = '/api/compounds/' + this.props.id + '/';\n        axios__WEBPACK_IMPORTED_MODULE_5___default().get(apiUrl).then(function (res) {\n          var compounds = res.data;\n\n          _this4.setState({\n            compounds: compounds\n          });\n        });\n        apiUrl = '/api/plate_detail/' + this.props.id + '/';\n        axios__WEBPACK_IMPORTED_MODULE_5___default().get(apiUrl).then(function (res) {\n          var collection = res.data;\n          collection.name = collection.barcode;\n\n          _this4.setState({\n            collection: collection\n          });\n        });\n      } //for a single cherrypicking list\n      else if (!this.props.is_a_preset) {\n          var compounds = this.uploadSubset(this.props.id, null);\n\n          var _apiUrl = '/api/subset_stats/' + this.props.id + '/';\n\n          axios__WEBPACK_IMPORTED_MODULE_5___default().get(_apiUrl).then(function (res) {\n            var collection = res.data;\n            console.log('Setting collection');\n\n            _this4.setState({\n              collection: collection\n            });\n          });\n        } //for a preset\n        else {\n            console.log('Found preset');\n\n            var _apiUrl2 = '/api/preset_detail/' + this.props.id + '/';\n\n            var subsets = [];\n            axios__WEBPACK_IMPORTED_MODULE_5___default().get(_apiUrl2).then(function (res) {\n              var subsets = res.data.subsets;\n\n              _this4.setState({\n                subsets: subsets\n              });\n\n              var collection = res.data;\n\n              _this4.setState({\n                collection: collection\n              });\n            });\n          }\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this5 = this;\n\n      var collection = null;\n      var name = null;\n      var current = \"\";\n\n      if (this.state.collection) {\n        collection = this.state.collection;\n\n        if (this.state.collection.library) {\n          name = collection.library.name;\n        }\n\n        if (this.state.collection.current) {\n          current = \"(current)\";\n        }\n      }\n\n      if (this.props.is_a_preset) {\n        name = 'Preset';\n      }\n\n      if (this.props.is_a_plate && this.props.is_a_preset) {\n        console.log('ERROR in this.props : both is_a_plate and is_a_preset are set to true!!! May cause unexpected behaviour');\n      } //Create show buttons for hidden columns. For subsets and presets, don't make show buttons for well and concentration.\n\n\n      var buttons = _display_options_js__WEBPACK_IMPORTED_MODULE_6__.display_options.map(function (option, index) {\n        if (_this5.props.is_a_plate || option[0] !== 'show_well' && option[0] !== 'show_concentration') {\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n            key: index,\n            className: _this5.state.display[option[0]] ? \"hidden\" : \"small-button\",\n            onClick: function onClick(event) {\n              return _this5.toggleDisplay(option[0]);\n            }\n          }, \"Show \", option[1]);\n        }\n      });\n      var extra_button = null;\n\n      if (this.props.is_a_preset) {\n        extra_button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n          key: \"0\",\n          className: this.state.display.show_library ? \"hidden\" : \"small-button\",\n          onClick: function onClick(event) {\n            return _this5.toggleDisplay(show_library);\n          }\n        }, \"Show Library\");\n      }\n\n      var plateList = null;\n\n      if (this.props.is_a_plate && collection && collection.library) {\n        plateList = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_plate_list_js__WEBPACK_IMPORTED_MODULE_2__.default, {\n          library: collection.library\n        });\n      }\n\n      var rows = null;\n\n      if (this.state.compounds.length > 0) {\n        rows = this.state.compounds.map(function (compound, index) {\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_table_row_js__WEBPACK_IMPORTED_MODULE_4__.default, {\n            key: index + 1,\n            counter: index + 1,\n            compound: compound,\n            display: _this5.state.display,\n            is_a_plate: _this5.props.is_a_plate,\n            is_a_preset: _this5.props.is_a_preset\n          });\n        });\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"plate-lookup\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, name ? name : \"\", \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, collection ? collection.name : \"\", \" \", current), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"sidebar-div\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h3\", null, \"Show more table columns:\"), extra_button, buttons), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_export_bar_js__WEBPACK_IMPORTED_MODULE_1__.default, {\n        id: this.props.id\n      }), plateList, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, \"2D structures powered by \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"a\", {\n        href: \"https://pubchem.ncbi.nlm.nih.gov/\"\n      }, \"PubChem\\xAE\"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"table\", {\n        \"data-toggle\": \"table\",\n        \"data-pagination\": \"true\",\n        \"data-search\": \"true\",\n        className: \"table table-bordered table-hover\",\n        id: \"table\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"caption\", null, \"Compound list (\", this.state.compounds.length, \" items)\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_table_header_js__WEBPACK_IMPORTED_MODULE_3__.default, {\n        display: this.state.display,\n        onButtonClick: this.toggleDisplay,\n        is_a_preset: this.props.is_a_preset\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tbody\", {\n        id: \"datatable-body\"\n      }, rows))));\n    }\n  }]);\n\n  return PlateLookup;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PlateLookup);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/PlateLookup.js?");
 
 /***/ }),
 
@@ -569,6 +624,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/structure_pic.js":
+/*!***********************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/structure_pic.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_lazy_load_image_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-lazy-load-image-component */ \"./node_modules/react-lazy-load-image-component/build/index.js\");\n/* harmony import */ var react_lazy_load_image_component__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_lazy_load_image_component__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../icons.js */ \"./webSoakDB/webSoakDB_frontend/src/components/icons.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\nvar StructurePic = /*#__PURE__*/function (_React$Component) {\n  _inherits(StructurePic, _React$Component);\n\n  var _super = _createSuper(StructurePic);\n\n  function StructurePic(props) {\n    var _this;\n\n    _classCallCheck(this, StructurePic);\n\n    _this = _super.call(this, props);\n    _this.state = {\n      url_suffix: \"\",\n      attempts: 0,\n      url_start: 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/',\n      url_end: '/PNG?'\n    };\n    return _this;\n  } //adds new query string to the end of the URL to force re-upload\n\n\n  _createClass(StructurePic, [{\n    key: \"reload\",\n    value: function reload() {\n      var att = this.state.attempts;\n\n      if (att < 11) {\n        att++;\n        setTimeout(this.setState({\n          url_suffix: Date.now(),\n          attempts: att\n        }), 2000);\n      } else if (att < 13) {\n        //try different service\n        att++;\n        this.setState({\n          url_start: 'https://cactus.nci.nih.gov/chemical/structure/',\n          url_end: '/image?',\n          attempts: att\n        });\n      }\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this2 = this;\n\n      var url_smiles = this.props.smiles.replace(/#/g, '%23');\n      url_smiles = url_smiles.replace(/\\//g, '%2F');\n      var img_url = this.state.url_start + url_smiles + this.state.url_end + this.state.url_suffix;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        className: \"img2d\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_lazy_load_image_component__WEBPACK_IMPORTED_MODULE_1__.LazyLoadImage, {\n        alt: \"Loading image...\",\n        src: img_url,\n        onError: function onError() {\n          return _this2.reload();\n        }\n      }), \"\\xA0\", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_icons_js__WEBPACK_IMPORTED_MODULE_2__.ZoomInIcon, {\n        size: \"20\"\n      }));\n    }\n  }]);\n\n  return StructurePic;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StructurePic);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/structure_pic.js?");
+
+/***/ }),
+
 /***/ "./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_header.js":
 /*!**********************************************************************************!*\
   !*** ./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_header.js ***!
@@ -576,7 +642,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _display_options__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./display_options */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/display_options.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nfunction showHide(value) {\n  if (value) {\n    return \"\";\n  } else {\n    return \"hidden\";\n  }\n}\n\nvar TableHeader = /*#__PURE__*/function (_React$Component) {\n  _inherits(TableHeader, _React$Component);\n\n  var _super = _createSuper(TableHeader);\n\n  function TableHeader() {\n    _classCallCheck(this, TableHeader);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(TableHeader, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var extra = null;\n\n      if (this.props.is_a_preset) {\n        extra = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", {\n          className: this.props.display.show_library ? \"\" : \"hidden\"\n        }, \"Library \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n          className: \"in-table\",\n          onClick: function onClick(event) {\n            return _this.props.onButtonClick(show_library);\n          }\n        }, \"Hide\"));\n      }\n\n      var ths = _display_options__WEBPACK_IMPORTED_MODULE_1__.display_options.map(function (option, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", {\n          key: index,\n          className: _this.props.display[option[0]] ? \"\" : \"hidden\"\n        }, option[1], /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n          className: \"in-table\",\n          onClick: function onClick(event) {\n            return _this.props.onButtonClick([option[0]]);\n          }\n        }, \"Hide\"));\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"thead\", {\n        className: \"undefined sticky-header\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", {\n        className: \"row-no\"\n      }, \"Row no.\"), extra, ths));\n    }\n  }]);\n\n  return TableHeader;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableHeader);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_header.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _display_options__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./display_options */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/display_options.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\nfunction showHide(value) {\n  if (value) {\n    return \"\";\n  } else {\n    return \"hidden\";\n  }\n}\n\nvar TableHeader = /*#__PURE__*/function (_React$Component) {\n  _inherits(TableHeader, _React$Component);\n\n  var _super = _createSuper(TableHeader);\n\n  function TableHeader() {\n    _classCallCheck(this, TableHeader);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(TableHeader, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var extra = null;\n\n      if (this.props.is_a_preset) {\n        extra = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", {\n          className: this.props.display.show_library ? \"library\" : \"hidden\"\n        }, \"Library \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n          className: \"in-table\",\n          onClick: function onClick(event) {\n            return _this.props.onButtonClick(show_library);\n          }\n        }, \"Hide\"));\n      }\n\n      var ths = _display_options__WEBPACK_IMPORTED_MODULE_1__.display_options.map(function (option, index) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", {\n          key: index,\n          className: _this.props.display[option[0]] ? option[0] : \"hidden\"\n        }, option[1], /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n          className: \"in-table\",\n          onClick: function onClick(event) {\n            return _this.props.onButtonClick([option[0]]);\n          }\n        }, \"Hide\"));\n      });\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"thead\", {\n        className: \"undefined sticky-header\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", {\n        className: \"row-no\"\n      }, \"Row no.\"), extra, ths));\n    }\n  }]);\n\n  return TableHeader;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableHeader);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_header.js?");
 
 /***/ }),
 
@@ -587,7 +653,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _display_options_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./display_options.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/display_options.js\");\n/* harmony import */ var _picker_stats_helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../picker/stats_helpers.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats_helpers.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\nfunction showHide(value) {\n  if (value) {\n    return \"\";\n  } else {\n    return \"hidden\";\n  }\n}\n\nvar stat_options = _display_options_js__WEBPACK_IMPORTED_MODULE_1__.display_options.slice(5);\n\nvar TableRow = /*#__PURE__*/function (_React$Component) {\n  _inherits(TableRow, _React$Component);\n\n  var _super = _createSuper(TableRow);\n\n  function TableRow() {\n    _classCallCheck(this, TableRow);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(TableRow, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var classes = {};\n      _display_options_js__WEBPACK_IMPORTED_MODULE_1__.display_options.forEach(function (option) {\n        classes[option[0]] = showHide(_this.props.display[option[0]]);\n      });\n      var general_cells;\n\n      if (this.props.is_a_plate) {\n        general_cells = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_well\n        }, this.props.compound.well), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_code\n        }, \" \", this.props.compound.compound.code), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_smiles\n        }, this.props.compound.compound.smiles), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_structure\n        }, \"[PICTURE GOES HERE]\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_concentration\n        }, this.props.compound.concentration));\n      } else {\n        general_cells = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_code\n        }, \" \", this.props.compound.code), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_smiles\n        }, this.props.compound.smiles), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_structure\n        }, \"[PICTURE GOES HERE]\"));\n      }\n\n      var stat_cells = _picker_stats_helpers_js__WEBPACK_IMPORTED_MODULE_2__.descriptor_names.map(function (option, index) {\n        var value;\n\n        if (_this.props.is_a_plate) {\n          value = _this.props.compound.compound[option];\n        } else {\n          value = _this.props.compound[option];\n        }\n\n        if (value % 1 !== 0) {\n          value = value.toFixed(2);\n        }\n\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          key: index,\n          className: classes[stat_options[index][0]]\n        }, value);\n      });\n      var library_cell = null;\n\n      if (this.props.is_a_preset) {\n        library_cell = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_library\n        }, this.props.compound.library !== undefined ? this.props.compound.library : '...');\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", null, this.props.counter), library_cell, general_cells, stat_cells);\n    }\n  }]);\n\n  return TableRow;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableRow);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_row.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _display_options_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./display_options.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/display_options.js\");\n/* harmony import */ var _picker_stats_helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../picker/stats_helpers.js */ \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats_helpers.js\");\n/* harmony import */ var _structure_pic_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./structure_pic.js */ \"./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/structure_pic.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n //import {ExpandIcon} from '../icons.js';\n\nfunction showHide(value) {\n  if (value) {\n    return \"\";\n  } else {\n    return \"hidden\";\n  }\n}\n\nvar stat_options = _display_options_js__WEBPACK_IMPORTED_MODULE_1__.display_options.slice(5);\n/*\nconst \n\nfunction StructurePicLoader(props) {\n\treturn(\t\n\t\t<Suspense fallback={<div>Loading image...</div>}>\n\t\t\t<StructurePic smiles={props.smiles} />\n\t\t</Suspense>\n\t);\n}\n*/\n\nvar TableRow = /*#__PURE__*/function (_React$Component) {\n  _inherits(TableRow, _React$Component);\n\n  var _super = _createSuper(TableRow);\n\n  function TableRow() {\n    _classCallCheck(this, TableRow);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(TableRow, [{\n    key: \"render\",\n    value: function render() {\n      var _this = this;\n\n      var url_smiles = \"\";\n      var img_url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/' + url_smiles + '/PNG'; //let img_url = 'https://cactus.nci.nih.gov/chemical/structure/' + url_smiles + '/image'\n\n      var classes = {};\n      _display_options_js__WEBPACK_IMPORTED_MODULE_1__.display_options.forEach(function (option) {\n        classes[option[0]] = showHide(_this.props.display[option[0]]);\n      });\n      var general_cells;\n\n      if (this.props.is_a_plate) {\n        url_smiles = this.props.compound.compound.smiles.replace('#', '%23');\n        general_cells = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_well\n        }, this.props.compound.well), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_code\n        }, \" \", this.props.compound.compound.code), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_smiles\n        }, this.props.compound.compound.smiles), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_structure\n        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_structure_pic_js__WEBPACK_IMPORTED_MODULE_3__.default, {\n          smiles: this.props.compound.compound.smiles\n        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_concentration\n        }, this.props.compound.concentration));\n      } else {\n        url_smiles = this.props.compound.smiles.replace('#', '%23');\n        general_cells = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_code\n        }, \" \", this.props.compound.code), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_smiles\n        }, this.props.compound.smiles), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_structure\n        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_structure_pic_js__WEBPACK_IMPORTED_MODULE_3__.default, {\n          smiles: this.props.compound.smiles\n        })));\n      }\n\n      var stat_cells = _picker_stats_helpers_js__WEBPACK_IMPORTED_MODULE_2__.descriptor_names.map(function (option, index) {\n        var value;\n\n        if (_this.props.is_a_plate) {\n          value = _this.props.compound.compound[option];\n        } else {\n          value = _this.props.compound[option];\n        }\n\n        if (value % 1 !== 0) {\n          value = value.toFixed(2);\n        }\n\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          key: index,\n          className: classes[stat_options[index][0]]\n        }, value);\n      });\n      var library_cell = null;\n\n      if (this.props.is_a_preset) {\n        library_cell = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", {\n          className: classes.show_library\n        }, this.props.compound.library !== undefined ? this.props.compound.library : '...');\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"td\", null, this.props.counter), library_cell, general_cells, stat_cells);\n    }\n  }]);\n\n  return TableRow;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableRow); //<img className=\"img2d\" src={img_url} />\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/plate_lookup/table_row.js?");
 
 /***/ }),
 
@@ -598,7 +664,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _collection_row_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./collection_row.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/collection_row.js\");\n/* harmony import */ var _th_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./th.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/th.js\");\n/* harmony import */ var _library_rows_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./library_rows.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/library_rows.js\");\n/* harmony import */ var _subset_table_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./subset_table.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/subset_table.js\");\n/* harmony import */ var _export_form_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./export_form.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/export_form.js\");\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_7__);\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n //import './home.css';\n\n\n\n\n\n\n\n\n\nvar Summary = /*#__PURE__*/function (_React$Component) {\n  _inherits(Summary, _React$Component);\n\n  var _super = _createSuper(Summary);\n\n  function Summary(props) {\n    var _this;\n\n    _classCallCheck(this, Summary);\n\n    _this = _super.call(this, props);\n    _this.removeLibrary = _this.removeLibrary.bind(_assertThisInitialized(_this));\n    _this.removeSubset = _this.removeSubset.bind(_assertThisInitialized(_this));\n    _this.state = {\n      selectedLibs: [],\n      selectedSubsets: [],\n      libClass: null,\n      subsetClass: null\n    };\n    return _this;\n  }\n\n  _createClass(Summary, [{\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      var _this2 = this;\n\n      var apiUrl = '/api/proposals/' + this.props.proposal.proposal + '/';\n      axios__WEBPACK_IMPORTED_MODULE_7___default().get(apiUrl).then(function (res) {\n        var selectedLibs = res.data.libraries;\n\n        _this2.setState({\n          selectedLibs: selectedLibs,\n          selectedLibIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(selectedLibs, \"id\")\n        });\n\n        var selectedSubsets = res.data.subsets;\n\n        _this2.setState({\n          selectedSubsets: selectedSubsets,\n          selectedSubsetIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(selectedSubsets, \"id\")\n        });\n      });\n    }\n  }, {\n    key: \"removeLibrary\",\n    value: function removeLibrary(id) {\n      var libs = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.deepCopyObjectArray)(this.state.selectedLibs);\n      var found = libs.find(function (object) {\n        return object.id === parseInt(id);\n      });\n      libs.splice(libs.indexOf(found), 1);\n      this.setState({\n        selectedLibs: libs\n      });\n      this.props.trackUnsavedChanges(true);\n      this.setState({\n        libClass: \"changed\"\n      });\n    }\n  }, {\n    key: \"removeSubset\",\n    value: function removeSubset(id) {\n      var subsets = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.deepCopyObjectArray)(this.state.selectedSubsets);\n      var found = subsets.find(function (object) {\n        return object.id === parseInt(id);\n      });\n      subsets.splice(subsets.indexOf(found), 1);\n      this.setState({\n        selectedSubsets: subsets\n      });\n      this.props.trackUnsavedChanges(true);\n      this.setState({\n        subsetClass: \"changed\"\n      });\n    }\n  }, {\n    key: \"undoChanges\",\n    value: function undoChanges() {\n      this.componentDidMount();\n      this.props.trackUnsavedChanges(false);\n      this.setState({\n        libClass: null,\n        subsetClass: null\n      });\n    }\n  }, {\n    key: \"saveChanges\",\n    value: function saveChanges() {\n      this.props.updateLibrarySelection((0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(this.state.selectedLibs, \"id\"));\n      this.props.updateSubsetSelection((0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(this.state.selectedSubsets, \"id\"));\n      this.props.trackUnsavedChanges(false);\n      this.setState({\n        libClass: null,\n        subsetClass: null\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this3 = this;\n\n      var libraries = [];\n\n      if (this.state.selectedLibs) {\n        libraries = this.state.selectedLibs.map(function (library, index) {\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_library_rows_js__WEBPACK_IMPORTED_MODULE_3__.default, {\n            key: index,\n            library: library,\n            handleClick: _this3.removeLibrary\n          });\n        });\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"all\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"Selected Compounds for \", this.props.proposal.proposal, \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", {\n        id: \"summary-main\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"whole\",\n        className: this.state.libClass\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Whole libraries\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"table\", {\n        className: \"table table-bordered\",\n        id: \"table\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"thead\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Library\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Origin\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Currently used plate\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Available \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), \"compounds\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Compounds\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Remove\"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tbody\", null, libraries))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"subsets\",\n        className: this.state.subsetClass\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_subset_table_js__WEBPACK_IMPORTED_MODULE_4__.default, {\n        selectedSubsets: this.state.selectedSubsets,\n        handleClick: this.removeSubset\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        onClick: function onClick(event) {\n          return _this3.saveChanges();\n        }\n      }, \"Save changes \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        onClick: function onClick(event) {\n          return _this3.undoChanges();\n        }\n      }, \"Undo unsaved changes \"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"exports\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_export_form_js__WEBPACK_IMPORTED_MODULE_5__.default, {\n        proposal: this.props.proposal\n      })))));\n    }\n  }]);\n\n  return Summary;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Summary);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/summary/Summary.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _collection_row_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./collection_row.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/collection_row.js\");\n/* harmony import */ var _th_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./th.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/th.js\");\n/* harmony import */ var _library_rows_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./library_rows.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/library_rows.js\");\n/* harmony import */ var _subset_table_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./subset_table.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/subset_table.js\");\n/* harmony import */ var _export_form_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./export_form.js */ \"./webSoakDB/webSoakDB_frontend/src/components/summary/export_form.js\");\n/* harmony import */ var _actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/stat_functions.js */ \"./webSoakDB/webSoakDB_frontend/src/actions/stat_functions.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_7__);\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n //import './home.css';\n\n\n\n\n\n\n\n\n\nvar Summary = /*#__PURE__*/function (_React$Component) {\n  _inherits(Summary, _React$Component);\n\n  var _super = _createSuper(Summary);\n\n  function Summary(props) {\n    var _this;\n\n    _classCallCheck(this, Summary);\n\n    _this = _super.call(this, props);\n    _this.removeLibrary = _this.removeLibrary.bind(_assertThisInitialized(_this));\n    _this.removeSubset = _this.removeSubset.bind(_assertThisInitialized(_this));\n    _this.state = {\n      selectedLibs: [],\n      selectedSubsets: [],\n      libClass: null,\n      subsetClass: null\n    };\n    return _this;\n  }\n\n  _createClass(Summary, [{\n    key: \"componentDidMount\",\n    value: function componentDidMount() {\n      var _this2 = this;\n\n      var apiUrl = '/api/proposals/' + this.props.proposal.proposal + '/';\n      axios__WEBPACK_IMPORTED_MODULE_7___default().get(apiUrl).then(function (res) {\n        var selectedLibs = res.data.libraries;\n\n        _this2.setState({\n          selectedLibs: selectedLibs,\n          selectedLibIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(selectedLibs, \"id\")\n        });\n\n        var selectedSubsets = res.data.subsets;\n\n        _this2.setState({\n          selectedSubsets: selectedSubsets,\n          selectedSubsetIds: (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(selectedSubsets, \"id\")\n        });\n      });\n    }\n  }, {\n    key: \"removeLibrary\",\n    value: function removeLibrary(id) {\n      var libs = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.deepCopyObjectArray)(this.state.selectedLibs);\n      var found = libs.find(function (object) {\n        return object.id === parseInt(id);\n      });\n      libs.splice(libs.indexOf(found), 1);\n      this.setState({\n        selectedLibs: libs\n      });\n      this.props.trackUnsavedChanges(true);\n      this.setState({\n        libClass: \"changed\"\n      });\n    }\n  }, {\n    key: \"removeSubset\",\n    value: function removeSubset(id) {\n      var subsets = (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.deepCopyObjectArray)(this.state.selectedSubsets);\n      var found = subsets.find(function (object) {\n        return object.id === parseInt(id);\n      });\n      subsets.splice(subsets.indexOf(found), 1);\n      this.setState({\n        selectedSubsets: subsets\n      });\n      this.props.trackUnsavedChanges(true);\n      this.setState({\n        subsetClass: \"changed\"\n      });\n    }\n  }, {\n    key: \"undoChanges\",\n    value: function undoChanges() {\n      this.componentDidMount();\n      this.props.trackUnsavedChanges(false);\n      this.setState({\n        libClass: null,\n        subsetClass: null\n      });\n    }\n  }, {\n    key: \"saveChanges\",\n    value: function saveChanges() {\n      this.props.updateSelection((0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(this.state.selectedLibs, \"id\"), (0,_actions_stat_functions_js__WEBPACK_IMPORTED_MODULE_6__.getAttributeArray)(this.state.selectedSubsets, \"id\")); //this.props.updateLibrarySelection(getAttributeArray(this.state.selectedLibs, \"id\"));\n      //this.props.updateSubsetSelection(getAttributeArray(this.state.selectedSubsets, \"id\"));\n\n      this.props.trackUnsavedChanges(false);\n      this.setState({\n        libClass: null,\n        subsetClass: null\n      });\n    }\n  }, {\n    key: \"render\",\n    value: function render() {\n      var _this3 = this;\n\n      var libraries = [];\n\n      if (this.state.selectedLibs) {\n        libraries = this.state.selectedLibs.map(function (library, index) {\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_library_rows_js__WEBPACK_IMPORTED_MODULE_3__.default, {\n            key: index,\n            library: library,\n            handleClick: _this3.removeLibrary\n          });\n        });\n      }\n\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", {\n        id: \"all\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h1\", null, \"Selected Compounds for \", this.props.proposal.proposal, \" \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"main\", {\n        id: \"summary-main\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"whole\",\n        className: this.state.libClass\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"h2\", null, \"Whole libraries\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"table\", {\n        className: \"table table-bordered\",\n        id: \"table\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"thead\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tr\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Library\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Origin\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Currently used plate\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Available \", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"br\", null), \"compounds\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Compounds\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"th\", null, \"Remove\"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"tbody\", null, libraries))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"subsets\",\n        className: this.state.subsetClass\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_subset_table_js__WEBPACK_IMPORTED_MODULE_4__.default, {\n        selectedSubsets: this.state.selectedSubsets,\n        handleClick: this.removeSubset\n      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        onClick: function onClick(event) {\n          return _this3.saveChanges();\n        }\n      }, \"Save changes \"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"button\", {\n        onClick: function onClick(event) {\n          return _this3.undoChanges();\n        }\n      }, \"Undo unsaved changes \"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"section\", {\n        id: \"exports\"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_export_form_js__WEBPACK_IMPORTED_MODULE_5__.default, {\n        proposal: this.props.proposal\n      })))));\n    }\n  }]);\n\n  return Summary;\n}(react__WEBPACK_IMPORTED_MODULE_0__.Component);\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Summary);\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/summary/Summary.js?");
 
 /***/ }),
 
@@ -676,6 +742,3317 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/App */ \"./webSoakDB/webSoakDB_frontend/src/components/App.js\");\n\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/index.js?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/mol_wt.svg":
+/*!***********************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/mol_wt.svg ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/pic.png":
+/*!********************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/pic.png ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/pic.png\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/pic.png?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_count.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_count.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_mol_wt.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_mol_wt.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/log_p.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/log_p.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/mol_wt.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/mol_wt.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/nhoh_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/nhoh_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/no_count.svg":
+/*!******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/no_count.svg ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_acceptors.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_acceptors.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_donors.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_donors.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_het_atoms.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_het_atoms.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_rot_bonds.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_rot_bonds.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_val_electrons.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_val_electrons.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/ring_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/ring_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/tpsa.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/tpsa.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_count.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_count.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_mol_wt.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_mol_wt.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/log_p.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/log_p.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/mol_wt.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/mol_wt.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/nhoh_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/nhoh_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/no_count.svg":
+/*!******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/no_count.svg ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_acceptors.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_acceptors.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_donors.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_donors.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_het_atoms.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_het_atoms.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_rot_bonds.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_rot_bonds.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_val_electrons.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_val_electrons.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/ring_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/ring_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/tpsa.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/tpsa.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_count.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_count.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_mol_wt.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_mol_wt.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/log_p.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/log_p.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/mol_wt.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/mol_wt.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/nhoh_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/nhoh_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/no_count.svg":
+/*!******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/no_count.svg ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_acceptors.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_acceptors.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_donors.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_donors.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_het_atoms.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_het_atoms.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_rot_bonds.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_rot_bonds.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_val_electrons.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_val_electrons.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/ring_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/ring_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/tpsa.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/tpsa.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_count.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_count.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_mol_wt.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_mol_wt.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/log_p.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/log_p.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/mol_wt.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/mol_wt.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/nhoh_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/nhoh_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/no_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/no_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_acceptors.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_acceptors.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_donors.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_donors.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_het_atoms.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_het_atoms.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_rot_bonds.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_rot_bonds.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_val_electrons.svg":
+/*!****************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_val_electrons.svg ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/ring_count.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/ring_count.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/tpsa.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/tpsa.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_count.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_count.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_mol_wt.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_mol_wt.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/log_p.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/log_p.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/mol_wt.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/mol_wt.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/nhoh_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/nhoh_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/no_count.svg":
+/*!******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/no_count.svg ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_acceptors.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_acceptors.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_donors.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_donors.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_het_atoms.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_het_atoms.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_rot_bonds.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_rot_bonds.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_val_electrons.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_val_electrons.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/ring_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/ring_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/tpsa.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/tpsa.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_count.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_count.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_mol_wt.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_mol_wt.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/log_p.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/log_p.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/mol_wt.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/mol_wt.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/nhoh_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/nhoh_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/no_count.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/no_count.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_acceptors.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_acceptors.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_donors.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_donors.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_het_atoms.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_het_atoms.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_rot_bonds.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_rot_bonds.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_val_electrons.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_val_electrons.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/ring_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/ring_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/tpsa.svg":
+/*!*************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/tpsa.svg ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_count.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_count.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_mol_wt.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_mol_wt.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/log_p.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/log_p.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/mol_wt.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/mol_wt.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/nhoh_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/nhoh_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/no_count.svg":
+/*!******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/no_count.svg ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_acceptors.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_acceptors.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_donors.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_donors.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_het_atoms.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_het_atoms.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_rot_bonds.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_rot_bonds.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_val_electrons.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_val_electrons.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/ring_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/ring_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/tpsa.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/tpsa.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_count.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_count.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_mol_wt.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_mol_wt.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/log_p.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/log_p.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/mol_wt.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/mol_wt.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/nhoh_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/nhoh_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/no_count.svg":
+/*!******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/no_count.svg ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_acceptors.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_acceptors.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_donors.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_donors.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_het_atoms.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_het_atoms.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_rot_bonds.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_rot_bonds.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_val_electrons.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_val_electrons.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/ring_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/ring_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/tpsa.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/tpsa.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_count.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_count.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_mol_wt.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_mol_wt.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/log_p.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/log_p.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/mol_wt.svg":
+/*!****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/mol_wt.svg ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/nhoh_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/nhoh_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/no_count.svg":
+/*!******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/no_count.svg ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_acceptors.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_acceptors.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_donors.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_donors.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_het_atoms.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_het_atoms.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_rot_bonds.svg":
+/*!***********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_rot_bonds.svg ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_val_electrons.svg":
+/*!***************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_val_electrons.svg ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/ring_count.svg":
+/*!********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/ring_count.svg ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/tpsa.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/tpsa.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_count.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_count.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_mol_wt.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_mol_wt.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/log_p.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/log_p.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/mol_wt.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/mol_wt.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/nhoh_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/nhoh_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/no_count.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/no_count.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_acceptors.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_acceptors.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_donors.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_donors.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_het_atoms.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_het_atoms.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_rot_bonds.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_rot_bonds.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_val_electrons.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_val_electrons.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/ring_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/ring_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/tpsa.svg":
+/*!*************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/tpsa.svg ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_count.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_count.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_mol_wt.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_mol_wt.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/log_p.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/log_p.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/mol_wt.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/mol_wt.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/nhoh_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/nhoh_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/no_count.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/no_count.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_acceptors.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_acceptors.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_donors.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_donors.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_het_atoms.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_het_atoms.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_rot_bonds.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_rot_bonds.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_val_electrons.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_val_electrons.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/ring_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/ring_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/tpsa.svg":
+/*!*************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/tpsa.svg ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_count.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_count.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_mol_wt.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_mol_wt.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/log_p.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/log_p.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/mol_wt.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/mol_wt.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/nhoh_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/nhoh_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/no_count.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/no_count.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_acceptors.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_acceptors.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_donors.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_donors.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_het_atoms.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_het_atoms.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_rot_bonds.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_rot_bonds.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_val_electrons.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_val_electrons.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/ring_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/ring_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/tpsa.svg":
+/*!*************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/tpsa.svg ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_count.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_count.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_mol_wt.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_mol_wt.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/log_p.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/log_p.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/mol_wt.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/mol_wt.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/nhoh_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/nhoh_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/no_count.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/no_count.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_acceptors.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_acceptors.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_donors.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_donors.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_het_atoms.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_het_atoms.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_rot_bonds.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_rot_bonds.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_val_electrons.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_val_electrons.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/ring_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/ring_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/tpsa.svg":
+/*!*************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/tpsa.svg ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_count.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_count.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_mol_wt.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_mol_wt.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/log_p.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/log_p.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/mol_wt.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/mol_wt.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/nhoh_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/nhoh_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/no_count.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/no_count.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_acceptors.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_acceptors.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_donors.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_donors.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_het_atoms.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_het_atoms.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_rot_bonds.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_rot_bonds.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_val_electrons.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_val_electrons.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/ring_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/ring_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/tpsa.svg":
+/*!*************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/tpsa.svg ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/tpsa.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_count.svg":
+/*!*************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_count.svg ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_mol_wt.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_mol_wt.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/log_p.svg":
+/*!**************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/log_p.svg ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/log_p.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/log_p.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/mol_wt.svg":
+/*!***************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/mol_wt.svg ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/mol_wt.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/mol_wt.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/nhoh_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/nhoh_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/nhoh_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/nhoh_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/no_count.svg":
+/*!*****************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/no_count.svg ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/no_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/no_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_acceptors.svg":
+/*!************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_acceptors.svg ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_acceptors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_acceptors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_donors.svg":
+/*!*********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_donors.svg ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_donors.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_donors.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_het_atoms.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_het_atoms.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_het_atoms.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_het_atoms.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_rot_bonds.svg":
+/*!**********************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_rot_bonds.svg ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_rot_bonds.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_rot_bonds.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_val_electrons.svg":
+/*!**************************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_val_electrons.svg ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_val_electrons.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_val_electrons.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/ring_count.svg":
+/*!*******************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/ring_count.svg ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/ring_count.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/ring_count.svg?");
+
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/tpsa.svg":
+/*!*************************************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/tpsa.svg ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/tpsa.svg\");\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/tpsa.svg?");
 
 /***/ }),
 
@@ -830,6 +4207,16 @@ eval("\n\nif (false) {} else {\n  module.exports = __webpack_require__(/*! ./cjs
 
 /***/ }),
 
+/***/ "./node_modules/react-lazy-load-image-component/build/index.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/react-lazy-load-image-component/build/index.js ***!
+  \*********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+eval("module.exports = (function(e) {\n\tvar t = {};\n\tfunction r(n) {\n\t\tif (t[n]) return t[n].exports;\n\t\tvar o = (t[n] = { i: n, l: !1, exports: {} });\n\t\treturn e[n].call(o.exports, o, o.exports, r), (o.l = !0), o.exports;\n\t}\n\treturn (\n\t\t(r.m = e),\n\t\t(r.c = t),\n\t\t(r.d = function(e, t, n) {\n\t\t\tr.o(e, t) ||\n\t\t\t\tObject.defineProperty(e, t, { enumerable: !0, get: n });\n\t\t}),\n\t\t(r.r = function(e) {\n\t\t\t'undefined' != typeof Symbol &&\n\t\t\t\tSymbol.toStringTag &&\n\t\t\t\tObject.defineProperty(e, Symbol.toStringTag, {\n\t\t\t\t\tvalue: 'Module',\n\t\t\t\t}),\n\t\t\t\tObject.defineProperty(e, '__esModule', { value: !0 });\n\t\t}),\n\t\t(r.t = function(e, t) {\n\t\t\tif ((1 & t && (e = r(e)), 8 & t)) return e;\n\t\t\tif (4 & t && 'object' == typeof e && e && e.__esModule) return e;\n\t\t\tvar n = Object.create(null);\n\t\t\tif (\n\t\t\t\t(r.r(n),\n\t\t\t\tObject.defineProperty(n, 'default', {\n\t\t\t\t\tenumerable: !0,\n\t\t\t\t\tvalue: e,\n\t\t\t\t}),\n\t\t\t\t2 & t && 'string' != typeof e)\n\t\t\t)\n\t\t\t\tfor (var o in e)\n\t\t\t\t\tr.d(\n\t\t\t\t\t\tn,\n\t\t\t\t\t\to,\n\t\t\t\t\t\tfunction(t) {\n\t\t\t\t\t\t\treturn e[t];\n\t\t\t\t\t\t}.bind(null, o)\n\t\t\t\t\t);\n\t\t\treturn n;\n\t\t}),\n\t\t(r.n = function(e) {\n\t\t\tvar t =\n\t\t\t\te && e.__esModule\n\t\t\t\t\t? function() {\n\t\t\t\t\t\t\treturn e.default;\n\t\t\t\t\t  }\n\t\t\t\t\t: function() {\n\t\t\t\t\t\t\treturn e;\n\t\t\t\t\t  };\n\t\t\treturn r.d(t, 'a', t), t;\n\t\t}),\n\t\t(r.o = function(e, t) {\n\t\t\treturn Object.prototype.hasOwnProperty.call(e, t);\n\t\t}),\n\t\t(r.p = ''),\n\t\tr((r.s = 8))\n\t);\n})([\n\tfunction(e, t) {\n\t\te.exports = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n\t},\n\tfunction(e, t, r) {\n\t\te.exports = r(10)();\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 }),\n\t\t\t(t.default = function() {\n\t\t\t\treturn (\n\t\t\t\t\t'undefined' != typeof window &&\n\t\t\t\t\t'IntersectionObserver' in window &&\n\t\t\t\t\t'isIntersecting' in\n\t\t\t\t\t\twindow.IntersectionObserverEntry.prototype\n\t\t\t\t);\n\t\t\t});\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 });\n\t\tvar n = (function() {\n\t\t\t\tfunction e(e, t) {\n\t\t\t\t\tfor (var r = 0; r < t.length; r++) {\n\t\t\t\t\t\tvar n = t[r];\n\t\t\t\t\t\t(n.enumerable = n.enumerable || !1),\n\t\t\t\t\t\t\t(n.configurable = !0),\n\t\t\t\t\t\t\t'value' in n && (n.writable = !0),\n\t\t\t\t\t\t\tObject.defineProperty(e, n.key, n);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn function(t, r, n) {\n\t\t\t\t\treturn r && e(t.prototype, r), n && e(t, n), t;\n\t\t\t\t};\n\t\t\t})(),\n\t\t\to = u(r(0)),\n\t\t\ti = r(1),\n\t\t\ta = u(r(4)),\n\t\t\ts = u(r(12)),\n\t\t\tl = u(r(2));\n\t\tfunction u(e) {\n\t\t\treturn e && e.__esModule ? e : { default: e };\n\t\t}\n\t\tvar c = (function(e) {\n\t\t\tfunction t(e) {\n\t\t\t\t!(function(e, t) {\n\t\t\t\t\tif (!(e instanceof t))\n\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t'Cannot call a class as a function'\n\t\t\t\t\t\t);\n\t\t\t\t})(this, t);\n\t\t\t\tvar r = (function(e, t) {\n\t\t\t\t\t\tif (!e)\n\t\t\t\t\t\t\tthrow new ReferenceError(\n\t\t\t\t\t\t\t\t\"this hasn't been initialised - super() hasn't been called\"\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\treturn !t ||\n\t\t\t\t\t\t\t('object' != typeof t && 'function' != typeof t)\n\t\t\t\t\t\t\t? e\n\t\t\t\t\t\t\t: t;\n\t\t\t\t\t})(\n\t\t\t\t\t\tthis,\n\t\t\t\t\t\t(t.__proto__ || Object.getPrototypeOf(t)).call(this, e)\n\t\t\t\t\t),\n\t\t\t\t\tn = e.afterLoad,\n\t\t\t\t\to = e.beforeLoad,\n\t\t\t\t\ti = e.scrollPosition,\n\t\t\t\t\ta = e.visibleByDefault;\n\t\t\t\treturn (\n\t\t\t\t\t(r.state = { visible: a }),\n\t\t\t\t\ta && (o(), n()),\n\t\t\t\t\t(r.onVisible = r.onVisible.bind(r)),\n\t\t\t\t\t(r.isScrollTracked = Boolean(\n\t\t\t\t\t\ti &&\n\t\t\t\t\t\t\tNumber.isFinite(i.x) &&\n\t\t\t\t\t\t\ti.x >= 0 &&\n\t\t\t\t\t\t\tNumber.isFinite(i.y) &&\n\t\t\t\t\t\t\ti.y >= 0\n\t\t\t\t\t)),\n\t\t\t\t\tr\n\t\t\t\t);\n\t\t\t}\n\t\t\treturn (\n\t\t\t\t(function(e, t) {\n\t\t\t\t\tif ('function' != typeof t && null !== t)\n\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t'Super expression must either be null or a function, not ' +\n\t\t\t\t\t\t\t\ttypeof t\n\t\t\t\t\t\t);\n\t\t\t\t\t(e.prototype = Object.create(t && t.prototype, {\n\t\t\t\t\t\tconstructor: {\n\t\t\t\t\t\t\tvalue: e,\n\t\t\t\t\t\t\tenumerable: !1,\n\t\t\t\t\t\t\twritable: !0,\n\t\t\t\t\t\t\tconfigurable: !0,\n\t\t\t\t\t\t},\n\t\t\t\t\t})),\n\t\t\t\t\t\tt &&\n\t\t\t\t\t\t\t(Object.setPrototypeOf\n\t\t\t\t\t\t\t\t? Object.setPrototypeOf(e, t)\n\t\t\t\t\t\t\t\t: (e.__proto__ = t));\n\t\t\t\t})(t, e),\n\t\t\t\tn(t, [\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'componentDidUpdate',\n\t\t\t\t\t\tvalue: function(e, t) {\n\t\t\t\t\t\t\tt.visible !== this.state.visible &&\n\t\t\t\t\t\t\t\tthis.props.afterLoad();\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'onVisible',\n\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\tthis.props.beforeLoad(),\n\t\t\t\t\t\t\t\tthis.setState({ visible: !0 });\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'render',\n\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\tif (this.state.visible) return this.props.children;\n\t\t\t\t\t\t\tvar e = this.props,\n\t\t\t\t\t\t\t\tt = e.className,\n\t\t\t\t\t\t\t\tr = e.delayMethod,\n\t\t\t\t\t\t\t\tn = e.delayTime,\n\t\t\t\t\t\t\t\ti = e.height,\n\t\t\t\t\t\t\t\tu = e.placeholder,\n\t\t\t\t\t\t\t\tc = e.scrollPosition,\n\t\t\t\t\t\t\t\tf = e.style,\n\t\t\t\t\t\t\t\tp = e.threshold,\n\t\t\t\t\t\t\t\td = e.useIntersectionObserver,\n\t\t\t\t\t\t\t\ty = e.width;\n\t\t\t\t\t\t\treturn this.isScrollTracked ||\n\t\t\t\t\t\t\t\t(d && (0, l.default)())\n\t\t\t\t\t\t\t\t? o.default.createElement(a.default, {\n\t\t\t\t\t\t\t\t\t\tclassName: t,\n\t\t\t\t\t\t\t\t\t\theight: i,\n\t\t\t\t\t\t\t\t\t\tonVisible: this.onVisible,\n\t\t\t\t\t\t\t\t\t\tplaceholder: u,\n\t\t\t\t\t\t\t\t\t\tscrollPosition: c,\n\t\t\t\t\t\t\t\t\t\tstyle: f,\n\t\t\t\t\t\t\t\t\t\tthreshold: p,\n\t\t\t\t\t\t\t\t\t\tuseIntersectionObserver: d,\n\t\t\t\t\t\t\t\t\t\twidth: y,\n\t\t\t\t\t\t\t\t  })\n\t\t\t\t\t\t\t\t: o.default.createElement(s.default, {\n\t\t\t\t\t\t\t\t\t\tclassName: t,\n\t\t\t\t\t\t\t\t\t\tdelayMethod: r,\n\t\t\t\t\t\t\t\t\t\tdelayTime: n,\n\t\t\t\t\t\t\t\t\t\theight: i,\n\t\t\t\t\t\t\t\t\t\tonVisible: this.onVisible,\n\t\t\t\t\t\t\t\t\t\tplaceholder: u,\n\t\t\t\t\t\t\t\t\t\tstyle: f,\n\t\t\t\t\t\t\t\t\t\tthreshold: p,\n\t\t\t\t\t\t\t\t\t\twidth: y,\n\t\t\t\t\t\t\t\t  });\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t]),\n\t\t\t\tt\n\t\t\t);\n\t\t})(o.default.Component);\n\t\t(c.propTypes = {\n\t\t\tafterLoad: i.PropTypes.func,\n\t\t\tbeforeLoad: i.PropTypes.func,\n\t\t\tuseIntersectionObserver: i.PropTypes.bool,\n\t\t\tvisibleByDefault: i.PropTypes.bool,\n\t\t}),\n\t\t\t(c.defaultProps = {\n\t\t\t\tafterLoad: function() {\n\t\t\t\t\treturn {};\n\t\t\t\t},\n\t\t\t\tbeforeLoad: function() {\n\t\t\t\t\treturn {};\n\t\t\t\t},\n\t\t\t\tuseIntersectionObserver: !0,\n\t\t\t\tvisibleByDefault: !1,\n\t\t\t}),\n\t\t\t(t.default = c);\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 });\n\t\tvar n =\n\t\t\t\tObject.assign ||\n\t\t\t\tfunction(e) {\n\t\t\t\t\tfor (var t = 1; t < arguments.length; t++) {\n\t\t\t\t\t\tvar r = arguments[t];\n\t\t\t\t\t\tfor (var n in r)\n\t\t\t\t\t\t\tObject.prototype.hasOwnProperty.call(r, n) &&\n\t\t\t\t\t\t\t\t(e[n] = r[n]);\n\t\t\t\t\t}\n\t\t\t\t\treturn e;\n\t\t\t\t},\n\t\t\to = (function() {\n\t\t\t\tfunction e(e, t) {\n\t\t\t\t\tfor (var r = 0; r < t.length; r++) {\n\t\t\t\t\t\tvar n = t[r];\n\t\t\t\t\t\t(n.enumerable = n.enumerable || !1),\n\t\t\t\t\t\t\t(n.configurable = !0),\n\t\t\t\t\t\t\t'value' in n && (n.writable = !0),\n\t\t\t\t\t\t\tObject.defineProperty(e, n.key, n);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn function(t, r, n) {\n\t\t\t\t\treturn r && e(t.prototype, r), n && e(t, n), t;\n\t\t\t\t};\n\t\t\t})(),\n\t\t\ti = u(r(0)),\n\t\t\ta = u(r(5)),\n\t\t\ts = r(1),\n\t\t\tl = u(r(2));\n\t\tfunction u(e) {\n\t\t\treturn e && e.__esModule ? e : { default: e };\n\t\t}\n\t\tvar c = function(e) {\n\t\t\t\te.forEach(function(e) {\n\t\t\t\t\te.isIntersecting && e.target.onVisible();\n\t\t\t\t});\n\t\t\t},\n\t\t\tf = {},\n\t\t\tp = function(e) {\n\t\t\t\treturn (\n\t\t\t\t\t(f[e] =\n\t\t\t\t\t\tf[e] ||\n\t\t\t\t\t\tnew IntersectionObserver(c, { rootMargin: e + 'px' })),\n\t\t\t\t\tf[e]\n\t\t\t\t);\n\t\t\t},\n\t\t\td = (function(e) {\n\t\t\t\tfunction t(e) {\n\t\t\t\t\t!(function(e, t) {\n\t\t\t\t\t\tif (!(e instanceof t))\n\t\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t\t'Cannot call a class as a function'\n\t\t\t\t\t\t\t);\n\t\t\t\t\t})(this, t);\n\t\t\t\t\tvar r = (function(e, t) {\n\t\t\t\t\t\tif (!e)\n\t\t\t\t\t\t\tthrow new ReferenceError(\n\t\t\t\t\t\t\t\t\"this hasn't been initialised - super() hasn't been called\"\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\treturn !t ||\n\t\t\t\t\t\t\t('object' != typeof t && 'function' != typeof t)\n\t\t\t\t\t\t\t? e\n\t\t\t\t\t\t\t: t;\n\t\t\t\t\t})(\n\t\t\t\t\t\tthis,\n\t\t\t\t\t\t(t.__proto__ || Object.getPrototypeOf(t)).call(this, e)\n\t\t\t\t\t);\n\t\t\t\t\tif (\n\t\t\t\t\t\t((r.supportsObserver =\n\t\t\t\t\t\t\t!e.scrollPosition &&\n\t\t\t\t\t\t\te.useIntersectionObserver &&\n\t\t\t\t\t\t\t(0, l.default)()),\n\t\t\t\t\t\tr.supportsObserver)\n\t\t\t\t\t) {\n\t\t\t\t\t\tvar n = e.threshold;\n\t\t\t\t\t\tr.observer = p(n);\n\t\t\t\t\t}\n\t\t\t\t\treturn r;\n\t\t\t\t}\n\t\t\t\treturn (\n\t\t\t\t\t(function(e, t) {\n\t\t\t\t\t\tif ('function' != typeof t && null !== t)\n\t\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t\t'Super expression must either be null or a function, not ' +\n\t\t\t\t\t\t\t\t\ttypeof t\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t(e.prototype = Object.create(t && t.prototype, {\n\t\t\t\t\t\t\tconstructor: {\n\t\t\t\t\t\t\t\tvalue: e,\n\t\t\t\t\t\t\t\tenumerable: !1,\n\t\t\t\t\t\t\t\twritable: !0,\n\t\t\t\t\t\t\t\tconfigurable: !0,\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t})),\n\t\t\t\t\t\t\tt &&\n\t\t\t\t\t\t\t\t(Object.setPrototypeOf\n\t\t\t\t\t\t\t\t\t? Object.setPrototypeOf(e, t)\n\t\t\t\t\t\t\t\t\t: (e.__proto__ = t));\n\t\t\t\t\t})(t, e),\n\t\t\t\t\to(t, [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'componentDidMount',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tthis.placeholder &&\n\t\t\t\t\t\t\t\t\tthis.observer &&\n\t\t\t\t\t\t\t\t\t((this.placeholder.onVisible = this.props.onVisible),\n\t\t\t\t\t\t\t\t\tthis.observer.observe(this.placeholder)),\n\t\t\t\t\t\t\t\t\tthis.supportsObserver ||\n\t\t\t\t\t\t\t\t\t\tthis.updateVisibility();\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'componentWillUnmount',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tthis.observer &&\n\t\t\t\t\t\t\t\t\tthis.observer.unobserve(this.placeholder);\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'componentDidUpdate',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tthis.supportsObserver ||\n\t\t\t\t\t\t\t\t\tthis.updateVisibility();\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'getPlaceholderBoundingBox',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tvar e =\n\t\t\t\t\t\t\t\t\t\targuments.length > 0 &&\n\t\t\t\t\t\t\t\t\t\tvoid 0 !== arguments[0]\n\t\t\t\t\t\t\t\t\t\t\t? arguments[0]\n\t\t\t\t\t\t\t\t\t\t\t: this.props.scrollPosition,\n\t\t\t\t\t\t\t\t\tt = this.placeholder.getBoundingClientRect(),\n\t\t\t\t\t\t\t\t\tr = a.default.findDOMNode(this.placeholder)\n\t\t\t\t\t\t\t\t\t\t.style,\n\t\t\t\t\t\t\t\t\tn = {\n\t\t\t\t\t\t\t\t\t\tleft:\n\t\t\t\t\t\t\t\t\t\t\tparseInt(\n\t\t\t\t\t\t\t\t\t\t\t\tr.getPropertyValue(\n\t\t\t\t\t\t\t\t\t\t\t\t\t'margin-left'\n\t\t\t\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\t\t\t\t\t10\n\t\t\t\t\t\t\t\t\t\t\t) || 0,\n\t\t\t\t\t\t\t\t\t\ttop:\n\t\t\t\t\t\t\t\t\t\t\tparseInt(\n\t\t\t\t\t\t\t\t\t\t\t\tr.getPropertyValue(\n\t\t\t\t\t\t\t\t\t\t\t\t\t'margin-top'\n\t\t\t\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\t\t\t\t\t10\n\t\t\t\t\t\t\t\t\t\t\t) || 0,\n\t\t\t\t\t\t\t\t\t};\n\t\t\t\t\t\t\t\treturn {\n\t\t\t\t\t\t\t\t\tbottom: e.y + t.bottom + n.top,\n\t\t\t\t\t\t\t\t\tleft: e.x + t.left + n.left,\n\t\t\t\t\t\t\t\t\tright: e.x + t.right + n.left,\n\t\t\t\t\t\t\t\t\ttop: e.y + t.top + n.top,\n\t\t\t\t\t\t\t\t};\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'isPlaceholderInViewport',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tif (\n\t\t\t\t\t\t\t\t\t'undefined' == typeof window ||\n\t\t\t\t\t\t\t\t\t!this.placeholder\n\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t\t\treturn !1;\n\t\t\t\t\t\t\t\tvar e = this.props,\n\t\t\t\t\t\t\t\t\tt = e.scrollPosition,\n\t\t\t\t\t\t\t\t\tr = e.threshold,\n\t\t\t\t\t\t\t\t\tn = this.getPlaceholderBoundingBox(t),\n\t\t\t\t\t\t\t\t\to = t.y + window.innerHeight,\n\t\t\t\t\t\t\t\t\ti = t.x,\n\t\t\t\t\t\t\t\t\ta = t.x + window.innerWidth,\n\t\t\t\t\t\t\t\t\ts = t.y;\n\t\t\t\t\t\t\t\treturn Boolean(\n\t\t\t\t\t\t\t\t\ts - r <= n.bottom &&\n\t\t\t\t\t\t\t\t\t\to + r >= n.top &&\n\t\t\t\t\t\t\t\t\t\ti - r <= n.right &&\n\t\t\t\t\t\t\t\t\t\ta + r >= n.left\n\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'updateVisibility',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tthis.isPlaceholderInViewport() &&\n\t\t\t\t\t\t\t\t\tthis.props.onVisible();\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'render',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tvar e = this,\n\t\t\t\t\t\t\t\t\tt = this.props,\n\t\t\t\t\t\t\t\t\tr = t.className,\n\t\t\t\t\t\t\t\t\to = t.height,\n\t\t\t\t\t\t\t\t\ta = t.placeholder,\n\t\t\t\t\t\t\t\t\ts = t.style,\n\t\t\t\t\t\t\t\t\tl = t.width;\n\t\t\t\t\t\t\t\tif (a && 'function' != typeof a.type)\n\t\t\t\t\t\t\t\t\treturn i.default.cloneElement(a, {\n\t\t\t\t\t\t\t\t\t\tref: function(t) {\n\t\t\t\t\t\t\t\t\t\t\treturn (e.placeholder = t);\n\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\t\tvar u = n({ display: 'inline-block' }, s);\n\t\t\t\t\t\t\t\treturn (\n\t\t\t\t\t\t\t\t\tvoid 0 !== l && (u.width = l),\n\t\t\t\t\t\t\t\t\tvoid 0 !== o && (u.height = o),\n\t\t\t\t\t\t\t\t\ti.default.createElement(\n\t\t\t\t\t\t\t\t\t\t'span',\n\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\tclassName: r,\n\t\t\t\t\t\t\t\t\t\t\tref: function(t) {\n\t\t\t\t\t\t\t\t\t\t\t\treturn (e.placeholder = t);\n\t\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\t\tstyle: u,\n\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\ta\n\t\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t]),\n\t\t\t\t\tt\n\t\t\t\t);\n\t\t\t})(i.default.Component);\n\t\t(d.propTypes = {\n\t\t\tonVisible: s.PropTypes.func.isRequired,\n\t\t\tclassName: s.PropTypes.string,\n\t\t\theight: s.PropTypes.oneOfType([\n\t\t\t\ts.PropTypes.number,\n\t\t\t\ts.PropTypes.string,\n\t\t\t]),\n\t\t\tplaceholder: s.PropTypes.element,\n\t\t\tthreshold: s.PropTypes.number,\n\t\t\tuseIntersectionObserver: s.PropTypes.bool,\n\t\t\tscrollPosition: s.PropTypes.shape({\n\t\t\t\tx: s.PropTypes.number.isRequired,\n\t\t\t\ty: s.PropTypes.number.isRequired,\n\t\t\t}),\n\t\t\twidth: s.PropTypes.oneOfType([\n\t\t\t\ts.PropTypes.number,\n\t\t\t\ts.PropTypes.string,\n\t\t\t]),\n\t\t}),\n\t\t\t(d.defaultProps = {\n\t\t\t\tclassName: '',\n\t\t\t\tplaceholder: null,\n\t\t\t\tthreshold: 100,\n\t\t\t\tuseIntersectionObserver: !0,\n\t\t\t}),\n\t\t\t(t.default = d);\n\t},\n\tfunction(e, t) {\n\t\te.exports = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 });\n\t\tvar n =\n\t\t\t\tObject.assign ||\n\t\t\t\tfunction(e) {\n\t\t\t\t\tfor (var t = 1; t < arguments.length; t++) {\n\t\t\t\t\t\tvar r = arguments[t];\n\t\t\t\t\t\tfor (var n in r)\n\t\t\t\t\t\t\tObject.prototype.hasOwnProperty.call(r, n) &&\n\t\t\t\t\t\t\t\t(e[n] = r[n]);\n\t\t\t\t\t}\n\t\t\t\t\treturn e;\n\t\t\t\t},\n\t\t\to = (function() {\n\t\t\t\tfunction e(e, t) {\n\t\t\t\t\tfor (var r = 0; r < t.length; r++) {\n\t\t\t\t\t\tvar n = t[r];\n\t\t\t\t\t\t(n.enumerable = n.enumerable || !1),\n\t\t\t\t\t\t\t(n.configurable = !0),\n\t\t\t\t\t\t\t'value' in n && (n.writable = !0),\n\t\t\t\t\t\t\tObject.defineProperty(e, n.key, n);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn function(t, r, n) {\n\t\t\t\t\treturn r && e(t.prototype, r), n && e(t, n), t;\n\t\t\t\t};\n\t\t\t})(),\n\t\t\ti = p(r(0)),\n\t\t\ta = p(r(5)),\n\t\t\ts = r(1),\n\t\t\tl = p(r(13)),\n\t\t\tu = p(r(14)),\n\t\t\tc = p(r(2)),\n\t\t\tf = p(r(15));\n\t\tfunction p(e) {\n\t\t\treturn e && e.__esModule ? e : { default: e };\n\t\t}\n\t\tfunction d(e, t) {\n\t\t\tif (!e)\n\t\t\t\tthrow new ReferenceError(\n\t\t\t\t\t\"this hasn't been initialised - super() hasn't been called\"\n\t\t\t\t);\n\t\t\treturn !t || ('object' != typeof t && 'function' != typeof t)\n\t\t\t\t? e\n\t\t\t\t: t;\n\t\t}\n\t\tvar y = function() {\n\t\t\t\treturn 'undefined' == typeof window\n\t\t\t\t\t? 0\n\t\t\t\t\t: window.scrollX || window.pageXOffset;\n\t\t\t},\n\t\t\th = function() {\n\t\t\t\treturn 'undefined' == typeof window\n\t\t\t\t\t? 0\n\t\t\t\t\t: window.scrollY || window.pageYOffset;\n\t\t\t};\n\t\tt.default = function(e) {\n\t\t\tvar t = (function(t) {\n\t\t\t\tfunction r(e) {\n\t\t\t\t\t!(function(e, t) {\n\t\t\t\t\t\tif (!(e instanceof t))\n\t\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t\t'Cannot call a class as a function'\n\t\t\t\t\t\t\t);\n\t\t\t\t\t})(this, r);\n\t\t\t\t\tvar t = d(\n\t\t\t\t\t\tthis,\n\t\t\t\t\t\t(r.__proto__ || Object.getPrototypeOf(r)).call(this, e)\n\t\t\t\t\t);\n\t\t\t\t\tif (\n\t\t\t\t\t\t((t.useIntersectionObserver =\n\t\t\t\t\t\t\te.useIntersectionObserver && (0, c.default)()),\n\t\t\t\t\t\tt.useIntersectionObserver)\n\t\t\t\t\t)\n\t\t\t\t\t\treturn d(t);\n\t\t\t\t\tvar n = t.onChangeScroll.bind(t);\n\t\t\t\t\treturn (\n\t\t\t\t\t\t'debounce' === e.delayMethod\n\t\t\t\t\t\t\t? (t.delayedScroll = (0, l.default)(n, e.delayTime))\n\t\t\t\t\t\t\t: 'throttle' === e.delayMethod &&\n\t\t\t\t\t\t\t  (t.delayedScroll = (0, u.default)(\n\t\t\t\t\t\t\t\t\tn,\n\t\t\t\t\t\t\t\t\te.delayTime\n\t\t\t\t\t\t\t  )),\n\t\t\t\t\t\t(t.state = { scrollPosition: { x: y(), y: h() } }),\n\t\t\t\t\t\t(t.baseComponentRef = i.default.createRef()),\n\t\t\t\t\t\tt\n\t\t\t\t\t);\n\t\t\t\t}\n\t\t\t\treturn (\n\t\t\t\t\t(function(e, t) {\n\t\t\t\t\t\tif ('function' != typeof t && null !== t)\n\t\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t\t'Super expression must either be null or a function, not ' +\n\t\t\t\t\t\t\t\t\ttypeof t\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t(e.prototype = Object.create(t && t.prototype, {\n\t\t\t\t\t\t\tconstructor: {\n\t\t\t\t\t\t\t\tvalue: e,\n\t\t\t\t\t\t\t\tenumerable: !1,\n\t\t\t\t\t\t\t\twritable: !0,\n\t\t\t\t\t\t\t\tconfigurable: !0,\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t})),\n\t\t\t\t\t\t\tt &&\n\t\t\t\t\t\t\t\t(Object.setPrototypeOf\n\t\t\t\t\t\t\t\t\t? Object.setPrototypeOf(e, t)\n\t\t\t\t\t\t\t\t\t: (e.__proto__ = t));\n\t\t\t\t\t})(r, t),\n\t\t\t\t\to(r, [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'componentDidMount',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tthis.addListeners();\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'componentWillUnmount',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tthis.removeListeners();\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'componentDidUpdate',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\t'undefined' == typeof window ||\n\t\t\t\t\t\t\t\t\tthis.useIntersectionObserver ||\n\t\t\t\t\t\t\t\t\t((0, f.default)(\n\t\t\t\t\t\t\t\t\t\ta.default.findDOMNode(\n\t\t\t\t\t\t\t\t\t\t\tthis.baseComponentRef.current\n\t\t\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t\t\t) !== this.scrollElement &&\n\t\t\t\t\t\t\t\t\t\t(this.removeListeners(),\n\t\t\t\t\t\t\t\t\t\tthis.addListeners()));\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'addListeners',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\t'undefined' == typeof window ||\n\t\t\t\t\t\t\t\t\tthis.useIntersectionObserver ||\n\t\t\t\t\t\t\t\t\t((this.scrollElement = (0, f.default)(\n\t\t\t\t\t\t\t\t\t\ta.default.findDOMNode(\n\t\t\t\t\t\t\t\t\t\t\tthis.baseComponentRef.current\n\t\t\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t\t\t)),\n\t\t\t\t\t\t\t\t\tthis.scrollElement.addEventListener(\n\t\t\t\t\t\t\t\t\t\t'scroll',\n\t\t\t\t\t\t\t\t\t\tthis.delayedScroll,\n\t\t\t\t\t\t\t\t\t\t{ passive: !0 }\n\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\t\twindow.addEventListener(\n\t\t\t\t\t\t\t\t\t\t'resize',\n\t\t\t\t\t\t\t\t\t\tthis.delayedScroll,\n\t\t\t\t\t\t\t\t\t\t{ passive: !0 }\n\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\t\tthis.scrollElement !== window &&\n\t\t\t\t\t\t\t\t\t\twindow.addEventListener(\n\t\t\t\t\t\t\t\t\t\t\t'scroll',\n\t\t\t\t\t\t\t\t\t\t\tthis.delayedScroll,\n\t\t\t\t\t\t\t\t\t\t\t{ passive: !0 }\n\t\t\t\t\t\t\t\t\t\t));\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'removeListeners',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\t'undefined' == typeof window ||\n\t\t\t\t\t\t\t\t\tthis.useIntersectionObserver ||\n\t\t\t\t\t\t\t\t\t(this.scrollElement.removeEventListener(\n\t\t\t\t\t\t\t\t\t\t'scroll',\n\t\t\t\t\t\t\t\t\t\tthis.delayedScroll\n\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\t\twindow.removeEventListener(\n\t\t\t\t\t\t\t\t\t\t'resize',\n\t\t\t\t\t\t\t\t\t\tthis.delayedScroll\n\t\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\t\tthis.scrollElement !== window &&\n\t\t\t\t\t\t\t\t\t\twindow.removeEventListener(\n\t\t\t\t\t\t\t\t\t\t\t'scroll',\n\t\t\t\t\t\t\t\t\t\t\tthis.delayedScroll\n\t\t\t\t\t\t\t\t\t\t));\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'onChangeScroll',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tthis.useIntersectionObserver ||\n\t\t\t\t\t\t\t\t\tthis.setState({\n\t\t\t\t\t\t\t\t\t\tscrollPosition: { x: y(), y: h() },\n\t\t\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tkey: 'render',\n\t\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\t\tvar t = this.props,\n\t\t\t\t\t\t\t\t\tr =\n\t\t\t\t\t\t\t\t\t\t(t.delayMethod,\n\t\t\t\t\t\t\t\t\t\tt.delayTime,\n\t\t\t\t\t\t\t\t\t\t(function(e, t) {\n\t\t\t\t\t\t\t\t\t\t\tvar r = {};\n\t\t\t\t\t\t\t\t\t\t\tfor (var n in e)\n\t\t\t\t\t\t\t\t\t\t\t\tt.indexOf(n) >= 0 ||\n\t\t\t\t\t\t\t\t\t\t\t\t\t(Object.prototype.hasOwnProperty.call(\n\t\t\t\t\t\t\t\t\t\t\t\t\t\te,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tn\n\t\t\t\t\t\t\t\t\t\t\t\t\t) &&\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t(r[n] = e[n]));\n\t\t\t\t\t\t\t\t\t\t\treturn r;\n\t\t\t\t\t\t\t\t\t\t})(t, ['delayMethod', 'delayTime'])),\n\t\t\t\t\t\t\t\t\to = this.useIntersectionObserver\n\t\t\t\t\t\t\t\t\t\t? null\n\t\t\t\t\t\t\t\t\t\t: this.state.scrollPosition;\n\t\t\t\t\t\t\t\treturn i.default.createElement(\n\t\t\t\t\t\t\t\t\te,\n\t\t\t\t\t\t\t\t\tn(\n\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\tref: this.baseComponentRef,\n\t\t\t\t\t\t\t\t\t\t\tscrollPosition: o,\n\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\tr\n\t\t\t\t\t\t\t\t\t)\n\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t]),\n\t\t\t\t\tr\n\t\t\t\t);\n\t\t\t})(i.default.Component);\n\t\t\treturn (\n\t\t\t\t(t.propTypes = {\n\t\t\t\t\tdelayMethod: s.PropTypes.oneOf(['debounce', 'throttle']),\n\t\t\t\t\tdelayTime: s.PropTypes.number,\n\t\t\t\t\tuseIntersectionObserver: s.PropTypes.bool,\n\t\t\t\t}),\n\t\t\t\t(t.defaultProps = {\n\t\t\t\t\tdelayMethod: 'throttle',\n\t\t\t\t\tdelayTime: 300,\n\t\t\t\t\tuseIntersectionObserver: !0,\n\t\t\t\t}),\n\t\t\t\tt\n\t\t\t);\n\t\t};\n\t},\n\tfunction(e, t) {\n\t\tvar r;\n\t\tr = (function() {\n\t\t\treturn this;\n\t\t})();\n\t\ttry {\n\t\t\tr = r || new Function('return this')();\n\t\t} catch (e) {\n\t\t\t'object' == typeof window && (r = window);\n\t\t}\n\t\te.exports = r;\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 }),\n\t\t\t(t.trackWindowScroll = t.LazyLoadComponent = t.LazyLoadImage = void 0);\n\t\tvar n = a(r(9)),\n\t\t\to = a(r(3)),\n\t\t\ti = a(r(6));\n\t\tfunction a(e) {\n\t\t\treturn e && e.__esModule ? e : { default: e };\n\t\t}\n\t\t(t.LazyLoadImage = n.default),\n\t\t\t(t.LazyLoadComponent = o.default),\n\t\t\t(t.trackWindowScroll = i.default);\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 });\n\t\tvar n =\n\t\t\t\tObject.assign ||\n\t\t\t\tfunction(e) {\n\t\t\t\t\tfor (var t = 1; t < arguments.length; t++) {\n\t\t\t\t\t\tvar r = arguments[t];\n\t\t\t\t\t\tfor (var n in r)\n\t\t\t\t\t\t\tObject.prototype.hasOwnProperty.call(r, n) &&\n\t\t\t\t\t\t\t\t(e[n] = r[n]);\n\t\t\t\t\t}\n\t\t\t\t\treturn e;\n\t\t\t\t},\n\t\t\to = (function() {\n\t\t\t\tfunction e(e, t) {\n\t\t\t\t\tfor (var r = 0; r < t.length; r++) {\n\t\t\t\t\t\tvar n = t[r];\n\t\t\t\t\t\t(n.enumerable = n.enumerable || !1),\n\t\t\t\t\t\t\t(n.configurable = !0),\n\t\t\t\t\t\t\t'value' in n && (n.writable = !0),\n\t\t\t\t\t\t\tObject.defineProperty(e, n.key, n);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn function(t, r, n) {\n\t\t\t\t\treturn r && e(t.prototype, r), n && e(t, n), t;\n\t\t\t\t};\n\t\t\t})(),\n\t\t\ti = l(r(0)),\n\t\t\ta = r(1),\n\t\t\ts = l(r(3));\n\t\tfunction l(e) {\n\t\t\treturn e && e.__esModule ? e : { default: e };\n\t\t}\n\t\tvar u = (function(e) {\n\t\t\tfunction t(e) {\n\t\t\t\t!(function(e, t) {\n\t\t\t\t\tif (!(e instanceof t))\n\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t'Cannot call a class as a function'\n\t\t\t\t\t\t);\n\t\t\t\t})(this, t);\n\t\t\t\tvar r = (function(e, t) {\n\t\t\t\t\tif (!e)\n\t\t\t\t\t\tthrow new ReferenceError(\n\t\t\t\t\t\t\t\"this hasn't been initialised - super() hasn't been called\"\n\t\t\t\t\t\t);\n\t\t\t\t\treturn !t ||\n\t\t\t\t\t\t('object' != typeof t && 'function' != typeof t)\n\t\t\t\t\t\t? e\n\t\t\t\t\t\t: t;\n\t\t\t\t})(\n\t\t\t\t\tthis,\n\t\t\t\t\t(t.__proto__ || Object.getPrototypeOf(t)).call(this, e)\n\t\t\t\t);\n\t\t\t\treturn (r.state = { loaded: !1 }), r;\n\t\t\t}\n\t\t\treturn (\n\t\t\t\t(function(e, t) {\n\t\t\t\t\tif ('function' != typeof t && null !== t)\n\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t'Super expression must either be null or a function, not ' +\n\t\t\t\t\t\t\t\ttypeof t\n\t\t\t\t\t\t);\n\t\t\t\t\t(e.prototype = Object.create(t && t.prototype, {\n\t\t\t\t\t\tconstructor: {\n\t\t\t\t\t\t\tvalue: e,\n\t\t\t\t\t\t\tenumerable: !1,\n\t\t\t\t\t\t\twritable: !0,\n\t\t\t\t\t\t\tconfigurable: !0,\n\t\t\t\t\t\t},\n\t\t\t\t\t})),\n\t\t\t\t\t\tt &&\n\t\t\t\t\t\t\t(Object.setPrototypeOf\n\t\t\t\t\t\t\t\t? Object.setPrototypeOf(e, t)\n\t\t\t\t\t\t\t\t: (e.__proto__ = t));\n\t\t\t\t})(t, e),\n\t\t\t\to(t, [\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'onImageLoad',\n\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\tvar e = this;\n\t\t\t\t\t\t\treturn this.state.loaded\n\t\t\t\t\t\t\t\t? null\n\t\t\t\t\t\t\t\t: function() {\n\t\t\t\t\t\t\t\t\t\te.props.afterLoad(),\n\t\t\t\t\t\t\t\t\t\t\te.setState({ loaded: !0 });\n\t\t\t\t\t\t\t\t  };\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'getImg',\n\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\tvar e = this.props,\n\t\t\t\t\t\t\t\tt =\n\t\t\t\t\t\t\t\t\t(e.afterLoad,\n\t\t\t\t\t\t\t\t\te.beforeLoad,\n\t\t\t\t\t\t\t\t\te.delayMethod,\n\t\t\t\t\t\t\t\t\te.delayTime,\n\t\t\t\t\t\t\t\t\te.effect,\n\t\t\t\t\t\t\t\t\te.placeholder,\n\t\t\t\t\t\t\t\t\te.placeholderSrc,\n\t\t\t\t\t\t\t\t\te.scrollPosition,\n\t\t\t\t\t\t\t\t\te.threshold,\n\t\t\t\t\t\t\t\t\te.useIntersectionObserver,\n\t\t\t\t\t\t\t\t\te.visibleByDefault,\n\t\t\t\t\t\t\t\t\te.wrapperClassName,\n\t\t\t\t\t\t\t\t\te.wrapperProps,\n\t\t\t\t\t\t\t\t\t(function(e, t) {\n\t\t\t\t\t\t\t\t\t\tvar r = {};\n\t\t\t\t\t\t\t\t\t\tfor (var n in e)\n\t\t\t\t\t\t\t\t\t\t\tt.indexOf(n) >= 0 ||\n\t\t\t\t\t\t\t\t\t\t\t\t(Object.prototype.hasOwnProperty.call(\n\t\t\t\t\t\t\t\t\t\t\t\t\te,\n\t\t\t\t\t\t\t\t\t\t\t\t\tn\n\t\t\t\t\t\t\t\t\t\t\t\t) &&\n\t\t\t\t\t\t\t\t\t\t\t\t\t(r[n] = e[n]));\n\t\t\t\t\t\t\t\t\t\treturn r;\n\t\t\t\t\t\t\t\t\t})(e, [\n\t\t\t\t\t\t\t\t\t\t'afterLoad',\n\t\t\t\t\t\t\t\t\t\t'beforeLoad',\n\t\t\t\t\t\t\t\t\t\t'delayMethod',\n\t\t\t\t\t\t\t\t\t\t'delayTime',\n\t\t\t\t\t\t\t\t\t\t'effect',\n\t\t\t\t\t\t\t\t\t\t'placeholder',\n\t\t\t\t\t\t\t\t\t\t'placeholderSrc',\n\t\t\t\t\t\t\t\t\t\t'scrollPosition',\n\t\t\t\t\t\t\t\t\t\t'threshold',\n\t\t\t\t\t\t\t\t\t\t'useIntersectionObserver',\n\t\t\t\t\t\t\t\t\t\t'visibleByDefault',\n\t\t\t\t\t\t\t\t\t\t'wrapperClassName',\n\t\t\t\t\t\t\t\t\t\t'wrapperProps',\n\t\t\t\t\t\t\t\t\t]));\n\t\t\t\t\t\t\treturn i.default.createElement(\n\t\t\t\t\t\t\t\t'img',\n\t\t\t\t\t\t\t\tn({ onLoad: this.onImageLoad() }, t)\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'getLazyLoadImage',\n\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\tvar e = this.props,\n\t\t\t\t\t\t\t\tt = e.beforeLoad,\n\t\t\t\t\t\t\t\tr = e.className,\n\t\t\t\t\t\t\t\tn = e.delayMethod,\n\t\t\t\t\t\t\t\to = e.delayTime,\n\t\t\t\t\t\t\t\ta = e.height,\n\t\t\t\t\t\t\t\tl = e.placeholder,\n\t\t\t\t\t\t\t\tu = e.scrollPosition,\n\t\t\t\t\t\t\t\tc = e.style,\n\t\t\t\t\t\t\t\tf = e.threshold,\n\t\t\t\t\t\t\t\tp = e.useIntersectionObserver,\n\t\t\t\t\t\t\t\td = e.visibleByDefault,\n\t\t\t\t\t\t\t\ty = e.width;\n\t\t\t\t\t\t\treturn i.default.createElement(\n\t\t\t\t\t\t\t\ts.default,\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\tbeforeLoad: t,\n\t\t\t\t\t\t\t\t\tclassName: r,\n\t\t\t\t\t\t\t\t\tdelayMethod: n,\n\t\t\t\t\t\t\t\t\tdelayTime: o,\n\t\t\t\t\t\t\t\t\theight: a,\n\t\t\t\t\t\t\t\t\tplaceholder: l,\n\t\t\t\t\t\t\t\t\tscrollPosition: u,\n\t\t\t\t\t\t\t\t\tstyle: c,\n\t\t\t\t\t\t\t\t\tthreshold: f,\n\t\t\t\t\t\t\t\t\tuseIntersectionObserver: p,\n\t\t\t\t\t\t\t\t\tvisibleByDefault: d,\n\t\t\t\t\t\t\t\t\twidth: y,\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\tthis.getImg()\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'getWrappedLazyLoadImage',\n\t\t\t\t\t\tvalue: function(e) {\n\t\t\t\t\t\t\tvar t = this.props,\n\t\t\t\t\t\t\t\tr = t.effect,\n\t\t\t\t\t\t\t\to = t.height,\n\t\t\t\t\t\t\t\ta = t.placeholderSrc,\n\t\t\t\t\t\t\t\ts = t.width,\n\t\t\t\t\t\t\t\tl = t.wrapperClassName,\n\t\t\t\t\t\t\t\tu = t.wrapperProps,\n\t\t\t\t\t\t\t\tc = this.state.loaded,\n\t\t\t\t\t\t\t\tf = c ? ' lazy-load-image-loaded' : '';\n\t\t\t\t\t\t\treturn i.default.createElement(\n\t\t\t\t\t\t\t\t'span',\n\t\t\t\t\t\t\t\tn(\n\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\tclassName:\n\t\t\t\t\t\t\t\t\t\t\tl +\n\t\t\t\t\t\t\t\t\t\t\t' lazy-load-image-background ' +\n\t\t\t\t\t\t\t\t\t\t\tr +\n\t\t\t\t\t\t\t\t\t\t\tf,\n\t\t\t\t\t\t\t\t\t\tstyle: {\n\t\t\t\t\t\t\t\t\t\t\tbackgroundImage:\n\t\t\t\t\t\t\t\t\t\t\t\tc || !a ? '' : 'url(' + a + ')',\n\t\t\t\t\t\t\t\t\t\t\tbackgroundSize:\n\t\t\t\t\t\t\t\t\t\t\t\tc || !a ? '' : '100% 100%',\n\t\t\t\t\t\t\t\t\t\t\tdisplay: 'inline-block',\n\t\t\t\t\t\t\t\t\t\t\theight: o,\n\t\t\t\t\t\t\t\t\t\t\twidth: s,\n\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\tu\n\t\t\t\t\t\t\t\t),\n\t\t\t\t\t\t\t\te\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'render',\n\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\tvar e = this.props,\n\t\t\t\t\t\t\t\tt = e.effect,\n\t\t\t\t\t\t\t\tr = e.placeholderSrc,\n\t\t\t\t\t\t\t\tn = e.visibleByDefault,\n\t\t\t\t\t\t\t\to = e.wrapperClassName,\n\t\t\t\t\t\t\t\ti = e.wrapperProps,\n\t\t\t\t\t\t\t\ta = this.getLazyLoadImage();\n\t\t\t\t\t\t\treturn ((t || r) && !n) || o || i\n\t\t\t\t\t\t\t\t? this.getWrappedLazyLoadImage(a)\n\t\t\t\t\t\t\t\t: a;\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t]),\n\t\t\t\tt\n\t\t\t);\n\t\t})(i.default.Component);\n\t\t(u.propTypes = {\n\t\t\tafterLoad: a.PropTypes.func,\n\t\t\tbeforeLoad: a.PropTypes.func,\n\t\t\tdelayMethod: a.PropTypes.string,\n\t\t\tdelayTime: a.PropTypes.number,\n\t\t\teffect: a.PropTypes.string,\n\t\t\tplaceholderSrc: a.PropTypes.string,\n\t\t\tthreshold: a.PropTypes.number,\n\t\t\tuseIntersectionObserver: a.PropTypes.bool,\n\t\t\tvisibleByDefault: a.PropTypes.bool,\n\t\t\twrapperClassName: a.PropTypes.string,\n\t\t\twrapperProps: a.PropTypes.object,\n\t\t}),\n\t\t\t(u.defaultProps = {\n\t\t\t\tafterLoad: function() {\n\t\t\t\t\treturn {};\n\t\t\t\t},\n\t\t\t\tbeforeLoad: function() {\n\t\t\t\t\treturn {};\n\t\t\t\t},\n\t\t\t\tdelayMethod: 'throttle',\n\t\t\t\tdelayTime: 300,\n\t\t\t\teffect: '',\n\t\t\t\tplaceholderSrc: null,\n\t\t\t\tthreshold: 100,\n\t\t\t\tuseIntersectionObserver: !0,\n\t\t\t\tvisibleByDefault: !1,\n\t\t\t\twrapperClassName: '',\n\t\t\t}),\n\t\t\t(t.default = u);\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tvar n = r(11);\n\t\tfunction o() {}\n\t\tfunction i() {}\n\t\t(i.resetWarningCache = o),\n\t\t\t(e.exports = function() {\n\t\t\t\tfunction e(e, t, r, o, i, a) {\n\t\t\t\t\tif (a !== n) {\n\t\t\t\t\t\tvar s = new Error(\n\t\t\t\t\t\t\t'Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types'\n\t\t\t\t\t\t);\n\t\t\t\t\t\tthrow ((s.name = 'Invariant Violation'), s);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tfunction t() {\n\t\t\t\t\treturn e;\n\t\t\t\t}\n\t\t\t\te.isRequired = e;\n\t\t\t\tvar r = {\n\t\t\t\t\tarray: e,\n\t\t\t\t\tbool: e,\n\t\t\t\t\tfunc: e,\n\t\t\t\t\tnumber: e,\n\t\t\t\t\tobject: e,\n\t\t\t\t\tstring: e,\n\t\t\t\t\tsymbol: e,\n\t\t\t\t\tany: e,\n\t\t\t\t\tarrayOf: t,\n\t\t\t\t\telement: e,\n\t\t\t\t\telementType: e,\n\t\t\t\t\tinstanceOf: t,\n\t\t\t\t\tnode: e,\n\t\t\t\t\tobjectOf: t,\n\t\t\t\t\toneOf: t,\n\t\t\t\t\toneOfType: t,\n\t\t\t\t\tshape: t,\n\t\t\t\t\texact: t,\n\t\t\t\t\tcheckPropTypes: i,\n\t\t\t\t\tresetWarningCache: o,\n\t\t\t\t};\n\t\t\t\treturn (r.PropTypes = r), r;\n\t\t\t});\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\te.exports = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 });\n\t\tvar n = (function() {\n\t\t\t\tfunction e(e, t) {\n\t\t\t\t\tfor (var r = 0; r < t.length; r++) {\n\t\t\t\t\t\tvar n = t[r];\n\t\t\t\t\t\t(n.enumerable = n.enumerable || !1),\n\t\t\t\t\t\t\t(n.configurable = !0),\n\t\t\t\t\t\t\t'value' in n && (n.writable = !0),\n\t\t\t\t\t\t\tObject.defineProperty(e, n.key, n);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn function(t, r, n) {\n\t\t\t\t\treturn r && e(t.prototype, r), n && e(t, n), t;\n\t\t\t\t};\n\t\t\t})(),\n\t\t\to = s(r(0)),\n\t\t\ti = s(r(4)),\n\t\t\ta = s(r(6));\n\t\tfunction s(e) {\n\t\t\treturn e && e.__esModule ? e : { default: e };\n\t\t}\n\t\tvar l = (function(e) {\n\t\t\tfunction t(e) {\n\t\t\t\treturn (\n\t\t\t\t\t(function(e, t) {\n\t\t\t\t\t\tif (!(e instanceof t))\n\t\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t\t'Cannot call a class as a function'\n\t\t\t\t\t\t\t);\n\t\t\t\t\t})(this, t),\n\t\t\t\t\t(function(e, t) {\n\t\t\t\t\t\tif (!e)\n\t\t\t\t\t\t\tthrow new ReferenceError(\n\t\t\t\t\t\t\t\t\"this hasn't been initialised - super() hasn't been called\"\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\treturn !t ||\n\t\t\t\t\t\t\t('object' != typeof t && 'function' != typeof t)\n\t\t\t\t\t\t\t? e\n\t\t\t\t\t\t\t: t;\n\t\t\t\t\t})(\n\t\t\t\t\t\tthis,\n\t\t\t\t\t\t(t.__proto__ || Object.getPrototypeOf(t)).call(this, e)\n\t\t\t\t\t)\n\t\t\t\t);\n\t\t\t}\n\t\t\treturn (\n\t\t\t\t(function(e, t) {\n\t\t\t\t\tif ('function' != typeof t && null !== t)\n\t\t\t\t\t\tthrow new TypeError(\n\t\t\t\t\t\t\t'Super expression must either be null or a function, not ' +\n\t\t\t\t\t\t\t\ttypeof t\n\t\t\t\t\t\t);\n\t\t\t\t\t(e.prototype = Object.create(t && t.prototype, {\n\t\t\t\t\t\tconstructor: {\n\t\t\t\t\t\t\tvalue: e,\n\t\t\t\t\t\t\tenumerable: !1,\n\t\t\t\t\t\t\twritable: !0,\n\t\t\t\t\t\t\tconfigurable: !0,\n\t\t\t\t\t\t},\n\t\t\t\t\t})),\n\t\t\t\t\t\tt &&\n\t\t\t\t\t\t\t(Object.setPrototypeOf\n\t\t\t\t\t\t\t\t? Object.setPrototypeOf(e, t)\n\t\t\t\t\t\t\t\t: (e.__proto__ = t));\n\t\t\t\t})(t, e),\n\t\t\t\tn(t, [\n\t\t\t\t\t{\n\t\t\t\t\t\tkey: 'render',\n\t\t\t\t\t\tvalue: function() {\n\t\t\t\t\t\t\treturn o.default.createElement(\n\t\t\t\t\t\t\t\ti.default,\n\t\t\t\t\t\t\t\tthis.props\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t},\n\t\t\t\t\t},\n\t\t\t\t]),\n\t\t\t\tt\n\t\t\t);\n\t\t})(o.default.Component);\n\t\tt.default = (0, a.default)(l);\n\t},\n\tfunction(e, t, r) {\n\t\t(function(t) {\n\t\t\tvar r = 'Expected a function',\n\t\t\t\tn = NaN,\n\t\t\t\to = '[object Symbol]',\n\t\t\t\ti = /^\\s+|\\s+$/g,\n\t\t\t\ta = /^[-+]0x[0-9a-f]+$/i,\n\t\t\t\ts = /^0b[01]+$/i,\n\t\t\t\tl = /^0o[0-7]+$/i,\n\t\t\t\tu = parseInt,\n\t\t\t\tc = 'object' == typeof t && t && t.Object === Object && t,\n\t\t\t\tf =\n\t\t\t\t\t'object' == typeof self &&\n\t\t\t\t\tself &&\n\t\t\t\t\tself.Object === Object &&\n\t\t\t\t\tself,\n\t\t\t\tp = c || f || Function('return this')(),\n\t\t\t\td = Object.prototype.toString,\n\t\t\t\ty = Math.max,\n\t\t\t\th = Math.min,\n\t\t\t\tb = function() {\n\t\t\t\t\treturn p.Date.now();\n\t\t\t\t};\n\t\t\tfunction v(e) {\n\t\t\t\tvar t = typeof e;\n\t\t\t\treturn !!e && ('object' == t || 'function' == t);\n\t\t\t}\n\t\t\tfunction m(e) {\n\t\t\t\tif ('number' == typeof e) return e;\n\t\t\t\tif (\n\t\t\t\t\t(function(e) {\n\t\t\t\t\t\treturn (\n\t\t\t\t\t\t\t'symbol' == typeof e ||\n\t\t\t\t\t\t\t((function(e) {\n\t\t\t\t\t\t\t\treturn !!e && 'object' == typeof e;\n\t\t\t\t\t\t\t})(e) &&\n\t\t\t\t\t\t\t\td.call(e) == o)\n\t\t\t\t\t\t);\n\t\t\t\t\t})(e)\n\t\t\t\t)\n\t\t\t\t\treturn n;\n\t\t\t\tif (v(e)) {\n\t\t\t\t\tvar t = 'function' == typeof e.valueOf ? e.valueOf() : e;\n\t\t\t\t\te = v(t) ? t + '' : t;\n\t\t\t\t}\n\t\t\t\tif ('string' != typeof e) return 0 === e ? e : +e;\n\t\t\t\te = e.replace(i, '');\n\t\t\t\tvar r = s.test(e);\n\t\t\t\treturn r || l.test(e)\n\t\t\t\t\t? u(e.slice(2), r ? 2 : 8)\n\t\t\t\t\t: a.test(e)\n\t\t\t\t\t? n\n\t\t\t\t\t: +e;\n\t\t\t}\n\t\t\te.exports = function(e, t, n) {\n\t\t\t\tvar o,\n\t\t\t\t\ti,\n\t\t\t\t\ta,\n\t\t\t\t\ts,\n\t\t\t\t\tl,\n\t\t\t\t\tu,\n\t\t\t\t\tc = 0,\n\t\t\t\t\tf = !1,\n\t\t\t\t\tp = !1,\n\t\t\t\t\td = !0;\n\t\t\t\tif ('function' != typeof e) throw new TypeError(r);\n\t\t\t\tfunction w(t) {\n\t\t\t\t\tvar r = o,\n\t\t\t\t\t\tn = i;\n\t\t\t\t\treturn (o = i = void 0), (c = t), (s = e.apply(n, r));\n\t\t\t\t}\n\t\t\t\tfunction O(e) {\n\t\t\t\t\tvar r = e - u;\n\t\t\t\t\treturn void 0 === u || r >= t || r < 0 || (p && e - c >= a);\n\t\t\t\t}\n\t\t\t\tfunction g() {\n\t\t\t\t\tvar e = b();\n\t\t\t\t\tif (O(e)) return P(e);\n\t\t\t\t\tl = setTimeout(\n\t\t\t\t\t\tg,\n\t\t\t\t\t\t(function(e) {\n\t\t\t\t\t\t\tvar r = t - (e - u);\n\t\t\t\t\t\t\treturn p ? h(r, a - (e - c)) : r;\n\t\t\t\t\t\t})(e)\n\t\t\t\t\t);\n\t\t\t\t}\n\t\t\t\tfunction P(e) {\n\t\t\t\t\treturn (l = void 0), d && o ? w(e) : ((o = i = void 0), s);\n\t\t\t\t}\n\t\t\t\tfunction T() {\n\t\t\t\t\tvar e = b(),\n\t\t\t\t\t\tr = O(e);\n\t\t\t\t\tif (((o = arguments), (i = this), (u = e), r)) {\n\t\t\t\t\t\tif (void 0 === l)\n\t\t\t\t\t\t\treturn (function(e) {\n\t\t\t\t\t\t\t\treturn (\n\t\t\t\t\t\t\t\t\t(c = e),\n\t\t\t\t\t\t\t\t\t(l = setTimeout(g, t)),\n\t\t\t\t\t\t\t\t\tf ? w(e) : s\n\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t})(u);\n\t\t\t\t\t\tif (p) return (l = setTimeout(g, t)), w(u);\n\t\t\t\t\t}\n\t\t\t\t\treturn void 0 === l && (l = setTimeout(g, t)), s;\n\t\t\t\t}\n\t\t\t\treturn (\n\t\t\t\t\t(t = m(t) || 0),\n\t\t\t\t\tv(n) &&\n\t\t\t\t\t\t((f = !!n.leading),\n\t\t\t\t\t\t(a = (p = 'maxWait' in n)\n\t\t\t\t\t\t\t? y(m(n.maxWait) || 0, t)\n\t\t\t\t\t\t\t: a),\n\t\t\t\t\t\t(d = 'trailing' in n ? !!n.trailing : d)),\n\t\t\t\t\t(T.cancel = function() {\n\t\t\t\t\t\tvoid 0 !== l && clearTimeout(l),\n\t\t\t\t\t\t\t(c = 0),\n\t\t\t\t\t\t\t(o = u = i = l = void 0);\n\t\t\t\t\t}),\n\t\t\t\t\t(T.flush = function() {\n\t\t\t\t\t\treturn void 0 === l ? s : P(b());\n\t\t\t\t\t}),\n\t\t\t\t\tT\n\t\t\t\t);\n\t\t\t};\n\t\t}.call(this, r(7)));\n\t},\n\tfunction(e, t, r) {\n\t\t(function(t) {\n\t\t\tvar r = 'Expected a function',\n\t\t\t\tn = NaN,\n\t\t\t\to = '[object Symbol]',\n\t\t\t\ti = /^\\s+|\\s+$/g,\n\t\t\t\ta = /^[-+]0x[0-9a-f]+$/i,\n\t\t\t\ts = /^0b[01]+$/i,\n\t\t\t\tl = /^0o[0-7]+$/i,\n\t\t\t\tu = parseInt,\n\t\t\t\tc = 'object' == typeof t && t && t.Object === Object && t,\n\t\t\t\tf =\n\t\t\t\t\t'object' == typeof self &&\n\t\t\t\t\tself &&\n\t\t\t\t\tself.Object === Object &&\n\t\t\t\t\tself,\n\t\t\t\tp = c || f || Function('return this')(),\n\t\t\t\td = Object.prototype.toString,\n\t\t\t\ty = Math.max,\n\t\t\t\th = Math.min,\n\t\t\t\tb = function() {\n\t\t\t\t\treturn p.Date.now();\n\t\t\t\t};\n\t\t\tfunction v(e, t, n) {\n\t\t\t\tvar o,\n\t\t\t\t\ti,\n\t\t\t\t\ta,\n\t\t\t\t\ts,\n\t\t\t\t\tl,\n\t\t\t\t\tu,\n\t\t\t\t\tc = 0,\n\t\t\t\t\tf = !1,\n\t\t\t\t\tp = !1,\n\t\t\t\t\td = !0;\n\t\t\t\tif ('function' != typeof e) throw new TypeError(r);\n\t\t\t\tfunction v(t) {\n\t\t\t\t\tvar r = o,\n\t\t\t\t\t\tn = i;\n\t\t\t\t\treturn (o = i = void 0), (c = t), (s = e.apply(n, r));\n\t\t\t\t}\n\t\t\t\tfunction O(e) {\n\t\t\t\t\tvar r = e - u;\n\t\t\t\t\treturn void 0 === u || r >= t || r < 0 || (p && e - c >= a);\n\t\t\t\t}\n\t\t\t\tfunction g() {\n\t\t\t\t\tvar e = b();\n\t\t\t\t\tif (O(e)) return P(e);\n\t\t\t\t\tl = setTimeout(\n\t\t\t\t\t\tg,\n\t\t\t\t\t\t(function(e) {\n\t\t\t\t\t\t\tvar r = t - (e - u);\n\t\t\t\t\t\t\treturn p ? h(r, a - (e - c)) : r;\n\t\t\t\t\t\t})(e)\n\t\t\t\t\t);\n\t\t\t\t}\n\t\t\t\tfunction P(e) {\n\t\t\t\t\treturn (l = void 0), d && o ? v(e) : ((o = i = void 0), s);\n\t\t\t\t}\n\t\t\t\tfunction T() {\n\t\t\t\t\tvar e = b(),\n\t\t\t\t\t\tr = O(e);\n\t\t\t\t\tif (((o = arguments), (i = this), (u = e), r)) {\n\t\t\t\t\t\tif (void 0 === l)\n\t\t\t\t\t\t\treturn (function(e) {\n\t\t\t\t\t\t\t\treturn (\n\t\t\t\t\t\t\t\t\t(c = e),\n\t\t\t\t\t\t\t\t\t(l = setTimeout(g, t)),\n\t\t\t\t\t\t\t\t\tf ? v(e) : s\n\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t})(u);\n\t\t\t\t\t\tif (p) return (l = setTimeout(g, t)), v(u);\n\t\t\t\t\t}\n\t\t\t\t\treturn void 0 === l && (l = setTimeout(g, t)), s;\n\t\t\t\t}\n\t\t\t\treturn (\n\t\t\t\t\t(t = w(t) || 0),\n\t\t\t\t\tm(n) &&\n\t\t\t\t\t\t((f = !!n.leading),\n\t\t\t\t\t\t(a = (p = 'maxWait' in n)\n\t\t\t\t\t\t\t? y(w(n.maxWait) || 0, t)\n\t\t\t\t\t\t\t: a),\n\t\t\t\t\t\t(d = 'trailing' in n ? !!n.trailing : d)),\n\t\t\t\t\t(T.cancel = function() {\n\t\t\t\t\t\tvoid 0 !== l && clearTimeout(l),\n\t\t\t\t\t\t\t(c = 0),\n\t\t\t\t\t\t\t(o = u = i = l = void 0);\n\t\t\t\t\t}),\n\t\t\t\t\t(T.flush = function() {\n\t\t\t\t\t\treturn void 0 === l ? s : P(b());\n\t\t\t\t\t}),\n\t\t\t\t\tT\n\t\t\t\t);\n\t\t\t}\n\t\t\tfunction m(e) {\n\t\t\t\tvar t = typeof e;\n\t\t\t\treturn !!e && ('object' == t || 'function' == t);\n\t\t\t}\n\t\t\tfunction w(e) {\n\t\t\t\tif ('number' == typeof e) return e;\n\t\t\t\tif (\n\t\t\t\t\t(function(e) {\n\t\t\t\t\t\treturn (\n\t\t\t\t\t\t\t'symbol' == typeof e ||\n\t\t\t\t\t\t\t((function(e) {\n\t\t\t\t\t\t\t\treturn !!e && 'object' == typeof e;\n\t\t\t\t\t\t\t})(e) &&\n\t\t\t\t\t\t\t\td.call(e) == o)\n\t\t\t\t\t\t);\n\t\t\t\t\t})(e)\n\t\t\t\t)\n\t\t\t\t\treturn n;\n\t\t\t\tif (m(e)) {\n\t\t\t\t\tvar t = 'function' == typeof e.valueOf ? e.valueOf() : e;\n\t\t\t\t\te = m(t) ? t + '' : t;\n\t\t\t\t}\n\t\t\t\tif ('string' != typeof e) return 0 === e ? e : +e;\n\t\t\t\te = e.replace(i, '');\n\t\t\t\tvar r = s.test(e);\n\t\t\t\treturn r || l.test(e)\n\t\t\t\t\t? u(e.slice(2), r ? 2 : 8)\n\t\t\t\t\t: a.test(e)\n\t\t\t\t\t? n\n\t\t\t\t\t: +e;\n\t\t\t}\n\t\t\te.exports = function(e, t, n) {\n\t\t\t\tvar o = !0,\n\t\t\t\t\ti = !0;\n\t\t\t\tif ('function' != typeof e) throw new TypeError(r);\n\t\t\t\treturn (\n\t\t\t\t\tm(n) &&\n\t\t\t\t\t\t((o = 'leading' in n ? !!n.leading : o),\n\t\t\t\t\t\t(i = 'trailing' in n ? !!n.trailing : i)),\n\t\t\t\t\tv(e, t, { leading: o, maxWait: t, trailing: i })\n\t\t\t\t);\n\t\t\t};\n\t\t}.call(this, r(7)));\n\t},\n\tfunction(e, t, r) {\n\t\t'use strict';\n\t\tObject.defineProperty(t, '__esModule', { value: !0 });\n\t\tvar n = function(e, t) {\n\t\t\t\treturn 'undefined' == typeof getComputedStyle\n\t\t\t\t\t? e.style[t]\n\t\t\t\t\t: getComputedStyle(e, null).getPropertyValue(t);\n\t\t\t},\n\t\t\to = function(e) {\n\t\t\t\treturn (\n\t\t\t\t\tn(e, 'overflow') + n(e, 'overflow-y') + n(e, 'overflow-x')\n\t\t\t\t);\n\t\t\t};\n\t\tt.default = function(e) {\n\t\t\tif (!(e instanceof HTMLElement)) return window;\n\t\t\tfor (\n\t\t\t\tvar t = e;\n\t\t\t\tt &&\n\t\t\t\tt !== document.body &&\n\t\t\t\tt !== document.documentElement &&\n\t\t\t\tt.parentNode;\n\n\t\t\t) {\n\t\t\t\tif (/(scroll|auto)/.test(o(t))) return t;\n\t\t\t\tt = t.parentNode;\n\t\t\t}\n\t\t\treturn window;\n\t\t};\n\t},\n]);\n\n\n//# sourceURL=webpack://webSoakDB/./node_modules/react-lazy-load-image-component/build/index.js?");
+
+/***/ }),
+
 /***/ "./node_modules/react-router-dom/esm/react-router-dom.js":
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
@@ -960,6 +4347,16 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nfunction valueOf(obj) {\n  return obj.valueOf ? obj.valueOf() : Object.prototype.valueOf.call(obj);\n}\n\nfunction valueEqual(a, b) {\n  // Test for strict equality first.\n  if (a === b) return true;\n\n  // Otherwise, if either of them == null they are not equal.\n  if (a == null || b == null) return false;\n\n  if (Array.isArray(a)) {\n    return (\n      Array.isArray(b) &&\n      a.length === b.length &&\n      a.every(function(item, index) {\n        return valueEqual(item, b[index]);\n      })\n    );\n  }\n\n  if (typeof a === 'object' || typeof b === 'object') {\n    var aValue = valueOf(a);\n    var bValue = valueOf(b);\n\n    if (aValue !== a || bValue !== b) return valueEqual(aValue, bValue);\n\n    return Object.keys(Object.assign({}, a, b)).every(function(key) {\n      return valueEqual(a[key], b[key]);\n    });\n  }\n\n  return false;\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (valueEqual);\n\n\n//# sourceURL=webpack://webSoakDB/./node_modules/value-equal/esm/value-equal.js?");
 
+/***/ }),
+
+/***/ "./webSoakDB/webSoakDB_frontend/src/components/picker sync recursive ^.*$":
+/*!***********************************************************************!*\
+  !*** ./webSoakDB/webSoakDB_frontend/src/components/picker/ sync ^.*$ ***!
+  \***********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+eval("var map = {\n\t\"./Picker\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/Picker.js\",\n\t\"./Picker.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/Picker.js\",\n\t\"./cherrypick_form\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/cherrypick_form.js\",\n\t\"./cherrypick_form.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/cherrypick_form.js\",\n\t\"./csrf\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/csrf.js\",\n\t\"./csrf.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/csrf.js\",\n\t\"./details\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/details.js\",\n\t\"./details.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/details.js\",\n\t\"./graph\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js\",\n\t\"./graph.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph.js\",\n\t\"./graph_table\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph_table.js\",\n\t\"./graph_table.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/graph_table.js\",\n\t\"./library_option\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/library_option.js\",\n\t\"./library_option.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/library_option.js\",\n\t\"./library_option_old\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/library_option_old.js\",\n\t\"./library_option_old.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/library_option_old.js\",\n\t\"./mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/mol_wt.svg\",\n\t\"./own_lib_form\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/own_lib_form.js\",\n\t\"./own_lib_form.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/own_lib_form.js\",\n\t\"./pic.png\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/pic.png\",\n\t\"./preset_option\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js\",\n\t\"./preset_option.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/preset_option.js\",\n\t\"./presets\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/presets.js\",\n\t\"./presets.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/presets.js\",\n\t\"./properties_dict\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/properties_dict.js\",\n\t\"./properties_dict.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/properties_dict.js\",\n\t\"./public/library/1/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_count.svg\",\n\t\"./public/library/1/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/heavy_atom_mol_wt.svg\",\n\t\"./public/library/1/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/log_p.svg\",\n\t\"./public/library/1/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/mol_wt.svg\",\n\t\"./public/library/1/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/nhoh_count.svg\",\n\t\"./public/library/1/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/no_count.svg\",\n\t\"./public/library/1/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_acceptors.svg\",\n\t\"./public/library/1/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_h_donors.svg\",\n\t\"./public/library/1/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_het_atoms.svg\",\n\t\"./public/library/1/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_rot_bonds.svg\",\n\t\"./public/library/1/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/num_val_electrons.svg\",\n\t\"./public/library/1/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/ring_count.svg\",\n\t\"./public/library/1/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/1/tpsa.svg\",\n\t\"./public/library/13/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_count.svg\",\n\t\"./public/library/13/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/heavy_atom_mol_wt.svg\",\n\t\"./public/library/13/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/log_p.svg\",\n\t\"./public/library/13/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/mol_wt.svg\",\n\t\"./public/library/13/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/nhoh_count.svg\",\n\t\"./public/library/13/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/no_count.svg\",\n\t\"./public/library/13/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_acceptors.svg\",\n\t\"./public/library/13/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_h_donors.svg\",\n\t\"./public/library/13/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_het_atoms.svg\",\n\t\"./public/library/13/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_rot_bonds.svg\",\n\t\"./public/library/13/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/num_val_electrons.svg\",\n\t\"./public/library/13/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/ring_count.svg\",\n\t\"./public/library/13/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/13/tpsa.svg\",\n\t\"./public/library/14/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_count.svg\",\n\t\"./public/library/14/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/heavy_atom_mol_wt.svg\",\n\t\"./public/library/14/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/log_p.svg\",\n\t\"./public/library/14/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/mol_wt.svg\",\n\t\"./public/library/14/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/nhoh_count.svg\",\n\t\"./public/library/14/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/no_count.svg\",\n\t\"./public/library/14/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_acceptors.svg\",\n\t\"./public/library/14/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_h_donors.svg\",\n\t\"./public/library/14/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_het_atoms.svg\",\n\t\"./public/library/14/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_rot_bonds.svg\",\n\t\"./public/library/14/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/num_val_electrons.svg\",\n\t\"./public/library/14/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/ring_count.svg\",\n\t\"./public/library/14/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/14/tpsa.svg\",\n\t\"./public/library/15/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_count.svg\",\n\t\"./public/library/15/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/heavy_atom_mol_wt.svg\",\n\t\"./public/library/15/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/log_p.svg\",\n\t\"./public/library/15/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/mol_wt.svg\",\n\t\"./public/library/15/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/nhoh_count.svg\",\n\t\"./public/library/15/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/no_count.svg\",\n\t\"./public/library/15/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_acceptors.svg\",\n\t\"./public/library/15/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_h_donors.svg\",\n\t\"./public/library/15/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_het_atoms.svg\",\n\t\"./public/library/15/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_rot_bonds.svg\",\n\t\"./public/library/15/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/num_val_electrons.svg\",\n\t\"./public/library/15/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/ring_count.svg\",\n\t\"./public/library/15/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/15/tpsa.svg\",\n\t\"./public/library/16/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_count.svg\",\n\t\"./public/library/16/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/heavy_atom_mol_wt.svg\",\n\t\"./public/library/16/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/log_p.svg\",\n\t\"./public/library/16/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/mol_wt.svg\",\n\t\"./public/library/16/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/nhoh_count.svg\",\n\t\"./public/library/16/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/no_count.svg\",\n\t\"./public/library/16/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_acceptors.svg\",\n\t\"./public/library/16/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_h_donors.svg\",\n\t\"./public/library/16/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_het_atoms.svg\",\n\t\"./public/library/16/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_rot_bonds.svg\",\n\t\"./public/library/16/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/num_val_electrons.svg\",\n\t\"./public/library/16/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/ring_count.svg\",\n\t\"./public/library/16/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/16/tpsa.svg\",\n\t\"./public/library/17/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_count.svg\",\n\t\"./public/library/17/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/heavy_atom_mol_wt.svg\",\n\t\"./public/library/17/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/log_p.svg\",\n\t\"./public/library/17/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/mol_wt.svg\",\n\t\"./public/library/17/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/nhoh_count.svg\",\n\t\"./public/library/17/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/no_count.svg\",\n\t\"./public/library/17/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_acceptors.svg\",\n\t\"./public/library/17/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_h_donors.svg\",\n\t\"./public/library/17/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_het_atoms.svg\",\n\t\"./public/library/17/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_rot_bonds.svg\",\n\t\"./public/library/17/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/num_val_electrons.svg\",\n\t\"./public/library/17/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/ring_count.svg\",\n\t\"./public/library/17/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/17/tpsa.svg\",\n\t\"./public/library/18/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_count.svg\",\n\t\"./public/library/18/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/heavy_atom_mol_wt.svg\",\n\t\"./public/library/18/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/log_p.svg\",\n\t\"./public/library/18/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/mol_wt.svg\",\n\t\"./public/library/18/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/nhoh_count.svg\",\n\t\"./public/library/18/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/no_count.svg\",\n\t\"./public/library/18/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_acceptors.svg\",\n\t\"./public/library/18/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_h_donors.svg\",\n\t\"./public/library/18/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_het_atoms.svg\",\n\t\"./public/library/18/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_rot_bonds.svg\",\n\t\"./public/library/18/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/num_val_electrons.svg\",\n\t\"./public/library/18/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/ring_count.svg\",\n\t\"./public/library/18/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/18/tpsa.svg\",\n\t\"./public/library/19/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_count.svg\",\n\t\"./public/library/19/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/heavy_atom_mol_wt.svg\",\n\t\"./public/library/19/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/log_p.svg\",\n\t\"./public/library/19/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/mol_wt.svg\",\n\t\"./public/library/19/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/nhoh_count.svg\",\n\t\"./public/library/19/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/no_count.svg\",\n\t\"./public/library/19/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_acceptors.svg\",\n\t\"./public/library/19/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_h_donors.svg\",\n\t\"./public/library/19/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_het_atoms.svg\",\n\t\"./public/library/19/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_rot_bonds.svg\",\n\t\"./public/library/19/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/num_val_electrons.svg\",\n\t\"./public/library/19/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/ring_count.svg\",\n\t\"./public/library/19/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/19/tpsa.svg\",\n\t\"./public/library/2/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_count.svg\",\n\t\"./public/library/2/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/heavy_atom_mol_wt.svg\",\n\t\"./public/library/2/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/log_p.svg\",\n\t\"./public/library/2/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/mol_wt.svg\",\n\t\"./public/library/2/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/nhoh_count.svg\",\n\t\"./public/library/2/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/no_count.svg\",\n\t\"./public/library/2/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_acceptors.svg\",\n\t\"./public/library/2/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_h_donors.svg\",\n\t\"./public/library/2/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_het_atoms.svg\",\n\t\"./public/library/2/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_rot_bonds.svg\",\n\t\"./public/library/2/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/num_val_electrons.svg\",\n\t\"./public/library/2/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/ring_count.svg\",\n\t\"./public/library/2/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/2/tpsa.svg\",\n\t\"./public/library/20/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_count.svg\",\n\t\"./public/library/20/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/heavy_atom_mol_wt.svg\",\n\t\"./public/library/20/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/log_p.svg\",\n\t\"./public/library/20/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/mol_wt.svg\",\n\t\"./public/library/20/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/nhoh_count.svg\",\n\t\"./public/library/20/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/no_count.svg\",\n\t\"./public/library/20/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_acceptors.svg\",\n\t\"./public/library/20/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_h_donors.svg\",\n\t\"./public/library/20/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_het_atoms.svg\",\n\t\"./public/library/20/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_rot_bonds.svg\",\n\t\"./public/library/20/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/num_val_electrons.svg\",\n\t\"./public/library/20/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/ring_count.svg\",\n\t\"./public/library/20/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/20/tpsa.svg\",\n\t\"./public/library/3/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_count.svg\",\n\t\"./public/library/3/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/heavy_atom_mol_wt.svg\",\n\t\"./public/library/3/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/log_p.svg\",\n\t\"./public/library/3/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/mol_wt.svg\",\n\t\"./public/library/3/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/nhoh_count.svg\",\n\t\"./public/library/3/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/no_count.svg\",\n\t\"./public/library/3/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_acceptors.svg\",\n\t\"./public/library/3/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_h_donors.svg\",\n\t\"./public/library/3/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_het_atoms.svg\",\n\t\"./public/library/3/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_rot_bonds.svg\",\n\t\"./public/library/3/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/num_val_electrons.svg\",\n\t\"./public/library/3/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/ring_count.svg\",\n\t\"./public/library/3/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/3/tpsa.svg\",\n\t\"./public/library/51/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_count.svg\",\n\t\"./public/library/51/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/heavy_atom_mol_wt.svg\",\n\t\"./public/library/51/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/log_p.svg\",\n\t\"./public/library/51/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/mol_wt.svg\",\n\t\"./public/library/51/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/nhoh_count.svg\",\n\t\"./public/library/51/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/no_count.svg\",\n\t\"./public/library/51/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_acceptors.svg\",\n\t\"./public/library/51/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_h_donors.svg\",\n\t\"./public/library/51/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_het_atoms.svg\",\n\t\"./public/library/51/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_rot_bonds.svg\",\n\t\"./public/library/51/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/num_val_electrons.svg\",\n\t\"./public/library/51/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/ring_count.svg\",\n\t\"./public/library/51/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/51/tpsa.svg\",\n\t\"./public/library/7/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_count.svg\",\n\t\"./public/library/7/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/heavy_atom_mol_wt.svg\",\n\t\"./public/library/7/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/log_p.svg\",\n\t\"./public/library/7/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/mol_wt.svg\",\n\t\"./public/library/7/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/nhoh_count.svg\",\n\t\"./public/library/7/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/no_count.svg\",\n\t\"./public/library/7/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_acceptors.svg\",\n\t\"./public/library/7/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_h_donors.svg\",\n\t\"./public/library/7/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_het_atoms.svg\",\n\t\"./public/library/7/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_rot_bonds.svg\",\n\t\"./public/library/7/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/num_val_electrons.svg\",\n\t\"./public/library/7/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/ring_count.svg\",\n\t\"./public/library/7/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/library/7/tpsa.svg\",\n\t\"./public/preset/1/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_count.svg\",\n\t\"./public/preset/1/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/1/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/log_p.svg\",\n\t\"./public/preset/1/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/mol_wt.svg\",\n\t\"./public/preset/1/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/nhoh_count.svg\",\n\t\"./public/preset/1/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/no_count.svg\",\n\t\"./public/preset/1/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_acceptors.svg\",\n\t\"./public/preset/1/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_h_donors.svg\",\n\t\"./public/preset/1/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_het_atoms.svg\",\n\t\"./public/preset/1/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_rot_bonds.svg\",\n\t\"./public/preset/1/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/num_val_electrons.svg\",\n\t\"./public/preset/1/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/ring_count.svg\",\n\t\"./public/preset/1/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/1/tpsa.svg\",\n\t\"./public/preset/10/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_count.svg\",\n\t\"./public/preset/10/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/10/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/log_p.svg\",\n\t\"./public/preset/10/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/mol_wt.svg\",\n\t\"./public/preset/10/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/nhoh_count.svg\",\n\t\"./public/preset/10/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/no_count.svg\",\n\t\"./public/preset/10/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_acceptors.svg\",\n\t\"./public/preset/10/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_h_donors.svg\",\n\t\"./public/preset/10/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_het_atoms.svg\",\n\t\"./public/preset/10/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_rot_bonds.svg\",\n\t\"./public/preset/10/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/num_val_electrons.svg\",\n\t\"./public/preset/10/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/ring_count.svg\",\n\t\"./public/preset/10/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/10/tpsa.svg\",\n\t\"./public/preset/11/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_count.svg\",\n\t\"./public/preset/11/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/11/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/log_p.svg\",\n\t\"./public/preset/11/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/mol_wt.svg\",\n\t\"./public/preset/11/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/nhoh_count.svg\",\n\t\"./public/preset/11/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/no_count.svg\",\n\t\"./public/preset/11/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_acceptors.svg\",\n\t\"./public/preset/11/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_h_donors.svg\",\n\t\"./public/preset/11/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_het_atoms.svg\",\n\t\"./public/preset/11/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_rot_bonds.svg\",\n\t\"./public/preset/11/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/num_val_electrons.svg\",\n\t\"./public/preset/11/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/ring_count.svg\",\n\t\"./public/preset/11/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/11/tpsa.svg\",\n\t\"./public/preset/12/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_count.svg\",\n\t\"./public/preset/12/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/12/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/log_p.svg\",\n\t\"./public/preset/12/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/mol_wt.svg\",\n\t\"./public/preset/12/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/nhoh_count.svg\",\n\t\"./public/preset/12/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/no_count.svg\",\n\t\"./public/preset/12/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_acceptors.svg\",\n\t\"./public/preset/12/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_h_donors.svg\",\n\t\"./public/preset/12/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_het_atoms.svg\",\n\t\"./public/preset/12/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_rot_bonds.svg\",\n\t\"./public/preset/12/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/num_val_electrons.svg\",\n\t\"./public/preset/12/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/ring_count.svg\",\n\t\"./public/preset/12/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/12/tpsa.svg\",\n\t\"./public/preset/2/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_count.svg\",\n\t\"./public/preset/2/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/2/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/log_p.svg\",\n\t\"./public/preset/2/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/mol_wt.svg\",\n\t\"./public/preset/2/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/nhoh_count.svg\",\n\t\"./public/preset/2/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/no_count.svg\",\n\t\"./public/preset/2/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_acceptors.svg\",\n\t\"./public/preset/2/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_h_donors.svg\",\n\t\"./public/preset/2/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_het_atoms.svg\",\n\t\"./public/preset/2/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_rot_bonds.svg\",\n\t\"./public/preset/2/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/num_val_electrons.svg\",\n\t\"./public/preset/2/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/ring_count.svg\",\n\t\"./public/preset/2/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/2/tpsa.svg\",\n\t\"./public/preset/5/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_count.svg\",\n\t\"./public/preset/5/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/5/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/log_p.svg\",\n\t\"./public/preset/5/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/mol_wt.svg\",\n\t\"./public/preset/5/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/nhoh_count.svg\",\n\t\"./public/preset/5/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/no_count.svg\",\n\t\"./public/preset/5/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_acceptors.svg\",\n\t\"./public/preset/5/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_h_donors.svg\",\n\t\"./public/preset/5/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_het_atoms.svg\",\n\t\"./public/preset/5/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_rot_bonds.svg\",\n\t\"./public/preset/5/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/num_val_electrons.svg\",\n\t\"./public/preset/5/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/ring_count.svg\",\n\t\"./public/preset/5/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/5/tpsa.svg\",\n\t\"./public/preset/6/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_count.svg\",\n\t\"./public/preset/6/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/6/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/log_p.svg\",\n\t\"./public/preset/6/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/mol_wt.svg\",\n\t\"./public/preset/6/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/nhoh_count.svg\",\n\t\"./public/preset/6/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/no_count.svg\",\n\t\"./public/preset/6/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_acceptors.svg\",\n\t\"./public/preset/6/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_h_donors.svg\",\n\t\"./public/preset/6/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_het_atoms.svg\",\n\t\"./public/preset/6/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_rot_bonds.svg\",\n\t\"./public/preset/6/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/num_val_electrons.svg\",\n\t\"./public/preset/6/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/ring_count.svg\",\n\t\"./public/preset/6/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/6/tpsa.svg\",\n\t\"./public/preset/7/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_count.svg\",\n\t\"./public/preset/7/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/7/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/log_p.svg\",\n\t\"./public/preset/7/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/mol_wt.svg\",\n\t\"./public/preset/7/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/nhoh_count.svg\",\n\t\"./public/preset/7/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/no_count.svg\",\n\t\"./public/preset/7/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_acceptors.svg\",\n\t\"./public/preset/7/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_h_donors.svg\",\n\t\"./public/preset/7/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_het_atoms.svg\",\n\t\"./public/preset/7/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_rot_bonds.svg\",\n\t\"./public/preset/7/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/num_val_electrons.svg\",\n\t\"./public/preset/7/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/ring_count.svg\",\n\t\"./public/preset/7/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/7/tpsa.svg\",\n\t\"./public/preset/8/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_count.svg\",\n\t\"./public/preset/8/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/8/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/log_p.svg\",\n\t\"./public/preset/8/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/mol_wt.svg\",\n\t\"./public/preset/8/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/nhoh_count.svg\",\n\t\"./public/preset/8/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/no_count.svg\",\n\t\"./public/preset/8/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_acceptors.svg\",\n\t\"./public/preset/8/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_h_donors.svg\",\n\t\"./public/preset/8/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_het_atoms.svg\",\n\t\"./public/preset/8/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_rot_bonds.svg\",\n\t\"./public/preset/8/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/num_val_electrons.svg\",\n\t\"./public/preset/8/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/ring_count.svg\",\n\t\"./public/preset/8/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/8/tpsa.svg\",\n\t\"./public/preset/9/heavy_atom_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_count.svg\",\n\t\"./public/preset/9/heavy_atom_mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/heavy_atom_mol_wt.svg\",\n\t\"./public/preset/9/log_p.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/log_p.svg\",\n\t\"./public/preset/9/mol_wt.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/mol_wt.svg\",\n\t\"./public/preset/9/nhoh_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/nhoh_count.svg\",\n\t\"./public/preset/9/no_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/no_count.svg\",\n\t\"./public/preset/9/num_h_acceptors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_acceptors.svg\",\n\t\"./public/preset/9/num_h_donors.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_h_donors.svg\",\n\t\"./public/preset/9/num_het_atoms.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_het_atoms.svg\",\n\t\"./public/preset/9/num_rot_bonds.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_rot_bonds.svg\",\n\t\"./public/preset/9/num_val_electrons.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/num_val_electrons.svg\",\n\t\"./public/preset/9/ring_count.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/ring_count.svg\",\n\t\"./public/preset/9/tpsa.svg\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/public/preset/9/tpsa.svg\",\n\t\"./stat_headers\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/stat_headers.js\",\n\t\"./stat_headers.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/stat_headers.js\",\n\t\"./stats\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats.js\",\n\t\"./stats.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats.js\",\n\t\"./stats_helpers\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats_helpers.js\",\n\t\"./stats_helpers.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/stats_helpers.js\",\n\t\"./uploads\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/uploads.js\",\n\t\"./uploads.js\": \"./webSoakDB/webSoakDB_frontend/src/components/picker/uploads.js\"\n};\n\n\nfunction webpackContext(req) {\n\tvar id = webpackContextResolve(req);\n\treturn __webpack_require__(id);\n}\nfunction webpackContextResolve(req) {\n\tif(!__webpack_require__.o(map, req)) {\n\t\tvar e = new Error(\"Cannot find module '\" + req + \"'\");\n\t\te.code = 'MODULE_NOT_FOUND';\n\t\tthrow e;\n\t}\n\treturn map[req];\n}\nwebpackContext.keys = function webpackContextKeys() {\n\treturn Object.keys(map);\n};\nwebpackContext.resolve = webpackContextResolve;\nmodule.exports = webpackContext;\nwebpackContext.id = \"./webSoakDB/webSoakDB_frontend/src/components/picker sync recursive ^.*$\";\n\n//# sourceURL=webpack://webSoakDB/./webSoakDB/webSoakDB_frontend/src/components/picker/_sync_^.*$?");
+
 /***/ })
 
 /******/ 	});
@@ -1038,6 +4435,26 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) scriptUrl = scripts[scripts.length - 1].src
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /************************************************************************/

@@ -70,12 +70,12 @@ class ProteinSerializer(serializers.ModelSerializer):
 		model = Protein
 		fields = ['id', 'proposal', 'name', 'space_group', 'a', 'b', 'c', 'alpha', 'beta', 'gamma']
 
- 
-class PresetSerializer(serializers.Serializer):
-	id = serializers.IntegerField()
-	name = serializers.CharField(max_length=32)
-	description = serializers.CharField(max_length=256)
-	subsets = LibrarySubsetSerializer(many=True)
+class PresetSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Preset
+		fields = ['id', 'name', 'description', 'subsets']
+		depth=1;
+	
 
 class CrystalPlateSerializer(serializers.ModelSerializer):
 	class Meta:

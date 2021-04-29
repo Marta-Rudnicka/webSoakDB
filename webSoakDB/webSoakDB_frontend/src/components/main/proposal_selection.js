@@ -37,16 +37,15 @@ class ProposalSelection extends React.Component {
 		);
 		
 		let loggedIn = null;
-		loggedIn = this.props.proposal ?  <Redirect to="/home/" /> : null;
+		loggedIn = this.props.proposal ?  <Redirect to="/selection/home/" /> : null;
 		
 		return (
-		<div>
-			<h1>Temporary logging page</h1>
-			<div>This is a temporary page made for testing purposes. Normally, a user will have to log in first using their fed id, and then select the proposal.</div>
+		<main id="choose-proposal">
+			<section>
+			<h1>Proposals</h1>
 			<form>
-				<legend>Choose proposal before browsing other pages</legend>
+				<legend>Select proposal to manage</legend>
 				<p>
-					<label htmlFor="proposal_name">Select proposal:</label> 
 					<select name="proposal_name" onChange={event => {this.getSelection(event)}}>
 						<option value="">...</option>
 					{options}
@@ -54,8 +53,9 @@ class ProposalSelection extends React.Component {
 				</p>
 				<button onClick={event => this.props.logIn(this.state.chosenName)} >Confirm selection</button>
 			</form>
+			</section>
 			{loggedIn}
-		</div>
+		</main>
 		);
 	}
 }

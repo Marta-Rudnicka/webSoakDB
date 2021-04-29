@@ -23,7 +23,7 @@ class PlateLookup extends React.Component {
 				show_library: this.props.is_a_preset,
 				show_code: true, 
 				show_smiles: true, 
-				show_structure: false, 
+				show_structure: true, 
 				show_concentration: this.props.is_a_plate, 
 				show_mol_wt: !this.props.is_a_plate, 
 				show_tpsa: !this.props.is_a_plate,
@@ -209,7 +209,7 @@ class PlateLookup extends React.Component {
 					
 					<ExportBar id={this.props.id} />
 					{plateList}
-					
+					<div>2D structures powered by <a href="https://pubchem.ncbi.nlm.nih.gov/">PubChem®</a></div>
 					
 				</div>
 				<table data-toggle="table" data-pagination="true" data-search="true" className="table table-bordered table-hover" id="table">

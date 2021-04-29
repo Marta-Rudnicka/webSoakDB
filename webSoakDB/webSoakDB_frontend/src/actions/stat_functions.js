@@ -86,3 +86,34 @@ export function addUniqueCompounds(oldArray, newArray){
 	}
 	return oldArray;
 }
+
+
+export function removeFromArray(array, elements_to_remove){
+	/*Takes in two arrays, $array and $elements_to_remove; returns a copy
+	 * of $array without items from  $elements_to_remove*/
+	const arrayCopy = array.slice(0, array.length);
+	elements_to_remove.forEach(element => {
+		const found = arrayCopy.find(item => item === element);
+		arrayCopy.splice(arrayCopy.indexOf(found), 1);
+	});
+	return arrayCopy;
+}
+
+export function getSubsetIds(state, id){
+	/*takes component state and preset id, returns an array of all subset ids in the preset*/
+	const preset = state.presets.find(preset => preset.id === parseInt(id))
+	if (Number.isInteger(preset.subsets[0])){
+		return preset.subsets;
+	}
+	return getAttributeArray(preset.subsets, "id");
+}
+
+export function sharedItems(array1, array2){
+	let output = [];
+	array1.forEach(i =>{
+		if (array2.includes(i)){
+			output.push(i);
+		}
+	});
+	return output;
+}

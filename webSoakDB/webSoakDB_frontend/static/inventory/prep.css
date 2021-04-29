@@ -86,3 +86,10 @@ button.small-button {
 	margin: 1px;
 	font-size: 0.8em;
 }
+
+main#choose-proposal, main#login, main#dashboard{
+	width: 600px;
+	margin: auto;
+	font-size: 1.5em;
+}	
+

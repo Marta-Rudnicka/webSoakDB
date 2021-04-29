@@ -1,13 +1,11 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+@login_required
 @ensure_csrf_cookie
 def index(request):
     return render(request, 'frontend/index.html')
 
-def plate_lookup(request): #, library, plate):
-	return render(request, "frontend/plate_lookup.html")#, {
-		#"library": library,
-		#"plate": plate,
-#	})
+def index2(request, type, pk):
+    return render(request, 'frontend/index.html')

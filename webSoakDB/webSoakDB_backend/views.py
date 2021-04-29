@@ -1,15 +1,23 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .forms import LibraryPlateForm, ExternalLibraryForm, SubsetForm
 from datetime import date
 from .validators import data_is_valid, selection_is_valid
 from .helpers import upload_plate, upload_subset, import_full_libraries, import_library_parts, export_form_is_valid
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponseRedirect
 from API.models import Library, LibraryPlate, LibrarySubset, Proposals
 import mimetypes
 from slugify import slugify
+
+def redirect_to_login(request):
+	return HttpResponseRedirect('accounts/login/')
+
+def dashboard(request):
+	if request.user.is_staff:
+		return render(request, "webSoakDB_backend/dashboard.html", {'user' : request.user})
+	return HttpResponseRedirect('/selection/')
+		
 
 def upload_user_library(request):
 	print('fired upload user library')
@@ -24,20 +32,16 @@ def upload_user_library(request):
 			source = request.FILES["data_file"]
 			filename = fs.save(source.name, source)
 			if data_is_valid(filename, log):
-				print('data is valid')
 				#data to be submitted
 				submitted_name = form.cleaned_data['name']
 				proposal_name = form.cleaned_data['proposal']
 				name = submitted_name + '(' + proposal_name + ')'
 				today = str(date.today())
-				print('data: ', submitted_name, proposal_name, name, today)
 				#create new Library and LibraryPlate objects
 				user_lib = Library.objects.create(name=name, public=False, for_industry=True)
 				user_plate = LibraryPlate.objects.create(library = user_lib, barcode = name, current = True, last_tested = today)
-				print('library and plate created')
 				#upload the compound data for the new library plate
 				upload_plate(filename, user_plate)
-				print('plate created')
 				fs.delete(filename)
 				
 				#add new library to user's proposal
@@ -47,9 +51,8 @@ def upload_user_library(request):
 			
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/upload_success.html")
-			else:
-				fs.delete(filename)
-				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+			fs.delete(filename)
+			return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
 
 def upload_user_subset(request):
 	if request.method == "POST":

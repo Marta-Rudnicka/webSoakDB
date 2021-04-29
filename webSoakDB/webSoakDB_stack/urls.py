@@ -18,8 +18,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('webSoakDB_frontend.urls')),
-    path('', include('webSoakDB_backend.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('API.urls')),
     path('inventory/', include('inventory.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('webSoakDB_backend.urls')),
 ]

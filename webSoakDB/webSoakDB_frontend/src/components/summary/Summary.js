@@ -59,8 +59,9 @@ class Summary extends React.Component {
 	}
 	
 	saveChanges(){
-		this.props.updateLibrarySelection(getAttributeArray(this.state.selectedLibs, "id"));
-		this.props.updateSubsetSelection(getAttributeArray(this.state.selectedSubsets, "id"));
+		this.props.updateSelection(getAttributeArray(this.state.selectedLibs, "id"), getAttributeArray(this.state.selectedSubsets, "id"));
+		//this.props.updateLibrarySelection(getAttributeArray(this.state.selectedLibs, "id"));
+		//this.props.updateSubsetSelection(getAttributeArray(this.state.selectedSubsets, "id"));
 		this.props.trackUnsavedChanges(false);
 		this.setState({libClass : null, subsetClass : null});
 	

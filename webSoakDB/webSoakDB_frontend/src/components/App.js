@@ -32,7 +32,7 @@ class PrivateRoute extends Component {
 		  content = <Route path={this.props.path}> {this.props.children} </Route>;
 		}
 		else {
-			content = <Redirect to='/'/>;
+			content = <Redirect to='/selection/'/>;
 		}
 		
 		return (
@@ -40,7 +40,6 @@ class PrivateRoute extends Component {
 		{content}
 		</React.Fragment>
 		);
-		
 	}
 }
 
@@ -49,12 +48,12 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.logIn = this.logIn.bind(this);
-		this.updateLibrarySelection = this.updateLibrarySelection.bind(this);
-		this.updateSubsetSelection = this.updateSubsetSelection.bind(this);
+		this.updateSelection = this.updateSelection.bind(this);
 		this.trackUnsavedChanges = this.trackUnsavedChanges.bind(this);
 		this.refreshAfterUpload = this.refreshAfterUpload.bind(this);
 		this.state = {
 			proposal: null,
+			unsavedChanges: false,
 			}
 		};
 	
@@ -76,31 +75,24 @@ class App extends Component {
 		}
 	}
 	
-	updateLibrarySelection(idArray){
-		console.log('fired updateLibrarySelection with', idArray);
-		event.preventDefault()
+	updateSelection(libraries, subsets){
+		//event.preventDefault();
 		const apiUrl='/api/update_proposal_selection/' + this.state.proposal.proposal + '/';
-		axios.patch(apiUrl, {libraries: idArray}) 
-		.catch(error => {
-			console.log('updateLibrarySelection: axios error:');
-			console.log(error)
+		axios.patch(apiUrl, {libraries: libraries, subsets: subsets})
+		.then(res =>{
+			if (res.status===200){
+				this.logIn(this.state.proposal.proposal);
+			}
 		})
-		
-		this.logIn(this.state.proposal.proposal);
+		.catch(error => {
+			console.log('updateSelection: axios error:');
+			console.log(error)
+			alert('Failed to save changes in your selection due to server error. Please try again.');
+			this.trackUnsavedChanges(true);
+		})
 	}
 	
-	updateSubsetSelection(idArray){
-		event.preventDefault()
-		const apiUrl='/api/update_proposal_selection/' + this.state.proposal.proposal + '/';
-		axios.patch(apiUrl, {subsets: idArray}) 
-		.catch(error => {
-			console.log('updateLibrarySelection: axios error:');
-			console.log(error)
-		})
-		
-		setTimeout(() => {this.logIn(this.state.proposal.proposal)}, 1000);
-	}
-	
+
 	refreshAfterUpload(){
 		this.props.logIn(this.state.proposal.proposal);	
 	}
@@ -111,25 +103,22 @@ class App extends Component {
 		}
 	}
 	
-	
-	//to give warning when user risks discarding changes
 	trackUnsavedChanges(bool){
-		console.log('fired trackUnsavedChanges')
 		this.setState({unsavedChanges: bool})
 	}
-
 	
-
+	confirmLeaving(event){
+		if(this.state.unsavedChanges){
+			if (!window.confirm("You have unsaved changes in your selection. Do you want to discard them and leave this page?")){
+				event.preventDefault();
+			}
+			else{
+				this.trackUnsavedChanges(false);
+			}
+		}
+	}
 
     render() {
-		let app;
-		if(this.state.proposal){
-			app = <Main proposal={this.state.proposal} logIn={this.logIn} />;
-		}
-		else{
-			app = <ProposalSelection logIn={this.logIn} />;
-		}
-		
         return (
          <div id="content"> 
 			<Router>
@@ -137,44 +126,47 @@ class App extends Component {
 				  <ul className="nav nav-tabs">
 					
 					<li className="nav-item">
-					  <Link className="navbar-brand" to="/home/">Home</Link>
+					  <Link onClick={e => this.confirmLeaving(e)} className="navbar-brand" to="/selection/home/">Home</Link>
 					</li>
 					<li className="nav-item">
-					  <Link className="navbar-brand" to="/selection/">Select compounds</Link>
+					  <Link onClick={e => this.confirmLeaving(e)} className="navbar-brand" to="/selection/selection/">Select compounds</Link>
 					</li>
 					<li className="nav-item">
-					  <Link className="navbar-brand" to="/summary/">Selection summary</Link>
+					  <Link onClick={e => this.confirmLeaving(e)} className="navbar-brand" to="/selection/summary/">Selection summary</Link>
 					</li>
 					<li className="nav-item">
-					  <Link className="navbar-brand" to="/">Log in/out</Link>
+					  <Link onClick={e => this.confirmLeaving(e)} className="navbar-brand" to="/selection/">Change proposal</Link>
+					</li>
+					<li className="nav-item">
+					  <a onClick={e => this.confirmLeaving(e)} className="navbar-brand" href="/accounts/logout/">Log out</a>
 					</li>
 				  </ul>
 				</nav>
 				
 				<Switch> 
-				  <PrivateRoute path="/home/"proposal={this.state.proposal} >
+				  <PrivateRoute path="/selection/home/"proposal={this.state.proposal} >
 					<Home proposal={this.state.proposal}/>
 				  </PrivateRoute>
-				  <PrivateRoute path="/selection/" proposal={this.state.proposal}>
+				  <PrivateRoute path="/selection/selection/" proposal={this.state.proposal}>
 					<Picker 
 						proposal={this.state.proposal}
 						trackUnsavedChanges = {this.trackUnsavedChanges}
-						updateLibrarySelection = {this.updateLibrarySelection}
-						updateSubsetSelection = {this.updateSubsetSelection}
+						updateSelection = {this.updateSelection}
 						refreshAfterUpload = {this.refreshAfterUpload}
+						unsavedChanges = {this.state.unsavedChanges}
 						/>
 				  </PrivateRoute>
-				  <PrivateRoute path="/summary/" proposal={this.state.proposal}>
+				  <PrivateRoute path="/selection/summary/" proposal={this.state.proposal}>
 					<Summary 
 						proposal={this.state.proposal}
 						trackUnsavedChanges = {this.trackUnsavedChanges}
-						updateLibrarySelection = {this.updateLibrarySelection}
-						updateSubsetSelection = {this.updateSubsetSelection}
+						updateSelection = {this.updateSelection}
 					/>
 				  </PrivateRoute>
 				  <PrivateRoute path="/compounds/:type/:id/" children={<UrlTranslator />} proposal={this.state.proposal}/>
-				  <Route path="/">
-					{ this.props.proposal ? <Redirect to="/home/" /> : <ProposalSelection logIn={this.logIn} proposal={this.state.proposal} /> }
+				  
+				  <Route path="/selection/">
+					{ this.props.proposal ? <Redirect to="/selection/home/" /> : <ProposalSelection logIn={this.logIn} proposal={this.state.proposal} /> }
 				  </Route>	
 				</Switch>
 			</Router>
