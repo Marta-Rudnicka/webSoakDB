@@ -71,6 +71,7 @@ function hideRows(className){
 }
 
 function filterRows(value){
+	console.log('fired filterRows');
 	if (value==="all"){
 		showRows("active-row");
 		showRows("inactive-row");

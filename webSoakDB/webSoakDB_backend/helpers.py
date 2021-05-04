@@ -7,6 +7,7 @@ import django.core.exceptions
 from rdkit import Chem
 from rdkit.Chem import Descriptors
 from rdkit.Chem import Crippen
+from rdkit.Chem import Draw
 
 #prepate list of libraries formatted as froms.ChoiceField choices
 def create_lib_selection():
@@ -15,6 +16,7 @@ def create_lib_selection():
 		lib = (library.id, library.name)
 		output.append(lib)
 	return output
+	pass
 	
 #prepare a list of library plates in compound selection
 def get_selection_details(proposal):
@@ -188,3 +190,15 @@ def copy_compounds_to_experiment(proposal):
 			concentration = compound.concentration
 			print('data:', library, plate, well, code, smiles, concentration)
 '''
+
+#fix to take mol as argument to be used during upload
+def create_2d_image(compound):
+	if compound.smiles:
+		mol = Chem.MolFromSmiles(compound.smiles)
+		name = 'images/molecules/' + str(compound.id) + '.svg'
+		path = 'media/' + name
+		Chem.Draw.MolToFile(mol, path)
+		compound.mol_image = name
+		compound.save()
+	
+import datetime

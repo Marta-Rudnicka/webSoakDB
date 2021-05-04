@@ -15,25 +15,12 @@ function showHide(value) {
 }
 
 const stat_options = display_options.slice(5)
-/*
-const 
 
-function StructurePicLoader(props) {
-	return(	
-		<Suspense fallback={<div>Loading image...</div>}>
-			<StructurePic smiles={props.smiles} />
-		</Suspense>
-	);
-}
-*/
 
 class TableRow extends React.Component {
 	
 	
 	render() {
-		let url_smiles = "";
-		const img_url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/' + url_smiles + '/PNG'
-		//let img_url = 'https://cactus.nci.nih.gov/chemical/structure/' + url_smiles + '/image'
 		let classes = {};
 		
 		display_options.forEach(option => {
@@ -43,28 +30,26 @@ class TableRow extends React.Component {
 		let general_cells;
 		
 		if (this.props.is_a_plate){
-			url_smiles = this.props.compound.compound.smiles.replace('#', '%23');
 			general_cells = (
 				<React.Fragment>
 					<td className={classes.show_well} >{this.props.compound.well}</td>
 					<td className={classes.show_code} > {this.props.compound.compound.code}</td>
 					<td className={classes.show_smiles} >{this.props.compound.compound.smiles}</td>
 					<td className={classes.show_structure}>
-						<StructurePic smiles={this.props.compound.compound.smiles} />
+						<StructurePic id={this.props.compound.compound.id} />
 					</td>
 					<td className={classes.show_concentration}>{this.props.compound.concentration}</td>
 				</React.Fragment>
 			)
 		}
 		else {
-			url_smiles = this.props.compound.smiles.replace('#', '%23');
 			general_cells = (
 				<React.Fragment>
 					
 					<td className={classes.show_code} > {this.props.compound.code}</td>
 					<td className={classes.show_smiles} >{this.props.compound.smiles}</td>
 					<td className={classes.show_structure}>
-						<StructurePic smiles={this.props.compound.smiles} />
+						<StructurePic id={this.props.compound.id} />
 					</td>
 				</React.Fragment>
 			)
@@ -104,5 +89,3 @@ class TableRow extends React.Component {
 }
 
 export default TableRow;
-
-//<img className="img2d" src={img_url} />

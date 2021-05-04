@@ -16,13 +16,13 @@ RUN \
   wget -qO- https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   apt-get update && \
   apt-get install -yqq nodejs yarn && \
-  pip3 install -U pip && pip3 install pipenv && pip3 install python-slugify && \
-  npm i -g npm@^6 && \
+  pip3 install -U pip && pip3 install pipenv \
+#  npm i npm@6 && \
   curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && ln -s /root/.poetry/bin/poetry /usr/local/bin && \
   rm -rf /var/lib/apt/lists/*
 
 # Install Python Stuff
-RUN pip3 install django djangorestframework django-rest-knox psycopg2-binary
+RUN pip3 install django djangorestframework django-rest-knox psycopg2-binary seaborn python-slugify
 
 # Move Stuff to a new place
 WORKDIR /usr/app
@@ -40,4 +40,3 @@ EXPOSE 8000
 
 # Run on Entry
 CMD cd /usr/app/webSoakDB ; python3 ./manage.py migrate ; python3 ./manage.py runserver 0.0.0.0:8000
-

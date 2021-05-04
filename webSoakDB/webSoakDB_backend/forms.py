@@ -4,10 +4,8 @@ from .helpers import create_lib_selection
 from django.forms import formset_factory
 	
 libs = create_lib_selection()
-
 proposals = list([item.id, item.proposal] for item in Proposals.objects.all())
 libraries = list([item.id, item.name] for item in Library.objects.filter(public=True))
-
 
 class DateInput(forms.DateInput):
 	input_type= 'date'

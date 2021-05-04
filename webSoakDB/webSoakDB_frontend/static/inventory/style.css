@@ -242,6 +242,7 @@ table, input, select {
 	text-align: right;
 }
 
+/*
 .active-row td {
 	animation: grow-vertically 0.2s ease;
 }
@@ -257,7 +258,7 @@ table, input, select {
         padding: 0.75rem;
         transform: scaleY(1);
     }
-}
+}*/
 
 div#date {
 	border-left: solid black 1px;

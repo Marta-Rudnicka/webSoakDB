@@ -42,7 +42,7 @@ for filename in os.listdir('.'):
 '''
 #######################################
 libraries = Library.objects.filter(public=True)
-img_path = "webSoakDB_frontend/src/components/picker/public/" #where images for React are stored
+img_path = "images/graphs/"
 
 properties = ["mol_wt", 
 			"log_p", 
@@ -58,6 +58,7 @@ properties = ["mol_wt",
 			"ring_count",
 			"tpsa"
 			]
+		
 
 def get_compounds(obj, obj_type):
 	if obj_type=="library":
@@ -79,10 +80,16 @@ def get_preset_compounds(preset):
 	return c
 
 def get_current_lib_compounds(library):
+	print('library: ', library)
+#	for plate in library.plates:
+#		print(plate.name + "current :" + plate.current)
 	current_plates = LibraryPlate.objects.filter(library = library, current=True)
+#	print('current_plates: ', current_plates)
 	source_wells = []
 	for p in current_plates:
 		source_wells += p.compounds.all().filter(active=True)
+	
+#	print('source_wells: ', source_wells)
 	
 	return [sw.compound for sw in source_wells]
 
@@ -96,15 +103,9 @@ def dataset(compounds, attr):
 
 def make_images(obj, obj_type):
 	compounds = get_compounds(obj, obj_type)
-	path = img_path + obj_type + '/' + str(obj.id)
-	
-	try:
-		os.mkdir(path)
-	except FileExistsError:
-		pass
 	
 	for p in properties:
-		name = path + "/" + p + ".svg"
+		name = img_path + p + "/" + str(obj.id) + ".svg"
 		
 		try:
 			os.remove(name)
@@ -119,3 +120,13 @@ def make_images(obj, obj_type):
 				graph = sns.displot(data)
 			
 		graph.savefig(name, dpi=100)
+
+
+def set_image_fields(lib):
+	for p in properties:
+		attr = p + "_graph"
+		path = img_path + p + "/" + str(lib.id) + ".svg"
+		setattr(lib, attr, path)
+	
+	lib.save()
+
