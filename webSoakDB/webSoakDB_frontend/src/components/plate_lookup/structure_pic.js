@@ -6,7 +6,7 @@ import { ZoomInIcon } from '../icons.js';
 class StructurePic extends React.Component {
 		
 	render() {
-		const img_url = '/media/images/molecules/' + this.props.id + '.svg'
+		const img_url = '/molecule/' + this.props.id + '/'
 		return ( 
 		<div className="img2d">
 			<LazyLoadImage

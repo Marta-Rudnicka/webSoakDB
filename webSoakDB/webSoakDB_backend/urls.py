@@ -20,4 +20,7 @@ urlpatterns = [
     path('uploads/formatting_help/', views.formatting, name="formatting_help"),
     path('downloads/plate-map/<int:pk>/', views.download_current_plate_map, name="download_plate_map"),
     path('downloads/export-for-soakdb/', views.export_selection_for_soakdb, name="export_for_soakdb"),
+    path('molecule/<int:pk>/', views.serve_2d),
+    path('histogram/<str:obj_type>/<int:pk>/<str:attr>/', views.serve_histogram),
+    path('test/<str:obj_type>/<int:pk>/', views.test)
 ]

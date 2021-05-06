@@ -43,7 +43,7 @@ class LibraryOption extends React.Component {
 					name="lib_ids" defaultChecked={this.props.defaultChecked} 
 					onChange={event => this.props.handleCheckboxChange(event)} 
 				/>
-				<label htmlFor={"l_" + this.props.lib.id}>{lib.name} ({lib.size}) <ChevronDown size="16" handleClick={this.showDetails}/></label>
+				<p>{lib.name} ({lib.size}) <ChevronDown size="16" handleClick={this.showDetails}/></p>
 				{details}
 				<ul>
 				{presets}

@@ -1,7 +1,8 @@
 from __future__ import unicode_literals
 from django.db import models
 
-#INVENTORY DATA - mostly SPA-only classes
+#INVENTORY DATA
+
 class Protein(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     space_group = models.CharField(max_length=100, null=True, blank=True)
@@ -12,6 +13,7 @@ class Protein(models.Model):
     beta = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     gamma = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
 
+#modified from original xchem_db model: added code attribute, smiles no longer unique, moved
 class Compounds(models.Model):
     smiles = models.CharField(max_length=255, blank=True, null=True)
     code = models.CharField(max_length=32, blank=True, null=True)
@@ -34,7 +36,6 @@ class Compounds(models.Model):
     
     def __str__ (self):
         return self.code
-
 
 class Library(models.Model):
     '''Fragment library. If public=True, it is an XChem in-house library, otherwise
@@ -97,6 +98,12 @@ class SourceWell(models.Model):
     def __str__ (self):
         return f"{self.library_plate}: {self.well}"
 
+class SWStatuschange(models.Model):
+	'''an instance of marking a SourceWell active or inactive'''
+	source_well = models.ForeignKey(SourceWell, on_delete=models.CASCADE, related_name="status_changes")
+	date = models.DateField()
+	activation = models.BooleanField(default=False)
+	
 class LibrarySubset(models.Model):
     '''A selection of compounds from a specific library; always created automatically
     Origin is an automatically generated string to inform how the subset was added to a selection.

@@ -1,26 +1,20 @@
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.files.storage import FileSystemStorage
+
 from .forms import LibraryPlateForm, ExternalLibraryForm, SubsetForm
-from datetime import date
+from .histograms import get_histogram, get_all_histograms
 from .validators import data_is_valid, selection_is_valid
 from .helpers import upload_plate, upload_subset, import_full_libraries, import_library_parts, export_form_is_valid
-from django.core.files.storage import FileSystemStorage
-from API.models import Library, LibraryPlate, LibrarySubset, Proposals
+from API.models import Library, LibraryPlate, LibrarySubset, Proposals, Compounds, Preset
+
 import mimetypes
 from slugify import slugify
-
-def redirect_to_login(request):
-	return HttpResponseRedirect('accounts/login/')
-
-def dashboard(request):
-	if request.user.is_staff:
-		return render(request, "webSoakDB_backend/dashboard.html", {'user' : request.user})
-	return HttpResponseRedirect('/selection/')
-		
+from datetime import date
+from rdkit import Chem
+from rdkit.Chem import Draw
 
 def upload_user_library(request):
-	print('fired upload user library')
 	today = str(date.today())
 	
 	if request.method == "POST":
@@ -32,14 +26,17 @@ def upload_user_library(request):
 			source = request.FILES["data_file"]
 			filename = fs.save(source.name, source)
 			if data_is_valid(filename, log):
+				
 				#data to be submitted
 				submitted_name = form.cleaned_data['name']
 				proposal_name = form.cleaned_data['proposal']
 				name = submitted_name + '(' + proposal_name + ')'
 				today = str(date.today())
+				
 				#create new Library and LibraryPlate objects
 				user_lib = Library.objects.create(name=name, public=False, for_industry=True)
 				user_plate = LibraryPlate.objects.create(library = user_lib, barcode = name, current = True, last_tested = today)
+				
 				#upload the compound data for the new library plate
 				upload_plate(filename, user_plate)
 				fs.delete(filename)
@@ -51,12 +48,14 @@ def upload_user_library(request):
 			
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/upload_success.html")
+			
 			fs.delete(filename)
 			return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
 
 def upload_user_subset(request):
 	if request.method == "POST":
 		form = SubsetForm(request.POST, request.FILES)
+		
 		if form.is_valid():
 			log = []
 			fs = FileSystemStorage()
@@ -64,8 +63,7 @@ def upload_user_subset(request):
 			library_id = form.cleaned_data['lib_id']
 			filename = fs.save(source.name, source)
 			if selection_is_valid(filename, log, library_id):
-				print('Valid data; uploading to db')
-				
+								
 				#data to be submitted
 				name = form.cleaned_data['name']
 				proposal_name = form.cleaned_data['proposal']
@@ -82,7 +80,6 @@ def upload_user_subset(request):
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/upload_success.html")
 			else:
-				print('Invalid data - no upload')
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
 
@@ -111,7 +108,7 @@ def download_current_plate_map(request, pk):
 def export_selection_for_soakdb(request):
 	if request.method == "POST":
 		if not export_form_is_valid(request.POST):
-			error_str = ["Application error:  cannot generate download file. Please report to developers. You should never see this message unless you manually edit the HTML in the browser"]
+			error_str = ["Application error:  cannot generate download file. Please report to developers."]
 			return render(request, "webSoakDB_backend/error_log.html", {'error_log': error_str})
 		
 		prop = request.POST.get('proposal', False)
@@ -122,16 +119,52 @@ def export_selection_for_soakdb(request):
 			for c in source_wells:
 				line = c.library_plate.barcode + ',' + c.well + ',' + c.library_plate.library.name + ',' + c.compound.smiles + ',' + c.compound.code + "\n"
 				f.write(line)
-			f.close()
+			f.close() #to ensure the whole file will get served
 		
 		with open('files/soakdb-export.csv', 'r+') as f:
 			filename = prop + '-' + 'soakDB-source-export-' + str(date.today()) + '.csv'
 			response = HttpResponse(f, content_type='text/csv')
 			response['Content-Disposition'] = "attachment; filename=%s" % filename
 			return response
+
+def serve_2d(request, pk):
+	compound = Compounds.objects.get(pk=pk)
+	mol = Chem.MolFromSmiles(compound.smiles)
+	img = Draw.MolToImage(mol)
+	response = HttpResponse(content_type="image/png")
+	img.save(response, "PNG")
+	return response
+
+def serve_histogram(request, obj_type, pk, attr):
+	if obj_type=="library":
+		obj = Library.objects.get(pk=pk)
+	if obj_type=="preset":
+		obj = Preset.objects.get(pk=pk)
+	if obj_type=="selection":
+		pass #TODO
+	g = get_histogram(obj, obj_type, attr)
+	return HttpResponse(g)
 		 
 def dummy(request):
-	return render(request, "webSoakDB_backend/dummy.html");
+	return render(request, "webSoakDB_backend/dummy.html")
 
 def formatting(request):
-	return render(request, "webSoakDB_backend/formatting-help.html");
+	return render(request, "webSoakDB_backend/formatting-help.html")
+
+def redirect_to_login(request):
+	return HttpResponseRedirect('accounts/login/')
+
+def dashboard(request):
+	if request.user.is_staff:
+		return render(request, "webSoakDB_backend/dashboard.html", {'user' : request.user})
+	return HttpResponseRedirect('/selection/')
+
+def test(request, obj_type, pk):
+	if obj_type=="library":
+		obj = Library.objects.get(pk=pk)
+	if obj_type=="preset":
+		obj = Preset.objects.get(pk=pk)
+	
+	g = get_all_histograms(obj, obj_type)
+	
+	return HttpResponse(g)

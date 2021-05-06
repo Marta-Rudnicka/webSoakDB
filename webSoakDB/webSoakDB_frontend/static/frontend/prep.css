@@ -376,3 +376,7 @@ main#choose-proposal select, main#choose-proposal button{
 	width: 100%;
 }
 
+iframe {
+	width: 300px;
+	height: 300px;
+}

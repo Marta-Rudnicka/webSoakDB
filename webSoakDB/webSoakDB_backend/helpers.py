@@ -9,6 +9,9 @@ from rdkit.Chem import Descriptors
 from rdkit.Chem import Crippen
 from rdkit.Chem import Draw
 
+
+from PIL import Image
+
 #prepate list of libraries formatted as froms.ChoiceField choices
 def create_lib_selection():
 	output = []
@@ -200,5 +203,3 @@ def create_2d_image(compound):
 		Chem.Draw.MolToFile(mol, path)
 		compound.mol_image = name
 		compound.save()
-	
-import datetime
