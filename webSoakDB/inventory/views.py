@@ -3,15 +3,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.contrib.admin.views.decorators import staff_member_required
+from webSoakDB_stack.settings import MEDIA_ROOT
 from datetime import date, datetime
 import string
 import re
-from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy, current_library_selection
-from .dt import get_well_dictionary
+from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy, current_library_selection, set_status
+from .dt import get_well_dictionary, manage_sw_status_change
 from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm
 from webSoakDB_backend.validators import data_is_valid, selection_is_valid
 from webSoakDB_backend.helpers import upload_plate, upload_subset
-from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset
+from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset, SWStatuschange
 
 
 
@@ -21,9 +22,11 @@ fake_well_dictionary = {} #
 @staff_member_required
 def index(request):
 	return render(request, "inventory/inventory-index.html")
-
+'''
 @staff_member_required
 def dispense_testing(request):
+	pass
+	
 	rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 	columns = [ '0' + str(i) for i in range(1, 10)] + ['10', '11', '12']
 	
@@ -35,7 +38,7 @@ def dispense_testing(request):
 		'rows': rows,
 		'l': l,
 	})
-
+	'''
 @staff_member_required
 def libraries(request):
 	libraries = Library.objects.filter(public=True).order_by("name")
@@ -103,7 +106,6 @@ def presets(request):
 
 @staff_member_required
 def update_plate(request, pk):
-	'''show information about compounds in plate, provides forms to edit plate data, delete a plate, and deactivate compounds'''
 	plate = LibraryPlate.objects.get(pk=pk)
 	compounds_count = plate.compounds.all().count()
 	
@@ -151,8 +153,9 @@ def track_usage(request, pk, date, mode):
 	
 	plate = LibraryPlate.objects.get(pk=pk)
 	compounds = fake_compounds_copy(plate.compounds.all()) #make a copy of the data to edit it without touching the db
+	modified_compounds = [compound for compound in compounds if len(compound.changes) > 0 ]
 	timestamp = datetime.strptime(date, "%Y-%m-%d").date() #make a datetime object based on the url
-	change_dates = get_change_dates(compounds, plate) #produce the list of all dates on which any compounds were deactivated
+	change_dates = get_change_dates(modified_compounds) #produce the list of all dates on which any compounds were (de)activated
 	
 	#generate strings needed to switch between the general and the graphic view
 	if mode == "general-view":
@@ -163,9 +166,8 @@ def track_usage(request, pk, date, mode):
 		switch_view_url = "general-view"
 	
 	#activate all the compounds that were still active on the inspected date
-	for c in compounds:
-		if c.deactivation_date and c.deactivation_date > timestamp:
-			c.active = True
+	for c in modified_compounds:
+		c = set_status(c, timestamp)
 	
 	#decide what size the table graphically representing the library plate should be
 	size = get_plate_size(plate.compounds.all())
@@ -391,7 +393,6 @@ def edit_plate(request):
 			library = Library.objects.get(pk=library_id)
 			barcode = form.cleaned_data['barcode']
 			current = form.cleaned_data['current']
-			print("pk: ", pk, ", library: ", library, ", barcode : ", barcode, ", current: ", current)
 			plate = LibraryPlate.objects.get(pk=pk)
 			plate.library = library
 			plate.barcode = barcode
@@ -412,11 +413,9 @@ def delete_library(request):
 		pk = request.POST.get('id')
 		lib = Library.objects.get(pk=pk)
 		if len(lib.plates.all()) == 0:
-			print('Good to delete')
 			lib.delete()
 			return HttpResponseRedirect('../libraries/')
 		else:
-			print('Cannot be deleted')
 			return HttpResponseRedirect('../library-deletion-error/')
 
 @staff_member_required
@@ -449,14 +448,33 @@ def deactivate_compounds(request):
 		redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
 		plate.last_tested = today
 		plate.save()
+		
+		not_dispensed = set()
+		#deactivate compounds that were not dispensed (unless already inactive)
 		for key in request.POST:
-			if key != 'csrfmiddlewaretoken' and key != "plate_id" and key != "":
+			if key not in ['csrfmiddlewaretoken', "plate_id", "", "already_inactive"]:
 				compound = SourceWell.objects.get(pk=key)
-				print(compound)
-				compound.active = False
-				compound.deactivation_date = today
-				compound.save()
-			
+				not_dispensed.add(int(key))
+				if compound.active:
+					compound.active = False
+					compound.deactivation_date = today
+					compound.save()
+					
+					manage_sw_status_change(compound, today, False)
+					#SWStatuschange.objects.create(source_well=compound, date=today, activation=False)
+		
+		#activate inactive compounds that were dispensed anyway
+		raw_string = request.POST.get('already_inactive')
+		already_inactive = set([ int(n) for n in raw_string.split() ])
+		activated = already_inactive - not_dispensed
+		for sw_id in activated:
+			compound = SourceWell.objects.get(pk=sw_id)
+			compound.active = True
+			compound.deactivation_date = None
+			compound.save()
+			manage_sw_status_change(compound, today, True)
+			#SWStatuschange.objects.create(source_well=compound, date=today, activation=True)
+		
 		return HttpResponseRedirect(redirect_url)
 
 @staff_member_required
@@ -469,15 +487,17 @@ def dispense_testing_map(request):
 	
 	if request.method == "POST":
 		if form.is_valid():
+			print('form is valid')
 			source = request.FILES["dt_map"]
+			print('source: ', source)
 			if not re.fullmatch('(.*)+\.csv$', source.name):
 				return render(request, "inventory/dispense-testing.html", {"errors": ["Invalid file: the well map must be a csv file."], "filename" : source.name})
 			
 			pk = request.POST.get('id')
 			fs = FileSystemStorage()
-			source = request.FILES["dt_map"]
 			filename = fs.save(source.name, source)
-			dt_dict = get_well_dictionary(filename)
+			print('filename: ', filename)
+			dt_dict = get_well_dictionary(MEDIA_ROOT + '/' + filename)
 			fs.delete(filename)
 			plate=LibraryPlate.objects.get(pk=pk)
 			

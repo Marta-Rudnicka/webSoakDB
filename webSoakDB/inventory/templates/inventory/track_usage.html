@@ -1,191 +1,191 @@
 {% extends "layout.html" %}
 {% load static %}
-	{% block main %}
-	<script>
-		function arrange(){
-			const compounds = document.querySelectorAll('.c');
-			compounds.forEach(compound => {
-				const re = new RegExp('[A-Z]{1,2}[1-9]$');
-				let well = compound.dataset.well
-				
-				//insert leading zero where needed
-				if (re.test(well)){
-					well = well.slice(0, well.length-1) + '0' + well[well.length-1];
-				}
-				
-				const cell = document.getElementById(well)
-				if (cell) {
-					cell.appendChild(compound);
-					cell.className = compound.className;
-				}
-			});
-		}		
+  {% block main %}
+  <script>
+    function arrange(){
+      const compounds = document.querySelectorAll('.c');
+      compounds.forEach(compound => {
+        const re = new RegExp('[A-Z]{1,2}[1-9]$');
+        let well = compound.dataset.well
+        
+        //insert leading zero where needed
+        if (re.test(well)){
+          well = well.slice(0, well.length-1) + '0' + well[well.length-1];
+        }
+        
+        const cell = document.getElementById(well)
+        if (cell) {
+          cell.appendChild(compound);
+          cell.className = compound.className;
+        }
+      });
+    }    
 
-		document.addEventListener('DOMContentLoaded', () => setTimeout(() => arrange(), 1));
-				
-		
-		function redirect(value, id, main_id){
-			console.log('args: ', value, id, main_id)
-			const url = '/inventory/track-usage/' +id+ '/' + value + '/' + main_id + '/';
-			console.log('url: ', url)
-			location.replace(url);
-			
-		}
-	</script>
-	<main id="{{main_id}}">
-		<h1>Track usage: {{plate.library.name}} - {{ plate.barcode }}  </h1>
-		<section id="top">
-			<div>
-				<h3>Select date</h3>
-				<table>
-					<tr>
-						<td>
-							<label>Dates with recorded changes:</label>
-						</td>
-						<td>
-							<select onchange="redirect(value, {{plate.id}}, '{{main_id}}')">
-								<option value="">Choose update day</option>
-								{% for date in change_dates %}
-								<option value="{{date|date:"Y-m-d"}}">{{date|date:"d M Y"}}</option>
-								{% endfor %}
-							</select>
-						</td>
-					</tr>
-						<td>
-							<label>Select an arbitrary date:</label>
-						</td>
-						<td>
-							<input type="date" onchange="redirect(value, {{plate.id}}, '{{main_id}}')">
-						</td>
-					</tr>
-				</table>
-				<a href="/inventory/track-usage/{{plate.id}}/{{date}}/{{switch_view_url}}"><button>Switch to {{switch_view}}</button></a>
-			</div>
-			<div id="date">
-				<h2>Availability of compouns {% if timestamp == plate.last_tested %} since {% else %} from {% endif %}:</h2>
-				<strong>{{timestamp | date:"l, d F Y"}}</strong>
-				<p>{% if timestamp == plate.last_tested %} (up to date) {% else %} until the next change {% endif %}</p>
-			</div>
-			
-			<div id="plate-info">
-				<h3>Plate information (now)</h3>
-				<table>
-					<tbody>
-						<tr>
-							<td><strong>Library:</strong></td>
-							<td>{{ plate.library.name }}</td>
-						</tr>
-						<tr>
-							<td><strong>Barcode:</strong></td>
-							<td>{{ plate.barcode }}</td>
-						</tr>
-						<tr>
-							<td><strong>Last updated:</strong></td>
-							<td>{{ plate.last_tested | date:"Y-m-d" }}</td>
-						</tr>
-						<tr>
-							<td><strong>Current:</strong></td>
-							<td>{% if plate.current %} Yes {% else %} No {% endif %}</td>
-						</tr>
-					</tbody>
-				</table>				
-			</div>
-			
-			<div id="availability">
-				<h3>Compounds availability on {{date}}</h3>
-				<table>
-					<tbody>
-						<tr>
-							<td><strong>All</strong></td>
-							<td>{{ plate.compounds.all|length }}</td>
-						</tr>
-						<tr>
-							<td><strong>Available</strong></td>
-							<td>{{ active_count }}</td>
-						</tr>
-						<tr>
-							<td><strong>Unavailable</strong></td>
-							<td>{{ inactive_count }}</td>
-						</tr>
-						<tr>
-							<td><strong>Availability</strong></td>
-							<td>{{ availability }}%</td>
-						</tr>
-					</tbody>
-				</table>					
-			</div>
-		</section>
-		
-		<section>
-			<table class="table-bordered" id="vis">
-				<caption>Visualisation</caption>
-				<thead>
-					<tr>
-						<th></th>
-						{% for c in columns %}
-						<th>{{ c }}</th>
-						{% endfor %}
-					</tr>
-				</thead>
-				<tbody>
-					{% for r in rows %}
-						<tr>
-							<td>{{ r }}</td>
-							{% for c in columns %}
-							<td id="{{r}}{{c}}"></td>
-							{% endfor %}
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</section>
-		<section class="hidden">
-			<div>
-				{% for compound in compounds %}
-					{% if compound.active %} 
-					<div class="c c-active" data-well="{{compound.well}}">{{compound.well}}</div>
-					{% else %}
-					<div class="c c-inactive" data-well="{{compound.well}}">{{compound.well}}</div>
-					{% endif %}
-				{% endfor %}
-				</div>
-				<button onclick="arrange()">Arrange</button>
-			</section>
-		
-			<section id="extra-table">
-				<div>
-				<table class="small-font-table table-bordered table-hover" id="table">
-					<caption>Compounds</caption>
-					<thead>
-						<tr>
-							<th>Well</th>
-							<th>Code</th>
-							<th>Active</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr id="first-line" class="hidden"><td></td></tr>
-						{% for compound in compounds %}
-						{% if compound.active %}
-							<tr id="w-{{compound.well}}">
-								
-						{% else %}
-							<tr id="w-{{compound.well}}" class="inactive-row">
-								
-						{% endif%}
-							
-							<td>{{compound.well}}</td>
-							<td>{{compound.code}}</td>
-							{% if compound.active %}
-								<td>Active</td>
-							{% else %}
-								<td>Inactive</td>
-							{% endif %}
-						</tr>
-					{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		</section>
-	</main>
-	{% endblock %}
+    document.addEventListener('DOMContentLoaded', () => setTimeout(() => arrange(), 1));
+        
+    
+    function redirect(value, id, main_id){
+      console.log('args: ', value, id, main_id)
+      const url = '/inventory/track-usage/' +id+ '/' + value + '/' + main_id + '/';
+      console.log('url: ', url)
+      location.replace(url);
+      
+    }
+  </script>
+  <main id="{{main_id}}">
+    <h1>Track usage: {{plate.library.name}} - {{ plate.barcode }}  </h1>
+    <section id="top">
+      <div>
+        <h3>Select date</h3>
+        <table>
+          <tr>
+            <td>
+              <label>Dates with recorded changes:</label>
+            </td>
+            <td>
+              <select onchange="redirect(value, {{plate.id}}, '{{main_id}}')">
+                <option value="">Choose update day</option>
+                {% for date in change_dates %}
+                <option value="{{date|date:"Y-m-d"}}">{{date|date:"d M Y"}}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+            <td>
+              <label>Select an arbitrary date:</label>
+            </td>
+            <td>
+              <input type="date" onchange="redirect(value, {{plate.id}}, '{{main_id}}')">
+            </td>
+          </tr>
+        </table>
+        <a href="/inventory/track-usage/{{plate.id}}/{{date}}/{{switch_view_url}}"><button>Switch to {{switch_view}}</button></a>
+      </div>
+      <div id="date">
+        <h2>Availability of compouns {% if timestamp == plate.last_tested %} since {% else %} from {% endif %}:</h2>
+        <strong>{{timestamp | date:"l, d F Y"}}</strong>
+        <p>{% if timestamp == plate.last_tested %} (up to date) {% else %} until the next change {% endif %}</p>
+      </div>
+      
+      <div id="plate-info">
+        <h3>Plate information (now)</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td><strong>Library:</strong></td>
+              <td>{{ plate.library.name }}</td>
+            </tr>
+            <tr>
+              <td><strong>Barcode:</strong></td>
+              <td>{{ plate.barcode }}</td>
+            </tr>
+            <tr>
+              <td><strong>Last updated:</strong></td>
+              <td>{{ plate.last_tested | date:"Y-m-d" }}</td>
+            </tr>
+            <tr>
+              <td><strong>Current:</strong></td>
+              <td>{% if plate.current %} Yes {% else %} No {% endif %}</td>
+            </tr>
+          </tbody>
+        </table>        
+      </div>
+      
+      <div id="availability">
+        <h3>Compounds availability on {{date}}</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td><strong>All</strong></td>
+              <td>{{ plate.compounds.all|length }}</td>
+            </tr>
+            <tr>
+              <td><strong>Available</strong></td>
+              <td>{{ active_count }}</td>
+            </tr>
+            <tr>
+              <td><strong>Unavailable</strong></td>
+              <td>{{ inactive_count }}</td>
+            </tr>
+            <tr>
+              <td><strong>Availability</strong></td>
+              <td>{{ availability }}%</td>
+            </tr>
+          </tbody>
+        </table>          
+      </div>
+    </section>
+    
+    <section>
+      <table class="table-bordered" id="vis">
+        <caption>Visualisation</caption>
+        <thead>
+          <tr>
+            <th></th>
+            {% for c in columns %}
+            <th>{{ c }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+            <tr>
+              <td>{{ r }}</td>
+              {% for c in columns %}
+              <td id="{{r}}{{c}}"></td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    <section class="hidden">
+      <div>
+        {% for compound in compounds %}
+          {% if compound.active %} 
+          <div class="c c-active" data-well="{{compound.well}}">{{compound.well}}</div>
+          {% else %}
+          <div class="c c-inactive" data-well="{{compound.well}}">{{compound.well}}</div>
+          {% endif %}
+        {% endfor %}
+        </div>
+        <button onclick="arrange()">Arrange</button>
+      </section>
+    
+      <section id="extra-table">
+        <div>
+        <table class="small-font-table table-bordered table-hover" id="table">
+          <caption>Compounds</caption>
+          <thead>
+            <tr>
+              <th>Well</th>
+              <th>Code</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="first-line" class="hidden"><td></td></tr>
+            {% for compound in compounds %}
+            {% if compound.active %}
+              <tr id="w-{{compound.well}}">
+                
+            {% else %}
+              <tr id="w-{{compound.well}}" class="inactive-row">
+                
+            {% endif%}
+              
+              <td>{{compound.well}}</td>
+              <td>{{compound.code}}</td>
+              {% if compound.active %}
+                <td>Active</td>
+              {% else %}
+                <td>Inactive</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  {% endblock %}

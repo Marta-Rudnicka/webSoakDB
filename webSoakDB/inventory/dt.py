@@ -1,8 +1,10 @@
 '''scripts used for dispense testing'''
 from webSoakDB_backend.validators import is_csv
+from API.models import SWStatuschange, SourceWell
 import csv
 import string
 import re
+from django.core.exceptions import ObjectDoesNotExist
 
 '''the 'human readable' format of destination well names is the one that
 is close to how the wells are labeled on the physical plate ('A01a' etc.)''' 
@@ -54,7 +56,6 @@ def create_well_dict():
 
 	return well_dictionary
 
-
 def ensure_leading_zero(string):
 	'''in human-readable format, e.g. turn A4d to A04d'''
 	pattern = '([A-H])([1-9])([a,c,d])'
@@ -81,7 +82,6 @@ def valid_wells(dw, sw):
 		return True
 	else:
 		return error_string
-	
 	
 #map destination wells to source wells based on input file (while validating input)
 def get_well_dictionary(file_name):
@@ -145,5 +145,23 @@ def get_well_dictionary(file_name):
 		if error_log == []:
 			return well_dict
 		else:
-			print(error_log)
 			return error_log
+
+
+
+def manage_sw_status_change(source_well, date, activation):
+	print('manage_sw_status_change: ', source_well, date, activation)
+	try:
+		change = SWStatuschange.objects.get(source_well = source_well, date=date)
+		print('found another change for ', source_well.well, ': ', change.date, change.activation)
+		if change.activation != activation:
+			print('undoing the change')
+			sw = SourceWell.objects.get(pk = source_well.id)
+			sw.active = activation
+			change.delete()
+		else:
+			print('doing nothing')
+		return
+	except(ObjectDoesNotExist):
+		print('creating new change')
+		SWStatuschange.objects.create(source_well=source_well, date=date, activation=activation)

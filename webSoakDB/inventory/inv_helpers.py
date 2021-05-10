@@ -11,20 +11,14 @@ def fake_compounds_copy(queryset):
 	SourceWell objects in quesryset. This copy is used to manipulate the data without chaging 
 	anything in the database'''
 	class Copy:
-		def __init__(self, well, code, active, deactivation_date):
-			self.well = well         
-			self.code = code
-			self.active = active
-			self.deactivation_date = deactivation_date
+		def __init__(self, compound):
+			self.well = compound.well         
+			self.code = compound.compound.code
+			self.active = compound.active
+			self.deactivation_date = compound.deactivation_date
+			self.changes = [{"date" : ch.date, "activation" : ch.activation} for ch in compound.status_changes.all()]
 	
-	compounds = []
-	
-	for c in queryset:
-		o = Copy(c.well, c.compound.code, c.active, c.deactivation_date)
-		compounds.append(o)
-	
-	return compounds
-
+	return [Copy(c) for c in queryset]
 
 def fake_preset_copy(preset, missing_compounds):
 	'''Produces a regular Python object (not django model object) to store a copy of the data from
@@ -33,20 +27,20 @@ def fake_preset_copy(preset, missing_compounds):
 	in the current plate, based on missing_compounds'''
 	
 	class PresetCopy:
-		def __init__(self, _id, name, description):
-			self.id = _id         
-			self.name = name
-			self.description = description
+		def __init__(self, preset):
+			self.id = preset.id         
+			self.name = preset.name
+			self.description = preset.description
 			self.subsets = []
 		def __str__(self):
 			return "Preset copy: " + self.name
 	
 	class SubsetCopy:
-		def __init__(self, _id, name, library_name, library_id):
-			self.id = _id         
-			self.name = name
-			self.library_name = library_name
-			self.library_id = library_id
+		def __init__(self, subset):
+			self.id = subset.id         
+			self.name = subset.name
+			self.library_name = subset.library.name
+			self.library_id = subset.library.id
 			self.compounds = []
 			self.unavailable_count = 0
 			
@@ -54,24 +48,24 @@ def fake_preset_copy(preset, missing_compounds):
 			return "Subset copy: " + self.name + ":" + self.library_name
 	
 	class CompoundCopy:
-		def __init__(self, _id, code, smiles):
-			self.id = _id         
-			self.code = code
-			self.smiles = smiles
+		def __init__(self, compound):
+			self.id = compound.id         
+			self.code = compound.code
+			self.smiles = compound.smiles
 			self.available = True
 		
 		def __str__(self):
 			return "Compound copy: " + str(self.id) + ":" + self.code
 	
-	preset_copy = PresetCopy(preset.id, preset.name, preset.description)
+	preset_copy = PresetCopy(preset)
 	
 	for subset in preset.subsets.all():
-		subset_copy = SubsetCopy(subset.id, subset.name, subset.library.name, subset.library.id)
+		subset_copy = SubsetCopy(subset)
 		preset_copy.subsets.append(subset_copy)
 		current = LibraryPlate.objects.filter(library=subset.library.id, current=True)
 		for plate in current:
 			for compound in subset.compounds.all():
-				c = CompoundCopy(compound.id, compound.code, compound.smiles)
+				c = CompoundCopy(compound)
 				if (plate.id, c.id) in missing_compounds:
 					c.available = False
 					subset_copy.unavailable_count += 1
@@ -80,12 +74,9 @@ def fake_preset_copy(preset, missing_compounds):
 		
 	return preset_copy
 
-
-
-
 def get_plate_size(queryset):
 	rows = [char for char in string.ascii_uppercase] + ['AA', 'AB', 'AC', 'AD', 'AF']
-	columns = ['01', '02', '03', '04', '05', '06', '07', '08', '09'] + [str(i) for i in range(10, 49)]
+	columns = ['0' + str(i) for i in range(1, 10)] + [str(i) for i in range(10, 49)]
 
 	large = False
 	for i in columns[24:]:
@@ -102,17 +93,25 @@ def get_plate_size(queryset):
 	
 	return {'rows' : rows, 'columns' : columns}
 		
-def get_change_dates(queryset, plate):
-	change_dates = []
-	
+def get_change_dates(queryset):
+		
+	changes = []
 	for compound in queryset:
-		if compound.deactivation_date:
-			change_dates.append(compound.deactivation_date)
+		changes += compound.changes
+		
+	change_dates = set([ change["date"] for change in changes])
+	return sorted(change_dates, reverse=True)
+
+def set_status(compound, date):
+	compound.active = True
 	
-	change_dates.append(plate.last_tested)
-	change_dates = sorted(set(change_dates))
-	change_dates.reverse()
-	return change_dates
+	for change in sorted(compound.changes, key=lambda change: change["date"], reverse=True):
+		#inspect changes in reverse chronological order
+		if change["date"] <= date:
+			compound.active = change["activation"]
+			break
+			
+	return compound
 
 def get_usage_stats(queryset):
 	
@@ -132,7 +131,6 @@ def get_usage_stats(queryset):
 	
 	return {"count" : count, "active" : active, "inactive" : inactive, "availability" : availability }
 	
-
 def current_library_selection(boolean):
 	if boolean == True:
 		first_tuple = [("", "Select library...")]

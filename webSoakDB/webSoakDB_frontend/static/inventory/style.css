@@ -331,6 +331,10 @@ div.drops:hover {
 
 }
 
+.drops input[type=checkbox] {
+	transform: translate(0, 3px);
+}
+
 input:hover {
 	border: solid 2px red;
 }

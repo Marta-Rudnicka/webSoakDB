@@ -1,142 +1,171 @@
 {% extends "layout.html" %}
 {% load static %}
-	{% block main %}
-	<script>
-		function arrange(){
-			const wells = document.querySelectorAll('.well-representation');
-			wells.forEach(well => {
-				const dest = well.dataset.dest;
-				//subwell = dest[dest.length-1]
-				const tn = document.createTextNode(dest[dest.length-1]);
-				const label = document.getElementById(dest)
-				if (label) {
-					label.appendChild(tn);
-					label.appendChild(well);
-				}
-			});
-			
-		}	
-		
-		function addToTable(dw, sw, c){
-			console.log('fired addToTable');
-			id = dw + '-checkbox';
-			const tbody = document.getElementById('marked-wells');
-			checkbox = document.getElementById(id);
-			if (checkbox.checked === true){
-				
-				const row = document.createElement("tr");
-				row.id=dw + '-row';
-				[sw, c, dw].forEach(item => {
-					const cell = document.createElement("td");
-					cell.innerHTML = item;
-					row.appendChild(cell);
-				});	
-				tbody.appendChild(row);
-			}
-			else {
-				const rowId = dw + '-row';
-				const row = document.getElementById(rowId);
-				tbody.removeChild(row);
-			}
-		}
-		
-		document.addEventListener('DOMContentLoaded', () => setTimeout(() => arrange(), 1));	
-	</script>
-	<main id="dispense-testing">
-		<section>
-			<form method="post" action="/inventory/deactivate-compounds/">
-				{% csrf_token %}
-				<input type="hidden" name="plate_id" value="{{plate.id}}">
-				<table id="xp" class="table-bordered">
-					<thead>
-						<tr>
-							<th></th>
-							{% for c in columns %}
-							<th>{{ c }}</th>
-							{% endfor %}
-						</tr>
-					</thead>
-					<tbody>
-						{% for r in rows %}
-							<tr>
-								<td class="row-header">{{ r }}</td>
-								{% for c in columns %}
-								<td id="{{r}}{{c}}">
-									<div class="drop-group-container">
-										<div class="drop-group">{{r}}{{c}}</div>
-										<div class="drops">
-											<label id="{{r}}{{c}}a"></label> 	
-											<label>&nbsp;&nbsp; {% include "x-sqr.html" %}</label>
-											<label id="{{r}}{{c}}c"></label>
-											<label id="{{r}}{{c}}d"></label>
-										</div>
-									</div>
-								</td>
-								{% endfor %}
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				<button type="submit">Submit</button>
-			</form>
-			<div class="error-log">
-				{% for error in errors %}
-				<p>{{ error }}</p>
-				{% endfor %}
-			</div>
-		</section>
-		<section id="dt-summary">
-			<h1>Dispense testing: {{plate.library}}: {{plate.barcode}}</h1>
-			<h2>Mapping file: {{filename}}</h2>
-			<div>
-				<table class="table-bordered">
-					<caption>Selected to mark as unavailable:</caption>
-					<thead>
-						<tr>
-							<th>Source well</th>
-							<th>Compound.code</th>
-							<th>Destination well</th>
-						</tr>
-					</thead>
-					<tbody id="marked-wells">
-					</tbody>
-					
-				</table>
-			</div>
-			<div>
-				<table class="table-bordered">
-					<caption>Unavailable compounds:</caption>
-					<thead>
-						<tr>
-							<th>Source well</th>
-							<th>Compound.code</th>
-							<th>Destination well</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for dw, sw, a, c, id in data %}
-							{% if not a %}
-						<tr>
-							<td>{{sw}}</td>
-							<td>{{c}}</td>
-							<td>{{dw}}</td>
-						</tr>
-							{% endif %}
-						{% endfor %}
-					</tbody>
-				</div>				
-			</table>
-			</div>
-		
-			<div>
-			{% for dw, sw, a, c, id in data %}
-				{% if a %}
-					<label><input id="{{dw}}-checkbox" data-dest="{{dw}}" data-code="{{c}}" name="{{id}}" type="checkbox" class="well-representation wellbox" onclick="addToTable('{{dw}}', '{{sw}}', '{{c}}')"></label>
-				{% else %}
-					<label><span data-dest="{{dw}}" class="well-representation">{% include "chck-rd-fill.html" %}</span></label>
-				{% endif %}
-			{% endfor %}
-		</div>
-		</section>
-	</main>
-	{% endblock %}
+  {% block main %}
+  <script>
+    function arrange(){
+      const wells = document.querySelectorAll('.well-representation');
+      wells.forEach(well => {
+        const dest = well.dataset.dest;
+        //subwell = dest[dest.length-1]
+        const tn = document.createTextNode(dest[dest.length-1]);
+        const label = document.getElementById(dest)
+        if (label) {
+          label.appendChild(tn);
+          label.appendChild(well);
+        }
+      });
+      
+    }  
+    
+    function addToTable(dw, sw, c){
+      console.log('fired addToTable');
+      id = dw + '-checkbox';
+      const tbody = document.getElementById('marked-wells');
+      checkbox = document.getElementById(id);
+      if (checkbox.checked === true){
+        
+        const row = document.createElement("tr");
+        row.id=dw + '-row';
+        [sw, c, dw].forEach(item => {
+          const cell = document.createElement("td");
+          cell.innerHTML = item;
+          row.appendChild(cell);
+        });  
+        tbody.appendChild(row);
+      }
+      else {
+        const rowId = dw + '-row';
+        const row = document.getElementById(rowId);
+        tbody.removeChild(row);
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => setTimeout(() => arrange(), 1));  
+  </script>
+  {% comment %}
+  The values in {{data}}:
+	dw - destination well
+	sw - source well
+	a - active
+	c - compound code
+  {% endcomment %}
+  <main id="dispense-testing">
+    <section>
+      <form method="post" action="/inventory/deactivate-compounds/">
+        {% csrf_token %}
+        <input type="hidden" name="plate_id" value="{{plate.id}}">
+        <input type="hidden" name="already_inactive" value="{% for dw, sw, a, c, id in data %}{% if not a %} {{id}} {% endif %}{% endfor %}">
+        <table id="xp" class="table-bordered">
+          <thead>
+            <tr>
+              <th></th>
+              {% for c in columns %}
+              <th>{{ c }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in rows %}
+              <tr>
+                <td class="row-header">{{ r }}</td>
+                {% for c in columns %}
+                <td id="{{r}}{{c}}">
+                  <div class="drop-group-container">
+                    <div class="drop-group">{{r}}{{c}}</div>
+                    <div class="drops">
+                      <label id="{{r}}{{c}}a"></label>   
+                      <label>&nbsp;&nbsp; {% include "x-sqr.html" %}</label>
+                      <label id="{{r}}{{c}}c"></label>
+                      <label id="{{r}}{{c}}d"></label>
+                    </div>
+                  </div>
+                </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <button type="submit">Submit</button>
+      </form>
+      <div class="error-log">
+        {% for error in errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    </section>
+    <section id="dt-summary">
+      <h1>Dispense testing: {{plate.library}}: {{plate.barcode}}</h1>
+      <h2>Mapping file: {{filename}}</h2>
+      <div>
+        <table class="table-bordered">
+          <caption>Selected to mark as unavailable:</caption>
+          <thead>
+            <tr>
+              <th>Source well</th>
+              <th>Compound.code</th>
+              <th>Destination well</th>
+            </tr>
+          </thead>
+          <tbody id="marked-wells">
+          </tbody>
+          
+        </table>
+      </div>
+      <div>
+        <table class="table-bordered">
+          <caption>Unavailable in previous tests:</caption>
+          <thead>
+            <tr>
+              <th>Source well</th>
+              <th>Compound.code</th>
+              <th>Destination well</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dw, sw, a, c, id in data %}
+              {% if not a %}
+            <tr>
+              <td>{{sw}}</td>
+              <td>{{c}}</td>
+              <td>{{dw}}</td>
+            </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </div>        
+      </table>
+      </div>
+    
+      <div>
+      {% for dw, sw, a, c, id in data %}
+        {% if a %}
+          <label>
+		    <input id="{{dw}}-checkbox" 
+		      data-dest="{{dw}}" 
+		      data-code="{{c}}" 
+		      name="{{id}}" 
+		      type="checkbox" 
+		      class="well-representation wellbox" 
+		      onclick="addToTable('{{dw}}', '{{sw}}', '{{c}}')"
+		     >
+		  </label>
+        
+        {% else %}
+          <label>
+			<input 
+			  id="{{dw}}-checkbox" 
+			  data-dest="{{dw}}" 
+			  data-code="{{c}}" 
+			  name="{{id}}" 
+			  type="checkbox" 
+			  class="well-representation wellbox" 
+			  onclick="addToTable('{{dw}}', '{{sw}}', '{{c}}')"
+			  checked
+			>
+		</label>  
+        {% endif %}
+      {% endfor %}
+    </div>
+    </section>
+  </main>
+  {% endblock %}
