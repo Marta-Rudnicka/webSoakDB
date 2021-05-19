@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { ZoomInIcon } from '../icons.js';
+import { ZoomInIcon } from '../main/icons.js';
 
 
 class StructurePic extends React.Component {

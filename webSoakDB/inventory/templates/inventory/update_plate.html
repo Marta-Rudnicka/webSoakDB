@@ -1,144 +1,187 @@
 {% extends "layout.html" %}
 {% load static %}
-	{% block main %}
-	
-	<main id="update-plate">
-		<h2>Plate update: </h2>
-		<h1>{{plate.library.name}} - {{ plate.barcode }}</h1>
-		<section>
-			<div id="dt">
-				<h3>Dispense testing</h3>
-				<form method="post" action="/inventory/dispense-testing-map/" enctype="multipart/form-data">
-					{% csrf_token %}
-					<input type="hidden" name="id" value="{{ plate.id }}">
-					<table>
-					{{ dt_map_form.as_table }}
-					</table>
-					<button type="submit">Submit</button>
-				</form>
-			</div>
-			<hr>
-			<div id="download">
-				<a href="/downloads/plate-map/{{ plate.id }}/" download>Download plate map (with available compounds only)</a>
-			</div>
-			<hr>
-			<div>
-				<h3>Edit plate data:</h3>
-				<form method="post" action="/inventory/edit-plate/">
-					{% csrf_token %}
-					<input type="hidden" name="id" value="{{ plate.id }}">
-					<table>
-					{{ plate_form.as_table }}
-					</table>
-					<button type="submit">Save changes</button>
-				</form>
-							
-			</div>
-			
-			
-			<div>
-				<h3>Delete {{plate.library.name}} : {{ plate.barcode }}</h3>
-				<form method="post" action="/inventory/delete-plate/" id="delete-{{plate.id}}">
-					{% csrf_token %}
-					<input type="hidden" name="id" value="{{plate.id}}">
-					<button type="submit" class="delete-button"  onclick="submitDelete('{{plate.id}}', '{{plate.barcode}}')">Delete plate with all the compound data</button>
-				</form>
-			</div>
-		</section>
-		<section>
-			<h2>Compounds</h2>
-			<table class="table table-bordered table-hover" id="table">
-				<caption>
-					<select class="table-filter" onchange="filterRows(value)">
-						<option value="all" selected>All</option>
-						<option value="active-only">Available only</option>
-						<option value="inactive-only">Unvailable only</option>
-					</select>
-				</caption>
-				<thead>
-					<tr>
-						<th>Well</th>
-						<th>Code</th>
-						<th>SMILES</th>
-						<th>Concentration</th>
-						<th>Available</th>
-						<th>Deactivated on:</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for compound in compounds %}
-					{% if compound.active %}
-						<tr id="w-{{compound.well}}" class="active-row">
-					{% else %}
-						<tr id="w-{{compound.well}}" class="inactive-row">
-					{% endif%}
-						
-						<td><div>{{compound.well}}</div></td>
-						<td>{{compound.compound.code}}</td>
-						<td>{{compound.compound.smiles}}</td>
-						<td>{{compound.concentration}}</td>
-						{% if compound.active %}
-							<td>Available</td>
-						{% else %}
-							<td>
-								<p class="show-on-hover">Unavailable (more<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-								<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-								</svg>)</p>
-								<div>
-									<strong>Active in:</strong><br>
-									{% comment %} 
-										<!--
-										The horrible nested thing below stands for:
-											
-											<p>location</p> for location in alternatives[compound.id]
-										
-										...because Django template language doesn't support dictionary lookups
-										-->
-									{% endcomment %}
-										{% for id, alts in alternatives.items %} 
-											{% for location in alts %}
-												{% if id == compound.id %}
-													<p>{{location}}</p>
-												{% endif %}
-											{% endfor %}
-										{% endfor %}
-								</div>
-							</td>
-						{% endif %}
-							
-						{% if compound.deactivation_date%}
-							<td>{{compound.deactivation_date|date:"d M Y" }}</td>
-						{% else %}
-							<td></td>
-						{% endif %}
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</section>
-		<section>
-			<div>
-				<h3>Plate information</h3>
-				<table class="table">
-					<tbody>
-						<tr><td>Library</td><td>{{ plate.library.name }}</td></tr>
-						<tr><td>Barcode</td><td>{{ plate.barcode }}</td></tr>
-						<tr><td>Last updated</td><td>{{ plate.last_tested }}</td></tr>
-						<tr><td>Current</td><td>{% if plate.current %} Yes {% else %} No {% endif %}</td></tr>
-					</tbody>
-				</table>				
-			</div>
-			<div>
-				<h3>Number of compounds in plate</h3>
-				<table class="table">
-					<tbody>
-						<tr><td>All</td><td>{{ plate.compounds.all|length }}</td></tr>
-						<tr><td>Available</td><td>{{ active_count }}</td></tr>
-						<tr><td>Unavailable</td><td>{{ inactive_count }}</td></tr>
-						<tr><td>Availability</td><td>{{ availability }}%</td></tr>
-					</tbody>
-				</table>				
-			</div>
-		</section>
-	</main>
-	{% endblock %}
+  {% block main %}
+  
+  <main id="update-plate">
+    <h2>Plate update: </h2>
+    <h1>{{plate.library.name}} - {{ plate.barcode }}</h1>
+    <section>
+	  <h2>Manage plate</h2>
+	  <hr>
+	  <div id="download">
+        <a href="/downloads/plate-map/{{ plate.id }}/" download><button class="button">Download plate map <br>(with available compounds only)</button></a>
+      </div>
+      <hr>
+      <div id="dt">
+        <h3>Dispense testing</h3>
+        <form method="post" action="/inventory/dispense-testing-map/" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="{{ plate.id }}">
+          <table>
+          {{ dt_map_form.as_table }}
+          </table>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      <hr>
+      <div>
+        <h3>Edit plate data:</h3>
+        <form method="post" action="/inventory/edit-plate/">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="{{ plate.id }}">
+          <table>
+          {{ plate_form.as_table }}
+          </table>
+          <button type="submit">Save changes</button>
+        </form>
+              
+      </div>
+      <hr>
+      <div>
+		  <h3>Manually register opening the plate</h3>
+		  <p>For special cases only*</p>
+		<form method="post" action="/inventory/open-plate/">
+		  {% csrf_token %}
+		  <input type="hidden" name="id" value="{{ plate.id }}">
+		  <table>
+			<tr>
+			  <th><label for="name">Date:</label></th>
+			  <td><input type="date" name="date"></td>
+			</tr>
+			<tr>
+				<th><label for="reason">Reason:</label></th>
+				<td><input type="test" name="reason"></td>
+			</tr>
+		  </table>
+		  <button type="submit">Register</button>
+		</form>
+		<p><small>* If a plate is opened for an experiment or dispense testing, 
+			it is registerd automatically. 
+			This form is supposed to cover less typical cases, e.g. opening by mistake.</small></p>
+      </div>
+      <hr>
+      <div>
+        <h3>Delete {{plate.library.name}} : {{ plate.barcode }}</h3>
+        <form method="post" action="/inventory/delete-plate/" id="delete-{{plate.id}}">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="{{plate.id}}">
+          <button type="submit" class="delete-button"  onclick="submitDelete('{{plate.id}}', '{{plate.barcode}}')">Delete plate with all the compound data</button>
+        </form>
+      </div>
+    </section>
+    <section>
+      <h2>Compounds</h2>
+      <table class="table table-bordered table-hover" id="table">
+        <caption>
+          <select class="table-filter" onchange="filterRows(value)">
+            <option value="all" selected>All</option>
+            <option value="active-only">Available only</option>
+            <option value="inactive-only">Unvailable only</option>
+          </select>
+        </caption>
+        <thead>
+          <tr>
+            <th>Well</th>
+            <th>Code</th>
+            <th>SMILES</th>
+            <th>Concentration</th>
+            <th>Available</th>
+            <th>Deactivated on:</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for compound in compounds %}
+          {% if compound.active %}
+            <tr id="w-{{compound.well}}" class="active-row">
+          {% else %}
+            <tr id="w-{{compound.well}}" class="inactive-row">
+          {% endif%}
+            
+            <td><div>{{compound.well}}</div></td>
+            <td>{{compound.compound.code}}</td>
+            <td>{{compound.compound.smiles}}</td>
+            <td>{{compound.concentration}}</td>
+            {% if compound.active %}
+              <td>Available</td>
+            {% else %}
+              <td>
+                <p class="show-on-hover">Unavailable (more<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                </svg>)</p>
+                <div>
+                  <strong>Available in:</strong><br>
+                  {% comment %} 
+                    <!--
+                    The horrible nested thing below stands for:
+                      
+                      <p>location</p> for location in alternatives[compound.id]
+                    
+                    ...because Django template language doesn't support dictionary lookups
+                    -->
+                  {% endcomment %}
+                    {% for id, alts in alternatives.items %} 
+                      {% for location in alts %}
+                        {% if id == compound.id %}
+                          <p>{{location}}</p>
+                        {% endif %}
+                      {% endfor %}
+                    {% endfor %}
+                </div>
+              </td>
+            {% endif %}
+              
+            {% if compound.deactivation_date%}
+              <td>{{compound.deactivation_date|date:"d M Y" }}</td>
+            {% else %}
+              <td></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    <section>
+	  <h2>Additional information</h2>
+	  <hr>
+      <div>
+        <h3>Basic data</h3>
+        <table class="table">
+          <tbody>
+            <tr><td>Library</td><td>{{ plate.library.name }}</td></tr>
+            <tr><td>Barcode</td><td>{{ plate.barcode }}</td></tr>
+            <tr><td>Last updated</td><td>{{ plate.last_tested }}</td></tr>
+            <tr><td>Current</td><td>{% if plate.current %} Yes {% else %} No {% endif %}</td></tr>
+            <tr><td>Opened</td><td>{{ plate.opened.count }} times</td></tr>
+                      </tbody>
+        </table>        
+      </div>
+      <hr>
+      <div>
+        <h3>Number of compounds in plate</h3>
+        <table class="table">
+          <tbody>
+            <tr><td>All</td><td>{{ plate.compounds.all|length }}</td></tr>
+            <tr><td>Available</td><td>{{ active_count }}</td></tr>
+            <tr><td>Unavailable</td><td>{{ inactive_count }}</td></tr>
+            <tr><td>Availability</td><td>{{ availability }}%</td></tr>
+          </tbody>
+        </table>        
+      </div>
+      <hr>
+      <div>
+        <h3>Plate opened</h3>
+        <table class="table">
+		  <thead>
+			<tr><th>Date</th><th>Reason</th></tr>
+		  </thead>
+          <tbody>
+			{% for o in plate.opened.all|dictsortreversed:"date" %}
+            <tr><td>{{ o.date|date:"d M Y" }}</td><td>{{ o.reason }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>        
+      </div>
+      <hr>
+    </section>
+  </main>
+  {% endblock %}

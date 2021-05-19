@@ -1,9 +1,9 @@
 from django import forms
 from API.models import Library, Proposals
-from .helpers import create_lib_selection
+from inventory.inv_helpers import current_library_selection
 from django.forms import formset_factory
 	
-libs = create_lib_selection()
+libs = current_library_selection(False)
 proposals = list([item.id, item.proposal] for item in Proposals.objects.all())
 libraries = list([item.id, item.name] for item in Library.objects.filter(public=True))
 

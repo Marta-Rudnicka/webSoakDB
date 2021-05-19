@@ -75,7 +75,7 @@ def fake_preset_copy(preset, missing_compounds):
 	return preset_copy
 
 def get_plate_size(queryset):
-	rows = [char for char in string.ascii_uppercase] + ['AA', 'AB', 'AC', 'AD', 'AF']
+	rows = [char for char in string.ascii_uppercase] + ['AA', 'AB', 'AC', 'AD', 'AE', 'AF']
 	columns = ['0' + str(i) for i in range(1, 10)] + [str(i) for i in range(10, 49)]
 
 	large = False

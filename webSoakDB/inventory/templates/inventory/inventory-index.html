@@ -1,20 +1,32 @@
 {% extends "layout.html" %}
 {% load static %}
-	{% block main %}
-	<h1>XChem inventory management</h1>
-	<main id="index">
-		<section>
-				<h2><a href="plates">Manage library plates</a></h2>
-				<p>Add, edit, update and remove library plates. View how availability of compounds changed over time.</p>
-		</section>
-		<section>
-				<h2><a href="libraries">Manage libraries</a></h2>
-				<p>Add, edit, and remove libraries</p>
-		</section>
+  {% block main %}
+  <h1>XChem inventory management</h1>
+  <main id="index">
+    <section>
+      <h2><a href="plates">Manage library plates</a></h2>
+      <p>Add, edit, update and remove library plates. View how availability of compounds changed over time.</p>
+    </section>
+    <section>
+      <h2><a href="libraries">Manage libraries</a></h2>
+      <p>Add, edit, and remove libraries</p>
+    </section>
 
-		<section>
-				<h2><a href="presets">Manage presets</a></h2>
-				<p>Add, edit, and remove presets</p>
-		</section>
-	</main>
-	{% endblock %}
+    <section>
+      <h2><a href="presets">Manage presets</a></h2>
+      <p>Add, edit, and remove presets</p>
+    </section>
+
+    <section>
+      <h2>Manage proposals</h2>
+      <p>Edit user's library plates and experimental data</p>
+      <form method="post" action="/inventory/proposal/">
+		  {% csrf_token %}
+		  <table>
+		  {{ form.as_table }}
+		  </table>
+		  <button type="submit">Submit</button>
+      </form>
+    </section>
+  </main>
+  {% endblock %}

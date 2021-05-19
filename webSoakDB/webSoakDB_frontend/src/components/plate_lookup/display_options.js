@@ -1,8 +1,8 @@
-const display_options = [
+export const display_options = [
 			["show_well", "Well"],
+			["show_structure", "2D Structure"],
 			["show_code", "Compound Code"],
 			["show_smiles", "SMILES"],
-			["show_structure", "2D Structure"],
 			["show_concentration", "Concentration"],
 			["show_mol_wt", "Molecular Weight"],
 			["show_tpsa", "TPSA"],
@@ -19,4 +19,17 @@ const display_options = [
 			["show_ring_count", "No. of Rings"], 
 		];
 
-export {display_options};
+export const descriptor_names = [
+	"mol_wt", 
+	"tpsa", 
+	"log_p", 
+	"heavy_atom_count",
+	"heavy_atom_mol_wt", 
+	"nhoh_count" , 
+	"no_count", 
+	"num_h_acceptors", 
+	"num_h_donors", 
+	"num_het_atoms", 
+	"num_rot_bonds", 
+	"num_val_electrons", 
+	"ring_count"]

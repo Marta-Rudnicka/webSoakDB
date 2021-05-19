@@ -1,98 +1,99 @@
 {% extends "layout.html" %}
 {% load static %}
-	{% block main %}
-	
-	<script>
-		function showForm(index){
-			const id = "lib-" + index;
-			document.getElementById(id).className = "edit-field";
-		}
-		function hideForm(index){
-			const id = "lib-" + index;
-			document.getElementById(id).className = "hidden";
-		}
-		
-	</script>
-	
-	<main id="libraries">
-		<h1>XChem in-house fragment libraries</h1>
-		<section id="library-list">	
-			<table id="table" class="table">
-				<thead>
-					<th>Name</th>
-					<th>Plates</th>
-					<th>For industry</th>
-					<th>Edit</th>
-				</thead>
-				<tbody>
-					{% for library, form in form_dict.items %}
-						<tr>
-							<td>{{ library.name }}</td>
-							<td>
-								
-								{% if library.plates.all|length > 0 %}
-								<div class="list-in-table">
-									<ul>
-										{% for plate in library.plates.all %}
-											<li>{{ plate.barcode }}</li>
-											{% endfor %}						
-									</ul>
-								</div>
-								{% else %}
-								No plates added yet <br>
-								<a href="/inventory/plates">Create first plate</a>
-								{% endif %}
-							</td>
-							<td>
-								{% if library.for_industry %}
-								Yes
-								{% else %}
-								No
-								{% endif %}
-							</td>
-							<td><button onclick="showForm({{ library.id }})">Edit/Delete</button></td>
-						</tr>
-						<tr class="hidden" id="lib-{{ library.id }}">
-							<td colspan="4">
-								<div>
-									<button type="reset" onclick="hideForm({{ library.id }})">Discard changes / hide form</button>
-									<form class="" action="../edit-library/" method="post">
-										<legend>Edit {{library.name}} </legend>
-										{% csrf_token %}
-										<table>
-										{{ form.as_table }}
-										</table>
-										<input id="{{library.id}}-id}" type="hidden" name="id" value={{library.id}}>
-									<button type="submit" value="Submit">Save changes</button>
-									
-									
-									</form>
-									<form class="" action="../delete-library/" method="post" id="delete-{{library.id}}">
-										{% csrf_token %}
-										<button type="submit" value="Submit" class="delete-button" onclick="submitDelete('{{library.id}}', '{{library.name}}')">Delete {{library.name}}*</button>
-										<br>
-										<label>*To prevent accidental deletion, deleting a library is only possible if there are no plates related to it left in the database.</label>
-										<br>
-										<a href="/dummy/">Go to plate management</a>
-										<input type="hidden" name="id" value={{library.id}}>
-									</form>
-								</div>
-							</td>
-						</tr>
-					{% endfor %}
-				</tbody>				
-			</table>
-		</section>
-		<section id="upload-form">
-			<h2>Add new library</h2>
-			<form action="../add-library/" method="post">
-				{% csrf_token %}
-				<table>
-				{{ library_form.as_table }}
-				</table>
-				<input type="submit" value="Submit">
-			</form>
-		</section>
-		
-	</main>
-	{% endblock %}
+  {% block main %}
+  
+  <script>
+    function showForm(index){
+      const id = "lib-" + index;
+      document.getElementById(id).className = "edit-field";
+    }
+    function hideForm(index){
+      const id = "lib-" + index;
+      document.getElementById(id).className = "hidden";
+    }
+    
+  </script>
+  
+  <main id="proposal">
+    <h1>Manage proposal {proposals.proposal}</h1>
+    <section id="library-list">  
+	  <h2>User's library plates</h2>
+      <table id="table" class="table">
+        <thead>
+          <th>Name</th>
+          <th>Plates</th>
+          <th>For industry</th>
+          <th>Edit</th>
+        </thead>
+        <tbody>
+          {% for library, form in form_dict.items %}
+            <tr>
+              <td>{{ library.name }}</td>
+              <td>
+                
+                {% if library.plates.all|length > 0 %}
+                <div class="list-in-table">
+                  <ul>
+                    {% for plate in library.plates.all %}
+                      <li>{{ plate.barcode }}</li>
+                      {% endfor %}            
+                  </ul>
+                </div>
+                {% else %}
+                No plates added yet <br>
+                <a href="/inventory/plates">Create first plate</a>
+                {% endif %}
+              </td>
+              <td>
+                {% if library.for_industry %}
+                Yes
+                {% else %}
+                No
+                {% endif %}
+              </td>
+              <td><button onclick="showForm({{ library.id }})">Edit/Delete</button></td>
+            </tr>
+            <tr class="hidden" id="lib-{{ library.id }}">
+              <td colspan="4">
+                <div>
+                  <button type="reset" onclick="hideForm({{ library.id }})">Discard changes / hide form</button>
+                  <form class="" action="../edit-library/" method="post">
+                    <legend>Edit {{library.name}} </legend>
+                    {% csrf_token %}
+                    <table>
+                    {{ form.as_table }}
+                    </table>
+                    <input id="{{library.id}}-id}" type="hidden" name="id" value={{library.id}}>
+                  <button type="submit" value="Submit">Save changes</button>
+                  
+                  
+                  </form>
+                  <form class="" action="../delete-library/" method="post" id="delete-{{library.id}}">
+                    {% csrf_token %}
+                    <button type="submit" value="Submit" class="delete-button" onclick="submitDelete('{{library.id}}', '{{library.name}}')">Delete {{library.name}}*</button>
+                    <br>
+                    <label>*To prevent accidental deletion, deleting a library is only possible if there are no plates related to it left in the database.</label>
+                    <br>
+                    <a href="/dummy/">Go to plate management</a>
+                    <input type="hidden" name="id" value={{library.id}}>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>        
+      </table>
+    </section>
+    <section id="upload-form">
+      <h2>Add new library</h2>
+      <form action="../add-library/" method="post">
+        {% csrf_token %}
+        <table>
+        {{ library_form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+      </form>
+    </section>
+    
+  </main>
+  {% endblock %}

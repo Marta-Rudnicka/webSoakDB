@@ -16,7 +16,9 @@ from .serializers import (LibrarySerializer,
 							LibraryPlateSerializer, 
 							ProposalUpdateSerializer,
 							LibrarySubsetStatSerializer,
-							CompoundsStatSerializer)
+							CompoundsStatSerializer,
+							LibrarySubsetSerializer,
+						)
 
 import itertools
 
@@ -43,25 +45,10 @@ class InHouseLibraryList(generics.ListAPIView):
 	queryset = Library.objects.filter(public=True)
 	serializer_class = LibrarySerializer
 	permission_classes = [AllowAny]
-'''
-class PresetList(generics.ListAPIView):
-	#def get_queryset(self):
-	#	return [p for p in Preset.objects.all() if p.subsets.count() > 1]
-	queryset = Preset.objects.all()
-	serializer_class = PresetSerializer
-	permission_classes = [AllowAny]
-'''
-
-
 
 class PresetDetail(generics.RetrieveAPIView):
 	queryset = Preset.objects.all()
 	serializer_class = PresetSerializer
-	permission_classes = [AllowAny]
-
-class CrystalsInPlates(generics.ListAPIView):
-	queryset = CrystalPlate.objects.all()
-	serializer_class = CrystalPlateSerializer
 	permission_classes = [AllowAny]
 
 class ProposalList(generics.ListAPIView):
@@ -87,34 +74,6 @@ class PlateCompoundList(generics.ListAPIView):
 	serializer_class = SourceWellStatSerializer
 	permission_classes = [AllowAny]
 
-'''class CurrentPlateList(generics.ListAPIView):
-	def get_queryset(self):
-		libs = Library.objects.filter(public=True)
-		plates = []
-		for lib in libs:
-			c = lib.plates.filter(current=True)
-			try:
-				plates.append(c[0])
-			except IndexError:
-				print('No current plate for ', lib)
-		return plates
-	serializer_class = CurrentPlateSerializer
-	permission_classes = [AllowAny]
-
-
-class LibCurrentPlatesStatList(generics.ListAPIView):
-	#list all current plates, with details about compounds (for stats)
-	def get_queryset(self):
-		self.library = get_object_or_404(Library, id=self.kwargs['pk'])
-		plates = self.library.plates.filter(current=True);
-		wells = list(itertools.chain.from_iterable([x.compounds.all() for x in plates]))
-		compounds = [well.compound for well in wells]
-		return compounds
-
-	#serializer_class = LibraryPlateStatSerializer	
-	serializer_class = CompoundsStatSerializer	
-	permission_classes = [AllowAny]
-'''
 class LibPlatesList(generics.ListAPIView):
 	#list all plates, with details about compounds (for stats)
 	def get_queryset(self):
@@ -123,7 +82,11 @@ class LibPlatesList(generics.ListAPIView):
 	serializer_class = LibraryPlateSerializer	
 	permission_classes = [AllowAny]
 
-
+class SubsetDetail(generics.RetrieveAPIView):
+	queryset = LibrarySubset.objects.all()
+	serializer_class = LibrarySubsetSerializer
+	permission_classes = [AllowAny]
+	
 class SubsetStatList(generics.RetrieveAPIView):
 	#get subset data with details about compounds (for stats)
 	queryset = LibrarySubset.objects.all()
@@ -137,7 +100,6 @@ class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
 	lookup_field = "proposal"
 	serializer_class = ProposalUpdateSerializer
 	permission_classes = [AllowAny]
-	
 	
 class CurrentPlatesForLib(generics.ListAPIView):
 	def get_queryset(self):

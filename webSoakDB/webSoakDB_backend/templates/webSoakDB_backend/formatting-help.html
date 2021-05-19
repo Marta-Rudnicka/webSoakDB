@@ -118,5 +118,7 @@
 		</div>
 	</main>
 	<button class="close-button">Close</button>
-	<script>document.querySelectorAll('.close-button').forEach(button => addEventListener('click', ()=>close()));</script>
+	<script>
+		document.querySelectorAll('.close-button').forEach(button => button.addEventListener('click', ()=>close()));
+	</script>
 </body>

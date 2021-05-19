@@ -11,7 +11,7 @@ from rdkit.Chem import Draw
 
 
 from PIL import Image
-
+'''
 #prepate list of libraries formatted as froms.ChoiceField choices
 def create_lib_selection():
 	output = []
@@ -19,7 +19,7 @@ def create_lib_selection():
 		lib = (library.id, library.name)
 		output.append(lib)
 	return output
-	pass
+
 	
 #prepare a list of library plates in compound selection
 def get_selection_details(proposal):
@@ -34,10 +34,9 @@ def get_selection_details(proposal):
 			plate_dict[plate] = origin
 	
 	return plate_dict
-
+'''
 #import data from a csv file - should be used after validation with data_is_valid
 def upload_plate(file_name, plate):
-	print('fired upload plate')
 	with open(file_name, newline='') as csvfile:
 		dialect = csv.Sniffer().sniff(csvfile.read(1024))
 		csvfile.seek(0)
@@ -46,7 +45,6 @@ def upload_plate(file_name, plate):
 			try:
 				compound = Compounds.objects.get(code = row[0].strip(), smiles = row[2].strip())	
 			except django.core.exceptions.ObjectDoesNotExist:
-				print('Compound not found, creating new one.')
 				compound = Compounds.objects.create(smiles = row[2].strip(), code = row[0].strip())
 				if compound.smiles:
 					sanitized_mol = Chem.MolFromSmiles(compound.smiles)
@@ -104,11 +102,8 @@ def import_full_libraries(proposal):
 		current_plates = LibraryPlate.objects.filter(library=l, current=True)
 		[full_plates.append(plate) for plate in current_plates]
 	
-	#print('full_plates in import_full_libraries: ', full_plates)
-	
 	s_wells = []
 	for p in full_plates:
-		#print('p.compounds.all()', p.compounds.all())
 		s_wells = s_wells + [c for c in p.compounds.all()]
 	return s_wells
 
@@ -180,20 +175,6 @@ def export_form_is_valid(post_data):
 				return False
 	return True
 '''
-def copy_compounds_to_experiment(proposal):
-	selection = CompoundSelection.objects.get(proposal=proposal)
-	
-	for plate in selection.plates:
-		for compound in plate.compounds:
-			library = compound.library_plate.library
-			plate = compound.library_plate.name
-			well = compound.well
-			code = compound.compound.code
-			smiles = compound.compound.smiles
-			concentration = compound.concentration
-			print('data:', library, plate, well, code, smiles, concentration)
-'''
-
 #fix to take mol as argument to be used during upload
 def create_2d_image(compound):
 	if compound.smiles:
@@ -203,3 +184,4 @@ def create_2d_image(compound):
 		Chem.Draw.MolToFile(mol, path)
 		compound.mol_image = name
 		compound.save()
+'''

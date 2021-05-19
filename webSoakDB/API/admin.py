@@ -2,12 +2,12 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Library, Compounds, SourceWell, LibraryPlate, Protein, Proposals, LibrarySubset, Preset, SpaCompound, Crystal, CrystalPlate, SWStatuschange
+from .models import Library, Compounds, SourceWell, LibraryPlate, Protein, Proposals, LibrarySubset, Preset, SpaCompound, Crystal, CrystalPlate, SWStatuschange, PlateOpening
 
 
 
 class SourceWellAdmin(admin.ModelAdmin):
-    list_display = ("id", "library_plate", "well", "compound", "concentration", "active", "deactivation_date")
+    list_display = ("id", "library_plate", "well", "compound", "concentration", "active", "deactivation_date", "status_changes")
 
 class LibraryPlateAdmin(admin.ModelAdmin):
     list_display = ("id", "library", "barcode", "last_tested", "current")
@@ -34,6 +34,10 @@ class PresetAdmin(admin.ModelAdmin):
 
 class SWStatuschangeAdmin(admin.ModelAdmin):
 	list_display = ("id", "source_well", "date", "activation")
+
+class PlateOpeningAdmin(admin.ModelAdmin):
+	list_display = ("id", "plate", "date", "reason")
+
 	 
 admin.site.register(Compounds, CompoundsAdmin)    
 admin.site.register(SourceWell, SourceWellAdmin)
@@ -47,3 +51,4 @@ admin.site.register(SpaCompound)
 admin.site.register(Crystal)
 admin.site.register(CrystalPlate, CrystalPlateAdmin)
 admin.site.register(SWStatuschange, SWStatuschangeAdmin)
+admin.site.register(PlateOpening, PlateOpeningAdmin)

@@ -27,10 +27,14 @@ SECRET_KEY = 'FprflpUfVtgFJc1AU3tzFvHgvbWGVeUD6vf4IxXp6s1aEYHgYd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-	'xchemspa.diamond.ac.uk',
-	'127.0.0.1',
-]
+#ALLOWED_HOSTS = [
+#	'xchemspa.diamond.ac.uk',
+#	'127.0.0.1',
+#]
+
+ALLOWED_HOSTS=['*']
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 
 # Application definition

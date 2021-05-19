@@ -165,7 +165,7 @@ class Proposals(models.Model):
     subsets = models.ManyToManyField(LibrarySubset, blank=True)
 
     def __str__(self):
-         return self.name + "proposal object"
+         return self.proposal + "proposal object"
          
 
 class Visit(models.Model):

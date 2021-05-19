@@ -6,12 +6,9 @@ import string
 import re
 from django.core.exceptions import ObjectDoesNotExist
 
-'''the 'human readable' format of destination well names is the one that
-is close to how the wells are labeled on the physical plate ('A01a' etc.)''' 
-
 def create_well_dict():
 	
-	#human readable format: [A - H][01-12][a-d], e.g. B09c, F12a
+	#'human readable' format: [A - H][01-12][a-d], e.g. B09c, F12a
 	
 	#generate lists of strings to concatenate into well names
 	part_1 = list(string.ascii_uppercase)[0:8]
@@ -34,24 +31,23 @@ def create_well_dict():
 					well_name_list_1.append(cap + number + letter)
 
 	
-	#384 system format: [A-P][1-24], e.g D2, H19
+	#Echo  format: [A-P][1-24], e.g D2, H19
 	
-	#generate an ordered list of all well names in $naming_system_384
-	well_name_list_384 = []
+	#generate an ordered list of all well names
+	well_name_list_echo = []
 
-	part_1_384 = list(string.ascii_uppercase)[0:16]
+	part_1_echo = list(string.ascii_uppercase)[0:16]
 	for number in range(1, 25):
-		for letter in part_1_384:
-			well_name_list_384.append(letter + str(number))
+		for letter in part_1_echo:
+			well_name_list_echo.append(letter + str(number))
 
 
-	#create a dictionary matching the names together
+	#create a dictionary matching the names
 	well_dictionary = {}
 
 	i = 0
 	for item in well_name_list_1:
-		#well_dictionary[item] = well_name_list_384[i]
-		well_dictionary[well_name_list_384[i]] = item
+		well_dictionary[well_name_list_echo[i]] = item
 		i = i + 1
 
 	return well_dictionary
@@ -71,11 +67,23 @@ def valid_wells(dw, sw):
 	pattern_echo = '[A-P][1-9][0-9]?'
 	pattern_hr = '[A-H][0-9][0-9]?[a,c,d]'
 	pattern_sw = '[A-Z][A-F]?[0-9]{1,2}'
+	
+	digit_part = '[0-9][0-9]?'
+	
 	error_string = ""
 	if not (re.fullmatch(pattern_echo, dw) or re.fullmatch(pattern_hr, dw)):
 		error_string = 'Invalid destination well: ' + dw + "; "
 	
 	if not re.fullmatch(pattern_sw, sw):
+		error_string = error_string + 'Invalid source well: ' + sw + "; "
+	
+	if (re.fullmatch(pattern_echo, dw) and int(re.search(digit_part, dw)[0]) > 24 ):
+		error_string = 'Invalid destination well: ' + dw + "; "
+	
+	if (re.fullmatch(pattern_hr, dw) and int(re.search(digit_part, dw)[0]) > 12 ):
+		error_string = 'Invalid destination well: ' + dw + "; "
+	
+	if (re.fullmatch(pattern_sw, sw) and int(re.search(digit_part, sw)[0]) > 48 ):
 		error_string = error_string + 'Invalid source well: ' + sw + "; "
 		
 	if error_string == "":
@@ -83,7 +91,7 @@ def valid_wells(dw, sw):
 	else:
 		return error_string
 	
-#map destination wells to source wells based on input file (while validating input)
+#map destination wells to source wells based on input file
 def get_well_dictionary(file_name):
 	
 	with open(file_name, newline='') as csvfile:
@@ -147,21 +155,25 @@ def get_well_dictionary(file_name):
 		else:
 			return error_log
 
-
-
 def manage_sw_status_change(source_well, date, activation):
-	print('manage_sw_status_change: ', source_well, date, activation)
 	try:
 		change = SWStatuschange.objects.get(source_well = source_well, date=date)
-		print('found another change for ', source_well.well, ': ', change.date, change.activation)
+		#reverse to the state before the change
 		if change.activation != activation:
-			print('undoing the change')
-			sw = SourceWell.objects.get(pk = source_well.id)
-			sw.active = activation
+			source_well.active = activation
 			change.delete()
-		else:
-			print('doing nothing')
+			if activation:
+				source_well.deactivation_date = None
+			else:
+				last_change = source_well.status_changes.order_by("date").reverse()[0]
+				source_well.deactivation_date = last_change.date
+			
+			source_well.save()
 		return
 	except(ObjectDoesNotExist):
-		print('creating new change')
 		SWStatuschange.objects.create(source_well=source_well, date=date, activation=activation)
+		if activation:
+			source_well.deactivation_date = None
+		else:
+			source_well.deactivation_date = date
+		source_well.save()

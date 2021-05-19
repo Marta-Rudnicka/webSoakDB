@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
-import PlateLookup from './plate_lookup/PlateLookup.js';
+import PlateLookup from '../plate_lookup/PlateLookup.js';
 
 /* translates url parameters to appropriate props for PlateLookup*/
 export default function UrlTranslator() {

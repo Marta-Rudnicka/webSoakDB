@@ -67,6 +67,7 @@ class PlateLookup extends React.Component {
 	}
 	
 	uploadSubset(id, libName){
+		console.log('uploadSubset: ', id, libName);
 		const apiUrl = '/api/subset_stats/' + id + '/';
 		
 		const compounds = axios.get(apiUrl)
@@ -113,17 +114,15 @@ class PlateLookup extends React.Component {
 			axios.get(apiUrl)
 				.then(res => {
 				const collection = res.data;
-				console.log('Setting collection')
 				this.setState({ collection });
 			});
 		}
 		//for a preset
 		else {
-			console.log('Found preset');
 			const apiUrl = '/api/preset_detail/' + this.props.id + '/';
 			
 			let subsets = [];
-			
+			let compouds = [];
 			axios.get(apiUrl)
 				.then(res => {
 				const subsets = res.data.subsets;
@@ -131,6 +130,10 @@ class PlateLookup extends React.Component {
 				const collection = res.data;
 				this.setState({collection});
 			});
+			
+			subsets.forEach(s => {
+				compounds = this.uploadSubset(s.id, s.library.name)
+			})
 		}
 	}
 	
@@ -139,6 +142,7 @@ class PlateLookup extends React.Component {
 		let collection = null;
 		let name = null;
 		let current ="";
+		
 		if (this.state.collection){
 			collection = this.state.collection;
 			if (this.state.collection.library){
@@ -173,9 +177,11 @@ class PlateLookup extends React.Component {
 			extra_button = <button key="0" className={this.state.display.show_library ? "hidden" : "small-button"} onClick={event => this.toggleDisplay(show_library)}>Show Library</button>
 		}
 		
+		let export_bar = null
 		let plateList = null;
 		if (this.props.is_a_plate && collection && collection.library){
 			plateList = <PlateList library={collection.library} />;
+			export_bar = <ExportBar id={this.props.id} />
 		}
 		
 		let rows = null;
@@ -206,10 +212,8 @@ class PlateLookup extends React.Component {
 						{extra_button}
 						{buttons}
 					</div>
-					
-					<ExportBar id={this.props.id} />
+					{export_bar}
 					{plateList}
-					<div>2D structures powered by <a href="https://pubchem.ncbi.nlm.nih.gov/">PubChem®</a></div>
 					
 				</div>
 				<table data-toggle="table" data-pagination="true" data-search="true" className="table table-bordered table-hover" id="table">

@@ -1,85 +1,108 @@
 {% extends "layout.html" %}
 {% load static %}
-	{% block main %}
-	
-	<script>
-		function showLibrary(value){
-			
-			document.querySelectorAll('tr.plate-row').forEach(tr => {
-				if(value==="all"){
-					tr.className="plate-row"
-				}
-				else{
-					tr.className = "plate-row hidden";
-				}
-			});
-				
-			document.querySelectorAll("tr").forEach(tr => {
-				if (tr.dataset.lib === value){
-					tr.className = "plate-row";
-				}
-			});
-		}
-		
-	</script>
+  {% block main %}
+  
+  <script>
+    function showLibrary(value){
+      
+      document.querySelectorAll('tr.plate-row').forEach(tr => {
+        if(value==="all"){
+          tr.className="plate-row"
+        }
+        else{
+          tr.className = "plate-row hidden";
+        }
+      });
+        
+      document.querySelectorAll("tr").forEach(tr => {
+        if (tr.dataset.lib === value){
+          tr.className = "plate-row";
+        }
+      });
+    }
+    
+  </script>
 
-	<main id="plates">
-		<h1>XChem in-house library plates</h1>
-		<section id="library-list">	
-			<h2>Library plates</h2>
-			<label>Choose library to show plates from:</label>
-			<select class="table-filter" name="library" onchange="showLibrary(value)">
-				<option value="all" selected>All libraries</option>
-				{% for library in libraries %}
-					{% if library.plates.all %}
-						<option value={{library.id}}>{{library.name}}</option>
-					{% endif %}
-				{% endfor %}
-			</select>
-			<table id="table" class="table table-hover">
-				<thead>
-					<th>Library</th>
-					<th>Barcode</th>
-					<th>Current</th>
-					<th>Compounds</th>
-					<th>Last updated</th>
-					<th>Update</th>
-					<th>Track usage</th>
-				</thead>
-				<tbody>
-					{% for library in libraries %}
-						{% if library.plates.all|length > 0 %}
-							{% for plate in library.plates.all %}
-								<tr class="plate-row" data-lib="{{library.id}}">
-									<td>{{ library.name }}</td>
-									<td>{{ plate.barcode }}</td>
-									{% if plate.current %}
-										<td class="highlight">Yes</td>
-										{% else %}
-										<td>No</td>
-									{% endif %}
-									</td>
-									<td>{{plate.compounds.count}}</td>
-									<td>{{ plate.last_tested|date:"d M Y" }}</td>
-									<td><a href="../update-plate/{{plate.id}}/">Update/delete</a></td>
-									<td><a href="../track-usage/{{plate.id}}/{{plate.last_tested|date:"Y-m-d"}}/general-view/">Track usage</a></td>
-								</tr>
-							{% endfor %}
-						{% endif %}
-					{% endfor %}
-				</tbody>				
+  <main id="plates">
+    <h1>XChem in-house library plates</h1>
+    <section id="library-list">  
+      <h2>Library plates</h2>
+      <label>Choose library to show plates from:</label>
+      <select class="table-filter" name="library" onchange="showLibrary(value)">
+        <option value="all" selected>All libraries</option>
+        {% for library in libraries %}
+          {% if library.plates.all %}
+            <option value={{library.id}}>{{library.name}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <table id="table" class="table table-hover">
+        <thead>
+          <th>Library</th>
+          <th>Barcode</th>
+          <th>Current</th>
+          <th>Compounds</th>
+          <th>Last updated</th>
+          <th>Update</th>
+          <th>Track usage</th>
+        </thead>
+        <tbody>
+          {% for library in libraries %}
+            {% if library.plates.all|length > 0 %}
+              {% for plate in library.plates.all %}
+                <tr class="plate-row" data-lib="{{library.id}}">
+                  <td>{{ library.name }}</td>
+                  <td>{{ plate.barcode }}</td>
+                  {% if plate.current %}
+                    <td class="highlight">Yes</td>
+                    {% else %}
+                    <td>No</td>
+                  {% endif %}
+                  </td>
+                  <td>{{plate.compounds.count}}</td>
+                  <td>{{ plate.last_tested|date:"d M Y" }}</td>
+                  <td><a href="../update-plate/{{plate.id}}/">Update/delete</a></td>
+                  <td><a href="../track-usage/{{plate.id}}/{{plate.last_tested|date:"Y-m-d"}}/general-view/">Track usage</a></td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </tbody>        
+      </table>
+    </section>
+    <section id="upload-form">
+	  <div>
+		  <h2>Add new plate</h2>
+		  <form action="../add-plate/" method="post" enctype="multipart/form-data" >
+			{% csrf_token %}
+			<table>
+			{{ plate_form.as_table }}
 			</table>
-		</section>
-		<section id="upload-form">
-			<h2>Add new plate</h2>
-			<form action="../add-plate/" method="post" enctype="multipart/form-data" >
-				{% csrf_token %}
-				<table>
-				{{ plate_form.as_table }}
-				</table>
-				<input type="submit" value="Submit">
-			</form>
-		</section>
-		
-	</main>
-	{% endblock %}
+			<input type="submit" value="Submit">
+		  </form>
+	  </div>
+	  <hr>
+	   <div id="multi-delete-form">
+		  <h2>Delete multiple plates</h2>
+		  <form action="../delete-multiple-plates/" method="post">
+			{% csrf_token %}
+			<p><small>Hold the Crtl key to select multiple options from a list</small></p>
+			<div id="liblist">
+				{% for library in libraries %}
+				<div>
+					<label>{{library.name}}</label>
+					<select name="{{library.id}}" multiple>
+						{% for plate in library.plates.all %}
+						<option value="{{plate.id}}">{{ plate.barcode }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				{% endfor%}
+			</div>
+			<button type="submit" class="delete-button">Delete selected</button>
+		  </form>
+	  </div>
+    </section>
+    
+  </main>
+  {% endblock %}

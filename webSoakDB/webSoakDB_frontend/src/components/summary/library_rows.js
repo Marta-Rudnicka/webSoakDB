@@ -29,7 +29,7 @@ class LibraryInTable extends React.Component {
 		function plateCells(plate){
 			return(
 			<React.Fragment>
-				<td>{plate.name}</td>
+				<td>{plate.barcode}</td>
 				<td>{plate.size}</td>
 				<td><Link to={"/compounds/plate/" + plate.id + "/"}>See compounds</Link></td>
 			</React.Fragment>

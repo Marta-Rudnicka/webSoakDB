@@ -76,8 +76,19 @@ tfoot {
 	animation: grow 1s ease;
 }
 
-.library li {
+.library li, #pres li {
 	font-size: 0.7rem;
+	list-style-type: none;
+}
+
+.library p, #pres p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.bottom-right {
+	position: absolute ;
+	bottom: -1.3em;
+	right: 1.3em;
 }
 
 @keyframes grow {
@@ -92,8 +103,6 @@ tfoot {
       opacity: 1;
     }
 }
-
-
 
 .plate-link {
 	margin: auto;
@@ -131,7 +140,7 @@ tfoot {
 	grid-column: 1/4;
 }
 
-.form-container {
+.form-container, .explanation {
 	position: relative
 }
 
@@ -169,6 +178,7 @@ hr {
 .img2d img {
 	height: 150px;
 	width: 150px;
+	border: solid #dee2e6 1px;
 	transition: height 0.1s, width 0.1s;
 }
 
@@ -189,7 +199,7 @@ th.show_structure {
 }
 
 #libform, #preset-form {
-	display: absolute;
+	position: relative;
 }
 
 #libform button, #preset-form button, .compound-upload button{
@@ -379,4 +389,13 @@ main#choose-proposal select, main#choose-proposal button{
 iframe {
 	width: 300px;
 	height: 300px;
+}
+
+.outdated {
+	opacity: 0.5;
+}
+
+iframe.detail-iframe {
+	width: 1200px;
+	height: 1150px;
 }

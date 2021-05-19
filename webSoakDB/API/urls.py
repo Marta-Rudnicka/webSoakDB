@@ -4,9 +4,10 @@ from . import views
 
 urlpatterns = [
 	#general purpose generic endpoints:
-	path("library_list/", views.LibraryList.as_view(), name="library_list"),
+	#path("library_list/", views.LibraryList.as_view(), name="library_list"),
 	path("library_detail/<int:pk>/", views.LibraryDetail.as_view(), name="library_detail"),
 	path("compounds/<int:pk>/", views.PlateCompoundList.as_view(), name="api_lib"),
+	path("subset_detail/<int:pk>/", views.SubsetDetail.as_view()),
 	path("in_house_library_list/", views.InHouseLibraryList.as_view(), name="in_house_library_list"),
 	path("plates_list/<str:library>/", views.LibPlatesList.as_view(), name="all_library_plates_list"),
 	path("plate_detail/<int:pk>/", views.PlateDetail.as_view(), name="plate_detail"),
@@ -28,13 +29,7 @@ urlpatterns = [
 	#for Library with id=pk, list all current plates (no individual compound data)
 	path("current_plates_list/<int:pk>/", views.CurrentPlatesForLib.as_view(), name="library_detail"),
 	
-	#list all in-house libraries with one current plate each
-	#path("library_selection_list/", views.CurrentPlateList.as_view(), name="library_selection_list"),
-	
 	#to update library or subset selection by passing it an array of ints (representing ids)
 	path("update_proposal_selection/<str:proposal>/", views.UpdateProposalSelection.as_view(), name="update_proposal_selection"),	
-
-	#path("crystals_list", views.CrystalsInPlates.as_view(), name="crystals_list"), #needs debug
-
 
 ]

@@ -17,8 +17,7 @@
       
     }  
     
-    function addToTable(dw, sw, c){
-      console.log('fired addToTable');
+    function addToUnavailableTable(dw, sw, c){
       id = dw + '-checkbox';
       const tbody = document.getElementById('marked-wells');
       checkbox = document.getElementById(id);
@@ -39,6 +38,29 @@
         tbody.removeChild(row);
       }
     }
+    
+    function addToAvailableTable(dw, sw, c){
+      id = dw + '-checkbox';
+      const tbody = document.getElementById('unmarked-wells');
+      checkbox = document.getElementById(id);
+      if (checkbox.checked === false){
+        
+        const row = document.createElement("tr");
+        row.id=dw + '-row';
+        [sw, c, dw].forEach(item => {
+          const cell = document.createElement("td");
+          cell.innerHTML = item;
+          row.appendChild(cell);
+        });  
+        tbody.appendChild(row);
+      }
+      else {
+        const rowId = dw + '-row';
+        const row = document.getElementById(rowId);
+        tbody.removeChild(row);
+      }
+    }
+    
     
     document.addEventListener('DOMContentLoaded', () => setTimeout(() => arrange(), 1));  
   </script>
@@ -135,7 +157,21 @@
         </div>        
       </table>
       </div>
-    
+    <div>
+        <table class="table-bordered">
+          <caption>Selected to mark as available:</caption>
+          <thead>
+            <tr>
+              <th>Source well</th>
+              <th>Compound.code</th>
+              <th>Destination well</th>
+            </tr>
+          </thead>
+          <tbody id="unmarked-wells">
+          </tbody>
+          
+        </table>
+      </div>
       <div>
       {% for dw, sw, a, c, id in data %}
         {% if a %}
@@ -146,7 +182,7 @@
 		      name="{{id}}" 
 		      type="checkbox" 
 		      class="well-representation wellbox" 
-		      onclick="addToTable('{{dw}}', '{{sw}}', '{{c}}')"
+		      onclick="addToUnavailableTable('{{dw}}', '{{sw}}', '{{c}}')"
 		     >
 		  </label>
         
@@ -159,7 +195,7 @@
 			  name="{{id}}" 
 			  type="checkbox" 
 			  class="well-representation wellbox" 
-			  onclick="addToTable('{{dw}}', '{{sw}}', '{{c}}')"
+			  onclick="addToAvailableTable('{{dw}}', '{{sw}}', '{{c}}')"
 			  checked
 			>
 		</label>  

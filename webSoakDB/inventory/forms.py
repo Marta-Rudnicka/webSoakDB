@@ -1,5 +1,5 @@
 from django import forms
-from API.models import Library, Preset
+from API.models import Library, Preset, PlateOpening, Proposals
 
 
 presets = [("", "Select preset...")] + [(preset.id, preset.name) for preset in Preset.objects.all()]
@@ -50,3 +50,11 @@ class EditPresetForm(NewPresetForm):
 
 class DTMapForm(forms.Form):
 	dt_map = forms.FileField(label='Upload mapping file', required=False)
+
+class PlateOpeningForm(forms.ModelForm):
+	class Meta:
+		model = PlateOpening
+		fields = ['date', 'reason']
+
+class ProposalForm(forms.Form):
+	proposal = forms.CharField(label='Proposal', required=True)

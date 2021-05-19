@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
+from rest_framework.response import Response
 
 from .forms import LibraryPlateForm, ExternalLibraryForm, SubsetForm
-from .histograms import get_histogram, get_all_histograms
+from .histograms import get_histogram, get_all_histograms, get_selection_histogram
 from .validators import data_is_valid, selection_is_valid
 from .helpers import upload_plate, upload_subset, import_full_libraries, import_library_parts, export_form_is_valid
 from API.models import Library, LibraryPlate, LibrarySubset, Proposals, Compounds, Preset
+from webSoakDB_stack.settings import MEDIA_ROOT
 
 import mimetypes
 from slugify import slugify
@@ -24,7 +26,8 @@ def upload_user_library(request):
 			log = []
 			fs = FileSystemStorage()
 			source = request.FILES["data_file"]
-			filename = fs.save(source.name, source)
+			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
+			print(filename)
 			if data_is_valid(filename, log):
 				
 				#data to be submitted
@@ -61,7 +64,7 @@ def upload_user_subset(request):
 			fs = FileSystemStorage()
 			source = request.FILES["data_file"]
 			library_id = form.cleaned_data['lib_id']
-			filename = fs.save(source.name, source)
+			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
 			if selection_is_valid(filename, log, library_id):
 								
 				#data to be submitted
@@ -140,10 +143,31 @@ def serve_histogram(request, obj_type, pk, attr):
 		obj = Library.objects.get(pk=pk)
 	if obj_type=="preset":
 		obj = Preset.objects.get(pk=pk)
-	if obj_type=="selection":
-		pass #TODO
+	if obj_type=="subset":
+		obj = LibrarySubset.objects.get(pk=pk)
+
 	g = get_histogram(obj, obj_type, attr)
+	if g==204:
+		print("no content")
+		return HttpResponse(status=204)
+	
 	return HttpResponse(g)
+	
+def selection_histogram(request, attr):
+	if request.method =="POST":
+		#attr = request.POST["attr"]
+		try:
+			libs = [int(s) for s in request.POST["libs"].split(",")]
+		except(ValueError):
+			libs = 0
+		try:
+			subs = [int(s) for s in request.POST["subs"].split(",")]
+		except(ValueError):
+			subs = 0
+		response = get_selection_histogram(libs, subs, attr)
+		return HttpResponse(response)
+	else:
+		return HttpResponse("<div>Loading...</div>")
 		 
 def dummy(request):
 	return render(request, "webSoakDB_backend/dummy.html")
@@ -159,7 +183,7 @@ def dashboard(request):
 		return render(request, "webSoakDB_backend/dashboard.html", {'user' : request.user})
 	return HttpResponseRedirect('/selection/')
 
-def test(request, obj_type, pk):
+def all_histograms(request, obj_type, pk):
 	if obj_type=="library":
 		obj = Library.objects.get(pk=pk)
 	if obj_type=="preset":
@@ -167,4 +191,5 @@ def test(request, obj_type, pk):
 	
 	g = get_all_histograms(obj, obj_type)
 	
+	print("normal response")
 	return HttpResponse(g)

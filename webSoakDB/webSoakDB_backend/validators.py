@@ -197,8 +197,10 @@ def code_is_valid(string, line, used_codes, error_log):
 #WELL validation helpers
 
 def valid_well_name(string, line, error_log): #figure out what are actual possible well names
-	match = re.fullmatch('([A-Z]{1,2}[1-9])|([A-Z]{1,2}(?!(00))([0-9]{2}))', string.upper())
-	if match:
+	match = re.fullmatch('([A-Z][A-F]?[1-9])|([A-Z][A-F]?(?!(00))([0-9]{2}))', string.upper())
+	digit_part = '[0-9][0-9]?'
+	
+	if match and (int(re.search(digit_part, string)[0]) <= 48 ):
 		return True
 	
 	msg = "Line " + str(line) + ": WELL NAME ERROR. Invalid well name: '" + string + "'"
@@ -206,12 +208,13 @@ def valid_well_name(string, line, error_log): #figure out what are actual possib
 	return False
 
 def unique_well_name(string, line, used_well_names, error_log):
-	if string in used_well_names:
-		msg = 'Line ' + str(line) + ": WELL NAME ERROR. Duplicate well name. Well name '" + string + "' was already used in line " + str(used_well_names[string])
+	if string.upper() in used_well_names:
+		msg = 'Line ' + str(line) + ": WELL NAME ERROR. Duplicate well name. Well name '" + string + "' was already used in line " + str(used_well_names[string.upper()])
 		update_error_log(msg, error_log)
-		used_well_names[string] = [used_well_names[string], line]
+		used_well_names[string.upper()] = [used_well_names[string.upper()], line]
 		return False
-	used_well_names[string] = line
+	
+	used_well_names[string.upper()] = line
 	return True
 
 def well_is_valid(string, line, used_well_names, error_log):
@@ -250,8 +253,14 @@ def smiles_is_valid(string, line, error_log):
 def concentration_is_valid(string, line, error_log):
 	if string != "":
 		try:
-			float(string)
-			return True
+			c = float(string)
+			if c > 0:
+				return True
+			else:
+				msg = "Line {line}: CONCENTRATION ERROR. Negative concentration value ({string})".format(line=str(line), string=string)
+				update_error_log(msg, error_log)
+				return False
+				
 		except(ValueError):
 			msg = "Line " + str(line) + ": CONCENTRATION ERROR. Concentration value '" + string + "' is not a number!"
 			update_error_log(msg, error_log)

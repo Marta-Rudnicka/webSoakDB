@@ -1,10 +1,8 @@
 import React from 'react';
-//import './home.css';
 import CollectionRow from './collection_row.js';
 import TableHeader from './th.js';
 import LibraryInTable from './library_rows.js';
 import SubsetTable from './subset_table.js';
-import ExportForm from './export_form.js';
 import { deepCopyObjectArray, getAttributeArray, mean } from  '../../actions/stat_functions.js';
 import axios from 'axios';
 
@@ -60,8 +58,6 @@ class Summary extends React.Component {
 	
 	saveChanges(){
 		this.props.updateSelection(getAttributeArray(this.state.selectedLibs, "id"), getAttributeArray(this.state.selectedSubsets, "id"));
-		//this.props.updateLibrarySelection(getAttributeArray(this.state.selectedLibs, "id"));
-		//this.props.updateSubsetSelection(getAttributeArray(this.state.selectedSubsets, "id"));
 		this.props.trackUnsavedChanges(false);
 		this.setState({libClass : null, subsetClass : null});
 	
@@ -81,45 +77,39 @@ class Summary extends React.Component {
 		}
 		
 		return (
-			<div id="all">
-				<h1>Selected Compounds for {this.props.proposal.proposal} </h1>
-				<main id="summary-main">
-				<section id="whole" className={this.state.libClass}>
-					<h2>Whole libraries</h2>
-					<table className="table table-bordered" id="table">
-						<thead>
-							<tr>
-								<th>Library</th>
-								<th>Origin</th>
-								<th>Currently used plate</th>
-								<th>Available <br/>compounds</th>
-								<th>Compounds</th>
-								<th>Remove</th>
-							</tr>
-						</thead>	
-						<tbody>
-							{libraries}
-						</tbody>
-					</table>
-				</section>
-				<section id="subsets" className={this.state.subsetClass}>
-					<SubsetTable 
-						selectedSubsets={this.state.selectedSubsets} 
-						handleClick={this.removeSubset}
-					/>
-					<div>
-						<button onClick={event => this.saveChanges()}>Save changes </button>
-						<button onClick={event => this.undoChanges()}>Undo unsaved changes </button>
-					</div>
-				</section>
-				<section id="exports">					
-					<div>
-						<ExportForm proposal={this.props.proposal} />
-					</div>
-				</section>
-			</main>
-			</div>
-			
+		  <div id="all">
+			<h1>Selected Compounds for {this.props.proposal.proposal} </h1>
+			<main id="summary-main">
+			<section id="whole" className={this.state.libClass}>
+			  <h2>Whole libraries</h2>
+			  <table className="table table-bordered" id="table">
+				<thead>
+				  <tr>
+					<th>Library</th>
+					<th>Origin</th>
+					<th>Currently used plate</th>
+					<th>Available <br/>compounds</th>
+					<th>Compounds</th>
+					<th>Remove</th>
+				  </tr>
+				</thead>  
+				<tbody>
+				  {libraries}
+				</tbody>
+			  </table>
+			</section>
+			<section id="subsets" className={this.state.subsetClass}>
+			  <SubsetTable 
+				selectedSubsets={this.state.selectedSubsets} 
+				handleClick={this.removeSubset}
+			  />
+			  <div>
+				<button onClick={event => this.saveChanges()}>Save changes </button>
+				<button onClick={event => this.undoChanges()}>Undo unsaved changes </button>
+			  </div>
+			</section>
+		  </main>
+		  </div>
 		); 
 	}
 }

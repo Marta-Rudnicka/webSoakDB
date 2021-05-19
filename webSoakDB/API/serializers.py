@@ -13,12 +13,6 @@ class LibraryPlateSerializer(serializers.ModelSerializer):
 		fields = ['id', 'library', 'barcode', 'current', 'size']
 		depth = 1
 
-#class LibraryPlateWithCompoundsSerializer(serializers.ModelSerializer):
-#	class Meta:
-#		model = LibraryPlate
-#		fields = ['library', 'name', 'current', 'compounds', 'size']
-
-
 class CurrentPlateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = LibraryPlate
@@ -70,11 +64,11 @@ class ProteinSerializer(serializers.ModelSerializer):
 		model = Protein
 		fields = ['id', 'proposal', 'name', 'space_group', 'a', 'b', 'c', 'alpha', 'beta', 'gamma']
 
-class PresetSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Preset
-		fields = ['id', 'name', 'description', 'subsets']
-		depth=1;
+class PresetSerializer(serializers.Serializer):
+	id = serializers.IntegerField()
+	name = serializers.CharField(max_length=32)
+	description = serializers.CharField()
+	subsets = LibrarySubsetSerializer(many=True)
 	
 
 class CrystalPlateSerializer(serializers.ModelSerializer):
@@ -89,10 +83,11 @@ class ProposalListSerializer(serializers.Serializer):
 	libraries = LibrarySerializer(many=True)
 	subsets = LibrarySubsetSerializer(many=True)	
 
-'''class LibrarySubsetSerializer(serializers.ModelSerializer):
+class LibrarySubsetSerializer(serializers.ModelSerializer):
 	class Meta:
-		model LibrarySubset
-		fields'''
+		model = LibrarySubset
+		fields=["id", "name", "library", "origin"]
+		depth= 2
 
 #CUSTOM SERIALIZERS FOR RUNNING STATS
 

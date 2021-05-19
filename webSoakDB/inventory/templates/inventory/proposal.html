@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% load static %}
+  {% block main %}
+  
+  <script>
+    function showForm(index){
+      const id = "lib-" + index;
+      document.getElementById(id).className = "edit-field";
+    }
+    function hideForm(index){
+      const id = "lib-" + index;
+      document.getElementById(id).className = "hidden";
+    }
+    
+  </script>
+  
+  <main id="proposal">
+    <h1>Manage proposal {{ proposal.proposal }}</h1>
+    <section id="library-list">  
+	  <h2>User's library plates:</h2>
+      <table id="table" class="table table-hover">
+        <thead>
+          <th>Library</th>
+          <th>Barcode</th>
+          <th>Compounds</th>
+          <th>Last updated</th>
+          <th>Update</th>
+          <th>Track usage</th>
+        </thead>
+        <tbody>
+          {% for library in proposal.libraries.all %}
+			  {% if not library.public %}
+				{% for plate in library.plates.all %}
+				  <tr class="plate-row" data-lib="{{library.id}}">
+					<td>{{ library.name }}</td>
+					<td>{{ plate.barcode }}</td>
+					<td>{{plate.compounds.count}}</td>
+					<td>{{ plate.last_tested|date:"d M Y" }}</td>
+					<td><a href="/inventory/update-plate/{{plate.id}}/">Update/delete</a></td>
+					<td><a href="/inventory/track-usage/{{plate.id}}/{{plate.last_tested|date:"Y-m-d"}}/general-view/">Track usage</a></td>
+				  </tr>
+				{% endfor %}
+			{% endif %}
+
+          {% endfor %}
+        </tbody>        
+      </table>
+    </section>
+    <section id="subset-list">  
+	  <h2>User's visits:</h2>
+	  <table>
+		  <thead>
+			  <tr>
+				  <th>Visit</th>
+				  <th>Manage experiment</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+			  <tr><td colspan="2">TODO</td></tr>
+		  </tbody>
+	  </table>
+    </section>
+
+    
+  </main>
+  {% endblock %}

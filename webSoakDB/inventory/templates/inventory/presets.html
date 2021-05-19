@@ -1,136 +1,136 @@
 {% extends "layout.html" %}
 {% load static %}
-	{% block main %}
-	
-	<script>
-		function showForm(index){
-			const id = "lib-" + index;
-			document.getElementById(id).className = "edit-field";
-		}
-		function hideForm(index){
-			const id = "lib-" + index;
-			document.getElementById(id).className = "hidden";
-		}
-	</script>
-	
-	<main id="presets">
-		<h1>XChem fragment presets</h1>
-		<section id="preset-list">	
-			<div class="update-button">{{form_errors}} {{non_field_errors}}</div>
-			<table id="table" class="table">
-				<thead>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Libraries</th>
-					<th>Edit</th>
-				</thead>
-				<tbody>
-					{% for preset, form in form_dict.items %}
-						<tr>
-							<td>{{ preset.name }}</td>
-							<td>{{ preset.description }}</td>
-							<td>
-								
-								{% if preset.subsets|length > 0 %}
-								<div>
-									<ul>
-									{% for subset in preset.subsets %}
-										<li>{{ subset.library_name }} : <strong>{{ subset.compounds|length }}</strong> compounds ({{ subset.unavailable_count }}</strong> missing in the current plate)</li>
-											<div class="list-in-table">
-												<table class="small-font-table">
-													 <colgroup>
-													   <col style="width: 5%;">
-													   <col style="width: 20%;">
-													   <col>
-													   <col style="width: 15%;">
-													</colgroup>
-													<thead>
-														<tr>
-															<th></th>
-															<th>Code</th>
-															<th>SMILES</th>
-															<th>In current plate(s)</th>
-														</tr>
-													</thead>
-													<tbody>
-														{% for compound in subset.compounds %}
-														{% if compound.available %}
-														<tr>
-														{% else %}
-														<tr class="inactive-row">
-														{% endif %}
-															<td>{{ forloop.counter }}</td>
-															<td>{{ compound.code }}</td>
-															<td>{{ compound.smiles }}</td>
-															<td>{% if compound.available %}
-																Available 
-																{% else %}
-																 Unavailable <br>
-																<strong>Available in:</strong><br>
-																{% for a in compound.alternatives %} 
-																	{{forloop.counter }} - {{a}} <br>
-																{% empty %}
-																	Not found
-																{% endfor %} 
-																	
-																{% endif %}
-															</td>														
-														</tr>
-														{% endfor %}
-													</tbody>
-												
-												</table>
-											
-											</div>
-									{% endfor %}						
-									</ul>
-								</div>
-								{% else %}
-								No libraries added yet <br>
-								{% endif %}
-							</td>
-							<td><button onclick="showForm({{ preset.id }})">Edit/Delete</button></td>
-						</tr>
-						<tr class="hidden" id="lib-{{ preset.id }}">
-							
-							<td colspan="4">
-								<div class="edit-form">
-									<button type="reset" onclick="hideForm({{ preset.id }})">Discard changes / hide form</button>
-									<form class="" action="../edit-preset/" method="post" enctype="multipart/form-data">
-										<legend>Edit {{preset.name}} </legend>
-										{% csrf_token %}
-										<table>
-										{{ form.as_table }}
-										</table>
-										<input id="{{preset.id}}-id}" type="hidden" name="id" value="{{preset.id}}">
-										<button type="submit" value="Submit">Save changes</button>								
-									</form>
-									<form class="" action="../delete-preset/" method="post" id="delete-{{preset.id}}">
-										{% csrf_token %}
-										<input type="hidden" value="{{preset.id}}" name="id" >
-										<button type="submit" value="Submit" class="delete-button"  onclick="submitDelete('{{preset.id}}', '{{preset.name}}')">Delete {{preset.name}}</button>
-									</form>
-								
-								</div>
-							</td>
-						</tr>
-					{% endfor %}
-				</tbody>				
-			</table>
-		</section>
-		<section id="forms">
-			<div>
-			<h2>Create new preset</h2>
-			<form action="../add-preset/" method="post" enctype="multipart/form-data">
-				{% csrf_token %}
-				<table>
-				{{ new_preset_form.as_table }}
-				</table>
-				<input type="submit" value="Submit">
-			</form>
-			{{form_errors}}
-			</div>		
-		</section>
-		
-	</main>
-	{% endblock %}
+  {% block main %}
+  
+  <script>
+    function showForm(index){
+      const id = "lib-" + index;
+      document.getElementById(id).className = "edit-field";
+    }
+    function hideForm(index){
+      const id = "lib-" + index;
+      document.getElementById(id).className = "hidden";
+    }
+  </script>
+  
+  <main id="presets">
+    <h1>XChem fragment presets</h1>
+    <section id="preset-list">  
+      <div class="update-button">{{form_errors}} {{non_field_errors}}</div>
+      <table id="table" class="table">
+        <thead>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Libraries</th>
+          <th>Edit</th>
+        </thead>
+        <tbody>
+          {% for preset, form in form_dict.items %}
+            <tr>
+              <td>{{ preset.name }}</td>
+              <td>{{ preset.description }}</td>
+              <td>
+                
+                {% if preset.subsets|length > 0 %}
+                <div>
+                  <ul>
+                  {% for subset in preset.subsets %}
+                    <li>{{ subset.library_name }} : <strong>{{ subset.compounds|length }}</strong> compounds ({{ subset.unavailable_count }}</strong> missing in the current plate)</li>
+                      <div class="list-in-table">
+                        <table class="small-font-table">
+                           <colgroup>
+                             <col style="width: 5%;">
+                             <col style="width: 20%;">
+                             <col>
+                             <col style="width: 15%;">
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>Code</th>
+                              <th>SMILES</th>
+                              <th>In current plate(s)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for compound in subset.compounds %}
+                            {% if compound.available %}
+                            <tr>
+                            {% else %}
+                            <tr class="inactive-row">
+                            {% endif %}
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ compound.code }}</td>
+                              <td>{{ compound.smiles }}</td>
+                              <td>{% if compound.available %}
+                                Available 
+                                {% else %}
+                                 Unavailable <br>
+                                <strong>Available in:</strong><br>
+                                {% for a in compound.alternatives %} 
+                                  {{forloop.counter }} - {{a}} <br>
+                                {% empty %}
+                                  Not found
+                                {% endfor %} 
+                                  
+                                {% endif %}
+                              </td>                            
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        
+                        </table>
+                      
+                      </div>
+                  {% endfor %}            
+                  </ul>
+                </div>
+                {% else %}
+                No libraries added yet <br>
+                {% endif %}
+              </td>
+              <td><button onclick="showForm({{ preset.id }})">Edit/Delete</button></td>
+            </tr>
+            <tr class="hidden" id="lib-{{ preset.id }}">
+              
+              <td colspan="4">
+                <div class="edit-form">
+                  <button type="reset" onclick="hideForm({{ preset.id }})">Discard changes / hide form</button>
+                  <form class="" action="../edit-preset/" method="post" enctype="multipart/form-data">
+                    <legend>Edit {{preset.name}} </legend>
+                    {% csrf_token %}
+                    <table>
+                    {{ form.as_table }}
+                    </table>
+                    <input id="{{preset.id}}-id}" type="hidden" name="id" value="{{preset.id}}">
+                    <button type="submit" value="Submit">Save changes</button>                
+                  </form>
+                  <form class="" action="../delete-preset/" method="post" id="delete-{{preset.id}}">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{preset.id}}" name="id" >
+                    <button type="submit" value="Submit" class="delete-button"  onclick="submitDelete('{{preset.id}}', '{{preset.name}}')">Delete {{preset.name}}</button>
+                  </form>
+                
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>        
+      </table>
+    </section>
+    <section id="forms">
+      <div>
+      <h2>Create new preset</h2>
+      <form action="../add-preset/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+        {{ new_preset_form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+      </form>
+      {{form_errors}}
+      </div>    
+    </section>
+    
+  </main>
+  {% endblock %}

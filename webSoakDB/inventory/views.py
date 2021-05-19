@@ -7,38 +7,21 @@ from webSoakDB_stack.settings import MEDIA_ROOT
 from datetime import date, datetime
 import string
 import re
+import shutil
 from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy, current_library_selection, set_status
 from .dt import get_well_dictionary, manage_sw_status_change
-from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm
+from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm, PlateOpeningForm, ProposalForm
 from webSoakDB_backend.validators import data_is_valid, selection_is_valid
 from webSoakDB_backend.helpers import upload_plate, upload_subset
-from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset, SWStatuschange
+from webSoakDB_backend.histograms import update_histograms
+from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset, SWStatuschange, PlateOpening, Proposals
 
-
-
-fake_well_dictionary = {} #
-
-#VIEWS DISPLAYING PAGES (HANDLING GET REQUESTS)
+#VIEWS HANDLING GET REQUESTS
 @staff_member_required
 def index(request):
-	return render(request, "inventory/inventory-index.html")
-'''
-@staff_member_required
-def dispense_testing(request):
-	pass
-	
-	rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-	columns = [ '0' + str(i) for i in range(1, 10)] + ['10', '11', '12']
-	
-	
-	l = [('A', 'B', 'C', 'D'), ('E', 'F', 'G', 'H')]
-	
-	return render(request, "inventory/dispense-testing.html", {
-		'columns': columns,
-		'rows': rows,
-		'l': l,
-	})
-	'''
+	form = ProposalForm()
+	return render(request, "inventory/inventory-index.html", {"form" : form})
+
 @staff_member_required
 def libraries(request):
 	libraries = Library.objects.filter(public=True).order_by("name")
@@ -70,11 +53,6 @@ def presets(request):
 			for plate in current:
 				m = plate.compounds.filter(active=False).all()
 				missing_compounds = {(int(plate.id), int(c.compound.id)) for c in m} | missing_compounds
-				
-	# tip: the info from which plate the compound is missing is needed for libraries that share the same compounds,
-	# which happens when there are different versons of the same library for different solvents. Otherwise, e.g., 
-	# a compound that is missing from the current plate DSI DMSO would be recorded as missing also in the current
-	# plates of DSI EG, even if it's still available in the EG plate
 	
 	#make copy of presets data, and add information about availability of the compounds in the current library plates
 	presets_copy = [fake_preset_copy(preset, missing_compounds) for preset in presets]
@@ -108,10 +86,10 @@ def presets(request):
 def update_plate(request, pk):
 	plate = LibraryPlate.objects.get(pk=pk)
 	compounds_count = plate.compounds.all().count()
+	opened = plate.opened.all()
 	
-	#for compounds that are missing, find in which library plates they are still available
+	#for missing compounds, find in which library plates they are still available
 	alternatives = {}
-	
 	for compound in plate.compounds.all():
 		if not compound.active:
 			c = Compounds.objects.get(code=compound.compound.code, smiles = compound.compound.smiles)
@@ -130,11 +108,14 @@ def update_plate(request, pk):
 	libs = current_library_selection(True)
 	plate_form = PlateUpdateForm(libs=libs, initial={"library" : plate.library.id, "barcode" : plate.barcode, "current" : plate.current})
 	dt_map_form = DTMapForm()
+	
+	plate_opening_form = PlateOpeningForm(initial={"date" : datetime.today()})
 		
 	return render(request, "inventory/update_plate.html", {
 		"plate": plate, 
 		"compounds" : plate.compounds.all().order_by("deactivation_date"),
-		"plate_form" : plate_form, 
+		"plate_form" : plate_form,
+		"plate_opening_form" : plate_opening_form, 
 		"active_count" : active_count, 
 		"inactive_count" : inactive_count,
 		"availability" : availability,
@@ -144,13 +125,7 @@ def update_plate(request, pk):
 
 @staff_member_required
 def track_usage(request, pk, date, mode):
-	'''Shows information about availability of compounds in the plate on a given date in three ways: availability statistics,
-	a list of compounds on a given date with availability info, and a table graphically representing a physical plate with the
-	locations of the active and inactive compounds. There are two modes: general view, which shows everything, and graphical view, 
-	in which some of the page elements are hidden to bring the graphical representation of a plate to the top of the page. The 
-	mode argument is passed to the template and used as id of the <main> HTML element. The difference between the page layouts 
-	in different modes is determined by the CSS used for the children of the <main> element '''
-	
+		
 	plate = LibraryPlate.objects.get(pk=pk)
 	compounds = fake_compounds_copy(plate.compounds.all()) #make a copy of the data to edit it without touching the db
 	modified_compounds = [compound for compound in compounds if len(compound.changes) > 0 ]
@@ -176,6 +151,7 @@ def track_usage(request, pk, date, mode):
 	
 	#produce basic usage statistics
 	usage_stats = get_usage_stats(compounds)
+	opened = len([o for o in plate.opened.all() if o.date <= timestamp])
 		
 	return render(request, "inventory/track_usage.html", {
 		"change_dates": change_dates,
@@ -186,12 +162,29 @@ def track_usage(request, pk, date, mode):
 		"active_count" : usage_stats['active'], 
 		"inactive_count" : usage_stats['inactive'],
 		"availability" : usage_stats['availability'],
+		"opened" : opened,
 		"columns" : columns,
 		"rows": rows,
 		"main_id" : mode,
 		"switch_view": switch_view,
 		"switch_view_url": switch_view_url,
 		})
+
+@staff_member_required
+def proposal(request):
+	form = ProposalForm(request.POST)
+	if request.method == "POST":	
+		if form.is_valid():
+			try:
+				pr = form.cleaned_data['proposal']
+				proposal = Proposals.objects.get(proposal=pr)
+				return render(request, "inventory/proposal.html", {'proposal' : proposal})
+			except(ObjectDoesNotExist):
+				return render(request, "webSoakDB_backend/error_log.html", {'error_log': ['Proposal not found']})
+				
+		else:
+			return render(request, "webSoakDB_backend/error_log.html", {'error_log': [form.errors, form.non_field_errors]})
+
 
 #FORM ACTION VIEWS (HANDLING POST REQUESTS)
 @staff_member_required
@@ -202,7 +195,6 @@ def add_library(request):
 		if form.is_valid():
 			name = form.cleaned_data['name']
 			for_industry = form.cleaned_data['for_industry']
-			print('name: ', name, ", for_industry: ", for_industry)
 			Library.objects.create(name=name, for_industry=for_industry, public=True)
 
 			return HttpResponseRedirect('../libraries')
@@ -231,6 +223,8 @@ def add_plate(request):
 				
 				upload_plate(filename, plate)
 				fs.delete(filename)
+				if plate.current:
+					update_histograms(plate.library, "library")
 				
 				return HttpResponseRedirect('../plates')
 			else:
@@ -248,13 +242,11 @@ def add_preset(request):
 	if request.method == "POST":
 		form = NewPresetForm(data=request.POST, files=request.FILES, libs=current_library_selection(True))
 		if form.is_valid():
-			print('FILES: ', request.FILES)
 			log = []
 			fs = FileSystemStorage()
 			source = request.FILES["new_compound_list"]
 			library_id = form.cleaned_data['new_library']
 			filename = fs.save(source.name, source)
-			print('library_id: ', library_id, 'description: ', form.cleaned_data['description'], 'preset_name:', form.cleaned_data['name'])
 			if selection_is_valid(filename, log, library_id):
 				library = Library.objects.get(pk=library_id)
 				description = form.cleaned_data['description']
@@ -264,14 +256,14 @@ def add_preset(request):
 				subset_name = library.name + " selection"
 				origin = "preset: " + preset_name
 				first_subset = upload_subset(filename, library_id, subset_name, origin)
-				print('create subset: ', library_id, subset_name, origin)
 				fs.delete(filename)
 								
 				#create preset object
 				preset = Preset.objects.create(name=preset_name, description=description)
 				preset.subsets.add(first_subset)
 				preset.save()
-				print('create preset: ', preset_name, description)
+				
+				update_histograms(preset, "preset")
 				
 				return HttpResponseRedirect('../presets/')
 			else:
@@ -360,6 +352,10 @@ def edit_preset(request):
 				preset.subsets.remove(deleted_subset)	
 			
 			preset.save()
+			
+			if new_library or edited_library or deleted_library:
+				update_histograms(preset, "preset")
+			
 			return HttpResponseRedirect('../presets/')
 		else:
 			return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})			
@@ -394,10 +390,18 @@ def edit_plate(request):
 			barcode = form.cleaned_data['barcode']
 			current = form.cleaned_data['current']
 			plate = LibraryPlate.objects.get(pk=pk)
+			old_current = plate.current
+			old_library = plate.library
 			plate.library = library
 			plate.barcode = barcode
 			plate.current = current
 			plate.save()
+			
+			if old_current != current or old_library != library:
+				update_histograms(library, "library")
+			
+			if old_library != library:
+				update_histograms(old_library, "library")
 			
 			redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
 			return HttpResponseRedirect(redirect_url)
@@ -414,6 +418,11 @@ def delete_library(request):
 		lib = Library.objects.get(pk=pk)
 		if len(lib.plates.all()) == 0:
 			lib.delete()
+			
+			#remove all cached histograms
+			path = MEDIA_ROOT + '/html_graphs/library/' + str(lib.id) + '/'
+			shutil.rmtree(path)
+			
 			return HttpResponseRedirect('../libraries/')
 		else:
 			return HttpResponseRedirect('../library-deletion-error/')
@@ -424,6 +433,9 @@ def delete_plate(request):
 		pk = request.POST.get('id')
 		plate = LibraryPlate.objects.get(pk=pk)
 		plate.delete()
+		
+		if plate.current:
+			update_histograms(plate.library, "library")
 		return HttpResponseRedirect('../plates/')
 
 @staff_member_required
@@ -432,6 +444,10 @@ def delete_preset(request):
 		pk = request.POST.get('id')
 		preset = Preset.objects.get(pk=pk)
 		preset.delete()
+		
+		path = MEDIA_ROOT + '/html_graphs/preset/' + str(preset.id) + '/'
+		shutil.rmtree(path)
+		
 		return HttpResponseRedirect('../presets/')
 
 def library_deletion_error(request):
@@ -457,11 +473,9 @@ def deactivate_compounds(request):
 				not_dispensed.add(int(key))
 				if compound.active:
 					compound.active = False
-					compound.deactivation_date = today
 					compound.save()
 					
 					manage_sw_status_change(compound, today, False)
-					#SWStatuschange.objects.create(source_well=compound, date=today, activation=False)
 		
 		#activate inactive compounds that were dispensed anyway
 		raw_string = request.POST.get('already_inactive')
@@ -470,10 +484,12 @@ def deactivate_compounds(request):
 		for sw_id in activated:
 			compound = SourceWell.objects.get(pk=sw_id)
 			compound.active = True
-			compound.deactivation_date = None
 			compound.save()
 			manage_sw_status_change(compound, today, True)
-			#SWStatuschange.objects.create(source_well=compound, date=today, activation=True)
+			
+		PlateOpening.objects.create(plate=plate, date=today, reason="dispense test")
+		if plate.current:
+			update_histograms(plate.library, "library")
 		
 		return HttpResponseRedirect(redirect_url)
 
@@ -487,16 +503,13 @@ def dispense_testing_map(request):
 	
 	if request.method == "POST":
 		if form.is_valid():
-			print('form is valid')
 			source = request.FILES["dt_map"]
-			print('source: ', source)
 			if not re.fullmatch('(.*)+\.csv$', source.name):
 				return render(request, "inventory/dispense-testing.html", {"errors": ["Invalid file: the well map must be a csv file."], "filename" : source.name})
 			
 			pk = request.POST.get('id')
 			fs = FileSystemStorage()
 			filename = fs.save(source.name, source)
-			print('filename: ', filename)
 			dt_dict = get_well_dictionary(MEDIA_ROOT + '/' + filename)
 			fs.delete(filename)
 			plate=LibraryPlate.objects.get(pk=pk)
@@ -526,3 +539,34 @@ def dispense_testing_map(request):
 			return render(request, "inventory/dispense-testing.html", {"errors": errors, "data" : data, "rows": rows, "columns": columns, "plate": plate, "filename" : filename})
 		else:
 			return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})	
+
+@staff_member_required
+def open_plate(request):
+	if request.method == "POST":
+		try:
+			plate_id = int(request.POST["id"])
+			plate = LibraryPlate.objects.get(pk=plate_id)
+			date_input = request.POST["date"]
+			date = datetime.strptime(date_input, "%Y-%m-%d").date()
+			reason = str(request.POST["reason"])
+		except(ValueError):
+			return render(request, "webSoakDB_backend/error_log.html", {"error_log": "<p>The values submitted in the form were invalid. Please try again.</p>"})	
+			
+		PlateOpening.objects.create(plate=plate, date=date, reason=reason)
+		redirect_url = '/inventory/update-plate/' + str(plate_id) + '/'
+		return HttpResponseRedirect(redirect_url)
+
+@staff_member_required
+def delete_multiple_plates(request):
+	if request.method == "POST":
+		deleted = []
+		for key in request.POST:
+			if key != "csrfmiddlewaretoken":
+				deleted += [ int(n) for n in request.POST.getlist(key) ]
+		
+		for plate_id in deleted:
+			plate = LibraryPlate.objects.get(pk=plate_id)
+			plate.delete()
+			if plate.current:
+				update_histograms(plate.library, "library")
+		return HttpResponseRedirect('/inventory/plates/')

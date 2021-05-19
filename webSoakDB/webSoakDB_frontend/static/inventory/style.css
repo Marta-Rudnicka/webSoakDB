@@ -1,6 +1,6 @@
 main#index{
 	display: grid;
-	grid-template-columns: 33% 33% 33%;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 main#libraries, main#presets{
@@ -103,6 +103,10 @@ main#plates {
 	grid-column: 1/4;
 }
 
+#multi-delete-form #liblist {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
 #well {
 	width: 6em;
 }
@@ -119,7 +123,7 @@ main#plates {
 	color: blue;
 }
 
-[type="submit"]{
+.button, [type="submit"]{
 	width: 100%;
 	border-width: 1px;
 	border-color: #ec0000;
@@ -349,11 +353,6 @@ input:hover {
 	border: solid black 2px;
 }
 
-#dispense-testing {
-	display: grid;
-	grid-template-columns: auto auto;
-}
-
 span.well-representation {
 	height: 16px;
 	width: 16px;
@@ -365,11 +364,6 @@ span.well-representation {
 	filter: invert(100%) hue-rotate(18deg) brightness(1.1);
 }
 
-#dt-summary {
-	display: grid;
-	grid-template: min-content auto / 1fr 1fr;
-	grid-gap: 1em;
-}
 
 #dt-summary h1 {
 	grid-column: 1/3;
@@ -380,3 +374,37 @@ span.well-representation {
 	font-size: 2em;
 }
 
+.side {
+	opacity: 0.5;
+}
+
+.side:hover{
+	opacity: 1;
+}
+
+#dt-summary {
+	display: grid;
+	grid-template: min-content auto / 1fr 1fr;
+	grid-gap: 1em;
+}
+
+@media only screen and (max-width: 1260px) {
+
+	#dispense-testing {
+		display: grid;
+		grid-template-rows: auto auto;
+	}
+}
+
+@media only screen and (min-width: 1261px) {
+	
+	#dispense-testing {
+		display: grid;
+		grid-template-columns: auto auto;
+	}
+}
+
+main#proposal {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
