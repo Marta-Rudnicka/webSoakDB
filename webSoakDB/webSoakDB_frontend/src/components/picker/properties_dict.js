@@ -1,6 +1,6 @@
 import React from 'react';
 
-const properties_dict = {
+export const properties_dict = {
 	"mol_wt" : "Molecular weight" ,
 	"tpsa" : "TPSA" ,
 	"log_p" : "LogP" ,
@@ -15,5 +15,20 @@ const properties_dict = {
 	"nhoh_count" : "Number of NH and OH" ,
 	"no_count" : "Number of nitrogens and oxygens" ,
 }
+
+export const properties_list = [
+	"mol_wt", 
+	"tpsa", 
+	"log_p", 
+	"num_val_electrons", 
+	"num_h_acceptors", 
+	"num_h_donors", 
+	"num_het_atoms", 
+	"num_rot_bonds",
+	"ring_count", 
+	"heavy_atom_count",
+	"heavy_atom_mol_wt",
+	"nhoh_count",
+	"no_count"]
 
 export default properties_dict
