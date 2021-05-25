@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 import Details from './details.js';
 import PresetOption from './preset_option.js';
 import { ChevronDown } from '../main/icons.js';

@@ -22,17 +22,17 @@ class GraphTr extends React.Component {
 	else{
 	  let apiUrl = ""
 	  if(this.props.type==="library"){	
-		apiUrl = '/api/library_detail/' + this.props.col_id + '/';
+		  apiUrl = '/api/library_detail/' + this.props.col_id + '/';
 	  }
 	  if(this.props.type==="subset"){	
-		apiUrl = '/api/subset_detail/' + this.props.col_id + '/';
+		  apiUrl = '/api/subset_detail/' + this.props.col_id + '/';
 	  }
-      axios.get(apiUrl)
-        .then(res => {
-        const collection = res.data;
-        this.setState({ collection });
-        if (collection.public){
-			this.setState({public: collection.public});
+    axios.get(apiUrl)
+      .then(res => {
+      const collection = res.data;
+      this.setState({ collection });
+      if (collection.public){
+		this.setState({public: collection.public});
 		}
         });
 	}
@@ -48,11 +48,11 @@ class GraphTr extends React.Component {
 	  });
 	  name = this.state.collection.name;
 	  if(this.props.type==="subset"){
-		name = name + "(selected from " + this.state.collection.library.name + ")"
+		  name = name + "(selected from " + this.state.collection.library.name + ")"
 	  }
-    }
+  }
 
-    return(
+   return(
       
 		<tr>
 		  <td><strong>{name}</strong></td>

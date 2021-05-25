@@ -23,7 +23,7 @@ class LibraryInTable extends React.Component {
 		let first = true;
 		const library = this.props.library;
 		const plates = this.state.plates;
-		const showPlate = this.props.showPlate
+		//const showPlate = this.props.showPlate
 		const handleClick = this.props.handleClick
 		
 		function plateCells(plate){

@@ -1,10 +1,7 @@
 import React from 'react';
-import CollectionRow from './collection_row.js';
-import TableHeader from './th.js';
 import LibraryInTable from './library_rows.js';
 import SubsetTable from './subset_table.js';
-import { deepCopyObjectArray, getAttributeArray, mean } from  '../../actions/stat_functions.js';
-import axios from 'axios';
+import { removeFromArray, getAttributeArray } from  '../../actions/stat_functions.js';
 
 class Summary extends React.Component {
 	
@@ -12,46 +9,38 @@ class Summary extends React.Component {
 		super(props);
 		this.removeLibrary = this.removeLibrary.bind(this);
 		this.removeSubset = this.removeSubset.bind(this);
-		this.state = { 	selectedLibs: [],
-						selectedSubsets: [],
+		this.state = { 	selectedLibs: this.props.proposal.libraries,
+						selectedSubsets: this.props.proposal.subsets,
 						libClass : null,
 						subsetClass : null,
-					};
+		};
 	}
-	
-	
-	componentDidMount() {
-		const apiUrl = '/api/proposals/' + this.props.proposal.proposal + '/';
-		
-		axios.get(apiUrl)
-			.then(res => {
-			const selectedLibs = res.data.libraries;
-			this.setState({ selectedLibs, selectedLibIds : getAttributeArray(selectedLibs, "id") });
-			const selectedSubsets = res.data.subsets;
-			this.setState({ selectedSubsets, selectedSubsetIds : getAttributeArray(selectedSubsets, "id") });
-      });
+
+	resetSelection(){
+		this.setState({
+			selectedLibs: this.props.proposal.libraries, 
+			selectedSubsets: this.props.proposal.subsets
+		  })
 	}
-	
+
 	removeLibrary(id){
-		const libs = deepCopyObjectArray(this.state.selectedLibs)
-		const found = libs.find(object => object.id === parseInt(id));
-		libs.splice(libs.indexOf(found), 1);
-		this.setState({selectedLibs : libs});
+		const lib = this.state.selectedLibs.find(object => object.id === parseInt(id));
+		const newSelectedLibs = removeFromArray(this.state.selectedLibs, [lib]);
+		this.setState({selectedLibs : newSelectedLibs});
 		this.props.trackUnsavedChanges(true);
 		this.setState({libClass: "changed"});
 	}
 	
 	removeSubset(id){
-		const subsets = deepCopyObjectArray(this.state.selectedSubsets)
-		const found = subsets.find(object => object.id === parseInt(id));
-		subsets.splice(subsets.indexOf(found), 1);
-		this.setState({selectedSubsets : subsets});	
+		const sub = this.state.selectedSubsets.find(object => object.id === parseInt(id));
+		const newSelectedSubsets = removeFromArray(this.state.selectedSubsets, [sub]);
+		this.setState({selectedSubsets: newSelectedSubsets})
 		this.props.trackUnsavedChanges(true);
 		this.setState({subsetClass: "changed"})
 	}
 	
 	undoChanges(){
-		this.componentDidMount();
+		this.resetSelection();
 		this.props.trackUnsavedChanges(false);
 		this.setState({libClass : null, subsetClass : null});
 	}

@@ -4,7 +4,7 @@ import CSRFToken from './csrf.js';
 class OwnLibraryForm extends React.Component {
   
   submit() {
-    const unsavedChanges = this.props.detectUnsavedChanges(null, null);
+    const unsavedChanges = this.props.detectUnsavedChanges();
     document.forms["own_lib"].requestSubmit();
     setTimeout(() => {this.props.refreshAfterUpload();}, 2000);
     this.props.trackUnsavedChanges(unsavedChanges);

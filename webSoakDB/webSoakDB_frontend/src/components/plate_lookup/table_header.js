@@ -1,15 +1,6 @@
 import React from 'react';
 import {display_options} from './display_options';
 
-function showHide(value) {
-	if (value){
-		return "";
-	}
-	else {
-		return "hidden";
-	}	
-}
-
 class TableHeader extends React.Component {
 	
 	render() {

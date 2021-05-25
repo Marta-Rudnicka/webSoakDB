@@ -1,15 +1,6 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import {display_options, descriptor_names} from './display_options.js';
 import StructurePic from './structure_pic.js';
-
-function showHide(value) {
-  if (value){
-    return "";
-  }
-  else {
-    return "hidden";
-  }  
-}
 
 const stat_options = display_options.slice(5)
 
@@ -20,7 +11,7 @@ class TableRow extends React.Component {
     let classes = {};
     
     display_options.forEach(option => {
-      classes[option[0]] = showHide(this.props.display[option[0]]);
+      classes[option[0]] = this.props.display[option[0]] ? "" : "hidden" ;
     });
     
     let general_cells;

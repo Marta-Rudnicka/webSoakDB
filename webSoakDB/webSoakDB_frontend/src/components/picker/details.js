@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import { XIcon } from '../main/icons.js';
-import Graph from './graph.js';
 import { properties_list } from './properties_dict.js'
 
 class Details extends React.Component {

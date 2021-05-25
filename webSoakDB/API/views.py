@@ -1,22 +1,18 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Library, LibraryPlate, Compounds, SourceWell, Protein, Proposals, Preset, CrystalPlate, LibrarySubset
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from .models import Library, LibraryPlate, Proposals, Preset, LibrarySubset
 from django.views.generic import ListView #RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
 from .serializers import (LibrarySerializer, 
 							SourceWellStatSerializer,
 							CurrentPlateSerializer, 
 							PresetSerializer, 
-							CrystalPlateSerializer, 
 							ProposalListSerializer, 
 							LibraryPlateSerializer, 
 							ProposalUpdateSerializer,
 							LibrarySubsetStatSerializer,
-							CompoundsStatSerializer,
 							LibrarySubsetSerializer,
 						)
 

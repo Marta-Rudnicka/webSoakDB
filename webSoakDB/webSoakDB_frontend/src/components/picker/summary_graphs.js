@@ -107,7 +107,7 @@ class SummaryGraphs extends React.Component {
   }
   else{
     cells = this.props.properties.map((p, index) => {
-      return <td key={index}>No computed yet</td>
+      return <td key={index}>Not computed yet</td>
     });
   }
   const explanation = this.state.explanation ? <Explanation hideExplanation={this.hideExplanation}/> : null;

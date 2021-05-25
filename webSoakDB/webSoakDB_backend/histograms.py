@@ -21,17 +21,28 @@ def get_histogram(obj, obj_type, attr):
 		script = '<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.js"></script>' + script
 		
 		return '<div style="height: 100px, width: auto">' + script + div + '</div>'
-	except(TypeError):
+	except(TypeError):			#raised for compounds with no SMILES strings (all properties are None)
 		return 204
 
 def update_histograms(obj, obj_type):
 	compounds = get_compounds(obj, obj_type)
+		
 	path = MEDIA_ROOT + '/html_graphs/' + obj_type + '/' + str(obj.id) + '/'
 	try:
 		os.mkdir(path)
 	except(FileExistsError):
 		pass
+
+	if compounds == []:	
+		for attr in properties_dict:
+			filename = path + attr + '.html'
+			try:
+				os.remove(filename)
+			except(FileNotFoundError):
+				pass
 		
+		return
+
 	for attr in properties_dict:
 		filename = path + attr + '.html'
 		html = get_histogram(obj, obj_type, attr)

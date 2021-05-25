@@ -210,7 +210,7 @@ def add_plate(request):
 			log = []
 			fs = FileSystemStorage()
 			source = request.FILES["plate_map"]
-			filename = fs.save(source.name, source)
+			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
 			if data_is_valid(filename, log):
 				
 				barcode = form.cleaned_data['barcode']
@@ -417,12 +417,12 @@ def delete_library(request):
 		pk = request.POST.get('id')
 		lib = Library.objects.get(pk=pk)
 		if len(lib.plates.all()) == 0:
-			lib.delete()
 			
 			#remove all cached histograms
 			path = MEDIA_ROOT + '/html_graphs/library/' + str(lib.id) + '/'
 			shutil.rmtree(path)
-			
+
+			lib.delete()
 			return HttpResponseRedirect('../libraries/')
 		else:
 			return HttpResponseRedirect('../library-deletion-error/')
@@ -443,10 +443,11 @@ def delete_preset(request):
 	if request.method == "POST":	
 		pk = request.POST.get('id')
 		preset = Preset.objects.get(pk=pk)
-		preset.delete()
 		
 		path = MEDIA_ROOT + '/html_graphs/preset/' + str(preset.id) + '/'
 		shutil.rmtree(path)
+
+		preset.delete()
 		
 		return HttpResponseRedirect('../presets/')
 

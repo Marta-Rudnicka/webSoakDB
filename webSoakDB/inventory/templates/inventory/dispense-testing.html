@@ -6,7 +6,6 @@
       const wells = document.querySelectorAll('.well-representation');
       wells.forEach(well => {
         const dest = well.dataset.dest;
-        //subwell = dest[dest.length-1]
         const tn = document.createTextNode(dest[dest.length-1]);
         const label = document.getElementById(dest)
         if (label) {

@@ -6,7 +6,6 @@ import TableRow from './table_row.js';
 import axios from 'axios';
 import {display_options} from './display_options.js';
 import { deepCopyObjectArray } from  '../../actions/stat_functions.js';
-import {Link } from "react-router-dom";
 
 
 class PlateLookup extends React.Component {
@@ -50,8 +49,7 @@ class PlateLookup extends React.Component {
 	}
 	
 	componentDidMount() {
-		this.uploadDataFromAPI()
-		   		
+		this.getDataFromAPI();	
 	}
 	
 	componentDidUpdate(prevProps, prevState) {
@@ -61,16 +59,81 @@ class PlateLookup extends React.Component {
 		
 		if (prevState.subsets !== this.state.subsets){
 			this.state.subsets.forEach(subset =>{
-				this.uploadSubset(subset.id, subset.library.name);
+				this.getSubsetCompounds(subset.id, subset.library.name);
 			});
 		}
 	}
 	
-	uploadSubset(id, libName){
-		console.log('uploadSubset: ', id, libName);
+	getDataFromAPI() {
+			
+		if (this.props.is_a_plate) {
+			this.getPlateData();			
+		}
+		else if (!this.props.is_a_preset) {
+			this.getCherryPickingListData();
+		}
+		else {
+			this.getPresetData();
+		}
+	}
+
+	getPlateData() {
+		let apiUrl = '/api/compounds/' + this.props.id + '/';
+			
+		axios.get(apiUrl)
+			.then(res => {
+			const compounds = res.data;
+			this.setState({ compounds });
+		});
+		
+		apiUrl = '/api/plate_detail/' + this.props.id + '/';
+		
+		axios.get(apiUrl)
+			.then(res => {
+			const collection = res.data;
+			collection.name = collection.barcode;
+			this.setState({ collection });
+		});
+	}
+	
+	getCherryPickingListData(){
+		this.getSubsetCompounds(this.props.id, null)
+			
+		const apiUrl = '/api/subset_detail/' + this.props.id + '/';
+		
+		axios.get(apiUrl)
+			.then(res => {
+			let collection = res.data;
+			collection.name = collection.origin
+			this.setState({ collection });
+		});
+	}
+
+	getPresetData(){
+		const apiUrl = '/api/preset_detail/' + this.props.id + '/';
+			
+		let subsets = [];
+		axios.get(apiUrl)
+			.then(res => {
+			const subsets = res.data.subsets;
+			this.setState({subsets});
+			let collection = res.data;
+			collection.library = {};
+			collection.library.name = collection.name;
+			collection.name = collection.description;
+			
+			this.setState({collection});
+		});
+		
+		subsets.forEach(s => {
+			compounds = this.getSubsetCompounds(s.id, s.library.name)
+		})
+	}
+
+	getSubsetCompounds(id, libName){
 		const apiUrl = '/api/subset_stats/' + id + '/';
 		
-		const compounds = axios.get(apiUrl)
+		axios.get(apiUrl)
 			.then(res => {
 				const oldCompounds = deepCopyObjectArray(this.state.compounds);
 				let compounds = res.data.compounds;
@@ -81,89 +144,29 @@ class PlateLookup extends React.Component {
 				this.setState({ compounds: compounds });
 		});
 	}
-	
-	uploadDataFromAPI() {
-			
-		//for library plate
-		if (this.props.is_a_plate) {
-			let apiUrl = '/api/compounds/' + this.props.id + '/';
-			
-			axios.get(apiUrl)
-				.then(res => {
-				const compounds = res.data;
-				this.setState({ compounds });
-			});
-			
-			apiUrl = '/api/plate_detail/' + this.props.id + '/';
-			
-			axios.get(apiUrl)
-				.then(res => {
-				const collection = res.data;
-				collection.name = collection.barcode;
-				this.setState({ collection });
-			});
-			
-			
-		}
-		//for a single cherrypicking list
-		else if (!this.props.is_a_preset) {
-			const compounds = this.uploadSubset(this.props.id, null)
-			
-			const apiUrl = '/api/subset_stats/' + this.props.id + '/';
-			
-			axios.get(apiUrl)
-				.then(res => {
-				const collection = res.data;
-				this.setState({ collection });
-			});
-		}
-		//for a preset
-		else {
-			const apiUrl = '/api/preset_detail/' + this.props.id + '/';
-			
-			let subsets = [];
-			let compouds = [];
-			axios.get(apiUrl)
-				.then(res => {
-				const subsets = res.data.subsets;
-				this.setState({subsets});
-				const collection = res.data;
-				this.setState({collection});
-			});
-			
-			subsets.forEach(s => {
-				compounds = this.uploadSubset(s.id, s.library.name)
-			})
-		}
-	}
-	
-	
+
 	render() {
 		let collection = null;
 		let name = null;
 		let current ="";
 		
-		if (this.state.collection){
+		try{
 			collection = this.state.collection;
-			if (this.state.collection.library){
-				name = collection.library.name; 
-			}
+			name = collection.library.name;
 			if (this.state.collection.current){
 				current = "(current)"; 
 			}
 		}
-		
-		if (this.props.is_a_preset){
-			name = 'Preset';
-		}
-		
+		catch(e)
+		{
+			collection = null;
+			name = "Loading..."
+		}		
 		
 		if (this.props.is_a_plate && this.props.is_a_preset){
 			console.log('ERROR in this.props : both is_a_plate and is_a_preset are set to true!!! May cause unexpected behaviour')
 		
 		}
-		
-		
 		
 		//Create show buttons for hidden columns. For subsets and presets, don't make show buttons for well and concentration.
 		let buttons = display_options.map((option, index) => {
@@ -179,9 +182,15 @@ class PlateLookup extends React.Component {
 		
 		let export_bar = null
 		let plateList = null;
-		if (this.props.is_a_plate && collection && collection.library){
-			plateList = <PlateList library={collection.library} />;
-			export_bar = <ExportBar id={this.props.id} />
+
+		if (this.props.is_a_plate){
+			try{
+				plateList = <PlateList library={collection.library} />;
+				export_bar = <ExportBar id={this.props.id} />
+			}
+			catch(e){
+				//leave variables as null
+			}
 		}
 		
 		let rows = null;

@@ -2,11 +2,9 @@ import React, { Component, Fragment } from 'react';
 
 import ReactDOM from 'react-dom';
 import Home from './home/Home.js';
-//import Main from './main/Main.js';
 import Picker from './picker/Picker.js';
 import Summary from './summary/Summary.js';
 import ProposalSelection from './main/proposal_selection.js';
-import PlateLookup from './plate_lookup/PlateLookup.js';
 import UrlTranslator from './main/url_translator.js';
 
 import {
@@ -14,10 +12,7 @@ import {
   Switch,
   Route,
   Link,
-  useParams,
   Redirect,
-  useHistory,
-  useLocation
 } from "react-router-dom";
 
 //import { deepCopyObjectArray, getAttributeArray, mean, shareAllElements } from  '../actions/stat_functions.js';
@@ -96,13 +91,7 @@ class App extends Component {
   refreshAfterUpload(){
     this.props.logIn(this.state.proposal.proposal);  
   }
-  
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.proposal !== this.state.proposal){
-      console.log('fired componentDidUpdate from App');
-    }
-  }
-  
+   
   trackUnsavedChanges(bool){
     this.setState({unsavedChanges: bool})
   }
@@ -163,7 +152,7 @@ class App extends Component {
             updateSelection = {this.updateSelection}
           />
           </PrivateRoute>
-          <PrivateRoute path="/compounds/:type/:id/" children={<UrlTranslator />} proposal={this.state.proposal}/>
+          <Route path="/compounds/:type/:id/" children={<UrlTranslator />} proposal={this.state.proposal}/>
           
           <Route path="/selection/">
           { this.props.proposal ? <Redirect to="/selection/home/" /> : <ProposalSelection logIn={this.logIn} proposal={this.state.proposal} /> }
