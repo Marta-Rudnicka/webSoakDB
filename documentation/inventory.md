@@ -15,10 +15,12 @@ This is a reference for code included in the `inventory` app. It is recommended 
 - `presets()` (url: inventory/presets - the preset list includes the lists of all compounds belonging to that preset. However, the view does not simply display the values stored in the database. For every Compounds object referenced in the LibrarySubset belonging to a preset, the view checks the availability of the compound in the current library plate. If it is not available, it searches the other plates of that library, and lists the plates in which the compound is still available. The relevant values copied from Compounds objects, as well the availability data, are stored as a list of temporary objects and provided as the context to the page template.
 **Note on updating creating or presets:** the form creating a preset only allows for adding compounds from one library (adding one LibrarySubset). To create a preset covering multiple libraries, user first needs to create the preset with one subset, and the edit it to add more. If a preset already contains a selection from a particular library and the user wants to update this selection, the old selection is completely overwritten by the new one. The old LibrarySubset is first deleted from the database, then new one is created based on the uplodaded file and added to the Preset. E.g. if user wants to add three compounds to the list, the new uploaded list needs to contain all the old compounds + the three new ones.
 
-- `plates()` - this view lists all library plates for XChem in-house libraries and provides links to pages processing particular plate. Above the table with the plates list, there is a <select> element that allows for filtering the plates by library -  this is achieved using a simple JavaScript, which is in the template file.
+- `plates()` - this view lists all library plates for XChem in-house libraries and provides links to pages processing particular plate. Above the table with the plates list, there is a `<select>` element that allows for filtering the plates by library -  this is achieved using a simple JavaScript, which is in the template file.
 
-### Advanced features:
+### `Advanced features:
+	
 #### Tracking plate usage across time
+	
 Each library plate in the list at `inventory/plates` has a link labelled “track usage”, which allows ‘travelling back in time’ to see which compounds in a plate were available at a given date. The page  with the information also contains a visual representation of the library plate.
 
 - `track_usage()` (url: `inventory/track-usage/<int:pk>/<str:date>/<str:mode>/`)- this view copies values from the relevant SourceWell objects into new temporary objects, sets their `active` attribute to how it was on the inspected date (based on the records stored in SWStatuschange objects), and feeds the modified data into the template.
@@ -69,6 +71,7 @@ The script accepts two naming conventions of the destination wells: one that is 
 
 Dispense testing uses only one type of crystallisation plate: SWISSCI 3 Lens Crystallisation Plate (specs and photos available here: https://swissci.com/wp-content/uploads/2020/03/3-Lens-plate.pdf) 
 In the plate, the wells are organised into groups of three with one reservoir, like in the ASCII art below (where a, c, and d are wells, and r is a resevoir).
+	
 ```
 ----------
 |(a) [r] | 
@@ -76,8 +79,10 @@ In the plate, the wells are organised into groups of three with one reservoir, l
 |(c) (d) |
 ----------
 ```
+	
 These groups are placed in 12 columns (marked 1-12) and 8 rows (marked A-H). The markings “a” “c” and “d” are not on the plate itself, but are commonly used. Well names are composed of the row name, column name and the letter a, c, or d specifying the position in the group, e.g. B7c, F12a or G3d.
 The naming used in the Echo input files does not take groups into account and considers each column and row separately, which make 24 columns (1-24) and 16 rows (A-P), giving names such as G16, P3 etc. The conversion between the Echo naming system and the “human readable” naming system follows a pattern like this:
+	
 ```
 A1a --> A1  --------------------------
 A1c --> B1  | (A1a / A1)    [r / A2]|
@@ -85,13 +90,16 @@ A1d --> B2  |                       |
 A2a --> A3  | (A1c / B1) (A1d / B2) |
 A2c --> B3  |-----------------------|
 ```
+	
 etc.
 
 After the file upload, the script creates a dictionary matching source well to destination plate. If the uploaded file uses Echo-style well names, they get converted to “human-readable” names first.
+	
 
 #### The interface to mark unavailable compounds
 Once the dictionary mapping the wells is created, `dispense_testing_map()` renders a page with the dispense testing interface. The main element of the page is a form rendered as an HTML table representing the crystallisation plate, which roughly mimics its layout and appearance, with individual wells represented by checkboxes, and reservoirs represented by an icon of an ‘x’ in a square (they do not “do” anything, they are there to provide a closer visual representation of the plate). The checkboxes representing inactive SourceWells are checked on load.
 
+	
 In case of errors in the upload file, error messages are displayed instead of the input form. 
 
 During the test, users inspect the destination plate to check for wells into which no compound was dispensed. If they find such a well, they mark it on the plate with a marker. Then, in the interface, they check all the boxes representing the marked wells and submit the data. In rare cases, a compound that was not dispensed in the previous test may appear - in that case users uncheck the pre-checked box. The image below shows a photograph of a fragment of the real plate next to the data from that plate correctly entered into the form:
