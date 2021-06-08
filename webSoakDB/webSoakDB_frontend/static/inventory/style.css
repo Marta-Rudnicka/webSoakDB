@@ -40,6 +40,8 @@ section#upload-form{
 	transition: height 0.5s;
 }
 
+
+
 #presets .list-in-table:hover {
 	height: 20em;
 	transition: height 0.5s;
@@ -407,4 +409,28 @@ span.well-representation {
 main#proposal {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
+}
+
+.list-in-table-pix{
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	border: solid #ec0000 1px;
+	max-height: 200px;
+	overflow-y: scroll;
+	transition: height 0.5s;
+}
+
+.list-with-pix div{
+	margin: 3px;
+}
+
+.list-with-pix img{
+	width: 100px;
+	transition: height 0.5s, width 0.5s;
+}
+
+#locate {
+	display: grid;
+	grid-template-columns: 1fr 3fr;
 }

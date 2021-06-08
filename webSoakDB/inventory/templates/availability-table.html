@@ -1,0 +1,73 @@
+<table id="table" class="table table-hover">
+  <thead>
+    <th>Library</th>
+    <th>Name</th>
+    <th>Compounds</th>
+    <th>Recommended plate</th>
+    <th>Availability details</th>
+  </thead>
+  <tbody>
+  {% for subset in subsets %}
+    <tr>
+      <td>{{ subset.library.name }}</td>
+      <td>{{ subset.name }}</td>
+      <td>{{ subset.compounds|length }}</td>
+      <td>{{ subset.availability.0.barcode}} <br>
+        <strong>{{subset.availability.0.availability}}%</strong> available <br>
+        {%if subset.availability.0.current %}(current){% endif %}
+      </td>
+      <td>
+        <span id="{{subset.id}}-shower" onclick=show({{subset.id}})>
+          {% include "chevron-down.html"%}
+        </span>
+        <span id="{{subset.id}}-hider" onclick=hide({{subset.id}}) class="hidden">
+          {% include "chevron-up.html"%}
+        </span>
+      <td>
+    </tr>
+    <tr id="{{subset.id}}" class={{initial_class}}>
+      <td colspan="5">
+      <div class="list-with-pix">
+        <table class="small-font-table">
+          <thead>
+            <th>Library plate</th>
+            <th>Availability</th>
+            <th>Missing compounds</th>
+            <th>CSV list</th>
+          </thead>
+          <tbody>
+            {% for plate in subset.availability %}
+            <tr>
+              <td>{{ plate.barcode }} {% if plate.current %}<br>(current){% endif %}</td>
+              <td>{{plate.availability}} %</td>
+              <td>
+                <div>({{plate.missing_compounds | length}} missing)</strong></div>
+                <div class="list-in-table-pix"> 
+                  {% for c in plate.missing_compounds %} 
+                    <div>
+                      {{ c.code }} <br> 
+                      <img src="/molecule/{{c.id}}"></img>
+                    </div>
+                  {% endfor %} 
+                </div>
+              </td>
+              <td>
+                <form method="post" action="/inventory/subset-map/">
+                  {% csrf_token %}
+                  <input type="hidden" name="subset_id" value="{{subset.id}}">
+                  <input type="hidden" name="plate_id" value="{{plate.id}}">
+                  <input type="hidden" name="propsal" value={{proposal.proposal}}>
+                  <input type="hidden" name="compound_list" value="{% for c in compound_list %}{{c.code}}:{{c.smiles}},{%endfor%}">
+                  <button type="submit">Download</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>    
+</table>

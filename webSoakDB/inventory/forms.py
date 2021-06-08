@@ -58,3 +58,10 @@ class PlateOpeningForm(forms.ModelForm):
 
 class ProposalForm(forms.Form):
 	proposal = forms.CharField(label='Proposal', required=True)
+
+class UnsavedSubsetForm(forms.Form):
+	def __init__(self, libs=[], *args, **kwargs):
+		super(UnsavedSubsetForm, self).__init__(*args, **kwargs)
+		self.fields['library'] = forms.ChoiceField(choices = libs, label='Library:', required=True)
+		self.fields['compound_list'] = forms.FileField(label='Upload compounds list', required=True)
+		

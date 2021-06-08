@@ -1,20 +1,31 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
+from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 from django.contrib.admin.views.decorators import staff_member_required
 from webSoakDB_stack.settings import MEDIA_ROOT
 from datetime import date, datetime
-import string
 import re
 import shutil
-from .inv_helpers import fake_compounds_copy, get_plate_size, get_change_dates, get_usage_stats, fake_preset_copy, current_library_selection, set_status
+from .inv_helpers import (
+	parse_id_list,
+	sw_copies, 
+	get_plate_size, 
+	get_change_dates, 
+	get_subsets_with_availability, 
+	get_usage_stats, 
+	fake_preset_copy, 
+	current_library_selection,
+	parse_compound_list, 
+	set_status, 
+	upload_temporary_subset,
+)
 from .dt import get_well_dictionary, manage_sw_status_change
-from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm, PlateOpeningForm, ProposalForm
+from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm, PlateOpeningForm, ProposalForm, UnsavedSubsetForm
 from webSoakDB_backend.validators import data_is_valid, selection_is_valid
-from webSoakDB_backend.helpers import upload_plate, upload_subset
+from webSoakDB_backend.helpers import upload_plate, upload_subset, find_source_wells, source_wells_to_csv
 from webSoakDB_backend.histograms import update_histograms
-from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset, SWStatuschange, PlateOpening, Proposals
+from API.models import Library, LibraryPlate, LibrarySubset, SourceWell, Compounds, Preset, PlateOpening, Proposals
 
 #VIEWS HANDLING GET REQUESTS
 @staff_member_required
@@ -127,7 +138,7 @@ def update_plate(request, pk):
 def track_usage(request, pk, date, mode):
 		
 	plate = LibraryPlate.objects.get(pk=pk)
-	compounds = fake_compounds_copy(plate.compounds.all()) #make a copy of the data to edit it without touching the db
+	compounds = sw_copies(plate.compounds.all()) #make a copy of the data to edit it without touching the db
 	modified_compounds = [compound for compound in compounds if len(compound.changes) > 0 ]
 	timestamp = datetime.strptime(date, "%Y-%m-%d").date() #make a datetime object based on the url
 	change_dates = get_change_dates(modified_compounds) #produce the list of all dates on which any compounds were (de)activated
@@ -178,7 +189,9 @@ def proposal(request):
 			try:
 				pr = form.cleaned_data['proposal']
 				proposal = Proposals.objects.get(proposal=pr)
-				return render(request, "inventory/proposal.html", {'proposal' : proposal})
+				subsets = get_subsets_with_availability(set(proposal.subsets.all()))
+				
+				return render(request, "inventory/proposal.html", {'proposal' : proposal, 'subsets': subsets})
 			except(ObjectDoesNotExist):
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': ['Proposal not found']})
 				
@@ -571,3 +584,59 @@ def delete_multiple_plates(request):
 			if plate.current:
 				update_histograms(plate.library, "library")
 		return HttpResponseRedirect('/inventory/plates/')
+
+def get_subset_map(request):
+	if request.method == "POST":
+		plate_id = request.POST["plate_id"]
+		try:
+			plate_ids = [ int(plate_id) ]
+		except ValueError:
+			plate_ids = parse_id_list(plate_id)
+		subset_id = int(request.POST["subset_id"])
+		
+		if int(subset_id) == 0:
+			subset = parse_compound_list(request.POST["compound_list"])
+		else:
+			subset = LibrarySubset.objects.get(pk=subset_id)
+			
+		source_wells = find_source_wells(subset, plate_ids)
+		try:
+			filename_prefix = subset.library.name + '-selection'
+		except AttributeError:
+			filename_prefix = "selection"
+		response = source_wells_to_csv(source_wells, "files/soakdb-export.csv", filename_prefix)
+		return response
+
+def locate_compounds(request):
+	libraries = [("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True)]
+	
+	if request.method == "GET":
+		form = UnsavedSubsetForm(libs=libraries)
+		return render(request, "inventory/locate_compounds.html", {"form": form, "subsets" : []})
+	
+	if request.method == "POST":
+		form = UnsavedSubsetForm(data=request.POST, files=request.FILES, libs=libraries)
+		if form.is_valid():
+			log = []
+			fs = FileSystemStorage()
+			source = request.FILES["compound_list"]
+			library_id = form.cleaned_data['library']
+			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
+			if selection_is_valid(filename, log, library_id):
+				compounds = [c for c in upload_temporary_subset(filename)]
+				lib = Library.objects.get(pk=library_id)
+				subset = get_subsets_with_availability(compounds, lib)						
+				fs.delete(filename)
+				return render(request, "inventory/locate_compounds.html", {
+					"form": form, 
+					"subsets" : subset,
+					"compound_list": compounds,
+					})
+			else:
+				fs.delete(filename)
+				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+		else:
+			return render(request, "inventory/locate_compounds.html", {
+				"form": form, 
+				"errors" : [form.errors, form.non_field_errors ]
+				})

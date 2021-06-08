@@ -1,6 +1,6 @@
 from django.test import TestCase
 import unittest
-from inventory.tests import set_up
+from inventory.set_up import (set_up_source_wells, source_wells_data, plates_data, libraries_data, compounds_data)
 from .helpers import import_full_libraries
 from API.models import Proposals, SourceWell, LibraryPlate
 
@@ -97,7 +97,8 @@ class ValidatorHelpersTests(TestCase):
 
 class HelpersTests(TestCase):
 	def setUp():
-		set_up()
+		#set_up()
+		set_up_source_wells(source_wells_data, plates_data, libraries_data, compounds_data)
 		
 	def import_full_libraries_test():
 		proposal = Proposals.objects.get(proposal="proposal1")
@@ -112,7 +113,7 @@ class HelpersTests(TestCase):
 		sw6 = SourceWell.objects.get(library_plate=p4, well="B01")
 		sw7 = SourceWell.objects.get(library_plate=p4, well="C01")
 		
-		ouput = [sw1, sw2, sw3, sw4, sw5, sw6, sw7]
+		output = [sw1, sw2, sw3, sw4, sw5, sw6, sw7]
 		
 		self.assertEqual(import_full_libraries(proposal), output)
 

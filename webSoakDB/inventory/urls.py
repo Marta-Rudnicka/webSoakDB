@@ -28,4 +28,6 @@ urlpatterns = [
 	path("delete-preset/", views.delete_preset, name="delete-preset"),
 	
 	path("proposal/", views.proposal, name="proposal"),
+	path("subset-map/", views.get_subset_map, name="subset-map"),
+	path("locate-compounds/", views.locate_compounds, name="locate-compounds")
 ]

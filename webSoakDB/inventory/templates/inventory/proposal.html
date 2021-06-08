@@ -3,13 +3,24 @@
   {% block main %}
   
   <script>
-    function showForm(index){
-      const id = "lib-" + index;
-      document.getElementById(id).className = "edit-field";
+    function show(id){
+      console.log('show');
+      subTable = document.getElementById(id);
+      subTable.className = "";
+      hider =  document.getElementById(id + "-hider");
+      hider.className = "";
+      shower = document.getElementById(id + "-shower");
+      shower.className = "hidden";
     }
-    function hideForm(index){
-      const id = "lib-" + index;
-      document.getElementById(id).className = "hidden";
+
+    function hide(id){
+      console.log('hide');
+      subTable = document.getElementById(id);
+      subTable.className = "hidden";
+      hider =  document.getElementById(id + "-hider");
+      hider.className = "hidden";
+      shower = document.getElementById(id + "-shower");
+      shower.className = "";
     }
     
   </script>
@@ -29,22 +40,23 @@
         </thead>
         <tbody>
           {% for library in proposal.libraries.all %}
-			  {% if not library.public %}
-				{% for plate in library.plates.all %}
-				  <tr class="plate-row" data-lib="{{library.id}}">
-					<td>{{ library.name }}</td>
-					<td>{{ plate.barcode }}</td>
-					<td>{{plate.compounds.count}}</td>
-					<td>{{ plate.last_tested|date:"d M Y" }}</td>
-					<td><a href="/inventory/update-plate/{{plate.id}}/">Update/delete</a></td>
-					<td><a href="/inventory/track-usage/{{plate.id}}/{{plate.last_tested|date:"Y-m-d"}}/general-view/">Track usage</a></td>
-				  </tr>
-				{% endfor %}
+            {% if not library.public %}
+            {% for plate in library.plates.all %}
+              <tr class="plate-row" data-lib="{{library.id}}">
+              <td>{{ library.name }}</td>
+              <td>{{ plate.barcode }}</td>
+              <td>{{plate.compounds.count}}</td>
+              <td>{{ plate.last_tested|date:"d M Y" }}</td>
+              <td><a href="/inventory/update-plate/{{plate.id}}/">Update/delete</a></td>
+              <td><a href="/inventory/track-usage/{{plate.id}}/{{plate.last_tested|date:"Y-m-d"}}/general-view/">Track usage</a></td>
+              </tr>
+            {% endfor %}
 			{% endif %}
 
           {% endfor %}
         </tbody>        
       </table>
+    
     </section>
     <section id="subset-list">  
 	  <h2>User's visits:</h2>
@@ -59,6 +71,12 @@
 			  <tr><td colspan="2">TODO</td></tr>
 		  </tbody>
 	  </table>
+    </section>
+    <section>
+      <h2>Plates for cherry-picking lists and presets</h2>
+
+      {% include "availability-table.html" with subsets=subsets initial_class="hidden" %}
+
     </section>
 
     

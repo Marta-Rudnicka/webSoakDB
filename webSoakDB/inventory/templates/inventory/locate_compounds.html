@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% load static %}
+  {% block main %}
+    <main id="locate">
+      <h1>Locate compounds</h1>
+        <section>
+          <h2>Upload the list of compounds</h2>
+          <form method="post" action="/inventory/locate-compounds/" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Submit</button>
+          </form>
+        </section>
+        <section>
+          {% include "availability-table.html" with initial_class="" subsets=subsets compound_list=compound_list %}
+          {{ errors }}
+        </section>
+      </main>
+{% endblock %}

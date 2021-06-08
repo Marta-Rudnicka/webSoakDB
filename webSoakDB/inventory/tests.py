@@ -7,69 +7,32 @@ import datetime
 
 from .dt import ensure_leading_zero, valid_wells
 from API.models import Library, LibraryPlate, Preset, Compounds, SourceWell, SWStatuschange, PlateOpening, Proposals
-from .inv_helpers import get_plate_size, fake_compounds_copy, get_change_dates, set_status, get_usage_stats, current_library_selection, fake_preset_copy
+from .inv_helpers import (
+	find_missing_compounds,
+	get_compound_availability, 
+	get_plate_size, 
+	fake_compounds_copy, 
+	get_change_dates,
+	get_subsets_with_availability, 
+	set_status, 
+	get_usage_stats, 
+	current_library_selection, 
+	fake_preset_copy,
+)
 
-def set_up():
-	l1 = Library.objects.create(name='lib1', public=True, for_industry=True)
-	l2 = Library.objects.create(name='lib2', public=False, for_industry=True)
-	l3 = Library.objects.create(name='lib3', public=True, for_industry=False)
-	
-	p1 = LibraryPlate.objects.create(barcode="xyz", library=l1, current=True)
-	p2 = LibraryPlate.objects.create(barcode="xyz2", library=l1, current=False)
-	p3 = LibraryPlate.objects.create(barcode="xyz3", library=l1, current=False)
-	p4 = LibraryPlate.objects.create(barcode="abc1", library=l2, current=True)
-	p5 = LibraryPlate.objects.create(barcode="largest_small", library=l2, current=False)
-	p6 = LibraryPlate.objects.create(barcode="smallest_large", library=l2, current=False)
-	p7 = LibraryPlate.objects.create(barcode="large_row", library=l2, current=False)
-	p8 = LibraryPlate.objects.create(barcode="large_column", library=l2, current=False)
-	p9 = LibraryPlate.objects.create(barcode="empty", library=l2, current=False)
-	
-		
-	c1 = Compounds.objects.create(code="code1", smiles="CC")
-	c2 = Compounds.objects.create(code="code2", smiles="CCO")
-	c3 = Compounds.objects.create(code="code3", smiles="CCI")
-	c4 = Compounds.objects.create(code="code4", smiles="CCF")
-	c5 = Compounds.objects.create(code="code5", smiles="")
-	c6 = Compounds.objects.create(code="code6", smiles="")
-	c7 = Compounds.objects.create(code="code7", smiles="")
-	c8 = Compounds.objects.create(code="code8", smiles="CCFO")
-		
-	sw1 = SourceWell.objects.create(compound=c1, library_plate=p1, well="A01", concentration=30, active=True)
-	sw2 = SourceWell.objects.create(compound=c2, library_plate=p1, well="B01", concentration=30, active=True)
-	sw3 = SourceWell.objects.create(compound=c3, library_plate=p1, well="C01", concentration=30, active=True)
-	sw4 = SourceWell.objects.create(compound=c4, library_plate=p1, well="D01", concentration=30, active=True)
-	sw5 = SourceWell.objects.create(compound=c1, library_plate=p2, well="A01", concentration=30, active=False, deactivation_date=datetime.date(2021, 2, 10))
-	sw6 = SourceWell.objects.create(compound=c2, library_plate=p2, well="B01", concentration=30, active=True)
-	sw7 = SourceWell.objects.create(compound=c3, library_plate=p2, well="C01", concentration=30, active=False, deactivation_date=datetime.date(2020, 10, 28))
-	sw8 = SourceWell.objects.create(compound=c4, library_plate=p2, well="D01", concentration=30, active=True)
-	sw9 = SourceWell.objects.create(compound=c1, library_plate=p3, well="A01", concentration=30, active=True)
-	sw10 = SourceWell.objects.create(compound=c2, library_plate=p3, well="B01", concentration=30, active=True)
-	sw11 = SourceWell.objects.create(compound=c3, library_plate=p3, well="C01", concentration=30, active=False, deactivation_date=datetime.date(2020, 10, 28))
-	sw12 = SourceWell.objects.create(compound=c4, library_plate=p3, well="D01", concentration=30, active=True)
-	sw13 = SourceWell.objects.create(compound=c5, library_plate=p4, well="A01", concentration=30, active=True)
-	sw14 = SourceWell.objects.create(compound=c6, library_plate=p4, well="B01", concentration=30, active=True)
-	sw15 = SourceWell.objects.create(compound=c7, library_plate=p4, well="C01", concentration=30, active=False, deactivation_date=datetime.date(2020, 10, 28))
-	
-	sw14 = SourceWell.objects.create(compound=c8, library_plate=p5, well="P24", concentration=30, active=True)
-	sw15 = SourceWell.objects.create(compound=c8, library_plate=p6, well="R25", concentration=30, active=True)
-	sw16 = SourceWell.objects.create(compound=c8, library_plate=p7, well="R02", concentration=30, active=True)
-	sw17 = SourceWell.objects.create(compound=c8, library_plate=p8, well="F25", concentration=30, active=True)
-	
-	sch1 = SWStatuschange.objects.create(source_well=sw7, activation=False, date=datetime.date(2020, 10, 28))
-	sch2 = SWStatuschange.objects.create(source_well=sw11, activation=False, date=datetime.date(2020, 10, 28))
-	sch3 = SWStatuschange.objects.create(source_well=sw5, activation=False, date=datetime.date(2020, 10, 28))
-	sch4 = SWStatuschange.objects.create(source_well=sw5, activation=True, date=datetime.date(2020, 12, 2))
-	sch5 = SWStatuschange.objects.create(source_well=sw5, activation=False, date=datetime.date(2021, 2, 10))
-		
-	po1 = PlateOpening.objects.create(plate=p2, date="2020-10-28", reason="reason")
-	po2 = PlateOpening.objects.create(plate=p3, date="2020-10-28", reason="reason")
-	
-	pr = Preset.objects.create(name="preset1", description="desc")
-		
-	prop = Proposals.objects.create(proposal="proposal1")
-	prop.libraries.add(l1)
-	prop.libraries.add(l2)
-	prop.save()
+from .set_up import (
+	set_up_proposals,
+	set_up_status_changes,
+	set_up_openings,
+	status_change_data,
+	source_wells_data,
+	plates_data,
+	libraries_data,
+	compounds_data,
+	plate_opening_data,
+	proposals_data,
+	subsets_data
+)
 
 class DTHelperTestsNoDB(unittest.TestCase):
 	'''helper functions for dispense testing that do not use db objects)'''
@@ -115,9 +78,10 @@ class DTHelperTestsNoDB(unittest.TestCase):
 class HelperTestsDB(TestCase):
 	'''inventory helper functions using DB objects'''
 	def setUp(self):
-		set_up()
+		set_up_status_changes(status_change_data, source_wells_data, plates_data, libraries_data, compounds_data)
+		set_up_proposals(proposals_data, libraries_data, subsets_data, compounds_data)
 
-	def fake_compounds_copy_test(self):
+	def test_fake_compounds_copy(self):
 		l = LibraryPlate.objects.get(barcode="xyz2")
 		queryset = l.compounds.all()
 		copy = fake_compounds_copy(queryset)
@@ -152,10 +116,10 @@ class HelperTestsDB(TestCase):
 		self.assertEqual(copy[2].changes, changes2)
 		self.assertEqual(copy[3].changes, changes3)
 	
-	def fake_preset_copy_test(self):
+	def test_fake_preset_copy(self):
 		pass
 			
-	def get_plate_size_test(self):
+	def test_get_plate_size(self):
 		'''get_plate_size'''
 		plate1 = LibraryPlate.objects.get(barcode='xyz')
 		plate2 = LibraryPlate.objects.get(barcode='largest_small')
@@ -183,7 +147,7 @@ class HelperTestsDB(TestCase):
 		self.assertEqual(get_plate_size(queryset4), large_plate)
 		self.assertEqual(get_plate_size(queryset5), large_plate)
 		
-	def get_change_dates_test(self):
+	def test_get_change_dates(self):
 		
 		date201028 = datetime.date(2020, 10, 28)
 		date201202 = datetime.date(2020, 12, 2)
@@ -208,7 +172,7 @@ class HelperTestsDB(TestCase):
 		self.assertEqual(get_change_dates(input2), dates2)
 		self.assertEqual(get_change_dates(input3), dates3)
 	
-	def set_status_test(self):
+	def test_set_status(self):
 		'''set_status'''
 		plate = LibraryPlate.objects.get(barcode="xyz2")
 		sw = SourceWell.objects.get(library_plate=plate, well="A01")
@@ -223,24 +187,30 @@ class HelperTestsDB(TestCase):
 		date7 = datetime.date(2021, 2, 10)#
 		date8 = datetime.date(2021, 2, 11)
 		
-		output1 = set_status(sw_copy, date1)
-		output2 = set_status(sw_copy, date2)
-		output3 = set_status(sw_copy, date3)
-		output4 = set_status(sw_copy, date4)
-		output5 = set_status(sw_copy, date5)
-		output6 = set_status(sw_copy, date6)
-		output7 = set_status(sw_copy, date7)
-		output8 = set_status(sw_copy, date8)
-		
+		output1 = set_status(sw_copy[0], date1)
 		self.assertTrue(output1.active)
+		
+		output2 = set_status(sw_copy[0], date2)
 		self.assertFalse(output2.active)
+		
+		output3 = set_status(sw_copy[0], date3)
 		self.assertFalse(output3.active)
+				
+		output4 = set_status(sw_copy[0], date4)
 		self.assertTrue(output4.active)
+		
+		output5 = set_status(sw_copy[0], date5)
+		
+		output6 = set_status(sw_copy[0], date6)
 		self.assertTrue(output6.active)
+		
+		output7 = set_status(sw_copy[0], date7)
 		self.assertFalse(output7.active)
-		self.assertFalse(output8.active)
 
-	def get_usage_stats_test(self):
+		output8 = set_status(sw_copy[0], date8)
+		self.assertFalse(output8.active)
+		
+	def test_get_usage_stats(self):
 		'''get_usage_stats'''
 		plate1 = LibraryPlate.objects.get(barcode="xyz2")
 		compounds1 = fake_compounds_copy(plate1.compounds.all())
@@ -258,17 +228,57 @@ class HelperTestsDB(TestCase):
 		self.assertEqual(get_usage_stats(compounds2), stats2)
 		self.assertEqual(get_usage_stats(compounds3), stats3)
 	
-	def current_library_selection_test(self):
+	def test_current_library_selection(self):
 		'''current_library_selection'''
-		output_true = [("", "Select library..."), (1, "lib1"), (2, "lib2"), (3, "lib3")]
-		output_false = [(1, "lib1"), (2, "lib2"), (3, "lib3")]
+		output_true = [("", "Select library..."), (1, "lib1"), (3, "lib3")]
+		output_false = [(1, "lib1"), (3, "lib3")]
 		self.assertEqual(current_library_selection(True), output_true)
 		self.assertEqual(current_library_selection(False), output_false)
-			
+	
+	def test_find_missing_compounds(self):
+		lib = Library.objects.get(name="lib1")
+		c1 = Compounds.objects.get(code="code1")
+		#c2 = Compounds.objects.get(code="code2")
+		c3 = Compounds.objects.get(code="code3")
+		plate1 = LibraryPlate.objects.get(barcode="xyz")
+		plate2 = LibraryPlate.objects.get(barcode="xyz2")
+		plate3 = LibraryPlate.objects.get(barcode="xyz3")
+		s = { c1, c3 }
+
+		self.assertEqual(find_missing_compounds(s, plate1), set())
+		self.assertEqual(find_missing_compounds(s, plate2), {c1, c3})
+		self.assertEqual(find_missing_compounds(s, plate3), {c3})
+
+	def test_get_compound_availablility(self):
+		lib = Library.objects.get(name="lib1")
+		c1 = Compounds.objects.get(code="code1")
+		c3 = Compounds.objects.get(code="code3")
+		s = { c1, c3 }
+		output1 = get_compound_availability(s, lib)
+		self.assertEqual(len(output1), 3)
+		self.assertEqual(output1[0].availability, 100)
+		self.assertEqual(output1[1].availability, 50)
+		self.assertEqual(output1[2].availability, 0)
+		self.assertEqual(output1[0].barcode, "xyz")
+		self.assertEqual(output1[1].barcode, "xyz3")
+		self.assertEqual(output1[2].barcode, "xyz2")
+	
+	def test_get_subsets_with_availability(self):
+		p1 = Proposals.objects.get(proposal="proposal1")
+		lib = Library.objects.get(name="lib1")
+		subsets = get_subsets_with_availability(p1)
+		
+		self.assertEqual(len(subsets), 2)
+		self.assertEqual(subsets[0].name, "lib1-s1")
+		self.assertEqual(subsets[0].library, lib)
+		self.assertEqual(len(subsets[0].compounds), 2)
+		self.assertEqual(len(subsets[0].availability), 3)
+
 class GetViewsTests(TestCase):
 	
 	def setUp(self):
-		set_up()
+		set_up_status_changes(status_change_data, source_wells_data, plates_data, libraries_data, compounds_data)
+		set_up_openings(plate_opening_data, plates_data, libraries_data)
 		self.user = User.objects.create_user('staff', email='staff@example.com', password='password', is_staff=True)
 			
 	def test1(self):

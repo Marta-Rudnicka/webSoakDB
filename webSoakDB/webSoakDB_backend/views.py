@@ -6,11 +6,10 @@ from rest_framework.response import Response
 from .forms import LibraryPlateForm, ExternalLibraryForm, SubsetForm
 from .histograms import get_histogram, get_all_histograms, get_selection_histogram
 from .validators import data_is_valid, selection_is_valid
-from .helpers import upload_plate, upload_subset, import_full_libraries, import_library_parts, export_form_is_valid
+from .helpers import source_wells_to_csv, upload_plate, upload_subset, import_full_libraries, import_library_parts, export_form_is_valid
 from API.models import Library, LibraryPlate, LibrarySubset, Proposals, Compounds, Preset
 from webSoakDB_stack.settings import MEDIA_ROOT
 
-import mimetypes
 from slugify import slugify
 from datetime import date
 from rdkit import Chem
@@ -116,19 +115,8 @@ def export_selection_for_soakdb(request):
 		
 		prop = request.POST.get('proposal', False)
 		source_wells = import_full_libraries(prop) + import_library_parts(prop, request.POST)
-		
-		with open('files/soakdb-export.csv', 'r+') as f:
-			f.truncate(0)
-			for c in source_wells:
-				line = c.library_plate.barcode + ',' + c.well + ',' + c.library_plate.library.name + ',' + c.compound.smiles + ',' + c.compound.code + "\n"
-				f.write(line)
-			f.close() #to ensure the whole file will get served
-		
-		with open('files/soakdb-export.csv', 'r+') as f:
-			filename = prop + '-' + 'soakDB-source-export-' + str(date.today()) + '.csv'
-			response = HttpResponse(f, content_type='text/csv')
-			response['Content-Disposition'] = "attachment; filename=%s" % filename
-			return response
+		response = source_wells_to_csv(source_wells, "files/soakdb-export.csv", prop)
+		return response
 
 def serve_2d(request, pk):
 	compound = Compounds.objects.get(pk=pk)
@@ -190,6 +178,4 @@ def all_histograms(request, obj_type, pk):
 		obj = Preset.objects.get(pk=pk)
 	
 	g = get_all_histograms(obj, obj_type)
-	
-	print("normal response")
 	return HttpResponse(g)

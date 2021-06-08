@@ -3,38 +3,14 @@ import django.db
 import csv
 import re
 import django.core.exceptions
+from datetime import date
+from django.http import HttpResponse
 
 from rdkit import Chem
 from rdkit.Chem import Descriptors
 from rdkit.Chem import Crippen
 from rdkit.Chem import Draw
 
-
-from PIL import Image
-'''
-#prepate list of libraries formatted as froms.ChoiceField choices
-def create_lib_selection():
-	output = []
-	for library in Library.objects.filter(public=True):
-		lib = (library.id, library.name)
-		output.append(lib)
-	return output
-
-	
-#prepare a list of library plates in compound selection
-def get_selection_details(proposal):
-	plate_dict = {}
-	for library in proposal.libraries.all():
-		if library.public: 
-			origin = "in-house library"
-		else:
-			origin = "user-submitted library"
-		
-		for plate in LibraryPlate.objects.filter(library=library, current=True):
-			plate_dict[plate] = origin
-	
-	return plate_dict
-'''
 #import data from a csv file - should be used after validation with data_is_valid
 def upload_plate(file_name, plate):
 	with open(file_name, newline='') as csvfile:
@@ -92,7 +68,6 @@ def upload_subset(file_name, library_id, name, origin):
 				print('Error: upload_subset running on unvalidated data. Use validators.selection_is_valid() on the input data first!')
 	
 	return new_subset
-	
 
 def import_full_libraries(proposal):
 	proposal = Proposals.objects.get(proposal=proposal)
@@ -104,36 +79,48 @@ def import_full_libraries(proposal):
 	
 	s_wells = []
 	for p in full_plates:
-		s_wells = s_wells + [c for c in p.compounds.all()]
+		s_wells = s_wells + [c for c in p.compounds.filter(active=True)]
 	return s_wells
 
-def find_source_wells(subset, plate_id):
-	plate = LibraryPlate.objects.get(pk=plate_id)
+def find_source_wells(subset, plate_ids):
+	plates = []
+	for id in plate_ids:
+		plates.append(LibraryPlate.objects.get(pk=id))
+
 	sw = []
-	for compound in subset.compounds.all():
-		try:
-			c = plate.compounds.get(compound = compound)
-			sw.append(c)
-		except django.core.exceptions.ObjectDoesNotExist:
-			pass
+	if type(subset) == set:
+		compounds = subset
+	else:
+		compounds = subset.compounds.all()
 	
+	for compound in compounds:
+		print(compound, compound.code, compound.smiles)
+		for plate in plates:
+			try:
+				c = plate.compounds.get(compound__code = compound.code, compound__smiles = compound.smiles, active=True)
+				sw.append(c)
+				break 		#to avoid duplicates in plate combinations
+			except django.core.exceptions.ObjectDoesNotExist:
+				print('not found')
+				pass
+	sw.sort(key=lambda x: x.library_plate.id)
+
 	return sw
 		
-
 def import_library_parts(proposal, data):
 	proposal = Proposals.objects.get(proposal=proposal)
 	sw = []
 	
 	for s in proposal.subsets.all():
 		if data.get(str(s.library.id), False):
-			sw = sw + find_source_wells(s, data.get(str(s.library.id), False))
+			sw = sw + find_source_wells(s, [ data.get(str(s.library.id))])
 		else:							#multiple current plates
 			lib = Library.objects.get(pk=s.library.id)
 			plates_count = lib.plates.filter(current=True).count()
 			for i in range(1, plates_count + 1):
 				option_name = str(s.library.id) + '-' + str(i)
 				plate_id = data.get(option_name, False)
-				sw = sw + find_source_wells(s, plate_id)
+				sw = sw + find_source_wells(s, [plate_id])
 	return sw
 
 def export_form_is_valid(post_data):
@@ -174,14 +161,18 @@ def export_form_is_valid(post_data):
 				print('plate library not matching subset library')
 				return False
 	return True
-'''
-#fix to take mol as argument to be used during upload
-def create_2d_image(compound):
-	if compound.smiles:
-		mol = Chem.MolFromSmiles(compound.smiles)
-		name = 'images/molecules/' + str(compound.id) + '.svg'
-		path = 'media/' + name
-		Chem.Draw.MolToFile(mol, path)
-		compound.mol_image = name
-		compound.save()
-'''
+
+def source_wells_to_csv(source_wells, file_path, filename_prefix):
+	with open(file_path, 'r+') as f:
+		f.truncate(0)
+		for c in source_wells:
+			line = c.library_plate.barcode + ',' + c.well + ',' + c.library_plate.library.name + ',' + c.compound.smiles + ',' + c.compound.code + "\n"
+			f.write(line)
+		f.close() #to ensure the whole file will get served
+	
+	with open(file_path, 'r+') as f:
+		filename = filename_prefix + '-soakDB-source-export-' + str(date.today()) + '.csv'
+		response = HttpResponse(f, content_type='text/csv')
+		response['Content-Disposition'] = "attachment; filename=%s" % filename
+	
+	return response

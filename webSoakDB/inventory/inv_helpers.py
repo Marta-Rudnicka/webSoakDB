@@ -1,62 +1,16 @@
-from API.models import Library, LibraryPlate, SourceWell, Compounds, Preset
-from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm
-from webSoakDB_backend.validators import data_is_valid
-from webSoakDB_backend.helpers import upload_plate
-from datetime import date, datetime
-from django.core.files.storage import FileSystemStorage
+from django.core.exceptions import ObjectDoesNotExist
+from API.models import Library, LibraryPlate
+from tools.data_storage_classes import SourceWellCopy, PresetCopy, SubsetCopy, CompoundCopy, BasicTemporaryCompound, SubsetCopyWithAvailability
 import string
+import csv
+import re
 
-def fake_compounds_copy(queryset):
-	'''Produces regular Python objects (not django model objects) to store a copy of the data from
-	SourceWell objects in quesryset. This copy is used to manipulate the data without chaging 
-	anything in the database'''
-	class Copy:
-		def __init__(self, compound):
-			self.well = compound.well         
-			self.code = compound.compound.code
-			self.active = compound.active
-			self.deactivation_date = compound.deactivation_date
-			self.changes = [{"date" : ch.date, "activation" : ch.activation} for ch in compound.status_changes.all()]
-	
-	return [Copy(c) for c in queryset]
+def sw_copies(queryset):
+	return [SourceWellCopy(c) for c in queryset]
 
 def fake_preset_copy(preset, missing_compounds):
-	'''Produces a regular Python object (not django model object) to store a copy of the data from
-	the Preset object (preset). Then, it adds information about the availability of the compounds 
-	in the current LibraryPlates, and alternative locations of the compound if the compound is missing
-	in the current plate, based on missing_compounds'''
-	
-	class PresetCopy:
-		def __init__(self, preset):
-			self.id = preset.id         
-			self.name = preset.name
-			self.description = preset.description
-			self.subsets = []
-		def __str__(self):
-			return "Preset copy: " + self.name
-	
-	class SubsetCopy:
-		def __init__(self, subset):
-			self.id = subset.id         
-			self.name = subset.name
-			self.library_name = subset.library.name
-			self.library_id = subset.library.id
-			self.compounds = []
-			self.unavailable_count = 0
-			
-		def __str__(self):
-			return "Subset copy: " + self.name + ":" + self.library_name
-	
-	class CompoundCopy:
-		def __init__(self, compound):
-			self.id = compound.id         
-			self.code = compound.code
-			self.smiles = compound.smiles
-			self.available = True
-		
-		def __str__(self):
-			return "Compound copy: " + str(self.id) + ":" + self.code
-	
+	'''Copy of a preset with alternative locations for compounds that are missing from the current plate(s) in a library'''
+
 	preset_copy = PresetCopy(preset)
 	
 	for subset in preset.subsets.all():
@@ -69,7 +23,14 @@ def fake_preset_copy(preset, missing_compounds):
 				if (plate.id, c.id) in missing_compounds:
 					c.available = False
 					subset_copy.unavailable_count += 1
-					c.alternatives = [( w.library_plate.library.name + ' : ' + w.library_plate.barcode ) for w in compound.locations.filter(library_plate__library__public = True) if w.active ]
+					c.alternatives = [( 
+						w.library_plate.library.name + 
+						' : ' + 
+						w.library_plate.barcode ) 
+						for w in 
+						compound.locations.filter(library_plate__library__public = True) 
+						if w.active 
+						]
 				subset_copy.compounds.append(c)
 		
 	return preset_copy
@@ -138,3 +99,40 @@ def current_library_selection(boolean):
 		first_tuple = []
 		
 	return  first_tuple + [(library.id, library.name) for library in Library.objects.filter(public=True)]
+
+def get_subsets_with_availability(*args):
+	subset_copies = []
+	if len(args) == 1:
+		for s in args[0]:
+			subset_copies.append(SubsetCopyWithAvailability(s))
+	elif len(args) == 2:
+		subset_copies.append(SubsetCopyWithAvailability(args[0], args[1]))
+	
+	return subset_copies
+
+def upload_temporary_subset(file_name):
+	compounds = set()
+
+	with open(file_name, newline='') as csvfile:
+		dialect = csv.Sniffer().sniff(csvfile.read(1024))
+		csvfile.seek(0)
+		compound_reader = csv.reader(csvfile, dialect)
+		for row in compound_reader:
+			compound = BasicTemporaryCompound(row[0], row[1])
+			compounds.add(compound)
+			
+	return compounds
+
+def parse_compound_list(string):
+	compounds = set()
+	for item in string.split(','):
+		data = [x for x in item.split(':')]
+		try:
+			compounds.add(BasicTemporaryCompound(data[0], data[1]))
+		except IndexError:
+			pass
+	
+	return compounds
+
+def parse_id_list(string):
+	return [int(i) for i in re.findall('[0-9]+', string)]
