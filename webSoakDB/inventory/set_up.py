@@ -25,7 +25,7 @@ status_change_data = [
     ]
 
 plate_opening_data = [ (1, "2020-10-28", "reason"), (2, "2020-10-28", "reason"),]
-subsets_data = [("lib1-s1", 0, [1, 2]), ("lib1-s2", 0, [0, 3]), ("lib3-s1", 2, [7]), ("lib3-s2", 2, [7, 9]), ]
+subsets_data = [("lib1-s1", 0, [1, 2]), ("lib1-s2", 0, [0, 3]), ("lib3-s1", 2, [7]), ("lib3-s2", 2, [7, 9]), ("test-missing", 0, [0, 2])  ]
 
 proposals_data = [("proposal1", [0], [0, 1]), ("proposal2", [2], [])]
 

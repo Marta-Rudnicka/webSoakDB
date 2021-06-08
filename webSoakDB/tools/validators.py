@@ -21,7 +21,7 @@ import sys
 import re
 import csv
 import django.core.exceptions
-from API.models import Compounds, Library
+from API.models import Compounds, Library, LibraryPlate, Proposals
 
 
 #Library plate data uploads
@@ -163,7 +163,7 @@ def compound_is_valid(row, line, error_log, library_id):
 		pass
 	
 	
-	if not compound_exists(code, smiles, library_id, line, error_log):
+	if not compound_exists(code, smiles, library_id, line, error_log, row):
 		return False
 	
 	return valid_row
@@ -281,7 +281,7 @@ def is_csv(file_name, error_log):
 #COMPOUND finder
 
 
-def compound_exists(code, smiles, library_id, line, error_log):
+def compound_exists(code, smiles, library_id, line, error_log, row):
 	if not code or not smiles:
 		return False
 
@@ -313,6 +313,49 @@ def compound_exists(code, smiles, library_id, line, error_log):
 		msg = "Line " + str(line) + ": COMPOUND ERROR: '" + code + ' : ' + smiles + "' does not belong to " + library.name
 		update_error_log(msg, error_log)
 		return False
+	return True
+
+
+
+#EXPORT FORM FOR SOAKDB-COMPATIBLE LIST OF SOURCE COMPOUNDS
+
+def export_form_is_valid(post_data):
+	proposal = None
+	subset_lib_ids = []
+	for key in post_data:
+		if key=='csrfmiddlewaretoken':
+			pass
+		elif key=='proposal':
+			try:
+				proposal = Proposals.objects.get(proposal=post_data.get(key))
+				subset_lib_ids = [s.library.id for s in proposal.subsets.all()]
+			except django.core.exceptions.ObjectDoesNotExist:
+				print('No proposal found')
+				return False
+		else:
+			if re.fullmatch('[0-9]+', key):
+				value = post_data.get(str(key), False)
+			elif re.fullmatch('([0-9]+)(\-[0-9]+)', key):
+				value = post_data.get(str(key), False)
+				old_key = re.fullmatch('([0-9]+)(\-[0-9]+)', key)
+				key = old_key.group(1)
+			else:
+				print('key not matching any regex:', key)
+				return False
+				 
+			if not int(key) in subset_lib_ids:
+				print('key not found in subset libraries: ', key)
+				return False
+				
+			try:
+				plate = LibraryPlate.objects.get(pk=value)
+			except django.core.exceptions.ObjectDoesNotExist:
+				print('plate does not exist: ', value)
+				return False
+			
+			if plate.library.id != int(key):
+				print('plate library not matching subset library')
+				return False
 	return True
 
 

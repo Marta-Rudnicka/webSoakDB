@@ -8,7 +8,6 @@ from datetime import date, datetime
 import re
 import shutil
 from .inv_helpers import (
-	parse_id_list,
 	sw_copies, 
 	get_plate_size, 
 	get_change_dates, 
@@ -16,15 +15,14 @@ from .inv_helpers import (
 	get_usage_stats, 
 	fake_preset_copy, 
 	current_library_selection,
-	parse_compound_list, 
-	set_status, 
-	upload_temporary_subset,
+	set_status,
 )
+from tools.uploads_downloads import upload_temporary_subset, parse_compound_list, parse_id_list
 from .dt import get_well_dictionary, manage_sw_status_change
 from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm, PlateOpeningForm, ProposalForm, UnsavedSubsetForm
-from webSoakDB_backend.validators import data_is_valid, selection_is_valid
-from webSoakDB_backend.helpers import upload_plate, upload_subset, find_source_wells, source_wells_to_csv
-from webSoakDB_backend.histograms import update_histograms
+from tools.validators import data_is_valid, selection_is_valid
+from tools.histograms import update_histograms
+from tools.uploads_downloads import upload_plate, upload_subset, find_source_wells, source_wells_to_csv 
 from API.models import Library, LibraryPlate, LibrarySubset, SourceWell, Compounds, Preset, PlateOpening, Proposals
 
 #VIEWS HANDLING GET REQUESTS
@@ -421,9 +419,6 @@ def edit_plate(request):
 		else:
 			return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})	
 
-def update_preset(request):
-	pass
-
 @staff_member_required
 def delete_library(request):
 	if request.method == "POST":	
@@ -640,3 +635,7 @@ def locate_compounds(request):
 				"form": form, 
 				"errors" : [form.errors, form.non_field_errors ]
 				})
+
+def compound_lookup(request, pk):
+	compound = Compounds.objects.get(pk=pk)
+	return render(request, "compound_lookup.html", {'compound': compound})

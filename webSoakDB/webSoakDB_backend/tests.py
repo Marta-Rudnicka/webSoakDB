@@ -1,10 +1,9 @@
 from django.test import TestCase
-import unittest
 from inventory.set_up import (set_up_source_wells, source_wells_data, plates_data, libraries_data, compounds_data)
-from .helpers import import_full_libraries
+from tools.uploads_downloads import import_full_libraries
 from API.models import Proposals, SourceWell, LibraryPlate
 
-from .validators import code_is_valid, well_is_valid, smiles_is_valid, concentration_is_valid, row_is_valid
+from tools.validators import code_is_valid, well_is_valid, smiles_is_valid, concentration_is_valid, row_is_valid
 
 class ValidatorHelpersTests(TestCase):
 	

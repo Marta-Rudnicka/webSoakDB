@@ -6,19 +6,18 @@ import unittest
 import datetime
 
 from .dt import ensure_leading_zero, valid_wells
-from API.models import Library, LibraryPlate, Preset, Compounds, SourceWell, SWStatuschange, PlateOpening, Proposals
+from API.models import Library, LibraryPlate, LibrarySubset, Preset, Compounds, SourceWell, SWStatuschange, PlateOpening, Proposals
 from .inv_helpers import (
-	find_missing_compounds,
-	get_compound_availability, 
 	get_plate_size, 
-	fake_compounds_copy, 
 	get_change_dates,
 	get_subsets_with_availability, 
 	set_status, 
 	get_usage_stats, 
-	current_library_selection, 
-	fake_preset_copy,
+	current_library_selection,
+	sw_copies,
 )
+
+from tools.data_storage_classes import SubsetCopyWithAvailability
 
 from .set_up import (
 	set_up_proposals,
@@ -81,10 +80,10 @@ class HelperTestsDB(TestCase):
 		set_up_status_changes(status_change_data, source_wells_data, plates_data, libraries_data, compounds_data)
 		set_up_proposals(proposals_data, libraries_data, subsets_data, compounds_data)
 
-	def test_fake_compounds_copy(self):
+	def test_sw_copies(self):
 		l = LibraryPlate.objects.get(barcode="xyz2")
 		queryset = l.compounds.all()
-		copy = fake_compounds_copy(queryset)
+		copy = sw_copies(queryset)
 		
 		changes0 = [{"date" : datetime.date(2020, 10, 28), "activation" : False}, {"date" : datetime.date(2020, 12, 2), "activation" : True}, {"date" : datetime.date(2021, 2, 10), "activation" : False}]
 		changes1 = []
@@ -155,17 +154,17 @@ class HelperTestsDB(TestCase):
 		
 		plate1 = LibraryPlate.objects.get(barcode="xyz2")
 		compounds1 = plate1.compounds.all()
-		input1 = fake_compounds_copy(compounds1)
+		input1 = sw_copies(compounds1)
 		dates1 = [date210210, date201202, date201028]
 	
 		plate2 = LibraryPlate.objects.get(barcode="largest_small")
 		compounds2 = plate2.compounds.all()
-		input2 = fake_compounds_copy(compounds2)
+		input2 = sw_copies(compounds2)
 		dates2 = []
 		
 		plate3 = LibraryPlate.objects.get(barcode="xyz3")
 		compounds3 = plate3.compounds.all()
-		input3 = fake_compounds_copy(compounds3)
+		input3 = sw_copies(compounds3)
 		dates3 = [date201028]
 
 		self.assertEqual(get_change_dates(input1), dates1)
@@ -176,7 +175,7 @@ class HelperTestsDB(TestCase):
 		'''set_status'''
 		plate = LibraryPlate.objects.get(barcode="xyz2")
 		sw = SourceWell.objects.get(library_plate=plate, well="A01")
-		sw_copy = fake_compounds_copy([sw])
+		sw_copy = sw_copies([sw])
 		
 		date1 = datetime.date(2020, 10, 27)
 		date2 = datetime.date(2020, 10, 28)#
@@ -213,15 +212,15 @@ class HelperTestsDB(TestCase):
 	def test_get_usage_stats(self):
 		'''get_usage_stats'''
 		plate1 = LibraryPlate.objects.get(barcode="xyz2")
-		compounds1 = fake_compounds_copy(plate1.compounds.all())
+		compounds1 = sw_copies(plate1.compounds.all())
 		stats1 = {"count" : 4, "active" : 2, "inactive" : 2, "availability" : 50 }
 		
 		plate2 = LibraryPlate.objects.get(barcode="xyz3")
-		compounds2 = fake_compounds_copy(plate2.compounds.all())
+		compounds2 = sw_copies(plate2.compounds.all())
 		stats2 = {"count" : 4, "active" : 3, "inactive" : 1, "availability" : 75 }
 		
 		plate3 = LibraryPlate.objects.get(barcode="empty")
-		compounds3 = fake_compounds_copy(plate3.compounds.all())
+		compounds3 = sw_copies(plate3.compounds.all())
 		stats3 = {"count" : 0, "active" : 0, "inactive" : 0, "availability" : 0}
 		
 		self.assertEqual(get_usage_stats(compounds1), stats1)
@@ -236,37 +235,41 @@ class HelperTestsDB(TestCase):
 		self.assertEqual(current_library_selection(False), output_false)
 	
 	def test_find_missing_compounds(self):
-		lib = Library.objects.get(name="lib1")
+		subset = LibrarySubset.objects.get(name="test-missing")
+		
 		c1 = Compounds.objects.get(code="code1")
-		#c2 = Compounds.objects.get(code="code2")
+		c2 = Compounds.objects.get(code="code2")
 		c3 = Compounds.objects.get(code="code3")
 		plate1 = LibraryPlate.objects.get(barcode="xyz")
 		plate2 = LibraryPlate.objects.get(barcode="xyz2")
 		plate3 = LibraryPlate.objects.get(barcode="xyz3")
 		s = { c1, c3 }
 
-		self.assertEqual(find_missing_compounds(s, plate1), set())
-		self.assertEqual(find_missing_compounds(s, plate2), {c1, c3})
-		self.assertEqual(find_missing_compounds(s, plate3), {c3})
+		subset_copy = SubsetCopyWithAvailability(subset)
+
+		self.assertEqual(subset_copy.find_missing_compounds(s, plate1), set())
+		self.assertEqual(subset_copy.find_missing_compounds(s, plate2), {c1, c3})
+		self.assertEqual(subset_copy.find_missing_compounds(s, plate3), {c3})
 
 	def test_get_compound_availablility(self):
 		lib = Library.objects.get(name="lib1")
 		c1 = Compounds.objects.get(code="code1")
 		c3 = Compounds.objects.get(code="code3")
+		sub = LibrarySubset.objects.get(name="lib1-s1")
+		s_copy = SubsetCopyWithAvailability(sub)
+
 		s = { c1, c3 }
-		output1 = get_compound_availability(s, lib)
-		self.assertEqual(len(output1), 3)
+		output1 = s_copy.get_compound_availability(s, lib)
+		self.assertEqual(len(output1), 2)
 		self.assertEqual(output1[0].availability, 100)
 		self.assertEqual(output1[1].availability, 50)
-		self.assertEqual(output1[2].availability, 0)
 		self.assertEqual(output1[0].barcode, "xyz")
 		self.assertEqual(output1[1].barcode, "xyz3")
-		self.assertEqual(output1[2].barcode, "xyz2")
 	
 	def test_get_subsets_with_availability(self):
 		p1 = Proposals.objects.get(proposal="proposal1")
 		lib = Library.objects.get(name="lib1")
-		subsets = get_subsets_with_availability(p1)
+		subsets = get_subsets_with_availability(p1.subsets.all())
 		
 		self.assertEqual(len(subsets), 2)
 		self.assertEqual(subsets[0].name, "lib1-s1")

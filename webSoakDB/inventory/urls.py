@@ -29,5 +29,6 @@ urlpatterns = [
 	
 	path("proposal/", views.proposal, name="proposal"),
 	path("subset-map/", views.get_subset_map, name="subset-map"),
-	path("locate-compounds/", views.locate_compounds, name="locate-compounds")
+	path("locate-compounds/", views.locate_compounds, name="locate-compounds"),
+	path("compound-lookup/<int:pk>/", views.compound_lookup, name="compound-lookup")
 ]

@@ -1,5 +1,5 @@
 '''scripts used for dispense testing'''
-from webSoakDB_backend.validators import is_csv
+from tools.validators import is_csv
 from API.models import SWStatuschange, SourceWell
 import csv
 import string
