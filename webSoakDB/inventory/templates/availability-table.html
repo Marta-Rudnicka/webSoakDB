@@ -46,7 +46,9 @@
                   {% for c in plate.missing_compounds %} 
                     <div>
                       {{ c.code }} <br> 
-                      <img src="/molecule/{{c.id}}"></img>
+                      <!--
+                      <img src="/molecule/{{c.id}}"></img> -->
+                      {% include "molecule-image.html" with id=c.id %}
                     </div>
                   {% endfor %} 
                 </div>
@@ -57,7 +59,7 @@
                   <input type="hidden" name="subset_id" value="{{subset.id}}">
                   <input type="hidden" name="plate_id" value="{{plate.id}}">
                   <input type="hidden" name="propsal" value={{proposal.proposal}}>
-                  <input type="hidden" name="compound_list" value="{% for c in compound_list %}{{c.code}}:{{c.smiles}},{%endfor%}">
+                  <input type="hidden" name="compound_list" value="{% for c in compound_list %}{{ c.code }}:{{ c.smiles }},{% endfor %}">
                   <button type="submit">Download</button>
                 </form>
               </td>

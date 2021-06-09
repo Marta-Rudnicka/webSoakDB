@@ -84,6 +84,7 @@
             <th>Well</th>
             <th>Code</th>
             <th>SMILES</th>
+            <th>Structure</th>
             <th>Concentration</th>
             <th>Available</th>
             <th>Deactivated on:</th>
@@ -100,6 +101,7 @@
             <td><div>{{compound.well}}</div></td>
             <td>{{compound.compound.code}}</td>
             <td>{{compound.compound.smiles}}</td>
+            <td>{% include "molecule-image.html" with id=compound.compound.id %}</td>
             <td>{{compound.concentration}}</td>
             {% if compound.active %}
               <td>Available</td>

@@ -21,6 +21,13 @@ main#presets{
 	margin: 5px;
 }
 
+main#compound-lookup {
+	width: 1000px;
+	margin: auto;
+	display: grid;
+	grid-template-columns: 300px auto;
+}
+
 main h1 {
 	grid-column: 1/-1;
 }
@@ -425,7 +432,7 @@ main#proposal {
 	margin: 3px;
 }
 
-.list-with-pix img{
+img.small-mol{
 	width: 100px;
 	transition: height 0.5s, width 0.5s;
 }
