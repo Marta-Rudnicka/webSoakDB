@@ -53,18 +53,8 @@ def presets(request):
 	all_libs = current_library_selection(False)
 	new_preset_form = NewPresetForm(libs=([("", "Select library...")] + all_libs))
 	
-	#produce a set of all compounds missing from the current library plates (only for libraries used in any of the presets)
-	missing_compounds = set()
-	
-	for preset in presets:
-		for subset in preset.subsets.all():
-			current = LibraryPlate.objects.filter(library=subset.library.id, current=True)			
-			for plate in current:
-				m = plate.compounds.filter(active=False).all()
-				missing_compounds = {(int(plate.id), int(c.compound.id)) for c in m} | missing_compounds
-	
-	#make copy of presets data, and add information about availability of the compounds in the current library plates
-	presets_copy = [fake_preset_copy(preset, missing_compounds) for preset in presets]
+	#make copy of presets data, and add information about availability of the compounds
+	presets_copy = [fake_preset_copy(preset) for preset in presets]
 	
 	#produce a dictionary that matches each presets with appropriate form to edit this preset
 	form_dict = {}

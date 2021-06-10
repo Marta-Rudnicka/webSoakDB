@@ -16,6 +16,7 @@ def upload_temporary_subset(file_name):
 
 	with open(file_name, newline='') as csvfile:
 		dialect = csv.Sniffer().sniff(csvfile.read(1024))
+		dialect.delimiter = ','
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
@@ -44,6 +45,7 @@ def parse_id_list(string):
 def upload_plate(file_name, plate):
 	with open(file_name, newline='') as csvfile:
 		dialect = csv.Sniffer().sniff(csvfile.read(1024))
+		dialect.delimiter = ','
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
@@ -85,6 +87,7 @@ def upload_subset(file_name, library_id, name, origin):
 	
 	with open(file_name, newline='') as csvfile:
 		dialect = csv.Sniffer().sniff(csvfile.read(1024))
+		dialect.delimiter = ','
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
@@ -127,14 +130,12 @@ def find_source_wells(subset, plate_ids):
 		compounds = subset.compounds.all()
 	
 	for compound in compounds:
-		print(compound, compound.code, compound.smiles)
 		for plate in plates:
 			try:
 				c = plate.compounds.get(compound__code = compound.code, compound__smiles = compound.smiles, active=True)
 				sw.append(c)
 				break 		#to avoid duplicates in plate combinations
 			except django.core.exceptions.ObjectDoesNotExist:
-				print('not found')
 				pass
 	sw.sort(key=lambda x: x.library_plate.id)
 

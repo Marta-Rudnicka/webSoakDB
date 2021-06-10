@@ -441,3 +441,11 @@ img.small-mol{
 	display: grid;
 	grid-template-columns: 1fr 3fr;
 }
+
+.availability-details {
+	font-size: 1.2em;
+	background: aliceblue;
+	border: solid lightgrey 1px;
+	margin-top: 5px;
+	padding: 4px;
+}

@@ -25,51 +25,7 @@
         </span>
       <td>
     </tr>
-    <tr id="{{subset.id}}" class={{initial_class}}>
-      <td colspan="5">
-      <div class="list-with-pix">
-        <table class="small-font-table">
-          <thead>
-            <th>Library plate</th>
-            <th>Availability</th>
-            <th>Missing compounds</th>
-            <th>CSV list</th>
-          </thead>
-          <tbody>
-            {% for plate in subset.availability %}
-            <tr>
-              <td>{{ plate.barcode }} {% if plate.current %}<br>(current){% endif %}</td>
-              <td>{{plate.availability}} %</td>
-              <td>
-                <div>({{plate.missing_compounds | length}} missing)</strong></div>
-                <div class="list-in-table-pix"> 
-                  {% for c in plate.missing_compounds %} 
-                    <div>
-                      {{ c.code }} <br> 
-                      <!--
-                      <img src="/molecule/{{c.id}}"></img> -->
-                      {% include "molecule-image.html" with id=c.id %}
-                    </div>
-                  {% endfor %} 
-                </div>
-              </td>
-              <td>
-                <form method="post" action="/inventory/subset-map/">
-                  {% csrf_token %}
-                  <input type="hidden" name="subset_id" value="{{subset.id}}">
-                  <input type="hidden" name="plate_id" value="{{plate.id}}">
-                  <input type="hidden" name="propsal" value={{proposal.proposal}}>
-                  <input type="hidden" name="compound_list" value="{% for c in compound_list %}{{ c.code }}:{{ c.smiles }},{% endfor %}">
-                  <button type="submit">Download</button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </td>
-  </tr>
+    {% include "availability-details.html" with initial_class=initial_class %}
   {% endfor %}
   </tbody>    
 </table>

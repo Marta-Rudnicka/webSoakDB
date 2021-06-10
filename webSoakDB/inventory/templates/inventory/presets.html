@@ -11,6 +11,27 @@
       const id = "lib-" + index;
       document.getElementById(id).className = "hidden";
     }
+
+    function show(id){
+      console.log('show');
+      subTable = document.getElementById(id);
+      subTable.className = "";
+      hider =  document.getElementById(id + "-hider");
+      hider.className = "";
+      shower = document.getElementById(id + "-shower");
+      shower.className = "hidden";
+    }
+
+    function hide(id){
+      console.log('hide');
+      subTable = document.getElementById(id);
+      subTable.className = "hidden";
+      hider =  document.getElementById(id + "-hider");
+      hider.className = "hidden";
+      shower = document.getElementById(id + "-shower");
+      shower.className = "";
+    }
+    
   </script>
   
   <main id="presets">
@@ -35,7 +56,7 @@
                 <div>
                   <ul>
                   {% for subset in preset.subsets %}
-                    <li>{{ subset.library_name }} : <strong>{{ subset.compounds|length }}</strong> compounds ({{ subset.unavailable_count }}</strong> missing in the current plate)</li>
+                    <li>{{ subset.library_name }} : <strong>{{ subset.compounds|length }}</strong> compounds </li>
                       <div class="list-in-table">
                         <table class="small-font-table">
                            <colgroup>
@@ -49,39 +70,31 @@
                               <th></th>
                               <th>Code</th>
                               <th>SMILES</th>
-                              <th>In current plate(s)</th>
                             </tr>
                           </thead>
                           <tbody>
                             {% for compound in subset.compounds %}
-                            {% if compound.available %}
+                            
                             <tr>
-                            {% else %}
-                            <tr class="inactive-row">
-                            {% endif %}
+                            
                               <td>{{ forloop.counter }}</td>
                               <td>{{ compound.code }}</td>
                               <td>{{ compound.smiles }}</td>
-                              <td>{% if compound.available %}
-                                Available 
-                                {% else %}
-                                 Unavailable <br>
-                                <strong>Available in:</strong><br>
-                                {% for a in compound.alternatives %} 
-                                  {{forloop.counter }} - {{a}} <br>
-                                {% empty %}
-                                  Not found
-                                {% endfor %} 
-                                  
-                                {% endif %}
-                              </td>                            
+                              
                             </tr>
                             {% endfor %}
                           </tbody>
-                        
                         </table>
-                      
                       </div>
+                      <div class="availability-details">Availability details 
+                        <span id="{{subset.id}}-shower" onclick=show({{subset.id}})>
+                          {% include "chevron-down.html"%}
+                        </span>
+                        <span id="{{subset.id}}-hider" onclick=hide({{subset.id}}) class="hidden">
+                          {% include "chevron-up.html"%}
+                        </span> 
+                      </div>
+                      <table>{% include "availability-details.html" with initial_class="hidden"%}</table>
                   {% endfor %}            
                   </ul>
                 </div>

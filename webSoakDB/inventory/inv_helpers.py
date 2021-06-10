@@ -1,34 +1,17 @@
 from django.core.exceptions import ObjectDoesNotExist
 from API.models import Library, LibraryPlate
-from tools.data_storage_classes import SourceWellCopy, PresetCopy, SubsetCopy, CompoundCopy, BasicTemporaryCompound, SubsetCopyWithAvailability
+from tools.data_storage_classes import SourceWellCopy, PresetCopy, SubsetCopyWithAvailability
 import string
 
 def sw_copies(queryset):
 	return [SourceWellCopy(c) for c in queryset]
 
-def fake_preset_copy(preset, missing_compounds):
-	'''Copy of a preset with alternative locations for compounds that are missing from the current plate(s) in a library'''
+def fake_preset_copy(preset):
 	preset_copy = PresetCopy(preset)
 	
 	for subset in preset.subsets.all():
-		subset_copy = SubsetCopy(subset)
+		subset_copy = SubsetCopyWithAvailability(subset)
 		preset_copy.subsets.append(subset_copy)
-		current = LibraryPlate.objects.filter(library=subset.library.id, current=True)
-		for plate in current:
-			for compound in subset.compounds.all():
-				c = CompoundCopy(compound)
-				if (plate.id, c.id) in missing_compounds:
-					c.available = False
-					subset_copy.unavailable_count += 1
-					c.alternatives = [( 
-						w.library_plate.library.name + 
-						' : ' + 
-						w.library_plate.barcode ) 
-						for w in 
-						compound.locations.filter(library_plate__library__public = True) 
-						if w.active 
-						]
-				subset_copy.compounds.append(c)
 		
 	return preset_copy
 

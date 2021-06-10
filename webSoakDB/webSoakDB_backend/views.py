@@ -11,7 +11,7 @@ from API.models import Library, LibraryPlate, LibrarySubset, Proposals, Compound
 from webSoakDB_stack.settings import MEDIA_ROOT
 
 from slugify import slugify
-from datetime import date
+from datetime import date, datetime
 from rdkit import Chem
 from rdkit.Chem import Draw
 
@@ -120,11 +120,22 @@ def export_selection_for_soakdb(request):
 
 def serve_2d(request, pk):
 	compound = Compounds.objects.get(pk=pk)
+
 	mol = Chem.MolFromSmiles(compound.smiles)
-	img = Draw.MolToImage(mol)
-	response = HttpResponse(content_type="image/png")
-	img.save(response, "PNG")
-	return response
+	#img = Draw.MolToImage(mol)
+	#response = HttpResponse(content_type="image/png")
+
+	#img.save(response, "PNG")
+	##############
+	
+	d2d = Draw.MolDraw2DSVG(300, 300)
+	d2d.DrawMolecule(mol)
+	d2d.FinishDrawing()
+	svg_string = d2d.GetDrawingText()
+	response2 = HttpResponse(svg_string, content_type="image/svg+xml")
+	
+	return response2
+
 
 def serve_histogram(request, obj_type, pk, attr):
 	if obj_type=="library":

@@ -75,6 +75,8 @@ class SubsetCopyWithAvailability:
 			self.id = args[0].id
 			self.name = args[0].name
 			self.library = args[0].library
+			self.library_id = args[0].library.id
+			self.library_name = args[0].library.name
 			self.compounds = set(args[0].compounds.all())
 			self.availability = self.get_compound_availability(self.compounds, self.library)
 
@@ -83,6 +85,8 @@ class SubsetCopyWithAvailability:
 			self.id = 0
 			self.name = "temporary selection"
 			self.library = args[1]
+			self.library_id = args[1].id
+			self.library_name = args[1].name
 			self.compounds = args[0]
 			self.availability = self.get_compound_availability(self.compounds, self.library)
 
