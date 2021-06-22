@@ -39,6 +39,7 @@ def data_is_valid(file_name, error_log):
 	try:
 		with open(file_name, newline='') as csvfile:
 			dialect = csv.Sniffer().sniff(csvfile.read(1024))
+			dialect.delimiter = ','
 			csvfile.seek(0)
 			compound_reader = csv.reader(csvfile, dialect)
 			line = 1
