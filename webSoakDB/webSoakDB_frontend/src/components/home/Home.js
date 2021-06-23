@@ -25,7 +25,7 @@ class Home extends React.Component {
 				</ul>
 			</section>
 			
-			<section id="exp">
+			<section id="exp" className="disabled">
 				<h2>Experiment</h2>
 				<ul>
 					<li>

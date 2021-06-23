@@ -54,7 +54,7 @@ class PlateLookup extends React.Component {
 	
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps !== this.props) {
-			this.uploadDataFromAPI()
+			this.getDataFromAPI()
 	}
 		
 		if (prevState.subsets !== this.state.subsets){

@@ -34,7 +34,7 @@ class Details extends React.Component {
         </div>
         <h2>{col.name}</h2>
         <h3>({col.size} compounds {type === "library" ? "currently available" : null}) <br/>
-          <Link className="plate-link" to={link_url} >See the full list of compounds</Link>
+          <Link className="plate-link" to={link_url} target="_blank">See the full list of compounds</Link>
         </h3>
         <p>{description}</p>
         <div>

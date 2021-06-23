@@ -106,8 +106,16 @@ class Picker extends React.Component {
   }
 
   saveChanges(){
-    event.preventDefault();
-    this.props.updateSelection(this.state.selectedLibIds, this.state.selectedSubsetIds);  
+    //event.preventDefault();
+    this.props.updateSelection(this.state.selectedLibIds, this.state.selectedSubsetIds);
+    location.reload();
+  }
+
+
+  resetSelection(){
+    //event.preventDefault();
+    this.props.updateSelection([], []);
+    location.reload();
   }
 
   selected(preset){
@@ -190,7 +198,8 @@ class Picker extends React.Component {
               {otherPresets}
             </ul>
           </div>
-          <button type="submit" onClick={event => this.saveChanges(event)}>Save changes in your selection</button>         
+          <button type="submit" onClick={event => this.saveChanges(event)}>Save changes in your selection</button>
+          <button type="submit" onClick={event => this.resetSelection(event)}>Reset selection (demo only)</button>         
         </section>
                 
         <Uploads proposal={this.props.proposal}
