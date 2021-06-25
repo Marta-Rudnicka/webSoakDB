@@ -1,0 +1,38 @@
+<div style="height: 100px, width: auto"><script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.js"></script>
+<script type="text/javascript">
+    (function() {
+          var fn = function() {
+            Bokeh.safely(function() {
+              (function(root) {
+                function embed_document(root) {
+                  
+                var docs_json = '{"ccb53fe1-f062-45e8-99a7-90280b233b82":{"defs":[],"roots":{"references":[{"attributes":{"axis":{"id":"18191"},"dimension":1,"grid_line_color":"white","ticker":null},"id":"18194","type":"Grid"},{"attributes":{},"id":"18203","type":"AllLabels"},{"attributes":{"axis_label":"Compounds","formatter":{"id":"18204"},"major_label_policy":{"id":"18203"},"ticker":{"id":"18192"}},"id":"18191","type":"LinearAxis"},{"attributes":{"data":{"left":{"__ndarray__":"AAAAAAAA8D8AAAAAAAABQAAAAAAAAApAAAAAAACAEUAAAAAAAAAWQAAAAAAAgBpAAAAAAAAAH0AAAAAAAMAhQA==","dtype":"float64","order":"little","shape":[8]},"right":{"__ndarray__":"AAAAAAAAAUAAAAAAAAAKQAAAAAAAgBFAAAAAAAAAFkAAAAAAAIAaQAAAAAAAAB9AAAAAAADAIUAAAAAAAAAkQA==","dtype":"float64","order":"little","shape":[8]},"top":[10,47,47,16,3,0,1,1]},"selected":{"id":"18209"},"selection_policy":{"id":"18210"}},"id":"18196","type":"ColumnDataSource"},{"attributes":{},"id":"18210","type":"UnionRenderers"},{"attributes":{"axis":{"id":"18187"},"grid_line_color":"white","ticker":null},"id":"18190","type":"Grid"},{"attributes":{"source":{"id":"18196"}},"id":"18200","type":"CDSView"},{"attributes":{"background_fill_color":"#fafafa","below":[{"id":"18187"}],"center":[{"id":"18190"},{"id":"18194"}],"height":280,"left":[{"id":"18191"}],"renderers":[{"id":"18199"}],"title":{"id":"18177"},"toolbar":{"id":"18195"},"width":280,"x_range":{"id":"18179"},"x_scale":{"id":"18183"},"y_range":{"id":"18181"},"y_scale":{"id":"18185"}},"id":"18176","subtype":"Figure","type":"Plot"},{"attributes":{"bottom":{"value":0},"fill_alpha":{"value":0.1},"fill_color":{"value":"navy"},"left":{"field":"left"},"line_alpha":{"value":0.1},"line_color":{"value":"white"},"right":{"field":"right"},"top":{"field":"top"}},"id":"18198","type":"Quad"},{"attributes":{"bottom":{"value":0},"fill_alpha":{"value":0.5},"fill_color":{"value":"navy"},"left":{"field":"left"},"line_alpha":{"value":0.5},"line_color":{"value":"white"},"right":{"field":"right"},"top":{"field":"top"}},"id":"18197","type":"Quad"},{"attributes":{},"id":"18183","type":"LinearScale"},{"attributes":{"axis_label":"Value","formatter":{"id":"18207"},"major_label_policy":{"id":"18206"},"ticker":{"id":"18188"}},"id":"18187","type":"LinearAxis"},{"attributes":{},"id":"18179","type":"DataRange1d"},{"attributes":{"data_source":{"id":"18196"},"glyph":{"id":"18197"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"18198"},"view":{"id":"18200"}},"id":"18199","type":"GlyphRenderer"},{"attributes":{},"id":"18192","type":"BasicTicker"},{"attributes":{},"id":"18185","type":"LinearScale"},{"attributes":{"start":0},"id":"18181","type":"DataRange1d"},{"attributes":{},"id":"18206","type":"AllLabels"},{"attributes":{"active_multi":null,"logo":null},"id":"18195","type":"Toolbar"},{"attributes":{},"id":"18209","type":"Selection"},{"attributes":{"text":"Number of hydrogen bond acceptors"},"id":"18177","type":"Title"},{"attributes":{},"id":"18188","type":"BasicTicker"},{"attributes":{},"id":"18207","type":"BasicTickFormatter"},{"attributes":{},"id":"18204","type":"BasicTickFormatter"}],"root_ids":["18176"]},"title":"Bokeh Application","version":"2.3.1"}}';
+                var render_items = [{"docid":"ccb53fe1-f062-45e8-99a7-90280b233b82","root_ids":["18176"],"roots":{"18176":"d3d0c756-f281-4304-9ab9-962b6f924056"}}];
+                root.Bokeh.embed.embed_items(docs_json, render_items);
+              
+                }
+                if (root.Bokeh !== undefined) {
+                  embed_document(root);
+                } else {
+                  var attempts = 0;
+                  var timer = setInterval(function(root) {
+                    if (root.Bokeh !== undefined) {
+                      clearInterval(timer);
+                      embed_document(root);
+                    } else {
+                      attempts++;
+                      if (attempts > 100) {
+                        clearInterval(timer);
+                        console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                      }
+                    }
+                  }, 10, root)
+                }
+              })(window);
+            });
+          };
+          if (document.readyState != "loading") fn();
+          else document.addEventListener("DOMContentLoaded", fn);
+        })();
+</script>
+<div class="bk-root" id="d3d0c756-f281-4304-9ab9-962b6f924056" data-root-id="18176"></div></div>

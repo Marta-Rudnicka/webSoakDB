@@ -4,10 +4,15 @@ import CSRFToken from './csrf.js';
 class OwnLibraryForm extends React.Component {
   
   submit() {
-    const unsavedChanges = this.props.detectUnsavedChanges();
-    document.forms["own_lib"].requestSubmit();
-    setTimeout(() => {this.props.refreshAfterUpload();}, 2000);
-    this.props.trackUnsavedChanges(unsavedChanges);
+    if (!window.confirm("Are you sure you want to submit the data despite missing security features in the application demo?")){
+      event.preventDefault();
+    }
+    else{
+      const unsavedChanges = this.props.detectUnsavedChanges();
+      document.forms["own_lib"].requestSubmit();
+      setTimeout(() => {this.props.refreshAfterUpload();}, 2000);
+      this.props.trackUnsavedChanges(unsavedChanges);
+    }
   }
   
   render(){

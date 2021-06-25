@@ -1,0 +1,38 @@
+<div style="height: 100px, width: auto"><script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.js"></script>
+<script type="text/javascript">
+    (function() {
+          var fn = function() {
+            Bokeh.safely(function() {
+              (function(root) {
+                function embed_document(root) {
+                  
+                var docs_json = '{"9dbd3a9a-5816-41a3-a715-717723b2aaec":{"defs":[],"roots":{"references":[{"attributes":{"axis_label":"Value","formatter":{"id":"1777"},"major_label_policy":{"id":"1776"},"ticker":{"id":"1758"}},"id":"1757","type":"LinearAxis"},{"attributes":{},"id":"1780","type":"UnionRenderers"},{"attributes":{},"id":"1762","type":"BasicTicker"},{"attributes":{"axis":{"id":"1761"},"dimension":1,"grid_line_color":"white","ticker":null},"id":"1764","type":"Grid"},{"attributes":{"axis_label":"Compounds","formatter":{"id":"1774"},"major_label_policy":{"id":"1773"},"ticker":{"id":"1762"}},"id":"1761","type":"LinearAxis"},{"attributes":{"data":{"left":{"__ndarray__":"AAAAAAAAAAAXXXTRRRftPxdddNFFF/0/0UUXXXTRBUAXXXTRRRcNQC666KKLLhJA0UUXXXTRFUB00UUXXXQZQBdddNFFFx1AXXTRRRddIEAuuuiiiy4iQA==","dtype":"float64","order":"little","shape":[11]},"right":{"__ndarray__":"F1100UUX7T8XXXTRRRf9P9FFF1100QVAF1100UUXDUAuuuiiiy4SQNFFF1100RVAdNFFF110GUAXXXTRRRcdQF100UUXXSBALrrooosuIkAAAAAAAAAkQA==","dtype":"float64","order":"little","shape":[11]},"top":[2,66,134,161,80,40,12,10,6,1,1]},"selected":{"id":"1779"},"selection_policy":{"id":"1780"}},"id":"1766","type":"ColumnDataSource"},{"attributes":{"source":{"id":"1766"}},"id":"1770","type":"CDSView"},{"attributes":{"active_multi":null,"logo":null},"id":"1765","type":"Toolbar"},{"attributes":{},"id":"1755","type":"LinearScale"},{"attributes":{"background_fill_color":"#fafafa","below":[{"id":"1757"}],"center":[{"id":"1760"},{"id":"1764"}],"height":280,"left":[{"id":"1761"}],"renderers":[{"id":"1769"}],"title":{"id":"1747"},"toolbar":{"id":"1765"},"width":280,"x_range":{"id":"1749"},"x_scale":{"id":"1753"},"y_range":{"id":"1751"},"y_scale":{"id":"1755"}},"id":"1746","subtype":"Figure","type":"Plot"},{"attributes":{"bottom":{"value":0},"fill_alpha":{"value":0.5},"fill_color":{"value":"navy"},"left":{"field":"left"},"line_alpha":{"value":0.5},"line_color":{"value":"white"},"right":{"field":"right"},"top":{"field":"top"}},"id":"1767","type":"Quad"},{"attributes":{},"id":"1773","type":"AllLabels"},{"attributes":{},"id":"1749","type":"DataRange1d"},{"attributes":{},"id":"1758","type":"BasicTicker"},{"attributes":{"axis":{"id":"1757"},"grid_line_color":"white","ticker":null},"id":"1760","type":"Grid"},{"attributes":{},"id":"1774","type":"BasicTickFormatter"},{"attributes":{"data_source":{"id":"1766"},"glyph":{"id":"1767"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"1768"},"view":{"id":"1770"}},"id":"1769","type":"GlyphRenderer"},{"attributes":{},"id":"1779","type":"Selection"},{"attributes":{},"id":"1776","type":"AllLabels"},{"attributes":{},"id":"1753","type":"LinearScale"},{"attributes":{"start":0},"id":"1751","type":"DataRange1d"},{"attributes":{},"id":"1777","type":"BasicTickFormatter"},{"attributes":{"bottom":{"value":0},"fill_alpha":{"value":0.1},"fill_color":{"value":"navy"},"left":{"field":"left"},"line_alpha":{"value":0.1},"line_color":{"value":"white"},"right":{"field":"right"},"top":{"field":"top"}},"id":"1768","type":"Quad"},{"attributes":{"text":"Number of nitrogens and oxygens"},"id":"1747","type":"Title"}],"root_ids":["1746"]},"title":"Bokeh Application","version":"2.3.1"}}';
+                var render_items = [{"docid":"9dbd3a9a-5816-41a3-a715-717723b2aaec","root_ids":["1746"],"roots":{"1746":"7f536e4b-be16-4bb9-928b-40302c15cfd2"}}];
+                root.Bokeh.embed.embed_items(docs_json, render_items);
+              
+                }
+                if (root.Bokeh !== undefined) {
+                  embed_document(root);
+                } else {
+                  var attempts = 0;
+                  var timer = setInterval(function(root) {
+                    if (root.Bokeh !== undefined) {
+                      clearInterval(timer);
+                      embed_document(root);
+                    } else {
+                      attempts++;
+                      if (attempts > 100) {
+                        clearInterval(timer);
+                        console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                      }
+                    }
+                  }, 10, root)
+                }
+              })(window);
+            });
+          };
+          if (document.readyState != "loading") fn();
+          else document.addEventListener("DOMContentLoaded", fn);
+        })();
+</script>
+<div class="bk-root" id="7f536e4b-be16-4bb9-928b-40302c15cfd2" data-root-id="1746"></div></div>

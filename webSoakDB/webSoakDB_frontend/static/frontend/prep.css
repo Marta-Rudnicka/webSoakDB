@@ -399,3 +399,11 @@ iframe.detail-iframe {
 	width: 1200px;
 	height: 1150px;
 }
+
+.disabled {
+	opacity: 0.3;
+}
+
+.warning {
+	color: red;
+}

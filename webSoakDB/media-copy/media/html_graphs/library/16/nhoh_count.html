@@ -1,0 +1,38 @@
+<div style="height: 100px, width: auto"><script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.js"></script>
+<script type="text/javascript">
+    (function() {
+          var fn = function() {
+            Bokeh.safely(function() {
+              (function(root) {
+                function embed_document(root) {
+                  
+                var docs_json = '{"10041b41-0f56-4143-ac2d-a4662ae6bf88":{"defs":[],"roots":{"references":[{"attributes":{},"id":"15395","type":"LinearScale"},{"attributes":{},"id":"15414","type":"BasicTickFormatter"},{"attributes":{},"id":"15402","type":"BasicTicker"},{"attributes":{"axis_label":"Value","formatter":{"id":"15417"},"major_label_policy":{"id":"15416"},"ticker":{"id":"15398"}},"id":"15397","type":"LinearAxis"},{"attributes":{},"id":"15413","type":"AllLabels"},{"attributes":{"axis":{"id":"15401"},"dimension":1,"grid_line_color":"white","ticker":null},"id":"15404","type":"Grid"},{"attributes":{},"id":"15389","type":"DataRange1d"},{"attributes":{"background_fill_color":"#fafafa","below":[{"id":"15397"}],"center":[{"id":"15400"},{"id":"15404"}],"height":280,"left":[{"id":"15401"}],"renderers":[{"id":"15409"}],"title":{"id":"15387"},"toolbar":{"id":"15405"},"width":280,"x_range":{"id":"15389"},"x_scale":{"id":"15393"},"y_range":{"id":"15391"},"y_scale":{"id":"15395"}},"id":"15386","subtype":"Figure","type":"Plot"},{"attributes":{},"id":"15419","type":"Selection"},{"attributes":{"active_multi":null,"logo":null},"id":"15405","type":"Toolbar"},{"attributes":{"axis":{"id":"15397"},"grid_line_color":"white","ticker":null},"id":"15400","type":"Grid"},{"attributes":{"axis_label":"Compounds","formatter":{"id":"15414"},"major_label_policy":{"id":"15413"},"ticker":{"id":"15402"}},"id":"15401","type":"LinearAxis"},{"attributes":{"data":{"left":{"__ndarray__":"AAAAAAAAAAAAAAAAAADoPwAAAAAAAPg/AAAAAAAAAkA=","dtype":"float64","order":"little","shape":[4]},"right":{"__ndarray__":"AAAAAAAA6D8AAAAAAAD4PwAAAAAAAAJAAAAAAAAACEA=","dtype":"float64","order":"little","shape":[4]},"top":[43,37,20,5]},"selected":{"id":"15419"},"selection_policy":{"id":"15420"}},"id":"15406","type":"ColumnDataSource"},{"attributes":{},"id":"15398","type":"BasicTicker"},{"attributes":{"source":{"id":"15406"}},"id":"15410","type":"CDSView"},{"attributes":{},"id":"15420","type":"UnionRenderers"},{"attributes":{},"id":"15417","type":"BasicTickFormatter"},{"attributes":{"start":0},"id":"15391","type":"DataRange1d"},{"attributes":{},"id":"15393","type":"LinearScale"},{"attributes":{"text":"Number of NH and OH"},"id":"15387","type":"Title"},{"attributes":{"data_source":{"id":"15406"},"glyph":{"id":"15407"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"15408"},"view":{"id":"15410"}},"id":"15409","type":"GlyphRenderer"},{"attributes":{"bottom":{"value":0},"fill_alpha":{"value":0.5},"fill_color":{"value":"navy"},"left":{"field":"left"},"line_alpha":{"value":0.5},"line_color":{"value":"white"},"right":{"field":"right"},"top":{"field":"top"}},"id":"15407","type":"Quad"},{"attributes":{"bottom":{"value":0},"fill_alpha":{"value":0.1},"fill_color":{"value":"navy"},"left":{"field":"left"},"line_alpha":{"value":0.1},"line_color":{"value":"white"},"right":{"field":"right"},"top":{"field":"top"}},"id":"15408","type":"Quad"},{"attributes":{},"id":"15416","type":"AllLabels"}],"root_ids":["15386"]},"title":"Bokeh Application","version":"2.3.1"}}';
+                var render_items = [{"docid":"10041b41-0f56-4143-ac2d-a4662ae6bf88","root_ids":["15386"],"roots":{"15386":"80f99862-0beb-4030-abd9-e6860e3e1ca4"}}];
+                root.Bokeh.embed.embed_items(docs_json, render_items);
+              
+                }
+                if (root.Bokeh !== undefined) {
+                  embed_document(root);
+                } else {
+                  var attempts = 0;
+                  var timer = setInterval(function(root) {
+                    if (root.Bokeh !== undefined) {
+                      clearInterval(timer);
+                      embed_document(root);
+                    } else {
+                      attempts++;
+                      if (attempts > 100) {
+                        clearInterval(timer);
+                        console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                      }
+                    }
+                  }, 10, root)
+                }
+              })(window);
+            });
+          };
+          if (document.readyState != "loading") fn();
+          else document.addEventListener("DOMContentLoaded", fn);
+        })();
+</script>
+<div class="bk-root" id="80f99862-0beb-4030-abd9-e6860e3e1ca4" data-root-id="15386"></div></div>

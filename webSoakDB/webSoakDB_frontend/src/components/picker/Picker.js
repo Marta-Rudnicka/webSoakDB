@@ -106,16 +106,19 @@ class Picker extends React.Component {
   }
 
   saveChanges(){
+    console.log('fired save changes')
     //event.preventDefault();
     this.props.updateSelection(this.state.selectedLibIds, this.state.selectedSubsetIds);
-    location.reload();
+    this.props.refreshAfterUpload();
+    //location.reload();
   }
 
 
   resetSelection(){
     //event.preventDefault();
     this.props.updateSelection([], []);
-    location.reload();
+    this.props.refreshAfterUpload();
+    //location.reload();
   }
 
   selected(preset){

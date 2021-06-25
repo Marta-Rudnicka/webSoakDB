@@ -45,7 +45,7 @@ class App extends Component {
     //this.logIn = this.logIn.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
     this.trackUnsavedChanges = this.trackUnsavedChanges.bind(this);
-    //this.refreshAfterUpload = this.refreshAfterUpload.bind(this);
+    this.refreshAfterUpload = this.refreshAfterUpload.bind(this);
     this.state = {
       proposal: null,
       unsavedChanges: false,
@@ -101,7 +101,16 @@ class App extends Component {
     })
   }
   
-
+  refreshAfterUpload(){
+    console.log('fired refresh after upload')
+    const url = '/api/proposals/demo/';
+		
+		axios.get(url)
+			.then(res => {
+			const proposal = res.data;
+			this.setState({ proposal });
+      });
+  }
 /*  refreshAfterUpload(){
     this.props.logIn(this.state.proposal.proposal);  
   }

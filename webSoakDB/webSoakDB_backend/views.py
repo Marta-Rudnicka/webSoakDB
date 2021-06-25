@@ -28,7 +28,7 @@ def upload_user_library(request):
 			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
 			print(filename)
 			if data_is_valid(filename, log):
-				
+				print('data is valid')
 				#data to be submitted
 				submitted_name = form.cleaned_data['name']
 				proposal_name = form.cleaned_data['proposal']
@@ -50,9 +50,9 @@ def upload_user_library(request):
 			
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/upload_success.html")
-			
-			fs.delete(filename)
-			return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+			else:
+				fs.delete(filename)
+				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
 
 def upload_user_subset(request):
 	if request.method == "POST":
