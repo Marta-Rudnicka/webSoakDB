@@ -271,7 +271,7 @@ def concentration_is_valid(string, line, error_log):
 #FILE validation helpers
 
 def is_csv(file_name, error_log):
-	match = re.fullmatch('(.*)+\.csv$', file_name)
+	match = re.fullmatch('^.*\.csv$', file_name)
 
 	if match:
 		return True
