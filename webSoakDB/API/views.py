@@ -137,8 +137,9 @@ def current_library_options(request):
 		presets = [preset.__dict__ for (preset, lib) in preset_dict.items() if lib == l.id]
 		current_plates = LibraryPlate.objects.filter(library=l, current = True)
 		size = sum([p.compounds.filter(active=True).count() for p in current_plates])
-		lib = LibCopy(l, current_plates[0].id, size, presets)
-		options.append(lib.__dict__)
+		if current_plates.count() > 0:
+			lib = LibCopy(l, current_plates[0].id, size, presets)
+			options.append(lib.__dict__)
 	
 	return JsonResponse(options, safe=False)
 
