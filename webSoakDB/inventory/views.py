@@ -247,7 +247,7 @@ def add_preset(request):
 			fs = FileSystemStorage()
 			source = request.FILES["new_compound_list"]
 			library_id = form.cleaned_data['new_library']
-			filename = fs.save(source.name, source)
+			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
 			if selection_is_valid(filename, log, library_id):
 				library = Library.objects.get(pk=library_id)
 				description = form.cleaned_data['description']
@@ -301,10 +301,10 @@ def edit_preset(request):
 			
 			if new_compound_list:
 				fs_new =  FileSystemStorage()
-				filename_new = fs_new.save(new_compound_list.name, new_compound_list) 
+				filename_new = MEDIA_ROOT + '/' + fs_new.save(new_compound_list.name, new_compound_list) 
 			if updated_compound_list:
 				fs_edit =  FileSystemStorage()
-				filename_edit = fs_edit.save(updated_compound_list.name, updated_compound_list)
+				filename_edit = MEDIA_ROOT + '/' +  fs_edit.save(updated_compound_list.name, updated_compound_list)
 				
 			log = []
 			if ( new_compound_list and not selection_is_valid(filename_new, log, new_library)) or (updated_compound_list and not selection_is_valid(filename_edit, log, edited_library)):
@@ -418,7 +418,10 @@ def delete_library(request):
 			
 			#remove all cached histograms
 			path = MEDIA_ROOT + '/html_graphs/library/' + str(lib.id) + '/'
-			shutil.rmtree(path)
+			try:
+				shutil.rmtree(path)
+			except FileNotFoundError:
+				pass #in rare cases there are no graphs
 
 			lib.delete()
 			return HttpResponseRedirect('../libraries/')

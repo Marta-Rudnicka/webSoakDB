@@ -158,8 +158,8 @@ def make_plot(data, bins, title):
 
 
 properties_dict = {
-	"mol_wt" : "Molecular weight" ,
-	"tpsa" : "TPSA" ,
+	"mol_wt" : "Molecular weight (Da)" ,
+	"tpsa" : "TPSA (Å)" ,
 	"log_p" : "LogP" ,
 	"num_val_electrons" : "Number of valence electrons" ,
 	"num_h_acceptors" : "Number of hydrogen bond acceptors" ,
@@ -168,7 +168,7 @@ properties_dict = {
 	"num_rot_bonds" : "Number of rotable bonds" ,
 	"ring_count" : "Number of rings" ,
 	"heavy_atom_count" : "Number of heavy atoms" ,
-	"heavy_atom_mol_wt" : "Average mol. weight of heavy atoms" ,
+	"heavy_atom_mol_wt" : "Mol. weight of heavy atoms (Da)" ,
 	"nhoh_count" : "Number of NH and OH" ,
 	"no_count" : "Number of nitrogens and oxygens" ,
 }
