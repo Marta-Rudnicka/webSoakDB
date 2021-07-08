@@ -1,251 +1,29 @@
-tst3(test_proposal_2),E08,tst3(test_proposal_2),NC1=CC(=O)NN1,Z1245635875
-tst3(test_proposal_2),E09,tst3(test_proposal_2),C=1C=NNC1,Z1741966780
-tst3(test_proposal_2),E10,tst3(test_proposal_2),BrC=1C=CC=NC1,Z1250132521
-tst3(test_proposal_2),E11,tst3(test_proposal_2),Cl.O=C1N=CC=CN1,Z1201023052
-tst3(test_proposal_2),E12,tst3(test_proposal_2),CN1CCC(O)C1,Z1506115273
-tst3(test_proposal_2),E13,tst3(test_proposal_2),C1CCNC1,Z57834050
-tst3(test_proposal_2),E14,tst3(test_proposal_2),C1=CNN=N1,Z1198386795
-tst3(test_proposal_2),E15,tst3(test_proposal_2),NC=1C=NC=NC1,Z1741970824
-tst3(test_proposal_2),E16,tst3(test_proposal_2),Cl.CCC(=N)N,Z1741969146
-tst3(test_proposal_2),E17,tst3(test_proposal_2),O=C1CNC(=O)N1,Z57131035
-tst3(test_proposal_2),F08,tst3(test_proposal_2),C1CNCCN1,Z1245537944
-tst3(test_proposal_2),F09,tst3(test_proposal_2),NCC(=O)O,Z955123660
-tst3(test_proposal_2),F10,tst3(test_proposal_2),OC(=O)C1CCN1,Z1318268680
-tst3(test_proposal_2),F11,tst3(test_proposal_2),OC(=O)C=1C=CSC1,Z166605460
-tst3(test_proposal_2),F12,tst3(test_proposal_2),O=C1CCC(=O)N1,Z57127349
-tst3(test_proposal_2),F13,tst3(test_proposal_2),NC=1C=CC=CN1,Z275118248
-tst3(test_proposal_2),F14,tst3(test_proposal_2),O=S1(=O)CCN1,Z425449766
-tst3(test_proposal_2),F15,tst3(test_proposal_2),OC1CCCCC1,Z1954801734
-tst3(test_proposal_2),F16,tst3(test_proposal_2),O=C1CCCN1,Z940713508
-tst3(test_proposal_2),F17,tst3(test_proposal_2),OC=1C=CC=CN1,Z1741982125
-tst3(test_proposal_2),G08,tst3(test_proposal_2),CCOC(=O)N,Z33546369
-tst3(test_proposal_2),G09,tst3(test_proposal_2),NC1=NC=CN1.NC1=NC=CN1.OS(=O)(=O)O,Z1741961236
-tst3(test_proposal_2),G10,tst3(test_proposal_2),OCC1CC1,Z1259087003
-tst3(test_proposal_2),G11,tst3(test_proposal_2),Cl.O=C1CCNN1,Z2935001239
-tst3(test_proposal_2),G12,tst3(test_proposal_2),OC=1C=CC=CC1,Z966690946
-tst3(test_proposal_2),G13,tst3(test_proposal_2),NC(=O)CC#N,Z56896153
-tst3(test_proposal_2),G14,tst3(test_proposal_2),NC(=O)C1CCC1,Z33546656
-tst3(test_proposal_2),G15,tst3(test_proposal_2),CC(=O)NC(=O)N,Z1262398400
-tst3(test_proposal_2),G16,tst3(test_proposal_2),NC1=NN=CN1,Z56866006
-tst3(test_proposal_2),G17,tst3(test_proposal_2),OC(=O)C1CCC1,Z1270212509
-tst3(test_proposal_2),H08,tst3(test_proposal_2),C1CNCCOC1,Z1198107508
-tst3(test_proposal_2),H09,tst3(test_proposal_2),NC1CCCC1,Z1741971800
-tst3(test_proposal_2),H10,tst3(test_proposal_2),OC1CS(=O)(=O)C1,Z3241250482
-tst3(test_proposal_2),H11,tst3(test_proposal_2),O=C1CNCCN1,Z56968535
-tst3(test_proposal_2),H12,tst3(test_proposal_2),NC=1C=CN=CC1,Z955123498
-tst3(test_proposal_2),H13,tst3(test_proposal_2),NC=1N=CC=CN1,Z1741968196
-tst3(test_proposal_2),H14,tst3(test_proposal_2),O=C1CCON1,Z3235036808
-tst3(test_proposal_2),H15,tst3(test_proposal_2),N#CC=1C=CON1,Z1436620465
-tst3(test_proposal_2),H16,tst3(test_proposal_2),NCC1CCCO1,Z57127565
-tst3(test_proposal_2),H17,tst3(test_proposal_2),CC(C)C(=NO)N,Z1741972444
-tst3(test_proposal_2),I08,tst3(test_proposal_2),O=C1C=CC=NN1,Z3219959731
-tst3(test_proposal_2),I09,tst3(test_proposal_2),Cl.NC1=CSC(N)=N1,Z234893769
-tst3(test_proposal_2),I10,tst3(test_proposal_2),NC=1C=CC=NN1,Z1480642703
-tst3(test_proposal_2),I11,tst3(test_proposal_2),OCC=1C=CNN1,Z3225843273
-tst3(test_proposal_2),I12,tst3(test_proposal_2),Cl.CC(N)CC(=O)N,Z1459435569
-tst3(test_proposal_2),I13,tst3(test_proposal_2),O=C1CCCCN1,Z1201023039
-tst3(test_proposal_2),I14,tst3(test_proposal_2),Cl.Cl.CN1C=NC(N)=C1,Z2692604705
-tst3(test_proposal_2),I15,tst3(test_proposal_2),Cl.N=C1NCCCN1,Z1954800348
-tst3(test_proposal_2),I16,tst3(test_proposal_2),C1CCOC1,Z955123562
-tst3(test_proposal_2),I17,tst3(test_proposal_2),CC(C)CCCN,Z3219863192
-tst3(test_proposal_2),J08,tst3(test_proposal_2),OP(=O)(O)O,Z1954805639
-tst3(test_proposal_2),J09,tst3(test_proposal_2),C=1C=CN=CC1,Z940713324
-tst3(test_proposal_2),J10,tst3(test_proposal_2),CC(C)NC(=O)N,Z56887677
-tst3(test_proposal_2),J11,tst3(test_proposal_2),BrC=1C=NNC1,Z275169750
-tst3(test_proposal_2),J12,tst3(test_proposal_2),C1=CNC=N1,Z1245636370
-tst3(test_proposal_2),J13,tst3(test_proposal_2),CCC(=O)O,Z955123616
-tst3(test_proposal_2),J14,tst3(test_proposal_2),NC=1C=CNN1,Z241119328
-tst3(test_proposal_2),J15,tst3(test_proposal_2),CC1=NN=NN1,Z56761437
-tst3(test_proposal_2),J16,tst3(test_proposal_2),Cl.C1COCCN1,Z3234810942
-tst3(test_proposal_2),J17,tst3(test_proposal_2),CCC(=O)NO,Z59181971
-tst3(test_proposal_2),K08,tst3(test_proposal_2),O=C1NCCN1,Z1741976468
-tst3(test_proposal_2),K09,tst3(test_proposal_2),CC(O)C(=O)O,Z1741982441
-tst3(test_proposal_2),K10,tst3(test_proposal_2),OB(O)C1CCC1,Z1741980935
-tst3(test_proposal_2),K11,tst3(test_proposal_2),NCC1=COC=N1,Z1962142017
-tst3(test_proposal_2),K12,tst3(test_proposal_2),OCC1CCCN1,Z1333717631
-tst3(test_proposal_2),K13,tst3(test_proposal_2),NCC1CC1,Z1198394159
-tst3(test_proposal_2),K14,tst3(test_proposal_2),N#CC1CC1,Z1245735215
-tst3(test_proposal_2),K15,tst3(test_proposal_2),NC=1C=CON1,Z1741972704
-tst3(test_proposal_2),K16,tst3(test_proposal_2),Cl.NC(=O)C1(N)CC1,Z1415893881
-tst3(test_proposal_2),K17,tst3(test_proposal_2),CC(=O)C(=O)O,Z1741977082
-tst3(test_proposal_2),L08,tst3(test_proposal_2),Cl.CNC(=O)[C@@H](C)N,Z1346385420
-tst3(test_proposal_2),L09,tst3(test_proposal_2),Cl.OC1CNC1,Z1262327449
-tst3(test_proposal_2),L10,tst3(test_proposal_2),Cl.NC1CCNC1=O,Z3234814534
-tst3(test_proposal_2),L11,tst3(test_proposal_2),Cl.CC(N)C#C,Z1954800314
-tst3(test_proposal_2),L12,tst3(test_proposal_2),Cl.CC[C@H](N)C(=O)N,Z1450533799
-tst3(test_proposal_2),L13,tst3(test_proposal_2),Cl.N#CC1=CNC=N1,Z2301685688
-tst3(test_proposal_2),L14,tst3(test_proposal_2),OC=1C=CN=NC1,Z1741975221
-tst3(test_proposal_2),L15,tst3(test_proposal_2),O[C@H]1COC[C@H]1O,Z3235034972
-tst3(test_proposal_2),L16,tst3(test_proposal_2),NCC=1C=CSC1,Z1262255347
-tst3(test_proposal_2),L17,tst3(test_proposal_2),O=S1(=O)CCC1,Z3234823734
-teeeest(test_proposal_2),A1,teeeest(test_proposal_2),CC(=O)NCC(=O)NCC#CBr,NCL-00025345
-teeeest(test_proposal_2),A2,teeeest(test_proposal_2),CC([C@@H](C(NCC#CBr)=O)NC(C)=O)C,NCL-00024897
-teeeest(test_proposal_2),A3,teeeest(test_proposal_2),CC(N[C@H](C(NCC#CBr)=O)Cc1ccc(O)cc1)=O,NCL-00024905
-teeeest(test_proposal_2),A4,teeeest(test_proposal_2),CC[C@@H]([C@@H](C(NCC#CBr)=O)NC(C)=O)C,NCL-00024976
-teeeest(test_proposal_2),A5,teeeest(test_proposal_2),CC(=O)N[C@@H](Cc1ccccc1)C(=O)NCC#CBr,NCL-00024907
-teeeest(test_proposal_2),A6,teeeest(test_proposal_2),CC(=O)N1CCC[C@H]1C(=O)NCC#CBr,NCL-00024977
-teeeest(test_proposal_2),A7,teeeest(test_proposal_2),CC(=O)N[C@@H](CCCCN)C(=O)NCC#CBr,NCL-00024978
-teeeest(test_proposal_2),A8,teeeest(test_proposal_2),O=C(C)N[C@H](C(NCC#CBr)=O)CCSC,NCL-00024979
-teeeest(test_proposal_2),A9,teeeest(test_proposal_2),CC(=O)N[C@@H](CO)C(=O)NCC#CBr,NCL-00025057
-teeeest(test_proposal_2),A10,teeeest(test_proposal_2),C[C@H]([C@@H](C(NCC#CBr)=O)NC(C)=O)O,NCL-00025058
-teeeest(test_proposal_2),A11,teeeest(test_proposal_2),CC(=O)N[C@@H](CCC(=O)O)C(=O)NCC#CBr,NCL-00025059
-teeeest(test_proposal_2),A12,teeeest(test_proposal_2),CC(=O)N[C@@H](CCC(=O)N)C(=O)NCC#CBr,NCL-00025065
-teeeest(test_proposal_2),A13,teeeest(test_proposal_2),C[C@H](NC(=O)C)C(=O)NCC#CBr,NCL-00025067
-teeeest(test_proposal_2),A14,teeeest(test_proposal_2),CC(=O)NCCCC[C@H](NC(=O)C)C(=O)NCC#CBr,NCL-00025066
-teeeest(test_proposal_2),A15,teeeest(test_proposal_2),CC(=O)NCCCC[C@H](NC(=O)C)C(=O)NCc1ccc(cc1)Br,NCL-00025267
-teeeest(test_proposal_2),A16,teeeest(test_proposal_2),CC(N[C@H](C(NCC#CBr)=O)CC(N)=O)=O,NCL-00025412
-teeeest(test_proposal_2),A17,teeeest(test_proposal_2),CC(N[C@H](C(NCC#CBr)=O)CC(O)=O)=O,NCL-00025413
-teeeest(test_proposal_2),A18,teeeest(test_proposal_2),CC(N[C@@H](CC(C)C)C(NCC#CBr)=O)=O,NCL-00024906
-teeeest(test_proposal_2),A19,teeeest(test_proposal_2),CC(N[C@@H](CC1=CNC2=C1C=CC=C2)C(NCC#CBr)=O)=O,NCL-00024982
-teeeest(test_proposal_2),A20,teeeest(test_proposal_2),CC(N[C@@H](CCCC[NH3+])C(NCC#CBr)=O)=O.O=C([O-])C(F)(F)F,NCL-00024978-002
-teeeest(test_proposal_2),A21,teeeest(test_proposal_2),CC(N[C@@H](CC1=C[NH2+]C=N1)C(NCC#CBr)=O)=O.O=C([O-])C(F)(F)F,NCL-00025550
-teeeest(test_proposal_2),A22,teeeest(test_proposal_2),CC(N[C@@H](CCCNC(N)=N)C(NCC#CBr)=O)=O.O=C([O-])C(F)(F)F,NCL-00025551
-schema update test(test_proposal_2),A05,schema update test(test_proposal_2),ClCC(=O)NC(=O)NCC1COc2ccccc2O1,PCM-0102092-001
-schema update test(test_proposal_2),A07,schema update test(test_proposal_2),ClCC(=O)N1CCN(CC1)c2ncccn2,PCM-0102093-001
-schema update test(test_proposal_2),A09,schema update test(test_proposal_2),[O-][N+](=O)c1ccc(cc1)N2CCN(CC2)C(=O)CCl,PCM-0102094-001
-schema update test(test_proposal_2),A11,schema update test(test_proposal_2),Cc1csc(CC(=O)NNC(=O)CCl)n1,PCM-0102095-001
-schema update test(test_proposal_2),A13,schema update test(test_proposal_2),CC(NC(=O)CCl)c1ccc(Cl)c(Cl)c1,PCM-0102096-001
-schema update test(test_proposal_2),A15,schema update test(test_proposal_2),ClCC(=O)Nc1cccc2ncccc12,PCM-0102097-001
-schema update test(test_proposal_2),A17,schema update test(test_proposal_2),Cc1ccc(cc1NC(=O)CCl)[N+](=O)[O-],PCM-0102098-001
-schema update test(test_proposal_2),A19,schema update test(test_proposal_2),Cc1c(C)n(c(NC(=O)CCl)c1C#N)c2ccc(F)cc2,PCM-0102099-001
-schema update test(test_proposal_2),A21,schema update test(test_proposal_2),ClCC(=O)NC(=O)NC1CCS(=O)(=O)C1,PCM-0102100-001
-schema update test(test_proposal_2),A23,schema update test(test_proposal_2),ClCC(=O)Nc1ccc(cc1)c2nnc3CCCCCn23,PCM-0102101-001
-schema update test(test_proposal_2),A25,schema update test(test_proposal_2),Cc1oc(cc1)C2=NN(C(C2)c3occc3)C(=O)CCl,PCM-0102102-001
-schema update test(test_proposal_2),A27,schema update test(test_proposal_2),CCN1CCC(CC1)NC(=O)CCl,PCM-0102103-001
-schema update test(test_proposal_2),A29,schema update test(test_proposal_2),ClCC(=O)Nc1ccc2OC3(CCCCC3)Oc2c1,PCM-0102104-001
-schema update test(test_proposal_2),A31,schema update test(test_proposal_2),CCN(C1CCS(=O)(=O)C1)C(=O)CCl,PCM-0102105-001
-schema update test(test_proposal_2),A33,schema update test(test_proposal_2),C=CC(=O)NC(=O)NC12CC3CC(CC(C3)C1)C2,PCM-0102106-001
-schema update test(test_proposal_2),A35,schema update test(test_proposal_2),ClCC(=O)Nc1c(C#N)c2CCCCc2n1c3ccccc3,PCM-0102107-001
-schema update test(test_proposal_2),A37,schema update test(test_proposal_2),CC(=O)c1sc2nc(C)cc(C)c2c1NC(=O)CCl,PCM-0102108-001
-schema update test(test_proposal_2),A39,schema update test(test_proposal_2),ClCC(=O)NC1CCCCNC1=O,PCM-0102109-001
-schema update test(test_proposal_2),A41,schema update test(test_proposal_2),CC(NC(=O)CCl)c1ccccc1Cl,PCM-0102110-001
-schema update test(test_proposal_2),A43,schema update test(test_proposal_2),Fc1ccc(NC(=O)C=C)cc1,PCM-0102111-001
-no-smiles-lib(test_proposal_2),A05,no-smiles-lib(test_proposal_2),,code-1
-no-smiles-lib(test_proposal_2),A07,no-smiles-lib(test_proposal_2),,code-2
-no-smiles-lib(test_proposal_2),A09,no-smiles-lib(test_proposal_2),,code-3
-no-smiles-lib(test_proposal_2),A11,no-smiles-lib(test_proposal_2),,code-4
-no-smiles-lib(test_proposal_2),A13,no-smiles-lib(test_proposal_2),,code-5
-no-smiles-lib(test_proposal_2),A15,no-smiles-lib(test_proposal_2),,code-6
-no-smiles-lib(test_proposal_2),A17,no-smiles-lib(test_proposal_2),,code-7
-no-smiles-lib(test_proposal_2),A19,no-smiles-lib(test_proposal_2),,code-8
-no-smiles-lib(test_proposal_2),A21,no-smiles-lib(test_proposal_2),,code-9
-no-smiles-lib(test_proposal_2),A23,no-smiles-lib(test_proposal_2),,code-10
-no-smiles-lib(test_proposal_2),A25,no-smiles-lib(test_proposal_2),,code-11
-no-smiles-lib(test_proposal_2),A27,no-smiles-lib(test_proposal_2),,code-12
-no-smiles-lib(test_proposal_2),A29,no-smiles-lib(test_proposal_2),,code-13
-no-smiles-lib(test_proposal_2),A31,no-smiles-lib(test_proposal_2),,code-14
-no-smiles-lib(test_proposal_2),A33,no-smiles-lib(test_proposal_2),,code-15
-no-smiles-lib(test_proposal_2),A35,no-smiles-lib(test_proposal_2),,code-16
-no-smiles-lib(test_proposal_2),A37,no-smiles-lib(test_proposal_2),,code-17
-no-smiles-lib(test_proposal_2),A39,no-smiles-lib(test_proposal_2),,code-18
-no-smiles-lib(test_proposal_2),A41,no-smiles-lib(test_proposal_2),,code-19
-no-smiles-lib(test_proposal_2),A43,no-smiles-lib(test_proposal_2),,code-20
-Plate 1,E08,MiniFrag,NC1=CC(=O)NN1,Z1245635875
-Plate 1,E09,MiniFrag,C=1C=NNC1,Z1741966780
-Plate 1,E10,MiniFrag,BrC=1C=CC=NC1,Z1250132521
-Plate 1,E11,MiniFrag,Cl.O=C1N=CC=CN1,Z1201023052
-Plate 1,E12,MiniFrag,CN1CCC(O)C1,Z1506115273
-Plate 1,E13,MiniFrag,C1CCNC1,Z57834050
-Plate 1,E14,MiniFrag,C1=CNN=N1,Z1198386795
-Plate 1,E15,MiniFrag,NC=1C=NC=NC1,Z1741970824
-Plate 1,E16,MiniFrag,Cl.CCC(=N)N,Z1741969146
-Plate 1,E17,MiniFrag,O=C1CNC(=O)N1,Z57131035
-Plate 1,F08,MiniFrag,C1CNCCN1,Z1245537944
-Plate 1,F09,MiniFrag,NCC(=O)O,Z955123660
-Plate 1,F10,MiniFrag,OC(=O)C1CCN1,Z1318268680
-Plate 1,G10,MiniFrag,OCC1CC1,Z1259087003
-Plate 1,G11,MiniFrag,Cl.O=C1CCNN1,Z2935001239
-Plate 1,G12,MiniFrag,OC=1C=CC=CC1,Z966690946
-Plate 1,G13,MiniFrag,NC(=O)CC#N,Z56896153
-Plate 1,G14,MiniFrag,NC(=O)C1CCC1,Z33546656
-Plate 1,G15,MiniFrag,CC(=O)NC(=O)N,Z1262398400
-Plate 1,G16,MiniFrag,NC1=NN=CN1,Z56866006
-Plate 1,G17,MiniFrag,OC(=O)C1CCC1,Z1270212509
-Plate 1,H08,MiniFrag,C1CNCCOC1,Z1198107508
-Plate 1,H09,MiniFrag,NC1CCCC1,Z1741971800
-Plate 1,I10,MiniFrag,NC=1C=CC=NN1,Z1480642703
-Plate 1,I11,MiniFrag,OCC=1C=CNN1,Z3225843273
-Plate 1,I12,MiniFrag,Cl.CC(N)CC(=O)N,Z1459435569
-Plate 1,I13,MiniFrag,O=C1CCCCN1,Z1201023039
-Plate 1,I14,MiniFrag,Cl.Cl.CN1C=NC(N)=C1,Z2692604705
-Plate 1,I15,MiniFrag,Cl.N=C1NCCCN1,Z1954800348
-Plate 1,I16,MiniFrag,C1CCOC1,Z955123562
-Plate 1,I17,MiniFrag,CC(C)CCCN,Z3219863192
-Plate 1,J08,MiniFrag,OP(=O)(O)O,Z1954805639
-Plate 1,J09,MiniFrag,C=1C=CN=CC1,Z940713324
-Plate 1,J10,MiniFrag,CC(C)NC(=O)N,Z56887677
-Plate 1,J11,MiniFrag,BrC=1C=NNC1,Z275169750
-Plate 1,J12,MiniFrag,C1=CNC=N1,Z1245636370
-Plate 1,J13,MiniFrag,CCC(=O)O,Z955123616
-Plate 1,J14,MiniFrag,NC=1C=CNN1,Z241119328
-Plate 1,J15,MiniFrag,CC1=NN=NN1,Z56761437
-Plate 1,J16,MiniFrag,Cl.C1COCCN1,Z3234810942
-Plate 1,J17,MiniFrag,CCC(=O)NO,Z59181971
-Plate 1,K08,MiniFrag,O=C1NCCN1,Z1741976468
-Plate 1,K09,MiniFrag,CC(O)C(=O)O,Z1741982441
-Plate 1,K10,MiniFrag,OB(O)C1CCC1,Z1741980935
-Plate 1,K11,MiniFrag,NCC1=COC=N1,Z1962142017
-Plate 1,K12,MiniFrag,OCC1CCCN1,Z1333717631
-Plate 1,K13,MiniFrag,NCC1CC1,Z1198394159
-Plate 1,K14,MiniFrag,N#CC1CC1,Z1245735215
-Plate 1,K15,MiniFrag,NC=1C=CON1,Z1741972704
-Plate 1,K16,MiniFrag,Cl.NC(=O)C1(N)CC1,Z1415893881
-Plate 1,K17,MiniFrag,CC(=O)C(=O)O,Z1741977082
-Plate 1,L08,MiniFrag,Cl.CNC(=O)[C@@H](C)N,Z1346385420
-Plate 1,L09,MiniFrag,Cl.OC1CNC1,Z1262327449
-Plate 1,L10,MiniFrag,Cl.NC1CCNC1=O,Z3234814534
-Plate 1,L11,MiniFrag,Cl.CC(N)C#C,Z1954800314
-Plate 1,L12,MiniFrag,Cl.CC[C@H](N)C(=O)N,Z1450533799
-Plate 1,L13,MiniFrag,Cl.N#CC1=CNC=N1,Z2301685688
-Plate 1,L14,MiniFrag,OC=1C=CN=NC1,Z1741975221
-Plate 1,L15,MiniFrag,O[C@H]1COC[C@H]1O,Z3235034972
-Plate 1,L16,MiniFrag,NCC=1C=CSC1,Z1262255347
-Plate 1,L17,MiniFrag,O=S1(=O)CCC1,Z3234823734
-plate2,K03,DSI Poised EG,CN1CCN(CCN)CC1(C)C,Z1992316315
-plate2,I02,DSI Poised EG,CC(=O)N1CCCC(C1)C(=O)N,Z220816104
-plate2,M03,DSI Poised EG,CN(C(=O)C)C=1C=CC=CC1C(=O)O,Z223688272
-plate2,F02,DSI Poised EG,NC(=O)C1=CNC(=N1)C2CC2,Z1407672867
-plate2,E10,DSI Poised EG,CN1N=C(C(=O)N)C=2C=CC=CC12,Z2697514548
-plate2,C09,DSI Poised EG,CNC1CCCN(C1)C=2C=CC=NN2,Z1139246057
-plate2,J10,DSI Poised EG,CN1CCC[C@H](C1)OC(=O)C2=CC=CO2,Z2940170964
-plate2,M23,DSI Poised EG,CC1CCN(CCN)CC1,Z1245580461
-plate2,L02,DSI Poised EG,CC(CS(=O)(=O)N)C=1C=CC=CC1,Z1407673036
-plate2,J02,DSI Poised EG,CC(=O)NC(C)(C1CC1)C(=O)O,Z1259162160
-plate2,O09,DSI Poised EG,CN1CCN(CC1)C(=O)C2CCCN2,Z241832786
-plate2,F10,DSI Poised EG,CNCC(=O)NC=1C=C(C)C=CN1,Z927746322
-plate2,M10,DSI Poised EG,CC(=O)NC=1C=NC=CC1C,Z1129283193
-plate2,G10,DSI Poised EG,NC=1C=CC=C(OCC=2C=CC=CC2)C1,Z933326822
-plate2,G02,DSI Poised EG,CC(=O)NC=1C=CC=C(F)C1C(=O)O,Z1229798311
-plate2,B11,DSI Poised EG,CC=1C=C(N=C(C)N1)N2CCNCC2,Z274575916
-plate2,K09,DSI Poised EG,CC=1C=CC=CC1CC(=O)N,Z52214433
-plate2,H02,DSI Poised EG,O=C(CC#N)NC1CCCCC1,Z56813508
-plate2,M09,DSI Poised EG,OCC=1C=CC=CC1N2CCOCC2,Z235361235
-plate2,C11,DSI Poised EG,CC(=O)N1CCCC(O)(C1)C(=O)O,Z2293643386
-plate2,D09,DSI Poised EG,CC1=NC=CN1CC=2C=CC=C(C#N)C2,Z319545618
-plate2,H10,DSI Poised EG,CC(=O)N1CCCNCC1,Z168883358
-plate2,H09,DSI Poised EG,CN1CCCC=2C=CC(=CC12)S(=O)(=O)N,Z1367324110
-plate2,N09,DSI Poised EG,CNC1(CCCC1)C(=O)N,Z1348559502
-plate2,J09,DSI Poised EG,CC(C)C(=O)NC=1C=CC=C(C#N)C1,Z26548083
-plate2,L09,DSI Poised EG,NC(=O)C=1C=NC(=NC1)C(F)(F)F,Z1745658474
-plate2,I10,DSI Poised EG,CC(=O)NC=1C=CC=C(C(=O)O)C1C,Z364368134
-plate2,C02,DSI Poised EG,CC1COCCN1CCN,Z1263811695
-plate2,K10,DSI Poised EG,N(C1=NN=CS1)C=2C=CC=CC2,Z56347187
-plate2,B02,DSI Poised EG,CC=1N=CC=C(N1)N2CCC(N)CC2,Z1333043417
-plate2,O23,DSI Poised EG,CC(O)C(=O)NCC=1C=CC=CN1,Z1551688335
-plate2,L03,DSI Poised EG,OC=1C=CC=CC1NC(=O)COC=2C=CC=CC2,Z68195082
-plate2,I09,DSI Poised EG,CN1N=CC=C1C(=O)NCC2=CC=CS2,Z915492990
-plate2,N10,DSI Poised EG,CS(=O)(=O)N1CCC[C@@H]1CN,Z1713595338
-plate2,E02,DSI Poised EG,COC=1C=CC=CC1C2=NN=CO2,Z1359419878
-plate2,C10,DSI Poised EG,COC=1C=CC=C2NC(=O)CCCC12,Z1507502062
-plate2,K02,DSI Poised EG,CC(C)N1CCCC(CO)C1,Z103740620
-plate2,B09,DSI Poised EG,CC(=O)NCC=1C=CC(=CC1)S(=O)(=O)N,Z30932204
-plate2,D02,DSI Poised EG,FC=1C=CC(CNCC=2C=CC=CC2)=CC1,Z57329001
-plate2,E09,DSI Poised EG,CN(C)C(=O)C1CCCC(N)C1,Z2092396826
-plate2,F09,DSI Poised EG,Cl.CC1CCN(CC1)C=2C=CC(N)=CC2Cl,Z2106602036
-plate2,G09,DSI Poised EG,Cl.CN(C)CC1=CC=C(O1)C(=O)O,Z2805877175
-plate2,B10,DSI Poised EG,CCC(=O)NC=1C=CC(=CC1)C(C)N,Z1245537943
-plate2,D10,DSI Poised EG,O=S(=O)(NC1CCCC1)C2CCOCC2,Z1082839290
-plate2,L10,DSI Poised EG,CN(CCO)C=1C=CC=CN1,Z54633859
-plate2,O10,DSI Poised EG,Cl.NC(=O)C=1C=CC=2NCCC2C1,Z1696091761
-plate2,N23,DSI Poised EG,COC=1C=CC=CC1CN2CCNCC2,Z228584062
-plate2,N03,DSI Poised EG,Cl.FC(F)(F)CC(=O)N1CCNCC1,Z1262246195
+test-2,H40,test,OCc(scc1)c1Cl,EN300-187736
+test-2,L44,test,Oc(cccc1)c1Cl,EN300-19240
+test-2,F17,test,Cc([nH]nc1C)c1Cl,EN300-1301359
+test-2,Q31,test,Nc1cc(Br)cnc1,AC-907/30003012
+test-2,R32,test,CNCc1ccns1,EN300-267302
+test-2,L20,test,CCNc1nccs1,CSC000197369
+test-2,N06,test,CNCc1nccs1,EN300-96866
+test-2,Z32,test,NCCc1nccs1,EN300-60750
+test-2,K42,test,NS(C1CNC1)(=O)=O,EN300-252334
+test-2,V09,test,Oc(nc1)ncc1Cl,EN300-112895
+test-2,H33,test,NC(C1NCSC1)=O,PB1456279367
+test-2,F12,test,Fc1cc(Br)cnc1,AO-160/25072004
+test-2,AB39,test,CC1NCCSC1C,EN300-80665
+test-2,N32,test,C[C@H](c1cccs1)N,EN300-89279
+test-2,V25,test,O=S1(NCCCC1)=O,EN300-216075
+test-2,J29,test,Oc1cc(Br)cnc1,EN300-75258
+test-2,H43,test,O=C(C=C1)NC=C1Br,EN300-34322
+test-2,H06,test,Cc1csc(CO)n1,EN300-93466
+test-2,Q34,test,NC(c1cccs1)=O,EN300-49198
+test-2,L10,test,CC(CNCC1)S1=O,EN300-80999
+test-2,G12,test,Cc1nnc(NC)s1,EN300-216149
+test-2,Q10,test,NC(c1cnns1)=O,Z752159638
+test-2,T18,test,CSC(NN1)=NC1=O,Z1799834383
+test-2,AA24,test,C1NCC1n1nncc1,Z1683068197
+test-2,Q36,test,C(CC1)Cc2c1[nH]nc2,PB432024632
+test-2,Z34,test,NC(C1CC1)C1CCC1,EN300-247675
+test-2,W37,test,NC(C1)C11CCCCC1,Z1795817890
+test-2,O27,test,C1NCc2c1cccc2,I0958
+test-2,I18,test,c1c[nH]c2c1cccc2,EN300-18285

@@ -20,9 +20,9 @@
         }
       });
     }
-    
-  </script>
 
+  </script>
+  {% include "overlay.html" %}
   <main id="plates">
     <h1>XChem in-house library plates</h1>
     <section id="library-list">  
@@ -78,7 +78,7 @@
 			<table>
 			{{ plate_form.as_table }}
 			</table>
-			<input type="submit" value="Submit">
+			<input type="submit" value="Submit" onclick="showOverlay(['id_plate_map', 'id_library', 'id_barcode'])">
 		  </form>
 	  </div>
 	  <hr>
@@ -99,7 +99,7 @@
 				</div>
 				{% endfor%}
 			</div>
-			<button type="submit" class="delete-button">Delete selected</button>
+			<button type="submit" class="delete-button" onclick="showOverlay([])">Delete selected</button>
 		  </form>
 	  </div>
     </section>

@@ -86,3 +86,27 @@ function filterRows(value){
 	}
 
 }
+
+
+function show(id){
+	console.log('show');
+	//subTable = document.getElementById(id);
+	//subTable.className = "";
+	const details = String.raw`{% include "availability-details.html" with initial_class="" %}`;
+	const tId = 'container-table-' + id;
+	document.getElementById(tId).innerHTML = `${details}`;
+	hider =  document.getElementById(id + "-hider");
+	hider.className = "";
+	shower = document.getElementById(id + "-shower");
+	shower.className = "hidden";
+  }
+
+  function hide(id){
+	console.log('hide');
+	subTable = document.getElementById(id);
+	subTable.className = "hidden";
+	hider =  document.getElementById(id + "-hider");
+	hider.className = "hidden";
+	shower = document.getElementById(id + "-shower");
+	shower.className = "";
+  }

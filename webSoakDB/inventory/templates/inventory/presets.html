@@ -12,29 +12,23 @@
       document.getElementById(id).className = "hidden";
     }
 
-    function show(id){
-      console.log('show');
-      subTable = document.getElementById(id);
-      subTable.className = "";
-      hider =  document.getElementById(id + "-hider");
-      hider.className = "";
-      shower = document.getElementById(id + "-shower");
-      shower.className = "hidden";
-    }
-
-    function hide(id){
-      console.log('hide');
-      subTable = document.getElementById(id);
-      subTable.className = "hidden";
-      hider =  document.getElementById(id + "-hider");
-      hider.className = "hidden";
-      shower = document.getElementById(id + "-shower");
-      shower.className = "";
-    }
+  function show(id){
+	console.log('show');
+	//subTable = document.getElementById(id);
+	//subTable.className = "";
+	const details = String.raw`{% include "availability-details.html" with initial_class="" %}`;
+	const tId = 'container-table-' + id;
+	document.getElementById(tId).innerHTML = `${details}`;
+	hider =  document.getElementById(id + "-hider");
+	hider.className = "";
+	shower = document.getElementById(id + "-shower");
+	shower.className = "hidden";
+  }
     
   </script>
   
   <main id="presets">
+  {% include "overlay.html" %}
     <h1>XChem fragment presets</h1>
     <section id="preset-list">  
       <div class="update-button">{{form_errors}} {{non_field_errors}}</div>
@@ -94,7 +88,8 @@
                           {% include "chevron-up.html"%}
                         </span> 
                       </div>
-                      <table>{% include "availability-details.html" with initial_class="hidden"%}</table>
+                      <table id="container-table-{{subset.id}}"><p>subset.id: {{subset.id}}</table>
+                      <table>{% include "availability-details.html" with initial_class=""%}</table>
                   {% endfor %}            
                   </ul>
                 </div>
@@ -116,7 +111,7 @@
                     {{ form.as_table }}
                     </table>
                     <input id="{{preset.id}}-id}" type="hidden" name="id" value="{{preset.id}}">
-                    <button type="submit" value="Submit">Save changes</button>                
+                    <button type="submit" value="Submit" onclick="showOverlay(['id_name'])">Save changes</button>                
                   </form>
                   <form class="" action="../delete-preset/" method="post" id="delete-{{preset.id}}">
                     {% csrf_token %}
@@ -139,7 +134,7 @@
         <table>
         {{ new_preset_form.as_table }}
         </table>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" onclick="showOverlay(['id_name', 'id_new_library', 'id_new_compound_list'])">
       </form>
       {{form_errors}}
       </div>    
