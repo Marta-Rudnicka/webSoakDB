@@ -47,6 +47,7 @@ def plates(request):
 	plate_form = LibraryPlateForm(libs=current_library_selection(True))
 	return render(request, "inventory/plates.html", {"libraries": libraries, "plate_form" : plate_form})
 
+'''
 @staff_member_required
 def presets(request):
 	presets = Preset.objects.all().order_by("name")
@@ -75,6 +76,41 @@ def presets(request):
 			"delete_library": "",
 			})
 				
+	return render(request, "inventory/presets.html", {
+		"presets": presets_copy, 
+		"new_preset_form": new_preset_form,
+		"form_dict" : form_dict,
+		})
+'''
+
+
+@staff_member_required
+def presets(request):
+
+	presets = Preset.objects.all().order_by("name")
+	all_libs = current_library_selection(False)
+	new_preset_form = NewPresetForm(libs=([("", "Select library...")] + all_libs))
+
+	#make copy of presets data, and add information about availability of the compounds
+	presets_copy = presets 
+	form_dict = {}
+	
+	for p in presets_copy:
+		#generate lists of valid library choices for the preset
+		old_libs_set = {(s.library.id, s.library.name) for s in p.subsets.all()}
+		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
+		old_libs = [("", "Select library...")] + list(old_libs_set)
+		
+		form_dict[p] = EditPresetForm(old_libs=old_libs, new_libs=new_libs, initial={
+			"name": p.name, 
+			"description": p.description, 
+			"new_library": "", 
+			"new_compound_list": None, 
+			"edited_library": "",
+			"updated_compound_list": None,
+			"delete_library": "",
+			})
+	
 	return render(request, "inventory/presets.html", {
 		"presets": presets_copy, 
 		"new_preset_form": new_preset_form,
