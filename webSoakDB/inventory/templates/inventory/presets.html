@@ -14,8 +14,8 @@
 
     function show(id){
       console.log('show');
-      subTable = document.getElementById(id);
-      subTable.className = "";
+      cont = document.getElementById(id);
+      cont.className = "iframe-container";
       hider =  document.getElementById(id + "-hider");
       hider.className = "";
       shower = document.getElementById(id + "-shower");
@@ -30,6 +30,17 @@
       hider.className = "hidden";
       shower = document.getElementById(id + "-shower");
       shower.className = "";
+    }
+
+    function stretch(frame){
+      frame.style.height = 0;
+      const height = frame.contentWindow.document.body.scrollHeight;
+      if (height > 0){
+        frame.style.height=(frame.contentWindow.document.body.scrollHeight+20)+'px';
+      }
+      else{
+        frame.style.height = '400px';
+      }
     }
     
   </script>
@@ -51,12 +62,12 @@
               <td>{{ preset.name }}</td>
               <td>{{ preset.description }}</td>
               <td>
-                
-                {% if preset.subsets|length > 0 %}
+                <p>{{preset}}, {{preset.subsets}} {{preset.subsets.count}}</p>
+                {% if preset.subsets.count > 0 %}
                 <div>
                   <ul>
-                  {% for subset in preset.subsets %}
-                    <li>{{ subset.library_name }} : <strong>{{ subset.compounds|length }}</strong> compounds </li>
+                  {% for subset in preset.subsets.all %}
+                    <li>{{ subset.library.name }} : <strong>{{ subset.compounds.count }}</strong> compounds </li>
                       <div class="list-in-table">
                         <table class="small-font-table">
                            <colgroup>
@@ -73,7 +84,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            {% for compound in subset.compounds %}
+                            {% for compound in subset.compounds.all %}
                             
                             <tr>
                             
@@ -86,17 +97,22 @@
                           </tbody>
                         </table>
                       </div>
-                      <div class="availability-details">Availability details 
-                        <span id="{{subset.id}}-shower" onclick=show({{subset.id}})>
+                      
+                  {% endfor %}            
+                  </ul>
+                  <div class="availability-details">Availability details 
+                        <span id="{{preset.id}}-shower" onclick=show({{preset.id}})>
                           {% include "chevron-down.html"%}
                         </span>
-                        <span id="{{subset.id}}-hider" onclick=hide({{subset.id}}) class="hidden">
+                        <span id="{{preset.id}}-hider" onclick=hide({{preset.id}}) class="hidden">
                           {% include "chevron-up.html"%}
                         </span> 
                       </div>
-                      <table>{% include "availability-details.html" with initial_class="hidden"%}</table>
-                  {% endfor %}            
-                  </ul>
+                      <table>
+                        <div id="{{preset.id}}" class="hidden">
+                          <iframe id="{{preset.id}}-frame" loading="lazy" src="/inventory/preset-availability/{{preset.id}}/" class="preset-detail-iframe" onload=stretch(this)></iframe>
+                        </div>
+                      </table>
                 </div>
                 {% else %}
                 No libraries added yet <br>

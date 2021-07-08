@@ -449,3 +449,21 @@ img.small-mol{
 	margin-top: 5px;
 	padding: 4px;
 }
+
+.preset-detail-iframe {
+	width: 810px;
+}
+
+.availability-content {
+	width: 800px;
+	height: 50px;
+}
+
+.iframe-container {
+	width: 820px;
+	min-height: 50px;
+	position: relative;
+	background: white;
+	text-align: center;
+	background:url(Gear.gif) center center no-repeat;
+}

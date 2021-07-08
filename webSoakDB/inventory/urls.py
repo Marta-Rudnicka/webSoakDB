@@ -26,7 +26,8 @@ urlpatterns = [
 	path("add-preset/", views.add_preset, name="add-preset"),
 	path("edit-preset/", views.edit_preset, name="edit-preset"),
 	path("delete-preset/", views.delete_preset, name="delete-preset"),
-	
+	path("preset-availability/<int:pk>/", views.preset_availability),
+
 	path("proposal/", views.proposal, name="proposal"),
 	path("subset-map/", views.get_subset_map, name="subset-map"),
 	path("locate-compounds/", views.locate_compounds, name="locate-compounds"),

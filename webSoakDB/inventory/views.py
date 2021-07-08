@@ -1,3 +1,4 @@
+from tools.data_storage_classes import PresetCopy
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
@@ -49,19 +50,18 @@ def plates(request):
 
 @staff_member_required
 def presets(request):
+
 	presets = Preset.objects.all().order_by("name")
 	all_libs = current_library_selection(False)
 	new_preset_form = NewPresetForm(libs=([("", "Select library...")] + all_libs))
-	
+
 	#make copy of presets data, and add information about availability of the compounds
-	presets_copy = [fake_preset_copy(preset) for preset in presets]
-	
-	#produce a dictionary that matches each presets with appropriate form to edit this preset
+	presets_copy = presets # [fake_preset_copy(preset) for preset in presets]
 	form_dict = {}
 	
 	for p in presets_copy:
 		#generate lists of valid library choices for the preset
-		old_libs_set = {(s.library_id, s.library_name) for s in p.subsets}
+		old_libs_set = {(s.library.id, s.library.name) for s in p.subsets.all()}
 		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
 		old_libs = [("", "Select library...")] + list(old_libs_set)
 		
@@ -74,7 +74,8 @@ def presets(request):
 			"updated_compound_list": None,
 			"delete_library": "",
 			})
-				
+	t6 = datetime.now()
+	#print(t6-t5, 'made form_dict')		
 	return render(request, "inventory/presets.html", {
 		"presets": presets_copy, 
 		"new_preset_form": new_preset_form,
@@ -629,3 +630,8 @@ def locate_compounds(request):
 def compound_lookup(request, pk):
 	compound = Compounds.objects.get(pk=pk)
 	return render(request, "compound_lookup.html", {'compound': compound})
+
+def preset_availability(request, pk):
+	preset = Preset.objects.get(pk=pk)
+	preset = fake_preset_copy(preset)
+	return render(request, "inventory/preset-availability.html", {'preset': preset})

@@ -1,0 +1,38 @@
+<script>
+	function animateDots(){
+		console.log('fired animateDots');
+		let text = '. ';
+		const dots = document.getElementById('dots');
+		for (let i = 0; i < 30; i++){
+			setTimeout(()=>{
+				text = text + '. ';
+				dots.innerHTML = text;
+			},i * 1000);
+		}
+	}
+
+    function requiredFormData(id_array){
+      //checks if all the inputs with ids in <id_array> have been filled
+      let allRequired = true;
+      id_array.forEach(id => {
+        if (!document.getElementById(id).value){
+          allRequired = false;
+        }
+      });
+      return allRequired;
+    }
+    
+    function showOverlay(id_array){
+      if (requiredFormData(id_array)){
+          const overlay = document.getElementById('overlay').style.display = "block";
+          animateDots();
+      }
+    }
+
+</script>
+<div id="overlay">
+    <div id="overlay-message">
+		<p>Processing data. Please wait.</p>
+		<p id="dots"></p>
+	</div>
+</div>

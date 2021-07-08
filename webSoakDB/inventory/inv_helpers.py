@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from API.models import Library, LibraryPlate
 from tools.data_storage_classes import SourceWellCopy, PresetCopy, SubsetCopyWithAvailability
@@ -8,11 +9,9 @@ def sw_copies(queryset):
 
 def fake_preset_copy(preset):
 	preset_copy = PresetCopy(preset)
-	
 	for subset in preset.subsets.all():
 		subset_copy = SubsetCopyWithAvailability(subset)
 		preset_copy.subsets.append(subset_copy)
-		
 	return preset_copy
 
 def get_plate_size(queryset):
