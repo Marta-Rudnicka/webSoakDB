@@ -442,14 +442,6 @@ img.small-mol{
 	grid-template-columns: 1fr 3fr;
 }
 
-.availability-details {
-	font-size: 1.2em;
-	background: aliceblue;
-	border: solid lightgrey 1px;
-	margin-top: 5px;
-	padding: 4px;
-}
-
 #overlay {
 	position: absolute;
 	display: none;
@@ -472,4 +464,33 @@ img.small-mol{
 	padding: 5px;
 	width: 20em;
 	background: aliceblue;
+}
+
+
+.availability-details {
+	font-size: 1.2em;
+	background: aliceblue;
+	border: solid lightgrey 1px;
+	margin-top: 5px;
+	padding: 4px;
+	/*width: 810px;*/
+}
+
+.preset-detail-iframe {
+	width: 810px;
+}
+
+.availability-content {
+	width: 800px;
+	height: 50px;
+}
+
+.iframe-container {
+	padding: 0;
+	width: 820px;
+	min-height: 50px;
+	position: relative;
+	background: white;
+	text-align: center;
+	background:url(Gear.gif) center center no-repeat;
 }

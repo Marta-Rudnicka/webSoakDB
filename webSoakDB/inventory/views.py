@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
@@ -281,13 +281,13 @@ def add_preset(request):
 		if form.is_valid():
 			log = []
 			fs = FileSystemStorage()
-			source = request.FILES["new_compound_list"]
-			library_id = form.cleaned_data['new_library']
+			source = request.FILES["new_preset_compound_list"]
+			library_id = form.cleaned_data['new_preset_library']
 			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
 			if selection_is_valid(filename, log, library_id):
 				library = Library.objects.get(pk=library_id)
 				description = form.cleaned_data['description']
-				preset_name = form.cleaned_data['name']
+				preset_name = form.cleaned_data['new_preset_name']
 			
 				#create new Subset object and upload data to it
 				subset_name = library.name + " selection"
@@ -531,6 +531,29 @@ def deactivate_compounds(request):
 		
 		return HttpResponseRedirect(redirect_url)
 
+
+@staff_member_required
+def deactivate_compounds_manually(request):
+	if request.method == "POST":
+		today = str(date.today())
+		plate = LibraryPlate.objects.get(pk=request.POST.get('plate_id'))
+		redirect_url = redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
+
+		for key in request.POST:
+			if key not in ['csrfmiddlewaretoken', "plate_id", ""]:
+				compound = SourceWell.objects.get(pk=key)
+				if compound.active:
+					compound.active = False
+					compound.save()
+					
+					manage_sw_status_change(compound, today, False)
+		
+		if plate.current:
+			update_histograms(plate.library, "library")
+		
+		return HttpResponseRedirect(redirect_url)
+
+
 @staff_member_required
 def dispense_testing_map(request):
 	rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -668,3 +691,9 @@ def locate_compounds(request):
 def compound_lookup(request, pk):
 	compound = Compounds.objects.get(pk=pk)
 	return render(request, "compound_lookup.html", {'compound': compound})
+
+
+def preset_availability(request, pk):
+	preset = Preset.objects.get(pk=pk)
+	preset = fake_preset_copy(preset)
+	return render(request, "inventory/preset-availability.html", {'preset': preset})

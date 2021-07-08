@@ -46,10 +46,16 @@
   </script>
   
   <main id="presets">
+  {% include "overlay.html" %}
     <h1>XChem fragment presets</h1>
     <section id="preset-list">  
       <div class="update-button">{{form_errors}} {{non_field_errors}}</div>
       <table id="table" class="table">
+        <col>
+        <col>
+        <col style="width: 800px">
+        <col>
+      </colgroup>
         <thead>
           <th>Name</th>
           <th>Description</th>
@@ -62,7 +68,6 @@
               <td>{{ preset.name }}</td>
               <td>{{ preset.description }}</td>
               <td>
-                <p>{{preset}}, {{preset.subsets}} {{preset.subsets.count}}</p>
                 {% if preset.subsets.count > 0 %}
                 <div>
                   <ul>
@@ -71,11 +76,6 @@
                       <div class="list-in-table">
                         <table class="small-font-table">
                            <colgroup>
-                             <col style="width: 5%;">
-                             <col style="width: 20%;">
-                             <col>
-                             <col style="width: 15%;">
-                          </colgroup>
                           <thead>
                             <tr>
                               <th></th>
@@ -132,7 +132,7 @@
                     {{ form.as_table }}
                     </table>
                     <input id="{{preset.id}}-id}" type="hidden" name="id" value="{{preset.id}}">
-                    <button type="submit" value="Submit">Save changes</button>                
+                    <button type="submit" value="Submit" onclick="showOverlay([])">Save changes</button>                
                   </form>
                   <form class="" action="../delete-preset/" method="post" id="delete-{{preset.id}}">
                     {% csrf_token %}
@@ -155,7 +155,7 @@
         <table>
         {{ new_preset_form.as_table }}
         </table>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" onclick="showOverlay(['id_new_preset_library', 'id_new_preset_name', 'id_new_preset_compound_list'])">
       </form>
       {{form_errors}}
       </div>    

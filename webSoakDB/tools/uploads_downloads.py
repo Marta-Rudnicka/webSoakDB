@@ -49,10 +49,11 @@ def upload_plate(file_name, plate):
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
+			smiles = Chem.CanonSmiles(row[2].strip())
 			try:
-				compound = Compounds.objects.get(code = row[0].strip(), smiles = row[2].strip())	
+				compound = Compounds.objects.get(code = row[0].strip(), smiles = smiles)	
 			except django.core.exceptions.ObjectDoesNotExist:
-				compound = Compounds.objects.create(smiles = row[2].strip(), code = row[0].strip())
+				compound = Compounds.objects.create(smiles = smiles, code = row[0].strip())
 				if compound.smiles:
 					add_molecular_properties(compound)
 					

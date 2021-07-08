@@ -15,15 +15,22 @@
     function allFormDataSubmitted(id_array){
         ok = true;
         id_array.forEach(id =>{
+            console.log('checking ', id)
+            console.log(document.getElementById(id).value)
             if(!document.getElementById(id).value){
+                console.log('not found')
                 ok = false;
             }
-
+            else {
+                console.log('found')
+                
+            }
         });
         return ok;
     }
 
     function showOverlay(id_array){
+        console.log('fired showOverlay')
         if (allFormDataSubmitted(id_array)){
             const overlay = document.getElementById('overlay').style.display = "block";
             animateDots();
