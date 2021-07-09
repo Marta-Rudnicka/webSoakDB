@@ -456,6 +456,7 @@ img.small-mol{
 
 #overlay-message {
 	text-align: center;
+	font-size: 2em;
 	display: block;
 	position: static;
 	margin-top: 10em;

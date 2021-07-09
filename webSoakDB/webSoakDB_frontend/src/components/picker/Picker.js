@@ -4,6 +4,7 @@ import Uploads from './uploads.js';
 import GraphTable from './graph_table.js';
 import PresetOption from './preset_option.js';
 import axios from 'axios';
+import Overlay from './overlay.js';
 
 import { 
 	removeFromArray, 
@@ -26,7 +27,8 @@ class Picker extends React.Component {
       initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
       presets: [],
       currentLibOptions: [],
-      inHouseCompoundCount: 0,      
+      inHouseCompoundCount: 0,
+      overlay: false,    
     }
     
     this.detectUnsavedChanges = this.detectUnsavedChanges.bind(this);
@@ -34,6 +36,7 @@ class Picker extends React.Component {
     this.handleChangePreset = this.handleChangePreset.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
     this.selected = this.selected.bind(this);
+    this.showOverlay = this.showOverlay.bind(this);
   }
   
   componentDidMount() {
@@ -150,6 +153,10 @@ class Picker extends React.Component {
     });
     this.setState({inHouseCompoundCount: count});
   }
+
+  showOverlay(){
+    this.setState({overlay: true})
+  }
   
   render() {
     let changeStatus = "";
@@ -182,9 +189,11 @@ class Picker extends React.Component {
     
     let publicSubsets = [];
     this.state.presets.forEach(preset => publicSubsets.push(...preset.subsets));
-    
+    const overlay = this.state.overlay ? <Overlay /> : null;
+
     return (
     <div id="picker">
+      {overlay}
       <h1>Select compounds for {this.props.proposal.proposal}</h1>
       <main id="main-picker">
         <section id="libraries" className={changeStatus}>
@@ -212,6 +221,7 @@ class Picker extends React.Component {
           proposal={this.props.proposal}
           trackUnsavedChanges={this.props.trackUnsavedChanges}
           presets={this.state.presets}
+          showOverlay={this.showOverlay}
         />
         <section id="stats">
           <GraphTable

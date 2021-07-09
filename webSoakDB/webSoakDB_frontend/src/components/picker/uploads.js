@@ -82,6 +82,7 @@ class Uploads extends React.Component {
             refreshAfterUpload={this.props.refreshAfterUpload}
             detectUnsavedChanges={this.props.detectUnsavedChanges}
             trackUnsavedChanges={this.props.trackUnsavedChanges}
+            showOverlay={this.props.showOverlay}
           />
             {liblist()}      
       </div>
@@ -94,6 +95,7 @@ class Uploads extends React.Component {
           refreshAfterUpload={this.props.refreshAfterUpload} 
           detectUnsavedChanges={this.props.detectUnsavedChanges}
           trackUnsavedChanges={this.props.trackUnsavedChanges}
+          showOverlay={this.props.showOverlay}
         />
             {subsetlist()}
       </div>
