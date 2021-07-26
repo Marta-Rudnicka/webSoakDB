@@ -1,8 +1,8 @@
 from django import forms
-from API.models import Library, Preset, PlateOpening, Proposals
+from API.models import Library, Preset, PlateOpening
 
 
-presets = [("", "Select preset...")] + [(preset.id, preset.name) for preset in Preset.objects.all()]
+#presets = [("", "Select preset...")] + [(preset.id, preset.name) for preset in Preset.objects.all()]
 #libs = [("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True)]
 libs = []
 
@@ -58,7 +58,7 @@ class PlateOpeningForm(forms.ModelForm):
 		model = PlateOpening
 		fields = ['date', 'reason']
 
-class ProposalForm(forms.Form):
+class ProjectForm(forms.Form):
 	proposal = forms.CharField(label='Proposal', required=True)
 
 class UnsavedSubsetForm(forms.Form):

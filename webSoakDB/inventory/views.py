@@ -19,16 +19,16 @@ from .inv_helpers import (
 )
 from tools.uploads_downloads import upload_temporary_subset, parse_compound_list, parse_id_list
 from .dt import get_well_dictionary, manage_sw_status_change
-from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm, PlateOpeningForm, ProposalForm, UnsavedSubsetForm
+from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm, PlateOpeningForm, ProjectForm, UnsavedSubsetForm
 from tools.validators import data_is_valid, selection_is_valid
 from tools.histograms import update_histograms
 from tools.uploads_downloads import upload_plate, upload_subset, find_source_wells, source_wells_to_csv 
-from API.models import Library, LibraryPlate, LibrarySubset, SourceWell, Compounds, Preset, PlateOpening, Proposals
+from API.models import Library, LibraryPlate, LibrarySubset, SourceWell, Compounds, Preset, PlateOpening, Project
 
 #VIEWS HANDLING GET REQUESTS
 @staff_member_required
 def index(request):
-	form = ProposalForm()
+	form = ProjectForm()
 	return render(request, "inventory/inventory-index.html", {"form" : form})
 
 @staff_member_required
@@ -207,12 +207,12 @@ def track_usage(request, pk, date, mode):
 
 @staff_member_required
 def proposal(request):
-	form = ProposalForm(request.POST)
+	form = ProjectForm(request.POST)
 	if request.method == "POST":	
 		if form.is_valid():
 			try:
 				pr = form.cleaned_data['proposal']
-				proposal = Proposals.objects.get(proposal=pr)
+				proposal = Project.objects.get(proposal=pr)
 				subsets = get_subsets_with_availability(set(proposal.subsets.all()))
 				
 				return render(request, "inventory/proposal.html", {'proposal' : proposal, 'subsets': subsets})

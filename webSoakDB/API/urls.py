@@ -14,8 +14,8 @@ urlpatterns = [
 	#path("preset_list/", views.PresetList.as_view(), name="preset_list"),
 	path("preset_list/", views.preset_list, name="preset_list"),
 	path("preset_detail/<int:pk>/", views.PresetDetail.as_view(), name="preset_detail"),
-	path("proposals/", views.ProposalList.as_view(), name="proposals"),
-	path("proposals/<str:proposal>/", views.ProposalDetail.as_view(), name="proposal_detail"),
+	path("proposals/", views.ProjectList.as_view(), name="proposals"),
+	path("proposals/<str:proposal>/", views.ProjectDetail.as_view(), name="proposal_detail"),
 	path("current_library_options/", views.current_library_options, name="current_library_options"),
 	
 	#specific-purpose custom endpoints:
@@ -30,6 +30,6 @@ urlpatterns = [
 	path("current_plates_list/<int:pk>/", views.CurrentPlatesForLib.as_view(), name="library_detail"),
 	
 	#to update library or subset selection by passing it an array of ints (representing ids)
-	path("update_proposal_selection/<str:proposal>/", views.UpdateProposalSelection.as_view(), name="update_proposal_selection"),	
+	path("update_proposal_selection/<str:proposal>/", views.UpdateProjectSelection.as_view(), name="update_proposal_selection"),	
 
 ]

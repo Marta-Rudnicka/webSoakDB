@@ -7,7 +7,7 @@ from .forms import ExternalLibraryForm, SubsetForm
 from tools.histograms import get_histogram, get_all_histograms, get_selection_histogram
 from tools.validators import data_is_valid, selection_is_valid, export_form_is_valid
 from tools.uploads_downloads import source_wells_to_csv, upload_plate, upload_subset, import_full_libraries, import_library_parts
-from API.models import Library, LibraryPlate, LibrarySubset, Proposals, Compounds, Preset
+from API.models import Library, LibraryPlate, LibrarySubset, Project, Compounds, Preset
 from webSoakDB_stack.settings import MEDIA_ROOT
 
 from slugify import slugify
@@ -44,7 +44,7 @@ def upload_user_library(request):
 				fs.delete(filename)
 				
 				#add new library to user's proposal
-				proposal = Proposals.objects.get(proposal=proposal_name)
+				proposal = Project.objects.get(proposal=proposal_name)
 				proposal.libraries.add(user_lib)
 				proposal.save()
 			
@@ -75,7 +75,7 @@ def upload_user_subset(request):
 				subset = upload_subset(filename, library_id, name, origin)
 				
 				#add new subset to user's proposal
-				proposal = Proposals.objects.get(proposal=proposal_name)
+				proposal = Project.objects.get(proposal=proposal_name)
 				proposal.subsets.add(subset)
 				proposal.save()
 			

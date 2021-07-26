@@ -21,7 +21,7 @@ import sys
 import re
 import csv
 import django.core.exceptions
-from API.models import Compounds, Library, LibraryPlate, Proposals
+from API.models import Compounds, Library, LibraryPlate, Project
 
 
 #Library plate data uploads
@@ -332,7 +332,7 @@ def export_form_is_valid(post_data):
 			pass
 		elif key=='proposal':
 			try:
-				proposal = Proposals.objects.get(proposal=post_data.get(key))
+				proposal = Project.objects.get(proposal=post_data.get(key))
 				subset_lib_ids = [s.library.id for s in proposal.subsets.all()]
 			except django.core.exceptions.ObjectDoesNotExist:
 				print('No proposal found')

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Redirect } from "react-router-dom";
 
 class ProposalSelection extends React.Component {
-	/*
+	
 	constructor(props){
 		super(props);
 		this.state = {
@@ -30,39 +30,36 @@ class ProposalSelection extends React.Component {
 		this.setState({chosenName: e.target.value});
 	}
 	
-	*/
+	
 	render(){
-		/*
+		
 		const options = this.state.proposals.map((proposal, index) => 
 			 <option key={index} value={proposal.proposal} htmlFor="proposal_name">{proposal.proposal}</option>
 		);
 		
-		let loggedIn = null;*/
+		//let loggedIn = null;
 		let loggedIn = this.props.proposal ?  <Redirect to="/selection/home/" /> : null;
 		
 		return ( 
-			<div>{loggedIn} </div>
+			
+			<main id="choose-proposal">
+				<div>{loggedIn} </div>
+				<section>
+					<h1>Proposals</h1>
+					<form>
+						<legend>Select proposal to manage</legend>
+						<p>
+							<select name="proposal_name" onChange={event => {this.getSelection(event)}}>
+								<option value="">...</option>
+							{options}
+							</select>
+						</p>
+						<button onClick={event => this.props.logIn(this.state.chosenName)} >Confirm selection</button>
+					</form>
+			</section>
+		</main>
 		);
 	}
 }
 
 export default ProposalSelection;
-
-//old content
-/*<main id="choose-proposal">
-			<section>
-			<h1>Proposals</h1>
-			<form>
-				<legend>Select proposal to manage</legend>
-				<p>
-					<select name="proposal_name" onChange={event => {this.getSelection(event)}}>
-						<option value="">...</option>
-					{options}
-					</select>
-				</p>
-			 /*	<button onClick={event => this.props.logIn(this.state.chosenName)} >Confirm selection</button>
-			<button disabled={true}>Confirm selection</button>
-			</form>
-			</section>
-			{ loggedIn }
-		</main> */ 

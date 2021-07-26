@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Library, Compounds, SourceWell, LibraryPlate, Protein, Proposals, LibrarySubset, Preset, SpaCompound, Crystal, CrystalPlate, SWStatuschange, PlateOpening
+from .models import Library, Compounds, SourceWell, LibraryPlate, Protein, Project, LibrarySubset, Preset, SpaCompound, Crystal, CrystalPlate, SWStatuschange, PlateOpening
 
 
 
@@ -20,7 +20,7 @@ class CompoundsAdmin(admin.ModelAdmin):
 	 list_display = ["id", "code", "smiles", "log_p", "mol_wt", "heavy_atom_count", "heavy_atom_mol_wt", "nhoh_count", "no_count", "num_h_acceptors", "num_h_donors", "num_het_atoms", "num_rot_bonds", "num_val_electrons", "ring_count", "tpsa"]
 	 list_per_page = 800
 
-class ProposalsAdmin(admin.ModelAdmin):
+class ProjectAdmin(admin.ModelAdmin):
     list_display = ("proposal", "protein", "industry_user")
 
 class CrystalPlateAdmin(admin.ModelAdmin):
@@ -43,7 +43,7 @@ admin.site.register(Compounds, CompoundsAdmin)
 admin.site.register(SourceWell, SourceWellAdmin)
 admin.site.register(LibraryPlate, LibraryPlateAdmin)
 admin.site.register(Library, LibraryAdmin)
-admin.site.register(Proposals,ProposalsAdmin)
+admin.site.register(Project,ProjectAdmin)
 admin.site.register(Protein)
 admin.site.register(LibrarySubset, LibrarySubsetAdmin)
 admin.site.register(Preset, PresetAdmin)

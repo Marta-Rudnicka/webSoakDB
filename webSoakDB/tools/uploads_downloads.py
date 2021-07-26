@@ -1,6 +1,6 @@
 '''helper functions for uploading and downloading files'''
 import django.core.exceptions
-from API.models import Compounds, SourceWell, Library, LibrarySubset, LibraryPlate, Proposals
+from API.models import Compounds, SourceWell, Library, LibrarySubset, LibraryPlate, Project
 from .data_storage_classes import BasicTemporaryCompound
 import csv
 import re
@@ -107,7 +107,7 @@ def upload_subset(file_name, library_id, name, origin):
 
 #EXPORTING SOAK-DB COMPATIBLE COMPOUND LISTS (AS CSV)
 def import_full_libraries(proposal):
-	proposal = Proposals.objects.get(proposal=proposal)
+	proposal = Project.objects.get(proposal=proposal)
 	full_plates = []
 	
 	for l in proposal.libraries.all():
@@ -143,7 +143,7 @@ def find_source_wells(subset, plate_ids):
 	return sw
 		
 def import_library_parts(proposal, data):
-	proposal = Proposals.objects.get(proposal=proposal)
+	proposal = Project.objects.get(proposal=proposal)
 	sw = []
 	
 	for s in proposal.subsets.all():

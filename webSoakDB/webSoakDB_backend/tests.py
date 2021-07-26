@@ -1,7 +1,7 @@
 from django.test import TestCase
 from inventory.set_up import (set_up_source_wells, source_wells_data, plates_data, libraries_data, compounds_data)
 from tools.uploads_downloads import import_full_libraries
-from API.models import Proposals, SourceWell, LibraryPlate
+from API.models import Project, SourceWell, LibraryPlate
 
 from tools.validators import code_is_valid, well_is_valid, smiles_is_valid, concentration_is_valid, row_is_valid
 
@@ -100,7 +100,7 @@ class HelpersTests(TestCase):
 		set_up_source_wells(source_wells_data, plates_data, libraries_data, compounds_data)
 		
 	def import_full_libraries_test():
-		proposal = Proposals.objects.get(proposal="proposal1")
+		proposal = Project.objects.get(proposal="proposal1")
 		p1 = LibraryPlate.objects.get(barcode="xyz")
 		p2 = LibraryPlate.objects.get(barcode="abc1")
 		

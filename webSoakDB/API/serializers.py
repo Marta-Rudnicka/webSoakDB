@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Library, LibraryPlate, Compounds, SourceWell, Protein, Preset, CrystalPlate, Proposals, LibrarySubset
+from .models import Library, LibraryPlate, Compounds, Protein, CrystalPlate, Project, LibrarySubset
 
 class LibrarySerializer(serializers.ModelSerializer):
 	class Meta:
@@ -77,7 +77,7 @@ class CrystalPlateSerializer(serializers.ModelSerializer):
 		fields = ['name', 'drop_volume', 'plate_type', 'crystals']
 		depth=2
 
-class ProposalListSerializer(serializers.Serializer):
+class ProjectListSerializer(serializers.Serializer):
 	proposal = serializers.CharField(max_length=32)
 	#libraries = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 	libraries = LibrarySerializer(many=True)
@@ -115,8 +115,8 @@ class LibrarySubsetStatSerializer(serializers.Serializer):
 	compounds = CompoundsStatSerializer(many=True)
 
 #CUSTOM SERIALIZERS FOR COMPOUND SELECTION APP
-class ProposalUpdateSerializer(serializers.ModelSerializer):
+class ProjectUpdateSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Proposals
+		model = Project
 		fields = ["proposal", "libraries", "subsets"]
 		lookup_field = "proposal"

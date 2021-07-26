@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from .models import Library, LibraryPlate, Proposals, Preset, LibrarySubset
+from .models import Library, LibraryPlate, Project, Preset, LibrarySubset
 from django.views.generic import ListView #RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
@@ -9,9 +9,9 @@ from .serializers import (LibrarySerializer,
 							SourceWellStatSerializer,
 							CurrentPlateSerializer, 
 							PresetSerializer, 
-							ProposalListSerializer, 
+							ProjectListSerializer, 
 							LibraryPlateSerializer, 
-							ProposalUpdateSerializer,
+							ProjectUpdateSerializer,
 							LibrarySubsetStatSerializer,
 							LibrarySubsetSerializer,
 						)
@@ -47,17 +47,17 @@ class PresetDetail(generics.RetrieveAPIView):
 	serializer_class = PresetSerializer
 	permission_classes = [AllowAny]
 
-class ProposalList(generics.ListAPIView):
-	queryset = Proposals.objects.all()	
-	serializer_class = ProposalListSerializer
+class ProjectList(generics.ListAPIView):
+	queryset = Project.objects.all()	
+	serializer_class = ProjectListSerializer
 	permission_classes = [AllowAny]
 
-class ProposalDetail(generics.RetrieveUpdateAPIView):
+class ProjectDetail(generics.RetrieveUpdateAPIView):
 	permission_classes = [AllowAny]
 	
-	queryset = Proposals.objects.all()	
+	queryset = Project.objects.all()	
 	lookup_field = "proposal"
-	serializer_class = ProposalListSerializer
+	serializer_class = ProjectListSerializer
 	
 
 class PlateCompoundList(generics.ListAPIView):
@@ -89,12 +89,12 @@ class SubsetStatList(generics.RetrieveAPIView):
 	serializer_class = LibrarySubsetStatSerializer	
 	permission_classes = [AllowAny]
 
-class UpdateProposalSelection(generics.RetrieveUpdateAPIView):
+class UpdateProjectSelection(generics.RetrieveUpdateAPIView):
 	authentication_classes = []
 
-	queryset = Proposals.objects.all()	
+	queryset = Project.objects.all()	
 	lookup_field = "proposal"
-	serializer_class = ProposalUpdateSerializer
+	serializer_class = ProjectUpdateSerializer
 	permission_classes = [AllowAny]
 	
 class CurrentPlatesForLib(generics.ListAPIView):
