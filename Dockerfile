@@ -1,5 +1,5 @@
 #Start with RDkit
-FROM informaticsmatters/rdkit-python3-debian:Release_2019_03
+FROM informaticsmatters/rdkit-python3-debian:Release_2021_03_2
 
 # Install node prereqs, nodejs and yarn
 # Ref: https://deb.nodesource.com/setup_14.x
