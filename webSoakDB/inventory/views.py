@@ -1,5 +1,4 @@
-from tools.data_storage_classes import PresetCopy
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
@@ -48,6 +47,7 @@ def plates(request):
 	plate_form = LibraryPlateForm(libs=current_library_selection(True))
 	return render(request, "inventory/plates.html", {"libraries": libraries, "plate_form" : plate_form})
 
+'''
 @staff_member_required
 def presets(request):
 
@@ -76,6 +76,41 @@ def presets(request):
 			})
 	t6 = datetime.now()
 	#print(t6-t5, 'made form_dict')		
+	return render(request, "inventory/presets.html", {
+		"presets": presets_copy, 
+		"new_preset_form": new_preset_form,
+		"form_dict" : form_dict,
+		})
+'''
+
+
+@staff_member_required
+def presets(request):
+
+	presets = Preset.objects.all().order_by("name")
+	all_libs = current_library_selection(False)
+	new_preset_form = NewPresetForm(libs=([("", "Select library...")] + all_libs))
+
+	#make copy of presets data, and add information about availability of the compounds
+	presets_copy = presets 
+	form_dict = {}
+	
+	for p in presets_copy:
+		#generate lists of valid library choices for the preset
+		old_libs_set = {(s.library.id, s.library.name) for s in p.subsets.all()}
+		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
+		old_libs = [("", "Select library...")] + list(old_libs_set)
+		
+		form_dict[p] = EditPresetForm(old_libs=old_libs, new_libs=new_libs, initial={
+			"name": p.name, 
+			"description": p.description, 
+			"new_library": "", 
+			"new_compound_list": None, 
+			"edited_library": "",
+			"updated_compound_list": None,
+			"delete_library": "",
+			})
+	
 	return render(request, "inventory/presets.html", {
 		"presets": presets_copy, 
 		"new_preset_form": new_preset_form,
@@ -246,13 +281,13 @@ def add_preset(request):
 		if form.is_valid():
 			log = []
 			fs = FileSystemStorage()
-			source = request.FILES["new_compound_list"]
-			library_id = form.cleaned_data['new_library']
-			filename = fs.save(source.name, source)
+			source = request.FILES["new_preset_compound_list"]
+			library_id = form.cleaned_data['new_preset_library']
+			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
 			if selection_is_valid(filename, log, library_id):
 				library = Library.objects.get(pk=library_id)
 				description = form.cleaned_data['description']
-				preset_name = form.cleaned_data['name']
+				preset_name = form.cleaned_data['new_preset_name']
 			
 				#create new Subset object and upload data to it
 				subset_name = library.name + " selection"
@@ -302,10 +337,10 @@ def edit_preset(request):
 			
 			if new_compound_list:
 				fs_new =  FileSystemStorage()
-				filename_new = fs_new.save(new_compound_list.name, new_compound_list) 
+				filename_new = MEDIA_ROOT + '/' + fs_new.save(new_compound_list.name, new_compound_list) 
 			if updated_compound_list:
 				fs_edit =  FileSystemStorage()
-				filename_edit = fs_edit.save(updated_compound_list.name, updated_compound_list)
+				filename_edit = MEDIA_ROOT + '/' +  fs_edit.save(updated_compound_list.name, updated_compound_list)
 				
 			log = []
 			if ( new_compound_list and not selection_is_valid(filename_new, log, new_library)) or (updated_compound_list and not selection_is_valid(filename_edit, log, edited_library)):
@@ -419,7 +454,10 @@ def delete_library(request):
 			
 			#remove all cached histograms
 			path = MEDIA_ROOT + '/html_graphs/library/' + str(lib.id) + '/'
-			shutil.rmtree(path)
+			try:
+				shutil.rmtree(path)
+			except FileNotFoundError:
+				pass #in rare cases there are no graphs
 
 			lib.delete()
 			return HttpResponseRedirect('../libraries/')
@@ -492,6 +530,29 @@ def deactivate_compounds(request):
 			update_histograms(plate.library, "library")
 		
 		return HttpResponseRedirect(redirect_url)
+
+
+@staff_member_required
+def deactivate_compounds_manually(request):
+	if request.method == "POST":
+		today = str(date.today())
+		plate = LibraryPlate.objects.get(pk=request.POST.get('plate_id'))
+		redirect_url = redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
+
+		for key in request.POST:
+			if key not in ['csrfmiddlewaretoken', "plate_id", ""]:
+				compound = SourceWell.objects.get(pk=key)
+				if compound.active:
+					compound.active = False
+					compound.save()
+					
+					manage_sw_status_change(compound, today, False)
+		
+		if plate.current:
+			update_histograms(plate.library, "library")
+		
+		return HttpResponseRedirect(redirect_url)
+
 
 @staff_member_required
 def dispense_testing_map(request):
@@ -630,6 +691,7 @@ def locate_compounds(request):
 def compound_lookup(request, pk):
 	compound = Compounds.objects.get(pk=pk)
 	return render(request, "compound_lookup.html", {'compound': compound})
+
 
 def preset_availability(request, pk):
 	preset = Preset.objects.get(pk=pk)

@@ -442,6 +442,32 @@ img.small-mol{
 	grid-template-columns: 1fr 3fr;
 }
 
+#overlay {
+	position: absolute;
+	display: none;
+	/*opacity: 0.5;*/
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 99;
+}
+
+#overlay-message {
+	text-align: center;
+	font-size: 2em;
+	display: block;
+	position: static;
+	margin-top: 10em;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 5px;
+	width: 20em;
+	background: aliceblue;
+}
+
+
 .availability-details {
 	font-size: 1.2em;
 	background: aliceblue;
@@ -460,6 +486,7 @@ img.small-mol{
 }
 
 .iframe-container {
+	padding: 0;
 	width: 820px;
 	min-height: 50px;
 	position: relative;

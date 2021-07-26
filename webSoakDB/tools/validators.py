@@ -29,12 +29,16 @@ def data_is_valid(file_name, error_log):
 	'''Uses RDKit to validate SMILES strings, and includes RDKit
 	error messages in the error log.'''
 	
+	print('entered data is valid')
 	valid = True
 	well_names = {}
 	codes = {}
 	
 	if not is_csv(file_name, error_log):
+		print('not a csv file')
 		return False
+
+	print('is a csv file')
 
 	try:
 		with open(file_name, newline='') as csvfile:

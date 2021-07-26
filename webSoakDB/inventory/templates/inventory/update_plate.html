@@ -1,8 +1,61 @@
 {% extends "layout.html" %}
 {% load static %}
   {% block main %}
-  
+
+<script>
+  		function findAndCheck(str){
+			const feedback = document.getElementById("finder-feedback");
+			const row =  document.getElementById('w-' + str.toUpperCase());
+			if (!row){
+				feedback.innerHTML = "No such well in the plate map: <strong>" + str.toUpperCase() + "</strong>";
+			}
+			
+			if (row.className === "inactive-row"){
+				feedback.innerHTML = "<strong>" + str.toUpperCase() + "</strong> is already inactive";
+			}
+			else {
+				const input = row.querySelector('input');
+				input.checked = true;
+				moveToTop(input.id);
+				feedback.innerHTML = "Selected <strong>" + str.toUpperCase() + "</strong> for deactivation";
+			}
+		}
+		
+		function selectToDeactivate(){
+			const value = document.getElementById("well").value;
+			findAndCheck(value);
+			document.getElementById("well").value="";
+		}
+		
+		function moveToTop(id){
+			const box = document.getElementById(id);
+			if (box.checked===true) {
+				const firstLine = document.getElementById('first-line');
+				const row = box.closest('tr');
+				const parentNode = firstLine.parentNode
+				setTimeout(function() {parentNode.insertBefore(row, firstLine.nextElementSibling)}, 300);
+			}
+		}
+		
+    function submitInactive(){
+      const form = document.getElementById('compounds-form');
+      form.submit();
+    }
+
+		document.addEventListener('DOMContentLoaded', () => {
+		
+			document.querySelectorAll('#table input').forEach(box => { 
+				box.checked = false;
+				box.addEventListener('click', () => moveToTop(box.id));
+			});
+			
+			document.getElementById('well').addEventListener('change', () => selectToDeactivate());
+
+		});
+</script>
+
   <main id="update-plate">
+  {% include "overlay.html"%}
     <h2>Plate update: </h2>
     <h1>{{plate.library.name}} - {{ plate.barcode }}</h1>
     <section>
@@ -24,6 +77,15 @@
         </form>
       </div>
       <hr>
+      <hr>
+			<div id="finder" >		
+				<h3>Mark as inactive:</h3>
+				<label>Type in well name and press 'Enter':</label>
+				<input type="text" id="well">
+				<div id="finder-feedback"></div>
+        <button onclick="submitInactive()">Mark selected compounds as inactive</button>
+			</div>
+			<hr>
       <div>
         <h3>Edit plate data:</h3>
         <form method="post" action="/inventory/edit-plate/">
@@ -32,7 +94,7 @@
           <table>
           {{ plate_form.as_table }}
           </table>
-          <button type="submit">Save changes</button>
+          <button type="submit" onclick="showOverlay(['id_library', 'id_barcode'])">Save changes</button>
         </form>
               
       </div>
@@ -70,6 +132,10 @@
       </div>
     </section>
     <section>
+    <form method="post" action="/inventory/deactivate-compounds-manually/" id="compounds-form">
+				{% csrf_token %}
+				<input type="hidden" name="plate_id" value="{{plate.id}}">
+				
       <h2>Compounds</h2>
       <table class="table table-bordered table-hover" id="table">
         <caption>
@@ -81,6 +147,7 @@
         </caption>
         <thead>
           <tr>
+            <th>Select</th>
             <th>Well</th>
             <th>Code</th>
             <th>SMILES</th>
@@ -91,11 +158,16 @@
           </tr>
         </thead>
         <tbody>
+          <tr id="first-line" class="hidden"><td></td></tr>
           {% for compound in compounds %}
           {% if compound.active %}
             <tr id="w-{{compound.well}}" class="active-row">
+              <td>
+									<input type="checkbox" name="{{compound.id}}" id="{{compound.id }}">
+								</td>
           {% else %}
             <tr id="w-{{compound.well}}" class="inactive-row">
+              <td></td>
           {% endif%}
             
             <td><div>{{compound.well}}</div></td>
@@ -141,6 +213,7 @@
         {% endfor %}
         </tbody>
       </table>
+      </form>
     </section>
     <section>
 	  <h2>Additional information</h2>

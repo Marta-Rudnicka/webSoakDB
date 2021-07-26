@@ -86,3 +86,16 @@ function filterRows(value){
 	}
 
 }
+
+
+
+
+  function hide(id){
+	console.log('hide');
+	subTable = document.getElementById(id);
+	subTable.className = "hidden";
+	hider =  document.getElementById(id + "-hider");
+	hider.className = "hidden";
+	shower = document.getElementById(id + "-shower");
+	shower.className = "";
+  }

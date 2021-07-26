@@ -34,6 +34,9 @@ class Compounds(models.Model):
     
     mol_image = models.ImageField(upload_to="images/molecules/", null=True, blank=True)
     
+    class Meta:
+        unique_together = ('smiles', 'code')
+
     def __str__ (self):
         return self.code
 

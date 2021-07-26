@@ -12,36 +12,18 @@
       document.getElementById(id).className = "hidden";
     }
 
-    function show(id){
-      console.log('show');
-      cont = document.getElementById(id);
-      cont.className = "iframe-container";
-      hider =  document.getElementById(id + "-hider");
-      hider.className = "";
-      shower = document.getElementById(id + "-shower");
-      shower.className = "hidden";
-    }
-
-    function hide(id){
-      console.log('hide');
-      subTable = document.getElementById(id);
-      subTable.className = "hidden";
-      hider =  document.getElementById(id + "-hider");
-      hider.className = "hidden";
-      shower = document.getElementById(id + "-shower");
-      shower.className = "";
-    }
-
-    function stretch(frame){
-      frame.style.height = 0;
-      const height = frame.contentWindow.document.body.scrollHeight;
-      if (height > 0){
-        frame.style.height=(frame.contentWindow.document.body.scrollHeight+20)+'px';
-      }
-      else{
-        frame.style.height = '400px';
-      }
-    }
+  function show(id){
+	console.log('show');
+	//subTable = document.getElementById(id);
+	//subTable.className = "";
+	const details = String.raw`{% include "availability-details.html" with initial_class="" %}`;
+	const tId = 'container-table-' + id;
+	document.getElementById(tId).innerHTML = `${details}`;
+	hider =  document.getElementById(id + "-hider");
+	hider.className = "";
+	shower = document.getElementById(id + "-shower");
+	shower.className = "hidden";
+  }
     
   </script>
   
@@ -51,11 +33,6 @@
     <section id="preset-list">  
       <div class="update-button">{{form_errors}} {{non_field_errors}}</div>
       <table id="table" class="table">
-        <col>
-        <col>
-        <col style="width: 800px">
-        <col>
-      </colgroup>
         <thead>
           <th>Name</th>
           <th>Description</th>
@@ -68,14 +45,20 @@
               <td>{{ preset.name }}</td>
               <td>{{ preset.description }}</td>
               <td>
-                {% if preset.subsets.count > 0 %}
+                
+                {% if preset.subsets|length > 0 %}
                 <div>
                   <ul>
-                  {% for subset in preset.subsets.all %}
-                    <li>{{ subset.library.name }} : <strong>{{ subset.compounds.count }}</strong> compounds </li>
+                  {% for subset in preset.subsets %}
+                    <li>{{ subset.library_name }} : <strong>{{ subset.compounds|length }}</strong> compounds </li>
                       <div class="list-in-table">
                         <table class="small-font-table">
                            <colgroup>
+                             <col style="width: 5%;">
+                             <col style="width: 20%;">
+                             <col>
+                             <col style="width: 15%;">
+                          </colgroup>
                           <thead>
                             <tr>
                               <th></th>
@@ -84,7 +67,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            {% for compound in subset.compounds.all %}
+                            {% for compound in subset.compounds %}
                             
                             <tr>
                             
@@ -97,22 +80,18 @@
                           </tbody>
                         </table>
                       </div>
-                      
-                  {% endfor %}            
-                  </ul>
-                  <div class="availability-details">Availability details 
-                        <span id="{{preset.id}}-shower" onclick=show({{preset.id}})>
+                      <div class="availability-details">Availability details 
+                        <span id="{{subset.id}}-shower" onclick=show({{subset.id}})>
                           {% include "chevron-down.html"%}
                         </span>
-                        <span id="{{preset.id}}-hider" onclick=hide({{preset.id}}) class="hidden">
+                        <span id="{{subset.id}}-hider" onclick=hide({{subset.id}}) class="hidden">
                           {% include "chevron-up.html"%}
                         </span> 
                       </div>
-                      <table>
-                        <div id="{{preset.id}}" class="hidden">
-                          <iframe id="{{preset.id}}-frame" loading="lazy" src="/inventory/preset-availability/{{preset.id}}/" class="preset-detail-iframe" onload=stretch(this)></iframe>
-                        </div>
-                      </table>
+                      <table id="container-table-{{subset.id}}"><p>subset.id: {{subset.id}}</table>
+                      <table>{% include "availability-details.html" with initial_class=""%}</table>
+                  {% endfor %}            
+                  </ul>
                 </div>
                 {% else %}
                 No libraries added yet <br>
@@ -132,7 +111,7 @@
                     {{ form.as_table }}
                     </table>
                     <input id="{{preset.id}}-id}" type="hidden" name="id" value="{{preset.id}}">
-                    <button type="submit" value="Submit" onclick="showOverlay([])">Save changes</button>                
+                    <button type="submit" value="Submit" onclick="showOverlay(['id_name'])">Save changes</button>                
                   </form>
                   <form class="" action="../delete-preset/" method="post" id="delete-{{preset.id}}">
                     {% csrf_token %}
@@ -155,7 +134,7 @@
         <table>
         {{ new_preset_form.as_table }}
         </table>
-        <input type="submit" value="Submit" onclick="showOverlay(['id_new_preset_library', 'id_new_preset_name', 'id_new_preset_compound_list'])">
+        <input type="submit" value="Submit" onclick="showOverlay(['id_name', 'id_new_library', 'id_new_compound_list'])">
       </form>
       {{form_errors}}
       </div>    

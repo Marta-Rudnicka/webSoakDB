@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Redirect } from "react-router-dom";
 
 class ProposalSelection extends React.Component {
-	
+	/*
 	constructor(props){
 		super(props);
 		this.state = {
@@ -23,24 +23,33 @@ class ProposalSelection extends React.Component {
 			this.setState({ proposals });
       });
       
-      this.props.logIn(null);
+     // this.props.logIn(null);
 	}
 	
 	getSelection(e){
 		this.setState({chosenName: e.target.value});
 	}
 	
-	
+	*/
 	render(){
+		/*
 		const options = this.state.proposals.map((proposal, index) => 
 			 <option key={index} value={proposal.proposal} htmlFor="proposal_name">{proposal.proposal}</option>
 		);
 		
-		let loggedIn = null;
-		loggedIn = this.props.proposal ?  <Redirect to="/selection/home/" /> : null;
+		let loggedIn = null;*/
+		let loggedIn = this.props.proposal ?  <Redirect to="/selection/home/" /> : null;
 		
-		return (
-		<main id="choose-proposal">
+		return ( 
+			<div>{loggedIn} </div>
+		);
+	}
+}
+
+export default ProposalSelection;
+
+//old content
+/*<main id="choose-proposal">
 			<section>
 			<h1>Proposals</h1>
 			<form>
@@ -51,13 +60,9 @@ class ProposalSelection extends React.Component {
 					{options}
 					</select>
 				</p>
-				<button onClick={event => this.props.logIn(this.state.chosenName)} >Confirm selection</button>
+			 /*	<button onClick={event => this.props.logIn(this.state.chosenName)} >Confirm selection</button>
+			<button disabled={true}>Confirm selection</button>
 			</form>
 			</section>
-			{loggedIn}
-		</main>
-		);
-	}
-}
-
-export default ProposalSelection;
+			{ loggedIn }
+		</main> */ 

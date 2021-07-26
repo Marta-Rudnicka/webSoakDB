@@ -5,6 +5,8 @@ FROM informaticsmatters/rdkit-python3-debian:Release_2021_03_2
 # Ref: https://deb.nodesource.com/setup_14.x
 # Ref: https://yarnpkg.com/en/docs/install
 
+RUN echo $USER
+
 USER root
 
 RUN apt-get update && apt-get install -y gnupg2
@@ -15,19 +17,34 @@ RUN \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
   wget -qO- https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   apt-get update && \
-  apt-get install -yqq nodejs yarn && \
-  pip3 install -U pip && pip3 install pipenv \
+  apt-get install -yqq nodejs yarn
+
+USER rdkit
+
+RUN pip3 install -U pip && pip3 install pipenv
 #  npm i npm@6 && \
+
+USER root
+
+RUN \
   curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && ln -s /root/.poetry/bin/poetry /usr/local/bin && \
   rm -rf /var/lib/apt/lists/*
 
+USER rdkit
+
 # Install Python Stuff
-RUN pip3 install django djangorestframework django-rest-knox psycopg2-binary seaborn python-slugify
+RUN pip3 install django djangorestframework django-rest-knox psycopg2-binary bokeh python-slugify
 
 # Move Stuff to a new place
 WORKDIR /usr/app
 COPY ./ /usr/app
 RUN cd /usr/app/
+
+USER root
+
+RUN chown -R rdkit webSoakDB
+
+USER rdkit
 
 # Configure npm and build site
 RUN npm init -y

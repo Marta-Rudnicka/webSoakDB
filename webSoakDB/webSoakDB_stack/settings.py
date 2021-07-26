@@ -27,12 +27,12 @@ SECRET_KEY = 'FprflpUfVtgFJc1AU3tzFvHgvbWGVeUD6vf4IxXp6s1aEYHgYd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#ALLOWED_HOSTS = [
-#	'xchemspa.diamond.ac.uk',
-#	'127.0.0.1',
-#]
+ALLOWED_HOSTS = [
+	'xchemspa-staging.diamond.ac.uk',
+	'127.0.0.1',
+]
 
-ALLOWED_HOSTS=['*']
+#ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
 
@@ -91,9 +91,11 @@ WSGI_APPLICATION = 'webSoakDB_stack.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'media/db/db.sqlite3',
     }
 }
+
+#database moved to /media/ folder temporarily to make mounting pvc on Kubernetes easier
 
 # If you want to use XCDB uncomment this code and add the correct credentials
 # DATABASES = {

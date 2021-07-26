@@ -42,7 +42,7 @@ class App extends Component {
   
   constructor(props){
     super(props);
-    this.logIn = this.logIn.bind(this);
+    //this.logIn = this.logIn.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
     this.trackUnsavedChanges = this.trackUnsavedChanges.bind(this);
     this.refreshAfterUpload = this.refreshAfterUpload.bind(this);
@@ -52,8 +52,21 @@ class App extends Component {
       }
     };
   
-  
-  logIn(name){
+  /*FOR THE DOME ONLY*/
+  componentDidMount() {
+		const apiUrl = '/api/proposals/demo/';
+		
+		axios.get(apiUrl)
+			.then(res => {
+			const proposal = res.data;
+			this.setState({ proposal });
+      });
+      
+     // this.props.logIn(null);
+	}
+
+
+ /* logIn(name){
     if(event){
       event.preventDefault();  
     }
@@ -68,7 +81,7 @@ class App extends Component {
     else{
       this.setState({ proposal : null });
     }
-  }
+  }*/
   
   updateSelection(libraries, subsets){
     //event.preventDefault();
@@ -76,7 +89,8 @@ class App extends Component {
     axios.patch(apiUrl, {libraries: libraries, subsets: subsets})
     .then(res =>{
       if (res.status===200){
-        this.logIn(this.state.proposal.proposal);
+        //this.logIn(this.state.proposal.proposal);
+        console.log('Saved changes')
       }
     })
     .catch(error => {
@@ -87,11 +101,20 @@ class App extends Component {
     })
   }
   
-
   refreshAfterUpload(){
+    console.log('fired refresh after upload')
+    const url = '/api/proposals/demo/';
+		
+		axios.get(url)
+			.then(res => {
+			const proposal = res.data;
+			this.setState({ proposal });
+      });
+  }
+/*  refreshAfterUpload(){
     this.props.logIn(this.state.proposal.proposal);  
   }
-   
+  */ 
   trackUnsavedChanges(bool){
     this.setState({unsavedChanges: bool})
   }
@@ -123,8 +146,8 @@ class App extends Component {
           <li className="nav-item">
             <Link onClick={e => this.confirmLeaving(e)} className="navbar-brand" to="/selection/summary/">Selection summary</Link>
           </li>
-          <li className="nav-item">
-            <Link onClick={e => this.confirmLeaving(e)} className="navbar-brand" to="/selection/">Change proposal</Link>
+          <li className="nav-item" > <a className="navbar-brand disabled">Change proposal</a>
+            {/*<Link onClick={e => this.confirmLeaving(e)} className="navbar-brand" to="/selection/">Change proposal</Link>*/ }
           </li>
           <li className="nav-item">
             <a onClick={e => this.confirmLeaving(e)} className="navbar-brand" href="/accounts/logout/">Log out</a>

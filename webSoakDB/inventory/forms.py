@@ -33,15 +33,17 @@ class AddLibToPreset(forms.Form):
 class NewPresetForm(forms.Form):
 	def __init__(self, libs=[], *args, **kwargs):
 		super(NewPresetForm, self).__init__(*args, **kwargs)
-		self.fields['name'] = forms.CharField(label='Name', required=True )
+		self.fields['new_preset_name'] = forms.CharField(label='Name', required=True )
 		self.fields['description'] = forms.CharField(widget=forms.Textarea, required=False)
-		self.fields['new_library'] = forms.ChoiceField(choices=libs, label='Add the first library to preset:', required=True)
-		self.fields['new_compound_list'] = forms.FileField(label='Upload compounds list for the new library', required=True)
+		self.fields['new_preset_library'] = forms.ChoiceField(choices=libs, label='Add the first library to preset:', required=True)
+		self.fields['new_preset_compound_list'] = forms.FileField(label='Upload compounds list for the new library', required=True)
 
 
-class EditPresetForm(NewPresetForm):
+class EditPresetForm(forms.Form):
 	def __init__(self, old_libs=[], new_libs=[], *args, **kwargs):
 		super(EditPresetForm, self).__init__(*args, **kwargs)
+		self.fields['name'] = forms.CharField(label='Name', required=True )
+		self.fields['description'] = forms.CharField(widget=forms.Textarea, required=False)
 		self.fields['new_library'] = forms.ChoiceField(choices = new_libs, label='Add new library to preset:', required=False)
 		self.fields['new_compound_list'] = forms.FileField(label='Upload compounds list for the new library', required=False)
 		self.fields['edited_library'] = forms.ChoiceField(choices = old_libs, label='Update selection from:', required=False)
