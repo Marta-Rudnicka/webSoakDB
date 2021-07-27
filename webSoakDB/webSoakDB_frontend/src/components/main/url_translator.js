@@ -1,33 +1,26 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
-import PlateLookup from '../plate_lookup/PlateLookup.js';
+import CompoundLookupPlate from '../plate_lookup/CompoundLookupPlate.js';
+import CompoundLookupPreset from '../plate_lookup/CompoundLookupPreset.js';
+import CompoundLookupCherryPick from '../plate_lookup/CompoundLookupCherryPick.js';
 
-/* translates url parameters to appropriate props for PlateLookup*/
+/* translates url parameters and chooses the right component to display compound data*/
 export default function UrlTranslator() {
 	let { type, id }  = useParams();
-	let is_a_plate;
-	let is_a_preset;
-	
+
 	if (type==="plate"){
-		is_a_plate = true;
-		is_a_preset = false;
+		return (
+			<CompoundLookupPlate id={id} />
+		);
 	}
 	else if (type=="preset"){
-		is_a_plate = false;
-		is_a_preset = true;
+		return (
+			<CompoundLookupPreset id={id} />
+		);
 	}
 	else {
-		is_a_plate = false;
-		is_a_preset = false;
+		return (
+			<CompoundLookupCherryPick id={id} />
+		);
 	}
-	
-	return (
-		<
-			PlateLookup 
-			id={id} 
-			is_a_plate={is_a_plate} 
-			is_a_preset={is_a_preset} 
-			/>
-	)
-	
 }

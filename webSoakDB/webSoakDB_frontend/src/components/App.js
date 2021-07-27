@@ -51,12 +51,12 @@ class App extends Component {
     };
   
   
-  logIn(name){
+  logIn(id){
     if(event){
       event.preventDefault();  
     }
-    if (name){
-      const proposalApiUrl = '/api/proposals/' + name;
+    if (id){
+      const proposalApiUrl = '/api/proposals/' + id + '/';
       axios.get(proposalApiUrl)
         .then(res => {
         const proposal = res.data;
@@ -69,12 +69,16 @@ class App extends Component {
   }
   
   updateSelection(libraries, subsets){
-    //event.preventDefault();
-    const apiUrl='/api/update_proposal_selection/' + this.state.proposal.proposal + '/';
+    const propId = this.state.proposal.id;
+    console.log(this.state.proposal);
+    
+    const apiUrl='/api/update_proposal_selection/' + propId + '/';
     axios.patch(apiUrl, {libraries: libraries, subsets: subsets})
     .then(res =>{
+      event.preventDefault();
       if (res.status===200){
-        this.logIn(this.state.proposal.proposal);
+        console.log(this.state.proposal)
+        this.logIn(propId);
       }
     })
     .catch(error => {
@@ -87,7 +91,7 @@ class App extends Component {
   
 
   refreshAfterUpload(){
-    this.props.logIn(this.state.proposal.proposal);  
+    this.logIn(this.state.proposal.proposal);  
   }
    
   trackUnsavedChanges(bool){

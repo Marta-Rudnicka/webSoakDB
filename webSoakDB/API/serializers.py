@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Library, LibraryPlate, Compounds, Protein, CrystalPlate, Project, LibrarySubset
+from .models import IspybAuthorization, Library, LibraryPlate, Compounds, Protein, CrystalPlate, Project, LibrarySubset
 
 class LibrarySerializer(serializers.ModelSerializer):
 	class Meta:
@@ -77,11 +77,20 @@ class CrystalPlateSerializer(serializers.ModelSerializer):
 		fields = ['name', 'drop_volume', 'plate_type', 'crystals']
 		depth=2
 
+class IspybAuthorizationSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = IspybAuthorization
+		fields = ['id', 'project', 'users', 'proposal_visit']
+
 class ProjectListSerializer(serializers.Serializer):
-	proposal = serializers.CharField(max_length=32)
+	id = serializers.IntegerField()
+	#proposal = serializers.CharField(max_length=32)
 	#libraries = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 	libraries = LibrarySerializer(many=True)
 	subsets = LibrarySubsetSerializer(many=True)	
+	auth = IspybAuthorizationSerializer(many=True)
+
+
 
 class LibrarySubsetSerializer(serializers.ModelSerializer):
 	class Meta:

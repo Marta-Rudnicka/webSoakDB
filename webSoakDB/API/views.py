@@ -1,20 +1,21 @@
+from django.db.models import query
 from django.shortcuts import get_object_or_404
-from .models import Library, LibraryPlate, Project, Preset, LibrarySubset
+from .models import IspybAuthorization, Library, LibraryPlate, Project, Preset, LibrarySubset
 from django.views.generic import ListView #RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-import json
 from django.http import JsonResponse
-from .serializers import (LibrarySerializer, 
-							SourceWellStatSerializer,
-							CurrentPlateSerializer, 
-							PresetSerializer, 
-							ProjectListSerializer, 
-							LibraryPlateSerializer, 
-							ProjectUpdateSerializer,
-							LibrarySubsetStatSerializer,
-							LibrarySubsetSerializer,
-						)
+from .serializers import (
+	LibrarySerializer, 
+	SourceWellStatSerializer,
+	CurrentPlateSerializer, 
+	PresetSerializer, 
+	ProjectListSerializer, 
+	LibraryPlateSerializer, 
+	ProjectUpdateSerializer,
+	LibrarySubsetStatSerializer,
+	LibrarySubsetSerializer,
+)
 
 import itertools
 
@@ -52,11 +53,27 @@ class ProjectList(generics.ListAPIView):
 	serializer_class = ProjectListSerializer
 	permission_classes = [AllowAny]
 
-class ProjectDetail(generics.RetrieveUpdateAPIView):
+class ProjectListAuth(generics.ListAPIView):
+	def get_queryset(self):
+		username = self.kwargs['username']
+		auths = IspybAuthorization.objects.filter(users__username = username).all()
+		print(auths)
+		project_list = []
+		for a in auths:
+			project_list = project_list + list(a.project_obj.all())
+		
+		return project_list
+
+	serializer_class = ProjectListSerializer
 	permission_classes = [AllowAny]
-	
-	queryset = Project.objects.all()	
-	lookup_field = "proposal"
+
+class ProjectDetail(generics.RetrieveUpdateAPIView):
+	#def get_object(self):
+	#	proposal_str = self.kwargs['proposal']
+	#	print(IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0])
+	#	return IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0]
+	queryset = Project.objects.all()
+	permission_classes = [AllowAny]
 	serializer_class = ProjectListSerializer
 	
 
@@ -91,9 +108,13 @@ class SubsetStatList(generics.RetrieveAPIView):
 
 class UpdateProjectSelection(generics.RetrieveUpdateAPIView):
 	authentication_classes = []
+	#def get_object(self):
+	#	proposal_str = self.kwargs['proposal']
+	#	print(IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0])
+	#	return IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0]
 
 	queryset = Project.objects.all()	
-	lookup_field = "proposal"
+	#lookup_field = "proposal"
 	serializer_class = ProjectUpdateSerializer
 	permission_classes = [AllowAny]
 	

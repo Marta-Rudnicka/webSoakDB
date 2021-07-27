@@ -1,11 +1,17 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.db.models.deletion import CASCADE
+from django.contrib.auth.models import User
 
 class IspybAuthorization(models.Model):
     #dummy model for testing
-    proposal_visit = models.CharField(max_length=200, unique=True)
-    
+    project = models.CharField(max_length=200, unique=True, blank=True, null=True)
+    proposal_visit = models.CharField(max_length=200, unique=True,  blank=True, null=True)
+    users = models.ManyToManyField(User, blank=True)
+
+    class Meta:
+        unique_together = ('project', 'proposal_visit')
+
 
 #INVENTORY DATA
 
@@ -68,7 +74,6 @@ class LibraryPlate(models.Model):
     def __str__ (self):
         return f"[{self.id}]{self.library}, {self.barcode}"
 
-
 class PlateOpening(models.Model):
 	'''An instance when a library plate is opened'''
 	plate = models.ForeignKey(LibraryPlate, on_delete=models.CASCADE, related_name="opened")
@@ -87,7 +92,6 @@ class SourceWell(models.Model):
 
     def __str__ (self):
         return f"{self.library_plate}: {self.well}"
-
 
 class SWStatuschange(models.Model):
 	'''an instance of marking a SourceWell active or inactive'''
@@ -171,7 +175,6 @@ class CrystalPlate(models.Model):
     plate_type = models.CharField(max_length=50, blank=True, null=True)
     project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
     
-
 #modified: added more attributes    
 class Crystal(models.Model):
 
@@ -208,7 +211,6 @@ class Crystal(models.Model):
 
     class Meta:
         unique_together = ('crystal_name', 'project', 'product') #removed compound from unique_together to allow for cocktails
-
 
 #new class (SPA experimental data)	
 class SpaCompound(models.Model):
@@ -294,8 +296,6 @@ class SolventTestingData(SoakAndCryoValues):
     solvent_name = models.CharField(max_length=64, blank=True, null=True)
     batch = models.ForeignKey(SolventBatch, blank=True, null=True, on_delete=models.CASCADE)
 
-
-
 class DataProcessing(models.Model):
     auto_assigned = models.TextField(blank=True, null=True)
     cchalf_high = models.FloatField(blank=True, null=True)
@@ -380,8 +380,6 @@ class Lab(models.Model):
     mounted_timestamp = models.DateTimeField(blank=True, null=True)
     ispyb_status = models.CharField(max_length=100, blank=True, null=True)
 
-
-
 class Refinement(models.Model):
     bound_conf = models.CharField(max_length=255, blank=True, null=True, unique=True)
     cif = models.TextField(blank=True, null=True)
@@ -416,7 +414,6 @@ class PanddaAnalysis(models.Model):
     class Meta:
         db_table = 'pandda_analysis'
 
-
 class PanddaRun(models.Model):
     input_dir = models.TextField(blank=True, null=True)
     pandda_analysis = models.ForeignKey(PanddaAnalysis, on_delete=models.CASCADE)
@@ -428,7 +425,6 @@ class PanddaRun(models.Model):
     class Meta:
         db_table = 'pandda_run'
 
-
 class PanddaStatisticalMap(models.Model):
     resolution_from = models.FloatField(blank=True, null=True)
     resolution_to = models.FloatField(blank=True, null=True)
@@ -438,7 +434,6 @@ class PanddaStatisticalMap(models.Model):
     class Meta:
         db_table = 'pandda_statistical_map'
         unique_together = ('resolution_from', 'resolution_to', 'pandda_run')
-
 
 class PanddaSite(models.Model):
     pandda_run = models.ForeignKey(PanddaRun, on_delete=models.CASCADE)
@@ -500,7 +495,6 @@ class PanddaEvent(models.Model):
         db_table = 'pandda_event'
         unique_together = ('site', 'event', 'crystal', 'pandda_run')
 
-
 class PanddaEventStats(models.Model):
     event = models.ForeignKey(PanddaEvent, on_delete=models.CASCADE)
     one_minus_bdc = models.FloatField(blank=True, null=True)
@@ -553,14 +547,12 @@ class PanddaEventStats(models.Model):
     class Meta:
         db_table = 'pandda_event_stats'
 
-
 class MiscFiles(models.Model):
     file = models.FileField(max_length=500)
     description = models.TextField()
 
     class Meta:
         db_table = 'MiscFiles'
-
 
 class FragalysisTarget(models.Model):
     open = models.BooleanField()
@@ -573,7 +565,6 @@ class FragalysisTarget(models.Model):
 
     class Meta:
         db_table = 'FragalysisTarget'
-
 
 class FragalysisLigand(models.Model):
     ligand_name = models.CharField(max_length=255)
@@ -592,7 +583,6 @@ class FragalysisLigand(models.Model):
 
     class Meta:
         db_table = 'FragalysisLigand'
-
 
 class Ligand(models.Model):
     fragalysis_ligand = models.ForeignKey(FragalysisLigand, on_delete=models.CASCADE)
@@ -614,7 +604,6 @@ class ReviewResponses(models.Model):
     class Meta:
         db_table = 'review_responses'
 
-
 # New Class as the old one is STILL IN USE!
 class ReviewResponses2(models.Model):
     crystal = models.ForeignKey(Crystal, on_delete=models.CASCADE)  # This may not be correctly linked in psql...
@@ -630,7 +619,6 @@ class ReviewResponses2(models.Model):
     class Meta:
         db_table = 'review_responses_new'
 
-
 class BadAtoms(models.Model):
     Review = models.ForeignKey(ReviewResponses2, on_delete=models.CASCADE)
     Ligand = models.ForeignKey(Ligand, on_delete=models.CASCADE)
@@ -639,7 +627,6 @@ class BadAtoms(models.Model):
 
     class Meta:
         db_table = 'bad_atoms'
-
 
 class MetaData(models.Model):
     Ligand_name = models.ForeignKey(FragalysisLigand, on_delete=models.CASCADE)

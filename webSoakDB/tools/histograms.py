@@ -1,15 +1,13 @@
-from API.models import Library, LibraryPlate, LibrarySubset, SourceWell, Compounds
+from API.models import Library, LibraryPlate, LibrarySubset, Compounds
 from webSoakDB_stack.settings import MEDIA_ROOT
 
 from bokeh.embed import components
 import numpy as np
-from bokeh.plotting import figure, output_file, save
+from bokeh.plotting import figure
 import os
 
-
-from datetime import datetime
-
 def get_histogram(obj, obj_type, attr):
+	#produces HTML code of the histogram of distribution of values of <attr> in obj
 	try:
 		compounds = get_compounds(obj, obj_type)
 		data = dataset(compounds, attr)
@@ -25,6 +23,7 @@ def get_histogram(obj, obj_type, attr):
 		return 204
 
 def update_histograms(obj, obj_type):
+	#updates histograms of <obj>; called by function that may change availability of compounds
 	compounds = get_compounds(obj, obj_type)
 		
 	path = MEDIA_ROOT + '/html_graphs/' + obj_type + '/' + str(obj.id) + '/'
@@ -51,6 +50,7 @@ def update_histograms(obj, obj_type):
 		f.close()
 		
 def get_selection_histogram(libs, subsets, attr):
+	#produce a histogram for all compounds selected in Selection interface (including unsaved items)
 	try:
 		compounds = get_selection_compounds(libs, subsets)
 		data = dataset(compounds, attr)
@@ -92,26 +92,22 @@ def get_selection_compounds(libs, subsets):
 		pass
 	return set([c for c in compounds if c.smiles ]) #remove <None>s and duplicates
 
-
-#the bottleneck
 def get_current_lib_compounds(library):
+	#get list of compounds in the current plate(s) of <library>
 	current_plates = LibraryPlate.objects.filter(library = library, current=True)
 	
 	compounds = []
-	source_wells = []
 	for p in current_plates:
 		#ignore plates with no smiles submitted
 		if p.compounds.all()[0].compound.smiles == None:
 			return [None]
 		
+		#using raw SQL query to avoid performance issues
 		query = 'SELECT * FROM API_compounds INNER JOIN API_sourcewell ON API_sourcewell.compound_id = API_compounds.id WHERE library_plate_id = ' + str(p.id) + ' AND active = True'
 		compounds += Compounds.objects.raw(query)
 		
-	#	source_wells += p.compounds.all().filter(active=True).prefetch_related("compound")
-	#return [sw.compound for sw in source_wells] #this is the slow part
 	return compounds
 
-#alternative bottleneck
 def get_preset_compounds(preset):
 	c = []
 	for s in preset.subsets.all():
@@ -120,26 +116,6 @@ def get_preset_compounds(preset):
 
 def dataset(compounds, attr):
 	return [getattr(c, attr) for c in compounds]
-
-'''
-#I also tried the this:
-
-def get_current_lib_compounds(library):
-	current_plates = LibraryPlate.objects.filter(library = library, current=True)
-	source_wells = []
-	for p in current_plates:
-		source_wells += p.compounds.all().filter(active=True)
-	return source_wells
-
-def dataset(compounds, attr):
-	return [getattr(c.compound, attr) for c in compounds]
-
-
-The effect was that dataset() became the bottleneck.
-I also tried using different loops to get my list of numbers, but I didn't get anything 
-significantly better than a list comprehension.
-
-'''
 
 def make_plot(data, bins, title):
 	hist, edges = np.histogram(data, density=False, bins=bins)
@@ -158,6 +134,7 @@ def make_plot(data, bins, title):
 
 
 properties_dict = {
+	#maps Compounds model attributes to graph caption
 	"mol_wt" : "Molecular weight (Da)" ,
 	"tpsa" : "TPSA (Å)" ,
 	"log_p" : "LogP" ,

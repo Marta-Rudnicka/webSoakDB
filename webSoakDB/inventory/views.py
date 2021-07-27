@@ -16,20 +16,34 @@ from .inv_helpers import (
 	fake_preset_copy, 
 	current_library_selection,
 	set_status,
+	parse_fedids
 )
 from tools.uploads_downloads import upload_temporary_subset, parse_compound_list, parse_id_list
 from .dt import get_well_dictionary, manage_sw_status_change
-from .forms import LibraryForm, LibraryPlateForm, PlateUpdateForm, NewPresetForm, EditPresetForm, DTMapForm, PlateOpeningForm, ProjectForm, UnsavedSubsetForm
+from .forms import (
+	AddFedIDForm,
+	AddVisitForm,
+	LibraryForm, 
+	LibraryPlateForm, 
+	PlateUpdateForm, 
+	NewPresetForm, 
+	EditPresetForm, 
+	DTMapForm, 
+	PlateOpeningForm, 
+	OldProjectForm,
+	NewProjectForm,
+	UnsavedSubsetForm
+)
 from tools.validators import data_is_valid, selection_is_valid
 from tools.histograms import update_histograms
 from tools.uploads_downloads import upload_plate, upload_subset, find_source_wells, source_wells_to_csv 
-from API.models import Library, LibraryPlate, LibrarySubset, SourceWell, Compounds, Preset, PlateOpening, Project
+from API.models import Library, LibraryPlate, LibrarySubset, SourceWell, Compounds, Preset, PlateOpening, Project, IspybAuthorization
+from django.contrib.auth.models import User
 
 #VIEWS HANDLING GET REQUESTS
 @staff_member_required
 def index(request):
-	form = ProjectForm()
-	return render(request, "inventory/inventory-index.html", {"form" : form})
+	return render(request, "inventory/inventory-index.html")
 
 @staff_member_required
 def libraries(request):
@@ -47,42 +61,16 @@ def plates(request):
 	plate_form = LibraryPlateForm(libs=current_library_selection(True))
 	return render(request, "inventory/plates.html", {"libraries": libraries, "plate_form" : plate_form})
 
-'''
 @staff_member_required
-def presets(request):
-
-	presets = Preset.objects.all().order_by("name")
-	all_libs = current_library_selection(False)
-	new_preset_form = NewPresetForm(libs=([("", "Select library...")] + all_libs))
-
-	#make copy of presets data, and add information about availability of the compounds
-	presets_copy = presets # [fake_preset_copy(preset) for preset in presets]
-	form_dict = {}
-	
-	for p in presets_copy:
-		#generate lists of valid library choices for the preset
-		old_libs_set = {(s.library.id, s.library.name) for s in p.subsets.all()}
-		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
-		old_libs = [("", "Select library...")] + list(old_libs_set)
-		
-		form_dict[p] = EditPresetForm(old_libs=old_libs, new_libs=new_libs, initial={
-			"name": p.name, 
-			"description": p.description, 
-			"new_library": "", 
-			"new_compound_list": None, 
-			"edited_library": "",
-			"updated_compound_list": None,
-			"delete_library": "",
-			})
-	t6 = datetime.now()
-	#print(t6-t5, 'made form_dict')		
-	return render(request, "inventory/presets.html", {
-		"presets": presets_copy, 
-		"new_preset_form": new_preset_form,
-		"form_dict" : form_dict,
+def projects(request):
+	old_project_form = OldProjectForm()
+	new_project_form = NewProjectForm()
+	fed_id_form = AddFedIDForm()
+	return render(request, "inventory/projects.html", {
+		"old_project_form" : old_project_form, 
+		"new_project_form" : new_project_form,
+		"fed_id_form" : fed_id_form
 		})
-'''
-
 
 @staff_member_required
 def presets(request):
@@ -207,7 +195,7 @@ def track_usage(request, pk, date, mode):
 
 @staff_member_required
 def proposal(request):
-	form = ProjectForm(request.POST)
+	form = OldProjectForm(request.POST)
 	if request.method == "POST":	
 		if form.is_valid():
 			try:
@@ -215,13 +203,12 @@ def proposal(request):
 				proposal = Project.objects.get(proposal=pr)
 				subsets = get_subsets_with_availability(set(proposal.subsets.all()))
 				
-				return render(request, "inventory/proposal.html", {'proposal' : proposal, 'subsets': subsets})
+				return render(request, "inventory/proposal.html", {'proposal' : proposal, 'subsets': subsets, 'visit_form' : AddVisitForm()})
 			except(ObjectDoesNotExist):
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': ['Proposal not found']})
 				
 		else:
 			return render(request, "webSoakDB_backend/error_log.html", {'error_log': [form.errors, form.non_field_errors]})
-
 
 #FORM ACTION VIEWS (HANDLING POST REQUESTS)
 @staff_member_required
@@ -630,7 +617,51 @@ def delete_multiple_plates(request):
 			plate.delete()
 			if plate.current:
 				update_histograms(plate.library, "library")
+
 		return HttpResponseRedirect('/inventory/plates/')
+
+@staff_member_required
+def add_project(request):
+	if request.method == "POST":
+		form = NewProjectForm(request.POST)
+		if form.is_valid():
+			proposal = request.POST["proposal"]
+			title = request.POST["title"]
+			#fedids = parse_fedids(request.POST["fedids"])
+			fedids = request.POST["fedids"]
+			if request.POST.get("industry_user", False):
+				industry_user = True
+			else:
+				industry_user = False
+
+			first_visit = proposal + '-1'
+
+			new_project = Project.objects.create(
+				proposal=proposal, 
+				title=title, 
+				fedids=fedids, 
+				industry_user=industry_user
+			)
+			
+			new_auth = IspybAuthorization.objects.create(project=title, proposal_visit=first_visit)
+
+			for fedid in parse_fedids(fedids):
+				try:
+					user = User.objects.get(username=fedid)
+				except ObjectDoesNotExist:
+					user = User.objects.create(username=fedid)
+				
+				new_auth.users.add(user)
+				new_auth.save()
+			
+			new_project.auth.add(new_auth)
+			new_auth.save()
+			
+			return HttpResponseRedirect('../projects')
+		else:
+			return render(request, "webSoakDB_backend/error_log.html")	
+
+				
 
 def get_subset_map(request):
 	if request.method == "POST":

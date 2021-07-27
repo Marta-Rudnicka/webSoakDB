@@ -9,7 +9,7 @@ class ProposalSelection extends React.Component {
 		super(props);
 		this.state = {
 			proposals: [],
-			chosenName: "",
+			chosenProject: "",
 			}
 		this.getSelection = this.getSelection.bind(this);
 	}
@@ -27,15 +27,37 @@ class ProposalSelection extends React.Component {
 	}
 	
 	getSelection(e){
-		this.setState({chosenName: e.target.value});
+		this.setState({chosenProject: e.target.value});
 	}
 	
+	getProposalString(project){
+		if (! project.auth[0]) {
+			return null;
+		}
+		const proposal_visit = project.auth[0].proposal_visit;
+		const regex =  /([A-Za-z0-9_]+)(\-[0-9]+)/;
+		const m = proposal_visit.match(regex);
+	
+		if (m===null){
+			return null;
+		}
+		else{
+			return m[1];
+		}
+	}
 	
 	render(){
 		
-		const options = this.state.proposals.map((proposal, index) => 
-			 <option key={index} value={proposal.proposal} htmlFor="proposal_name">{proposal.proposal}</option>
-		);
+		const options = this.state.proposals.map((proposal, index) => {
+			 return (
+			<option
+				key={index} 
+				value={proposal.id} 
+				htmlFor="proposal_name"
+			>
+				{this.getProposalString(proposal)}: {proposal.auth[0] ? proposal.auth[0].project : null}
+			</option>);
+		});
 		
 		//let loggedIn = null;
 		let loggedIn = this.props.proposal ?  <Redirect to="/selection/home/" /> : null;
@@ -47,14 +69,14 @@ class ProposalSelection extends React.Component {
 				<section>
 					<h1>Proposals</h1>
 					<form>
-						<legend>Select proposal to manage</legend>
+						<legend>Select project to manage</legend>
 						<p>
 							<select name="proposal_name" onChange={event => {this.getSelection(event)}}>
 								<option value="">...</option>
 							{options}
 							</select>
 						</p>
-						<button onClick={event => this.props.logIn(this.state.chosenName)} >Confirm selection</button>
+						<button onClick={event => this.props.logIn(this.state.chosenProject)} >Confirm selection</button>
 					</form>
 			</section>
 		</main>

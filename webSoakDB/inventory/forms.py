@@ -1,5 +1,5 @@
 from django import forms
-from API.models import Library, Preset, PlateOpening
+from API.models import Library, Preset, PlateOpening, Project
 
 
 #presets = [("", "Select preset...")] + [(preset.id, preset.name) for preset in Preset.objects.all()]
@@ -58,12 +58,24 @@ class PlateOpeningForm(forms.ModelForm):
 		model = PlateOpening
 		fields = ['date', 'reason']
 
-class ProjectForm(forms.Form):
-	proposal = forms.CharField(label='Proposal', required=True)
+class OldProjectForm(forms.Form):
+	proposal = forms.CharField(label="Proposal", required=True)
 
 class UnsavedSubsetForm(forms.Form):
 	def __init__(self, libs=[], *args, **kwargs):
 		super(UnsavedSubsetForm, self).__init__(*args, **kwargs)
 		self.fields['library'] = forms.ChoiceField(choices = libs, label='Library:', required=True)
 		self.fields['compound_list'] = forms.FileField(label='Upload compounds list', required=True)
-		
+
+class AddVisitForm(forms.Form):
+	number = forms.IntegerField(label="Visit number", required=True)
+
+class NewProjectForm(forms.Form):
+	proposal = forms.CharField(label="Proposal", required=True)
+	title = forms.CharField(label="Title", required=False)
+	fedids = forms.CharField(label="FedIDs*", required=False)
+	industry_user = forms.BooleanField(label="Industry user", required=False)
+
+class AddFedIDForm(forms.Form):
+	fedids = forms.CharField(label="FedIDs", required=True)
+

@@ -18,14 +18,8 @@
     </section>
 
     <section>
-      <h2>Manage proposals</h2>
-      <p>Edit user's library plates and experimental data</p>
-      <form method="post" action="/inventory/proposal/">
-		  {% csrf_token %}
-		  <table>
-		  {{ form.as_table }}
-		  </table>
-		  <button type="submit">Submit</button>
+      <h2><a href="projects">Manage projects</a></h2>
+      <p>Create new projects, and edit user's library plates or experimental data in existing projects</p>
       </form>
     </section>
     <section>

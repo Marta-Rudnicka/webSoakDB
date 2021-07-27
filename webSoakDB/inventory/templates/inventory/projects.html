@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% load static %}
+  {% block main %}
+  
+  <main id="project">
+    <h1>Manage projects</h1>
+    <section>
+        <h2>Create new project </h2>
+        <form method="post" action="/inventory/create-project/">
+            {% csrf_token %}
+            <table>
+              {{new_project_form.as_table}}
+            </table>
+            <span class="small">* FedIDs of users who have access to the project (separated by commas)</span>
+             <button type="submit">Submit</button>
+        </form>
+    </section>
+    <section>
+        <h2>Manage existing project</h2>
+         <form method="post" action="/inventory/proposal/">
+		  {% csrf_token %}
+		  <table>
+		    {{ old_project_form.as_table }}
+		  </table>
+      
+		  <button type="submit">Submit</button>
+      </form>
+    </section>    
+  </main>
+  {% endblock %}

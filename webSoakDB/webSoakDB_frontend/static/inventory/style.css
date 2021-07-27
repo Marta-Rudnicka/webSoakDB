@@ -28,6 +28,25 @@ main#compound-lookup {
 	grid-template-columns: 300px auto;
 }
 
+main#project {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	width: 1000px;
+	grid-gap: 10px;
+	margin: auto;
+}
+
+main#project button {
+	position: absolute;
+	bottom: 5px;
+	left: 0;
+}
+
+main#project section {
+	padding: 10px;
+	padding-bottom: 25px;
+}
+
 main h1 {
 	grid-column: 1/-1;
 }
@@ -415,7 +434,14 @@ span.well-representation {
 
 main#proposal {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 2fr 1fr;
+	width: 1600px;
+	margin: auto;
+}
+
+#visits {
+	grid-row: 2/4;
+    grid-column: 2/3;
 }
 
 .list-in-table-pix{

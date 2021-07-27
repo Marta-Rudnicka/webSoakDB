@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
 	#general purpose generic endpoints:
-	#path("library_list/", views.LibraryList.as_view(), name="library_list"),
 	path("library_detail/<int:pk>/", views.LibraryDetail.as_view(), name="library_detail"),
 	path("compounds/<int:pk>/", views.PlateCompoundList.as_view(), name="api_lib"),
 	path("subset_detail/<int:pk>/", views.SubsetDetail.as_view()),
@@ -15,7 +14,8 @@ urlpatterns = [
 	path("preset_list/", views.preset_list, name="preset_list"),
 	path("preset_detail/<int:pk>/", views.PresetDetail.as_view(), name="preset_detail"),
 	path("proposals/", views.ProjectList.as_view(), name="proposals"),
-	path("proposals/<str:proposal>/", views.ProjectDetail.as_view(), name="proposal_detail"),
+	path("projects-auth/<str:username>/", views.ProjectListAuth.as_view()),
+	path("proposals/<int:pk>/", views.ProjectDetail.as_view(), name="proposal_detail"),
 	path("current_library_options/", views.current_library_options, name="current_library_options"),
 	
 	#specific-purpose custom endpoints:
@@ -30,6 +30,6 @@ urlpatterns = [
 	path("current_plates_list/<int:pk>/", views.CurrentPlatesForLib.as_view(), name="library_detail"),
 	
 	#to update library or subset selection by passing it an array of ints (representing ids)
-	path("update_proposal_selection/<str:proposal>/", views.UpdateProjectSelection.as_view(), name="update_proposal_selection"),	
+	path("update_proposal_selection/<int:pk>/", views.UpdateProjectSelection.as_view(), name="update_proposal_selection"),	
 
 ]

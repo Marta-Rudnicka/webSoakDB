@@ -89,3 +89,8 @@ def get_subsets_with_availability(*args):
 		subset_copies.append(SubsetCopyWithAvailability(args[0], args[1]))
 	
 	return subset_copies
+
+def parse_fedids(string):
+	return [s.strip() for s in string.split(',')]
+	#TODO: validate fedids
+	

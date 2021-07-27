@@ -92,13 +92,8 @@ class SubsetCopyWithAvailability:
 			self.availability = self.get_compound_availability(self.compounds, self.library)
 
 	def get_compound_availability(self, desired_compounds, library):
-		t1 = datetime.now()
 		plate_count = self.plates_in_library()
-		t2 = datetime.now()
-		print(t2-t1, 'counted plates')
 		single_plates = self.rank_single_plates(desired_compounds, library)
-		t3 = datetime.now()
-		print(t3-t2, 'got single plates')
 		if plate_count in [0, 1]:
 			return single_plates[:9]
 		else:
