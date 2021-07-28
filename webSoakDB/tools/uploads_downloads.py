@@ -172,3 +172,80 @@ def source_wells_to_csv(source_wells, file_path, filename_prefix):
 		response['Content-Disposition'] = "attachment; filename=%s" % filename
 	
 	return response
+
+#CREATE CSV FILES WITH COMPOUND LISTS (for plates, subsets or preset)
+def basic_csv_headers():
+	return "Compound Code, Well, SMILES, Concentration"
+
+def extended_csv_headers():
+	return ", Molecular weight (Da), \
+TPSA, \
+LogP, \
+Number of valence electrons, \
+Number of hydrogen bond acceptors, \
+Number of hydrogen bond donors, \
+Number of heteroatoms, \
+Number of rotable bonds, \
+Number of rings , \
+Number of heavy atoms , \
+Mol. weight of heavy atoms (Da), \
+Number of NH and OH , \
+Number of nitrogens and oxygens"
+
+def append_mol_properties_to_csv(compound):
+	return ', ' + str(compound.mol_wt) + ', ' \
+		+ str(compound.tpsa) + ', ' \
+		+ str(compound.log_p) + ', '\
+		+ str(compound.num_val_electrons) + ', '\
+		+ str(compound.num_h_acceptors) + ', '\
+		+ str(compound.num_h_donors) + ', '\
+		+ str(compound.num_het_atoms) + ', '\
+		+ str(compound.num_rot_bonds) + ', '\
+		+ str(compound.ring_count) + ', '\
+		+ str(compound.heavy_atom_count) + ', '\
+		+ str(compound.heavy_atom_mol_wt) + ', '\
+		+ str(compound.nhoh_count) + ', '\
+		+ str(compound.no_count)
+
+def serve_csv_compound_list(header, collection, filename, include_details):
+	with open('files/plate-map.csv', 'r+') as f:
+		f.truncate(0)
+		f.write(header + "\n")
+
+		#add appropriate data depending on the type of compound collection
+		if "LibraryPlate" in str(type(collection)):
+			f = add_plate_map_data_to_file(collection, f, include_details)
+		if "LibrarySubset" in str(type(collection)):
+			f = add_subset_data_to_file(collection, f, include_details, False)
+		if "Preset" in str(type(collection)):
+			for subset in collection.subsets.all():
+				f = add_subset_data_to_file(subset, f, include_details, True)
+		f.close()
+	
+	with open('files/plate-map.csv', 'r+') as f:
+		response = HttpResponse(f, content_type='text/csv')
+		response['Content-Disposition'] = "attachment; filename=%s" % filename
+		return response
+
+def add_plate_map_data_to_file(plate, file, include_details):
+	for compound in plate.compounds.filter(active=True):
+		line = compound.compound.code + ',' + compound.well + ',' + compound.compound.smiles + ',' + str(compound.concentration)
+		if include_details:
+			line += append_mol_properties_to_csv(compound.compound)
+		line += "\n"
+		file.write(line)
+	return file
+
+def add_subset_data_to_file(subset, file, include_details, is_preset):
+	if is_preset:
+		lib_name = subset.library.name + ','
+	else:
+		lib_name = ""
+
+	for compound in subset.compounds.all():
+		line = lib_name + compound.code + ',' + compound.smiles
+		if include_details:
+			line = line + append_mol_properties_to_csv(compound)
+		line += "\n"
+		file.write(line)
+	return file

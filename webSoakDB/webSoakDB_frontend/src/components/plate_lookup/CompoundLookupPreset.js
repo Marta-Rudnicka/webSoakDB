@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import CompoundLookupCherryPick from './CompoundLookupCherryPick';
 import TableRowPreset from './table_row_preset';
+import ExportBar from './export_bar';
 
 class CompoundLookupPreset extends CompoundLookupCherryPick {
 	
@@ -84,7 +85,10 @@ class CompoundLookupPreset extends CompoundLookupCherryPick {
 				Show Library
 			</button>
 		);
+	}
 
+	getExportBar(){
+		return <ExportBar url="preset" id={this.props.id} label= "compound list"/>;
 	}
 
 }

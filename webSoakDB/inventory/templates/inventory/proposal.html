@@ -68,16 +68,7 @@
         </table>
         <input type="submit" value="Submit">
     </form>
-    <h3>Add another user to project</h3>
-    <form action="../add-fedis-to-project/" method="post">
-       {% csrf_token %}
-        <input type="hidden" name="proposal" value={{proposal.proposal}} >
-        <table>
-          {{ fed_id_form.as_table }}
-        </table>
-        <input type="submit" value="Submit">
-    </form>
-	  <table>
+    <table>
 		  <thead>
 			  <tr>
 				  <th>Visit</th>

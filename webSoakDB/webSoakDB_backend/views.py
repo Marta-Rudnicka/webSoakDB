@@ -6,7 +6,17 @@ from rest_framework.response import Response
 from .forms import ExternalLibraryForm, SubsetForm
 from tools.histograms import get_histogram, get_all_histograms, get_selection_histogram
 from tools.validators import data_is_valid, selection_is_valid, export_form_is_valid
-from tools.uploads_downloads import source_wells_to_csv, upload_plate, upload_subset, import_full_libraries, import_library_parts
+from tools.uploads_downloads import (
+	append_mol_properties_to_csv,
+	serve_csv_compound_list,
+	extended_csv_headers,
+	source_wells_to_csv, 
+	upload_plate, 
+	upload_subset, 
+	import_full_libraries, 
+	import_library_parts,
+	basic_csv_headers
+)
 from API.models import Library, LibraryPlate, LibrarySubset, Project, Compounds, Preset
 from webSoakDB_stack.settings import MEDIA_ROOT
 
@@ -21,7 +31,6 @@ def upload_user_library(request):
 	if request.method == "POST":
 		form = ExternalLibraryForm(request.POST, request.FILES)
 		if form.is_valid():
-			print('form valid')
 			log = []
 			fs = FileSystemStorage()
 			source = request.FILES["data_file"]
@@ -85,27 +94,47 @@ def upload_user_subset(request):
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
 
-def download_current_plate_map(request, pk):
-	
+def download_current_plate_map(request, pk):	
 	plate = LibraryPlate.objects.get(pk=pk)
-	compounds = plate.compounds.filter(active=True)
-	
-	with open('files/plate-map.csv', 'r+') as f:
-		f.truncate(0)
-		for compound in compounds:
-			line = compound.compound.code + ',' + compound.well + ',' + compound.compound.smiles + ','
-			if compound.concentration:
-				line += str(compound.concentration)
-			line += "\n"
-			f.write(line)
-		f.close()
-	
-	
-	with open('files/plate-map.csv', 'r+') as f:
-		filename = slugify(plate.library.name) + '-' + slugify(plate.barcode) + '-map-' + str(date.today()) + '.csv'
-		response = HttpResponse(f, content_type='text/csv')
-		response['Content-Disposition'] = "attachment; filename=%s" % filename
-		return response
+	header = basic_csv_headers()
+	filename = slugify(plate.library.name) + '-' + slugify(plate.barcode) + '-map-' + str(date.today()) + '.csv'
+	response = serve_csv_compound_list(header, plate, filename, False)
+	return response
+
+def download_plate_map_with_properties(request, pk):
+	plate = LibraryPlate.objects.get(pk=pk)
+	header = basic_csv_headers() + extended_csv_headers()
+	filename = slugify(plate.library.name) + '-' + slugify(plate.barcode) + '-map-properties-' + str(date.today()) + '.csv'
+	response = serve_csv_compound_list(header, plate, filename, True)
+	return response
+
+def download_subset(request, pk):
+	subset = LibrarySubset.objects.get(pk=pk)
+	header = "Compound Code, SMILES"
+	filename = slugify(subset.library.name) + '-' + slugify(subset.name) + '-' + str(date.today()) + '.csv'
+	response = serve_csv_compound_list(header, subset, filename, False)
+	return response
+
+def download_subset_with_properties(request, pk):
+	subset = LibrarySubset.objects.get(pk=pk)
+	header = "Compound Code, SMILES" + extended_csv_headers()
+	filename = slugify(subset.library.name) + '-' + slugify(subset.name) + '-properties-' + str(date.today()) + '.csv'
+	response = serve_csv_compound_list(header, subset, filename, True)
+	return response
+
+def download_preset(request, pk):
+	preset = Preset.objects.get(pk=pk)
+	header = "Library, Compound Code, SMILES"
+	filename = slugify(preset.name) + '-' + str(date.today()) + '.csv'
+	response = serve_csv_compound_list(header, preset, filename, False)
+	return response
+
+def download_preset_with_properties(request, pk):
+	preset = Preset.objects.get(pk=pk)
+	header = "Library, Compound Code, SMILES" + extended_csv_headers()
+	filename = slugify(preset.name) + '-properties-' + str(date.today()) + '.csv'
+	response = serve_csv_compound_list(header, preset, filename, True)
+	return response
 
 def export_selection_for_soakdb(request):
 	if request.method == "POST":

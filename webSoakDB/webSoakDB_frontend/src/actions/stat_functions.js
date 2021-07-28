@@ -117,3 +117,19 @@ export function sharedItems(array1, array2){
 	});
 	return output;
 }
+
+export function getProposalString(project){
+	if (! project.auth[0]) {
+		return null;
+	}
+	const proposal_visit = project.auth[0].proposal_visit;
+	const regex =  /([A-Za-z0-9_]+)(\-[0-9]+)/;
+	const m = proposal_visit.match(regex);
+
+	if (m===null){
+		return null;
+	}
+	else{
+		return m[1];
+	}
+}

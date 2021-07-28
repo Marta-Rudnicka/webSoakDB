@@ -1,6 +1,7 @@
 import React from 'react';
 import CompoundLookupPlate from './CompoundLookupPlate.js';
 import TableRowCherryPick from './table_row_cherry_pick.js';
+import ExportBar from './export_bar.js';
 import axios from 'axios';
 import {display_options} from './display_options.js';
 import { deepCopyObjectArray } from  '../../actions/stat_functions.js';
@@ -99,7 +100,7 @@ class CompoundLookupCherryPick extends CompoundLookupPlate {
 	}
 
 	getExportBar(){
-		return null;
+		return <ExportBar url="subset" id={this.props.id} label= "compound list"/>;
 	}
 
 	getRows(){

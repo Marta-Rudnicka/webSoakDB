@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-
+import { getProposalString } from '../../actions/stat_functions';
 import { Redirect } from "react-router-dom";
 
 class ProposalSelection extends React.Component {
@@ -23,28 +23,14 @@ class ProposalSelection extends React.Component {
 			this.setState({ proposals });
       });
       
-     // this.props.logIn(null);
+      this.props.logIn(null);
 	}
 	
 	getSelection(e){
 		this.setState({chosenProject: e.target.value});
 	}
 	
-	getProposalString(project){
-		if (! project.auth[0]) {
-			return null;
-		}
-		const proposal_visit = project.auth[0].proposal_visit;
-		const regex =  /([A-Za-z0-9_]+)(\-[0-9]+)/;
-		const m = proposal_visit.match(regex);
 	
-		if (m===null){
-			return null;
-		}
-		else{
-			return m[1];
-		}
-	}
 	
 	render(){
 		
@@ -55,7 +41,7 @@ class ProposalSelection extends React.Component {
 				value={proposal.id} 
 				htmlFor="proposal_name"
 			>
-				{this.getProposalString(proposal)}: {proposal.auth[0] ? proposal.auth[0].project : null}
+				{getProposalString(proposal)}: {proposal.auth[0] ? proposal.auth[0].project : null}
 			</option>);
 		});
 		

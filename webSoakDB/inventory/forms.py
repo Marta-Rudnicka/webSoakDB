@@ -72,10 +72,5 @@ class AddVisitForm(forms.Form):
 
 class NewProjectForm(forms.Form):
 	proposal = forms.CharField(label="Proposal", required=True)
-	title = forms.CharField(label="Title", required=False)
-	fedids = forms.CharField(label="FedIDs*", required=False)
+	title = forms.CharField(label="Name", required=False)
 	industry_user = forms.BooleanField(label="Industry user", required=False)
-
-class AddFedIDForm(forms.Form):
-	fedids = forms.CharField(label="FedIDs", required=True)
-

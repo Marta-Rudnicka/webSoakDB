@@ -5,6 +5,7 @@ import GraphTable from './graph_table.js';
 import PresetOption from './preset_option.js';
 import axios from 'axios';
 import Overlay from './overlay.js';
+import { getProposalString } from '../../actions/stat_functions.js';
 
 import { 
 	removeFromArray, 
@@ -13,8 +14,6 @@ import {
 	getSubsetIds,
 	} 
 	from  '../../actions/stat_functions.js';
-
-const proposal = 'Test string';
 
 class Picker extends React.Component {
   
@@ -26,7 +25,7 @@ class Picker extends React.Component {
       selectedSubsetIds: getAttributeArray(this.props.proposal.subsets, "id"),
       initialSubsets: getAttributeArray(this.props.proposal.subsets, "id"),
       presets: [],
-      currentLibOptions: [],
+      currentLibOptions: null,
       inHouseCompoundCount: 0,
       overlay: false,    
     }
@@ -140,6 +139,9 @@ class Picker extends React.Component {
   
   updateInHouseCompoundCount(){
     let count = 0;
+    if (!this.state.currentLibOptions){
+      return 
+    }
     this.state.currentLibOptions.forEach(lib =>{
       if (this.state.selectedLibIds.includes(lib.id)){
         count = count + lib.size;
@@ -164,17 +166,21 @@ class Picker extends React.Component {
       changeStatus = 'changed';
     }
     
-    const libraries = this.state.currentLibOptions.map((lib, index) => {
-      const checked =  this.state.selectedLibIds.includes(lib.id)
-      return <LibraryOption 
-        key={index} 
-        lib={lib}
-        handleCheckboxChange = {this.handleChangeLib}
-        handleChangePreset = {this.handleChangePreset}
-        defaultChecked={this.state.selectedLibIds.includes(lib.id)}
-        selected = {this.selected}
+    let libraries = "Loading libraries..."
+    
+    if (this.state.currentLibOptions){
+      libraries = this.state.currentLibOptions.map((lib, index) => {
+        const checked =  this.state.selectedLibIds.includes(lib.id)
+        return <LibraryOption 
+          key={index} 
+          lib={lib}
+          handleCheckboxChange = {this.handleChangeLib}
+          handleChangePreset = {this.handleChangePreset}
+          defaultChecked={this.state.selectedLibIds.includes(lib.id)}
+          selected = {this.selected}
         />;
     });
+  }
     
     const otherPresets = this.state.presets.map((preset, index) => {
       if (preset.subsets.length > 1){
@@ -186,7 +192,7 @@ class Picker extends React.Component {
       }
     )
   
-    
+    const proposal = getProposalString(this.props.proposal)
     let publicSubsets = [];
     this.state.presets.forEach(preset => publicSubsets.push(...preset.subsets));
     const overlay = this.state.overlay ? <Overlay /> : null;
@@ -194,7 +200,7 @@ class Picker extends React.Component {
     return (
     <div id="picker">
       {overlay}
-      <h1>Select compounds for {this.props.proposal.proposal}</h1>
+      <h1>Select compounds for {proposal}</h1>
       <main id="main-picker">
         <section id="libraries" className={changeStatus}>
 		  <h2>Libraries available:</h2>

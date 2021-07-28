@@ -102,7 +102,7 @@ class CompoundLookupPlate extends React.Component {
 	}
 
 	getExportBar() {
-		return <ExportBar id={this.props.id} />;
+		return <ExportBar url="plate-map" id={this.props.id} label= "plate map"/>;
 	}
 
 	getPageHeaders(){

@@ -16,12 +16,11 @@ from .inv_helpers import (
 	fake_preset_copy, 
 	current_library_selection,
 	set_status,
-	parse_fedids
+	get_project_by_proposal
 )
 from tools.uploads_downloads import upload_temporary_subset, parse_compound_list, parse_id_list
 from .dt import get_well_dictionary, manage_sw_status_change
 from .forms import (
-	AddFedIDForm,
 	AddVisitForm,
 	LibraryForm, 
 	LibraryPlateForm, 
@@ -65,11 +64,9 @@ def plates(request):
 def projects(request):
 	old_project_form = OldProjectForm()
 	new_project_form = NewProjectForm()
-	fed_id_form = AddFedIDForm()
 	return render(request, "inventory/projects.html", {
 		"old_project_form" : old_project_form, 
-		"new_project_form" : new_project_form,
-		"fed_id_form" : fed_id_form
+		"new_project_form" : new_project_form
 		})
 
 @staff_member_required
@@ -200,10 +197,10 @@ def proposal(request):
 		if form.is_valid():
 			try:
 				pr = form.cleaned_data['proposal']
-				proposal = Project.objects.get(proposal=pr)
-				subsets = get_subsets_with_availability(set(proposal.subsets.all()))
+				project = get_project_by_proposal(pr) #Project.objects.get(proposal=pr)
+				subsets = get_subsets_with_availability(set(project.subsets.all()))
 				
-				return render(request, "inventory/proposal.html", {'proposal' : proposal, 'subsets': subsets, 'visit_form' : AddVisitForm()})
+				return render(request, "inventory/proposal.html", {'proposal' : project, 'subsets': subsets, 'visit_form' : AddVisitForm()})
 			except(ObjectDoesNotExist):
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': ['Proposal not found']})
 				
@@ -627,8 +624,6 @@ def add_project(request):
 		if form.is_valid():
 			proposal = request.POST["proposal"]
 			title = request.POST["title"]
-			#fedids = parse_fedids(request.POST["fedids"])
-			fedids = request.POST["fedids"]
 			if request.POST.get("industry_user", False):
 				industry_user = True
 			else:
@@ -636,24 +631,9 @@ def add_project(request):
 
 			first_visit = proposal + '-1'
 
-			new_project = Project.objects.create(
-				proposal=proposal, 
-				title=title, 
-				fedids=fedids, 
-				industry_user=industry_user
-			)
+			new_project = Project.objects.create(industry_user=industry_user)
 			
-			new_auth = IspybAuthorization.objects.create(project=title, proposal_visit=first_visit)
-
-			for fedid in parse_fedids(fedids):
-				try:
-					user = User.objects.get(username=fedid)
-				except ObjectDoesNotExist:
-					user = User.objects.create(username=fedid)
-				
-				new_auth.users.add(user)
-				new_auth.save()
-			
+			new_auth = IspybAuthorization.objects.create(project=title, proposal_visit=first_visit)			
 			new_project.auth.add(new_auth)
 			new_auth.save()
 			

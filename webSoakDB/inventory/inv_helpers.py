@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
-from API.models import Library, LibraryPlate
+from API.models import Library, LibraryPlate, IspybAuthorization
 from tools.data_storage_classes import SourceWellCopy, PresetCopy, SubsetCopyWithAvailability
 import string
 
@@ -94,3 +94,7 @@ def parse_fedids(string):
 	return [s.strip() for s in string.split(',')]
 	#TODO: validate fedids
 	
+def get_project_by_proposal(proposal_str):
+	auth = IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0]
+	return auth.project_obj.all()[0]
+
