@@ -77,8 +77,8 @@ def current_library_selection(boolean):
 	else:
 		first_tuple = []
 	
-	return []
-	#return  first_tuple + [(library.id, library.name) for library in Library.objects.filter(public=True)]
+	#return []
+	return  first_tuple + [(library.id, library.name) for library in Library.objects.filter(public=True)]
 
 def get_subsets_with_availability(*args):
 	subset_copies = []

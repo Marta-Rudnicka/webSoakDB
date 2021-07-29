@@ -20,7 +20,7 @@ def upload_temporary_subset(file_name):
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
-			compound = BasicTemporaryCompound(row[0], row[1])
+			compound = BasicTemporaryCompound(row[0].strip(), row[1].strip())
 			compounds.add(compound)
 			
 	return compounds
@@ -93,7 +93,7 @@ def upload_subset(file_name, library_id, name, origin):
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
 			try:
-				compound = Compounds.objects.get(code = row[0], smiles=row[1])
+				compound = Compounds.objects.get(code = row[0].strip(), smiles=row[1].strip())
 				new_subset.compounds.add(compound)
 				new_subset.save()
 			except django.core.exceptions.ObjectDoesNotExist:

@@ -16,27 +16,12 @@
 </head>
 
 <body>
- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<ul class="nav">
-		<li class="nav-item">
-			<a class="nav-link" href="/">XChemSPA Home  </a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/selection/selection/"> Select compounds </a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/selection/summary/">Selection summary  </a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/accounts/logout/">Log out  </a>
-		</li>
-	</ul>
-</nav>
 	<main id="compound-lookup">
         <h1>{{compound.code}}</h1>
         
         <section>
             <img src="/molecule/{{compound.id}}/">
+            <button id="close">Close compound look-up</button>
         </section>
         <section>
         <table class="table">
@@ -96,10 +81,16 @@
                     <th>Number of Rings</th>
                     <td>{{compound.ring_count }}</td>
                 </tr>
+                <tr>
+                    <th>Locations: </th>
+                    <td>{% for location in compound.locations.all %}
+                    {{location.library_plate.library.name }}: {{location.library_plate.barcode}} : {{location.well}}<br/>
+                    {%endfor%}</td>
+                </tr>
+                </tr>
             </tbody>
         </table>
         </section>
-        <section><button id="close">Close compound look-up</button></section>
     </main>
     <script>document.getElementById('close').addEventListener('click', ()=>window.close())</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
