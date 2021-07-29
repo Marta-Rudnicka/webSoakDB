@@ -18,13 +18,13 @@ class LibraryPlateForm(forms.Form):
 	data_file = forms.FileField(label='Upload compound data:')
 
 class ExternalLibraryForm(forms.Form):
-	proposal = forms.CharField(label="proposal")
+	project = forms.IntegerField(label="project")
 	name = forms.CharField(label='Library name')
 	data_file = forms.FileField(label='Upload compound data:')
 	
 
 class SubsetForm(forms.Form):
-	proposal = forms.CharField(label="proposal")
-	lib_id = forms.ChoiceField(label='Select library', choices=libraries)
+	project = forms.IntegerField(label="project")
+	lib_id = forms.ChoiceField(label='Select library', choices=libs)
 	name = forms.CharField(label='name')
 	data_file = forms.FileField(label='Upload your selection:')

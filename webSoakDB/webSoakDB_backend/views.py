@@ -40,8 +40,9 @@ def upload_user_library(request):
 				print('data is valid')
 				#data to be submitted
 				submitted_name = form.cleaned_data['name']
-				proposal_name = form.cleaned_data['proposal']
-				name = submitted_name + '(' + proposal_name + ')'
+				project_id = form.cleaned_data['project']
+				project = Project.objects.get(pk=project_id)
+				name = submitted_name + '(' + project.auth.all()[0].project + ')'
 				today = str(date.today())
 				
 				#create new Library and LibraryPlate objects
@@ -53,15 +54,16 @@ def upload_user_library(request):
 				fs.delete(filename)
 				
 				#add new library to user's proposal
-				proposal = Project.objects.get(proposal=proposal_name)
-				proposal.libraries.add(user_lib)
-				proposal.save()
+				project.libraries.add(user_lib)
+				project.save()
 			
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/upload_success.html")
 			else:
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+		else:
+			return render(request, "webSoakDB_backend/error_log.html", {'error_log': ["Application error: invalid form", form.non_field_errors, form.errors]})			
 
 def upload_user_subset(request):
 	if request.method == "POST":
@@ -77,22 +79,25 @@ def upload_user_subset(request):
 								
 				#data to be submitted
 				name = form.cleaned_data['name']
-				proposal_name = form.cleaned_data['proposal']
-				origin = "User selection for proposal " + proposal_name
+				project_id = form.cleaned_data['project']
+				project = Project.objects.get(pk=project_id)
+				origin = "User selection for proposal " + project.auth.all()[0].project
 				
 				#create new LibrarySubset object and upload data to it
 				subset = upload_subset(filename, library_id, name, origin)
 				
 				#add new subset to user's proposal
-				proposal = Project.objects.get(proposal=proposal_name)
-				proposal.subsets.add(subset)
-				proposal.save()
+				
+				project.subsets.add(subset)
+				project.save()
 			
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/upload_success.html")
 			else:
 				fs.delete(filename)
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': log})
+		else:
+			return render(request, "webSoakDB_backend/error_log.html", {'error_log': ["Application error: invalid form", form.non_field_errors, form.errors]})
 
 def download_current_plate_map(request, pk):	
 	plate = LibraryPlate.objects.get(pk=pk)
