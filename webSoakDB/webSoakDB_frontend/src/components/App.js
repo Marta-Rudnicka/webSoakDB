@@ -56,7 +56,7 @@ class App extends Component {
       event.preventDefault();  
     }
     if (id){
-      const proposalApiUrl = '/api/proposals/' + id + '/';
+      const proposalApiUrl = '/api/projects/' + id + '/';
       axios.get(proposalApiUrl)
         .then(res => {
         const proposal = res.data;
@@ -110,6 +110,7 @@ class App extends Component {
   }
 
     render() {
+      const proposal_id = this.state.proposal ? this.state.proposal.id : "0";
         return (
          <div id="content"> 
       <Router>
@@ -154,7 +155,11 @@ class App extends Component {
               updateSelection = {this.updateSelection}
             />
           </PrivateRoute>
-          <Route path="/compounds/:type/:id/" children={<UrlTranslator />} proposal={this.state.proposal}/>
+          <Route 
+            path={"/compounds/:type/:id/:project_id/"} 
+            children={<UrlTranslator />} 
+            proposal={this.state.proposal}
+          />
           
           <Route path="/selection/">
           { this.props.proposal ? <Redirect to="/selection/home/" /> : <ProposalSelection logIn={this.logIn} proposal={this.state.proposal} /> }

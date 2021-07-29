@@ -20,9 +20,6 @@ class OwnLibraryForm extends React.Component {
   }
 
   submit() {
-    if (!window.confirm("Are you sure you want to submit the data despite missing security features in the application demo?")){
-      event.preventDefault();
-    }
     if (!(this.state.name && this.state.file)){
       return;
     }

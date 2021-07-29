@@ -228,6 +228,7 @@ class Picker extends React.Component {
           trackUnsavedChanges={this.props.trackUnsavedChanges}
           presets={this.state.presets}
           showOverlay={this.showOverlay}
+          libs={this.state.currentLibOptions}
         />
         <section id="stats">
           <GraphTable

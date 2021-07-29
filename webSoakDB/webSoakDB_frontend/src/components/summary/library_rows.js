@@ -21,6 +21,7 @@ class LibraryInTable extends React.Component {
 	
 	render() {
 		let first = true;
+		const projectId = this.props.project.id;
 		const library = this.props.library;
 		const plates = this.state.plates;
 		//const showPlate = this.props.showPlate
@@ -31,7 +32,7 @@ class LibraryInTable extends React.Component {
 			<React.Fragment>
 				<td>{plate.barcode}</td>
 				<td>{plate.size}</td>
-				<td><Link to={"/compounds/plate/" + plate.id + "/"}>See compounds</Link></td>
+				<td><a href={"/compounds/plate/" + plate.id + "/" + projectId + "/"} target="_blank" >See compounds</a></td>
 			</React.Fragment>
 			)
 		}
@@ -76,3 +77,4 @@ class LibraryInTable extends React.Component {
 }
 
 export default LibraryInTable;
+//				<td><Link to={"/compounds/plate/" + plate.id + "/"}>See compounds</Link></td>

@@ -61,7 +61,7 @@ class CompoundLookupPreset extends CompoundLookupCherryPick {
 	}
 
 	getRows(){
-		let rows = null;
+		let rows = <tr><td colSpan="6" className="large-text">Loading compounds...</td></tr>;
 		if (this.state.compounds.length > 0){
 			rows = this.state.compounds.map((compound, index) => {
 				return <TableRowPreset

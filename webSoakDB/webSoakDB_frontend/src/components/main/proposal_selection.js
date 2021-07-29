@@ -15,7 +15,7 @@ class ProposalSelection extends React.Component {
 	}
 	
 	componentDidMount() {
-		const apiUrl = '/api/proposals/';
+		const apiUrl = '/api/projects/';
 		
 		axios.get(apiUrl)
 			.then(res => {

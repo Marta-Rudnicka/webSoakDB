@@ -57,22 +57,54 @@ class CompoundLookupPlate extends React.Component {
 	}
 	
 	getDataFromAPI() {
-		let apiUrl = '/api/compounds/' + this.props.id + '/';
+		let apiUrl = '/api/library_plates/' + this.props.id + '/' + this.props.project_id + '/';
+		
+		axios.get(apiUrl)
+			.then(res => {
+			//public and private plate data are taken from different API endpoints with 
+			//different data structures
+			if (res.data.barcode){
+				this.managePublicPlateData(res.data)
+			}
+			else{
+				this.managePrivatePlateData(res.data)
+			}
+			//const collection = res.data;
+			//collection.name = collection.barcode;
+			//this.setState({ collection });
+		});
+		
+		apiUrl = '/api/plate_compounds/' + this.props.id + '/';
 			
 		axios.get(apiUrl)
 			.then(res => {
 			const compounds = res.data;
-			this.setState({ compounds });
+
+			//private plates don't receive any new data at this point
+			if(res.data){ 
+				this.setState({ compounds });
+			}
 		});
 		
-		apiUrl = '/api/plate_detail/' + this.props.id + '/';
 		
-		axios.get(apiUrl)
-			.then(res => {
-			const collection = res.data;
-			collection.name = collection.barcode;
-			this.setState({ collection });
-		});
+	}
+
+	managePublicPlateData(data){
+		const collection = data;
+		collection.name = collection.barcode;
+		this.setState({ collection });
+	}
+
+	managePrivatePlateData(data){
+		console.log('fired managePrivatePlateData with: ', data)
+		//find the desired library in the project data
+		//(private libraries have only one plate, so only the first plate 
+		//in each libraries.plates array needs checking)
+		const lib = data.libraries.find(library => library.plates[0].id === parseInt(this.props.id))
+		let collection = lib.plates[0]
+		collection.name = collection.barcode;
+		let compounds = collection.compounds
+		this.setState({ collection, compounds });
 	}
 
 	getDisplayButtons() {
@@ -106,8 +138,8 @@ class CompoundLookupPlate extends React.Component {
 	}
 
 	getPageHeaders(){
-		let collection = "Loading...";
-		let name = null;
+		let collection = null;
+		let name = "Loading data...";
 		let current = null;
 		if (this.state.collection){
 			collection = this.state.collection;
@@ -120,7 +152,7 @@ class CompoundLookupPlate extends React.Component {
 	}
 
 	getRows(){
-		let rows = null;
+		let rows = <tr><td colSpan="6" className="large-text">Loading compounds...</td></tr>;
 		if (this.state.compounds.length > 0){
 			rows = this.state.compounds.map((compound, index) => {
 				return <TableRowPlate
@@ -136,7 +168,7 @@ class CompoundLookupPlate extends React.Component {
 
 	render() {
 		const headerStrings = this.getPageHeaders();
-		const collection = headerStrings.collection
+		const collection = headerStrings.collection;
 		const name = headerStrings.name;
 		const current = headerStrings.current;
 		const buttons = this.getDisplayButtons();
@@ -150,7 +182,7 @@ class CompoundLookupPlate extends React.Component {
 		return (
 		<div id="plate-lookup">
 			
-				<h1>{name ? name : ""} </h1>
+				<h1>{name} </h1>
 				<h2>{collection ? collection.name : ""} {current}</h2>	
 	
 			<main>
@@ -184,4 +216,3 @@ class CompoundLookupPlate extends React.Component {
 }
 
 export default CompoundLookupPlate;
-

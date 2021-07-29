@@ -76,7 +76,6 @@ class Uploads extends React.Component {
     <section id="upload">
       <div className="form-container">
         <h2>Upload your own library</h2>
-        <p className="warning">Warning: do not upload confidential data. This demo version does not implement all the necessary security features.</p>
           <OwnLibraryForm 
             proposal={this.props.proposal} 
             refreshAfterUpload={this.props.refreshAfterUpload}

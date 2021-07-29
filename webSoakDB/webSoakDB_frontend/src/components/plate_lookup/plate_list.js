@@ -13,7 +13,7 @@ class PlateList extends React.Component {
 	}
 	
 	componentDidMount() {
-		const apiUrl = '/api/plates_list/' + this.props.library.name;		
+		const apiUrl = '/api/plates_list/' + this.props.library.id + '/';		
 		axios.get(apiUrl)
 			.then(res => {
 			const plates = res.data;
@@ -31,7 +31,7 @@ class PlateList extends React.Component {
 				if (plate.current){
 					current = '(current)';
 				}
-				return <li key={index}><Link to={"/compounds/plate/" + plate.id + "/"}>{plate.barcode}</Link>{current}</li>;
+				return <li key={index}><Link to={"/compounds/plate/" + plate.id + "/0/"}>{plate.barcode}</Link>{current}</li>;
 			});
 			
 			return (

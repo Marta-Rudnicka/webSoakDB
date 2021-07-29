@@ -10,7 +10,7 @@ class SubsetTable extends React.Component {
 				<td>{subset.name}</td>
 				<td>{subset.origin}</td>
 				<td>{subset.size}</td>
-				<td><Link to={"/compounds/subset/" + subset.id + "/"}>See compounds</Link></td>
+				<td><a href={"/compounds/subset/" + subset.id + "/0/"} target="_blank">See compounds</a></td>
 				<td><button onClick={event => this.props.handleClick(subset.id)}>Remove</button></td>
 			</tr>
 		);

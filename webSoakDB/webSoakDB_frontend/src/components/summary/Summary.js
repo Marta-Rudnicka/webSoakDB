@@ -61,6 +61,7 @@ class Summary extends React.Component {
 						key={index} 
 						library={library} 
 						handleClick={this.removeLibrary}
+						project={this.props.proposal}
 						/>		
 			});
 		}

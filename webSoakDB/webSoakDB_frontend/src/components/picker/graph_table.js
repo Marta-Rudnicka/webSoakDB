@@ -22,7 +22,7 @@ class GraphTr extends React.Component {
 	else{
 	  let apiUrl = ""
 	  if(this.props.type==="library"){	
-		  apiUrl = '/api/library_detail/' + this.props.col_id + '/';
+		  apiUrl = '/api/libraries/' + this.props.col_id + '/';
 	  }
 	  if(this.props.type==="subset"){	
 		  apiUrl = '/api/subset_detail/' + this.props.col_id + '/';

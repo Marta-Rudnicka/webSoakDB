@@ -7,13 +7,14 @@ class CherryPickForm extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      libs: [],
+      //libs: [],
       name: "",
       file: "",
       library: "",
       }
   }
   
+  /*
   componentDidMount() {
     const apiUrl = '/api/in_house_library_list/';
     
@@ -22,7 +23,7 @@ class CherryPickForm extends React.Component {
       const libs = res.data;
       this.setState({ libs });
       });
-  }
+  }*/
   
 
   changeName(e){
@@ -48,9 +49,12 @@ class CherryPickForm extends React.Component {
   }
   
   render(){
-    const options = this.state.libs.map((lib, index) => 
-       <option key={index} value={lib.id}>{lib.name}</option>
-    );
+    let options = null;
+    if (this.props.libs){
+      options = this.props.libs.map((lib, index) => 
+        <option key={index} value={lib.id}>{lib.name}</option>
+      );
+    }
     
     const name = this.state.name;
     const file = this.state.file;

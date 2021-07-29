@@ -10,7 +10,7 @@ class SubsetSelect extends React.Component {
   
   
   componentDidMount() {
-    const apiUrl = '/api/library_detail/' + this.props.subset.library.id + '/';
+    const apiUrl = '/api/libraries/' + this.props.subset.library.id + '/';
     
     axios.get(apiUrl)
       .then(res => {

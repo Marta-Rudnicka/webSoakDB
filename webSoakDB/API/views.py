@@ -1,8 +1,7 @@
 from django.db.models import query
-from django.shortcuts import get_object_or_404
-from .models import IspybAuthorization, Library, LibraryPlate, Project, Preset, LibrarySubset
-from django.views.generic import ListView #RetrieveAPIView
-from rest_framework import generics
+from django.shortcuts import get_object_or_404, redirect
+from .models import Library, LibraryPlate, Project, Preset, LibrarySubset
+from rest_framework import generics, viewsets #, status
 from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
 from .serializers import (
@@ -15,82 +14,63 @@ from .serializers import (
 	ProjectUpdateSerializer,
 	LibrarySubsetStatSerializer,
 	LibrarySubsetSerializer,
+	ProjectCompoundsSerializer
 )
-
-import itertools
 
 #TODO: change persmissions everywhere; temporarily [AllowAny] for early stages of testing
 
 #general-purpose generic endpoints
 
-class LibraryList(generics.ListAPIView):
-	queryset = Library.objects.all()
-	serializer_class = LibrarySerializer
-	permission_classes = [AllowAny]
+def choose_plate_view(request, pk, project_id):
+	#decide whether to use a view that requires authorization
 
-class LibraryDetail(generics.RetrieveAPIView):
-	queryset = Library.objects.all()
-	serializer_class = LibrarySerializer
-	permission_classes = [AllowAny]
+	plate = LibraryPlate.objects.get(pk=pk)
+	if plate.library.public:
+		return redirect('/api/public_library_plates/' + str(pk) + '/')
+	else:
+		return redirect('/api/project_compounds/' + str(project_id) +  '/')
 
-class PlateDetail(generics.RetrieveAPIView):
-	queryset = LibraryPlate.objects.all()
-	serializer_class = LibraryPlateSerializer
-	permission_classes = [AllowAny]
+class ProjectCompoundsViewSet(viewsets.ReadOnlyModelViewSet):
+	#returns the project with all the libraries and their details
+	#linked by foreign keys - used for getting details of a non-public library plate
+	queryset = Project.objects.all()
+	serializer_class = ProjectCompoundsSerializer
 
-class InHouseLibraryList(generics.ListAPIView):
-	queryset = Library.objects.filter(public=True)
-	serializer_class = LibrarySerializer
-	permission_classes = [AllowAny]
+class PublicLibraryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Library.objects.filter(public=True)
+    serializer_class = LibrarySerializer
+
+class LibraryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Library.objects.all()
+    serializer_class = LibrarySerializer
+
+class PublicLibraryPlateViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = LibraryPlate.objects.filter(library__public=True)
+    serializer_class = LibraryPlateSerializer
+
+class PlateWithCompoundsViewSet(viewsets.ReadOnlyModelViewSet):
+	def get_queryset(self):
+		self.plate = get_object_or_404(LibraryPlate, pk=self.kwargs['pk'])
+		if self.plate.library.public:	
+			return self.plate.compounds.filter(active=True)
+		else:
+			#this should not happen in normal use, but just in case it will not show any data
+			return None
+	serializer_class = SourceWellStatSerializer
+
+class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
+	queryset = Project.objects.all()
+	serializer_class = ProjectListSerializer
 
 class PresetDetail(generics.RetrieveAPIView):
 	queryset = Preset.objects.all()
 	serializer_class = PresetSerializer
 	permission_classes = [AllowAny]
 
-class ProjectList(generics.ListAPIView):
-	queryset = Project.objects.all()	
-	serializer_class = ProjectListSerializer
-	permission_classes = [AllowAny]
-
-class ProjectListAuth(generics.ListAPIView):
-	def get_queryset(self):
-		username = self.kwargs['username']
-		auths = IspybAuthorization.objects.filter(users__username = username).all()
-		print(auths)
-		project_list = []
-		for a in auths:
-			project_list = project_list + list(a.project_obj.all())
-		
-		return project_list
-
-	serializer_class = ProjectListSerializer
-	permission_classes = [AllowAny]
-
-class ProjectDetail(generics.RetrieveUpdateAPIView):
-	#def get_object(self):
-	#	proposal_str = self.kwargs['proposal']
-	#	print(IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0])
-	#	return IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0]
-	queryset = Project.objects.all()
-	permission_classes = [AllowAny]
-	serializer_class = ProjectListSerializer
-	
-
-class PlateCompoundList(generics.ListAPIView):
-	
-	def get_queryset(self):
-		self.plate = get_object_or_404(LibraryPlate, pk=self.kwargs['pk'])
-		
-		return self.plate.compounds.filter(active=True)
-	
-	serializer_class = SourceWellStatSerializer
-	permission_classes = [AllowAny]
-
 class LibPlatesList(generics.ListAPIView):
 	#list all plates, with details about compounds (for stats)
 	def get_queryset(self):
-		self.library = get_object_or_404(Library, name=self.kwargs['library'])
+		self.library = get_object_or_404(Library, pk=self.kwargs['pk'])
 		return self.library.plates.all();
 	serializer_class = LibraryPlateSerializer	
 	permission_classes = [AllowAny]
@@ -99,7 +79,7 @@ class SubsetDetail(generics.RetrieveAPIView):
 	queryset = LibrarySubset.objects.all()
 	serializer_class = LibrarySubsetSerializer
 	permission_classes = [AllowAny]
-	
+
 class SubsetStatList(generics.RetrieveAPIView):
 	#get subset data with details about compounds (for stats)
 	queryset = LibrarySubset.objects.all()
@@ -108,13 +88,7 @@ class SubsetStatList(generics.RetrieveAPIView):
 
 class UpdateProjectSelection(generics.RetrieveUpdateAPIView):
 	authentication_classes = []
-	#def get_object(self):
-	#	proposal_str = self.kwargs['proposal']
-	#	print(IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0])
-	#	return IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0].project_obj.all()[0]
-
-	queryset = Project.objects.all()	
-	#lookup_field = "proposal"
+	queryset = Project.objects.all()
 	serializer_class = ProjectUpdateSerializer
 	permission_classes = [AllowAny]
 	
@@ -125,11 +99,9 @@ class CurrentPlatesForLib(generics.ListAPIView):
 	serializer_class = CurrentPlateSerializer
 	permission_classes = [AllowAny]
 
-
-
 def current_library_options(request):
-	'''In-house libraries with information about: 1) the number of available
-	compounds in current plates; 2) single-library presets related to them'''
+	#In-house libraries with information about: 1) the number of available
+	#compounds in current plates; 2) single-library presets related to them
 	class LibCopy:
 		def __init__(self, library, current_plate, size, presets):
 			self.id = library.id

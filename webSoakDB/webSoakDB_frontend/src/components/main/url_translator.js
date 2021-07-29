@@ -6,11 +6,11 @@ import CompoundLookupCherryPick from '../plate_lookup/CompoundLookupCherryPick.j
 
 /* translates url parameters and chooses the right component to display compound data*/
 export default function UrlTranslator() {
-	let { type, id }  = useParams();
+	let { type, id, project_id }  = useParams();
 
 	if (type==="plate"){
 		return (
-			<CompoundLookupPlate id={id} />
+			<CompoundLookupPlate id={id} project_id={project_id}/>
 		);
 	}
 	else if (type=="preset"){

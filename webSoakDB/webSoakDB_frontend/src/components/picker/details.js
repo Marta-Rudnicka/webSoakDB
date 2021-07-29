@@ -20,7 +20,7 @@ class Details extends React.Component {
     if (type === "library"){
       url_id = col.current_plate;
     }
-    const link_url = "../../compounds/" + url_type + '/' + url_id + '/';
+    const link_url = "../../compounds/" + url_type + '/' + url_id + '/0/';
     const graphs_url = "/media/html_graphs/" + type + '/' + id + '/';
 
     const graphs = properties_list.map((key, index) => {

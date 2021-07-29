@@ -175,6 +175,10 @@ hr {
 	border-color: white;
 }
 
+div.img2d {
+	min-width: 190px;
+}
+
 .img2d img {
 	height: 150px;
 	width: 150px;
@@ -431,4 +435,9 @@ iframe.detail-iframe {
 	padding: 5px;
 	width: 20em;
 	background: aliceblue;
+}
+
+.large-text{
+	font-size: 2em;
+	text-align: center;
 }
