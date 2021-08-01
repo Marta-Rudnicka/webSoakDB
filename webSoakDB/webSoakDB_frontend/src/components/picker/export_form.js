@@ -91,7 +91,7 @@ class ExportForm extends React.Component {
     return (
       <form method="post" action="/downloads/export-for-soakdb/">
         <CSRFToken />
-        <input type="hidden" name="proposal" value={this.props.proposal.proposal} />
+        <input type="hidden" name="project" value={this.props.proposal.id} />
         <h2>Export list of selected compounds </h2>
         { this.props.proposal.subsets.length > 0 ? <p><strong>Select library plates for cherry-picking lists and subsets</strong></p> : null }
         <table className="table">

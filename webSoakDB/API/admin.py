@@ -21,7 +21,7 @@ class CompoundsAdmin(admin.ModelAdmin):
 	 list_per_page = 800
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ("proposal", "protein", "industry_user")
+    list_display = ("protein", "industry_user")
 
 class CrystalPlateAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "drop_volume", "plate_type")

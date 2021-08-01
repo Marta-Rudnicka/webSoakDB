@@ -91,7 +91,7 @@ class LibrarySubsetStatSerializer(serializers.Serializer):
 class ProjectUpdateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Project
-		fields = ["proposal", "libraries", "subsets"]
+		fields = ["id", "libraries", "subsets"]
 		lookup_field = "proposal"
 
 

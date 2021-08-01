@@ -145,9 +145,9 @@ class Reference(models.Model):
 class Project(models.Model):
 
     # TODO - can we refactor this for title [original comment]
-    proposal = models.CharField(max_length=255, blank=False, null=False, unique=True)
-    title = models.CharField(max_length=10, blank=True, null=True)
-    fedids = models.TextField(blank=True, null=True)
+    #proposal = models.CharField(max_length=255, blank=False, null=False, unique=True)
+    #title = models.CharField(max_length=10, blank=True, null=True)
+    #fedids = models.TextField(blank=True, null=True)
     auth = models.ManyToManyField(IspybAuthorization, blank=True, related_name="project_obj")
 
     #SPA-related data

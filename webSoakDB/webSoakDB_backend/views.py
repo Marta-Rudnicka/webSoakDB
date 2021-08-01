@@ -147,7 +147,7 @@ def export_selection_for_soakdb(request):
 			error_str = ["Application error:  cannot generate download file. Please report to developers."]
 			return render(request, "webSoakDB_backend/error_log.html", {'error_log': error_str})
 		
-		prop = request.POST.get('proposal', False)
+		prop = request.POST.get('project', False)
 		source_wells = import_full_libraries(prop) + import_library_parts(prop, request.POST)
 		response = source_wells_to_csv(source_wells, "files/soakdb-export.csv", prop)
 		return response

@@ -9,6 +9,27 @@ from django.http import HttpResponse
 
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Crippen, Draw
+from rdkit.Chem.SaltRemover import SaltRemover
+
+def standardize_smiles(raw_string):
+	'''Canonicalize SMILES and remove salts - use only on validated SMILES strings;
+	For parsing CSV files'''
+
+	#remove whitespace and convert to canonical form
+	smiles = Chem.CanonSmiles(raw_string.strip())
+
+	#convert to RDKit mol object 
+	mol = Chem.MolFromSmiles(smiles)
+
+	#remove salt
+	remover = SaltRemover()
+	desalted_mol = remover.StripMol(mol, dontRemoveEverything=True)
+
+	#get SMILES string of the desalted mol and return it
+	return Chem.MolToSmiles(desalted_mol)
+
+
+
 
 #LOCATING COMPOUND LIST IN INVENTORY / EXPORTING LOCATION DATA (INVENTORY)
 def upload_temporary_subset(file_name):
@@ -20,7 +41,7 @@ def upload_temporary_subset(file_name):
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
-			compound = BasicTemporaryCompound(row[0].strip(), row[1].strip())
+			compound = BasicTemporaryCompound(row[0].strip(), standardize_smiles(row[1]))
 			compounds.add(compound)
 			
 	return compounds
@@ -49,7 +70,7 @@ def upload_plate(file_name, plate):
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
-			smiles = Chem.CanonSmiles(row[2].strip())
+			smiles = standardize_smiles(row[2])
 			try:
 				compound = Compounds.objects.get(code = row[0].strip(), smiles = smiles)	
 			except django.core.exceptions.ObjectDoesNotExist:
@@ -62,7 +83,7 @@ def upload_plate(file_name, plate):
 			try:
 				s_well.concentration = int(row[3])
 				s_well.save()
-			except (IndexError, ValueError):
+			except (IndexError, ValueError): #ignore if concentration is not provided
 				pass
 
 def add_molecular_properties(compound):
@@ -83,6 +104,7 @@ def add_molecular_properties(compound):
 	compound.save()
 
 def upload_subset(file_name, library_id, name, origin):
+	'''assumes list have been validated before'''
 	library = Library.objects.get(id=library_id)
 	new_subset = LibrarySubset.objects.create(library=library, name=name, origin=origin)
 	
@@ -93,7 +115,22 @@ def upload_subset(file_name, library_id, name, origin):
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
 			try:
-				compound = Compounds.objects.get(code = row[0].strip(), smiles=row[1].strip())
+				#compound = Compounds.objects.get(code = row[0].strip(), smiles=row[1].strip())
+
+				#find all compounds with matching SMILES string
+				matching_smiles = Compounds.objects.filter(smiles=standardize_smiles(row[0]))
+
+				#if you find only one, use it
+				if matching_smiles.count() == 1:
+					compound = matching_smiles.all()[0]
+				
+				#if there are more, take the first one you find that belongs to <library>
+				else:
+					for c in matching_smiles.all():
+						if library.id in [sw.library_plate.library.id for sw in c.locations.all()]:
+							compound = c
+							break
+
 				new_subset.compounds.add(compound)
 				new_subset.save()
 			except django.core.exceptions.ObjectDoesNotExist:
@@ -107,7 +144,8 @@ def upload_subset(file_name, library_id, name, origin):
 
 #EXPORTING SOAK-DB COMPATIBLE COMPOUND LISTS (AS CSV)
 def import_full_libraries(proposal):
-	proposal = Project.objects.get(proposal=proposal)
+	print("import_full_libraries", proposal)
+	proposal = Project.objects.get(id=proposal)
 	full_plates = []
 	
 	for l in proposal.libraries.all():
@@ -143,7 +181,7 @@ def find_source_wells(subset, plate_ids):
 	return sw
 		
 def import_library_parts(proposal, data):
-	proposal = Project.objects.get(proposal=proposal)
+	proposal = Project.objects.get(id=proposal)
 	sw = []
 	
 	for s in proposal.subsets.all():

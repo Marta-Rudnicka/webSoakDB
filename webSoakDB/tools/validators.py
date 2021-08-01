@@ -22,6 +22,7 @@ import re
 import csv
 import django.core.exceptions
 from API.models import Compounds, Library, LibraryPlate, Project
+from tools.uploads_downloads import standardize_smiles
 
 
 #Library plate data uploads
@@ -62,9 +63,7 @@ def data_is_valid(file_name, error_log):
 #Cherrypicking list uploads
 def selection_is_valid(file_name, error_log, library_id):
 	'''Checks if file format is valid, if the compound exists in the
-	inventory, and is it belongs to the selected library. Does not
-	validate SMILES strings - the Compounds objects with invalid strings 
-	should not exist in the DB anyway'''
+	inventory, and is it belongs to the selected library.'''
 	
 	valid = True
 	
@@ -96,37 +95,35 @@ def row_is_valid(row, line, error_log, well_names, codes):
 	valid_row = True
 	
 	try:
-		code = row[0]
+		code = row[0].strip()
 		if not code_is_valid(code, line, codes, error_log):
 			valid_row = False
 	except (IndexError):
-		pass
+		return True 	#ignore empty lines
 	
 	try:
-		well = row[1]
+		well = row[1].strip()
 		if not well_is_valid(well, line, well_names, error_log):
 			valid_row = False
 	except (IndexError):
-		msg = "Line: " + str(line) + "CSV FORMATTING ERROR: Not enough fields. Line contains only 1 field, but 3 or 4 are required."
+		msg = "Line " + str(line) + ": CSV FORMATTING ERROR: Not enough fields. Line contains only 1 field, but 2 to 4 are required."
 		update_error_log(msg, error_log)
 		valid_row = False
 		
 	try:
-		smiles = row[2]
+		smiles = row[2].strip()
 		if smiles != "" and smiles != " ":
 			if not smiles_is_valid(smiles, line, error_log):
 				valid_row = False
 	except (IndexError):
-		msg = "Line " + str(line) + ": CSV FORMATTING ERROR: Not enough fields. Line contains only 2 fields, but 3 or 4 are required. If not providing the SMILES string, leave an empty field"
-		update_error_log(msg, error_log)
-		valid_row = False
+		pass #this field is optional
 	
 	try:
-		concentration = row[3]
+		concentration = row[3].strip()
 		if not concentration_is_valid(concentration, line, error_log):
 			valid_row = False
 	except (IndexError):
-		pass
+		pass	#this field is optional
 	
 	try:
 		extra_field = row[4]
@@ -144,31 +141,28 @@ def compound_is_valid(row, line, error_log, library_id):
 	valid_row = True
 	
 	try:
-		code = row[0].strip()
-		if not code_exists(code, line, error_log):
-			valid_row = False
+		raw_smiles = row[0].strip()
 	except (IndexError):
-		pass #ignore empty lines
-		
-	try:
-		smiles = row[1].strip()
-		if not smiles_string_exists(smiles, line, error_log):
-			valid_row = False
-	except (IndexError):
-		msg = "Line " + str(line) + ": CSV FORMATTING ERROR: Not enough fields. Line contains only 1 field, but 2 are required."
-		update_error_log(msg, error_log)
+		return True # ignore empty lines
+
+	if not smiles_is_valid(raw_smiles, line, error_log):
 		return False
-	
-	try:
-		extra_field = row[2]
-		msg = "Line " + str(line) + ": CSV FORMATTING ERROR: Too many fields. Line contains more than 2 fields."
+
+	smiles = standardize_smiles(raw_smiles)
+
+	if not smiles_string_exists(smiles, line, error_log):
+		valid_row = False
+		
+	try: 		#if a file has too many fields, it could be a wrong file that happen to have SMILES string in it
+		extra_field = row[1]
+		msg = "Line " + str(line) + ": CSV FORMATTING ERROR: Too many fields. Line contains more than 1 field."
 		update_error_log(msg, error_log)
 		valid_row = False
 	except (IndexError):
-		pass
+		pass #everything is fine
 	
 	
-	if not compound_exists(code, smiles, library_id, line, error_log, row):
+	if not compound_exists(smiles, library_id, line, error_log):
 		return False
 	
 	return valid_row
@@ -201,7 +195,13 @@ def code_is_valid(string, line, used_codes, error_log):
 
 #WELL validation helpers
 
-def valid_well_name(string, line, error_log): #figure out what are actual possible well names
+def valid_well_name(string, line, error_log):
+
+	if string == "":
+		msg = "Line " + str(line) + ": WELL NAME ERROR. Missing well name."
+		update_error_log(msg, error_log)
+		return False
+
 	match = re.fullmatch('([A-Z][A-F]?[1-9])|([A-Z][A-F]?(?!(00))([0-9]{2}))', string.upper())
 	digit_part = '[0-9][0-9]?'
 	
@@ -237,6 +237,7 @@ def smiles_string_exists(string, line, error_log):
 	return True
 
 def parse_smiles(string):
+	'''If SMILES string is valid, returns empty string; otherwise returns RDKit error message'''
 	sio = sys.stderr = StringIO()
 	mol = Chem.MolFromSmiles(string)
 	output = sio.getvalue()
@@ -286,36 +287,34 @@ def is_csv(file_name, error_log):
 #COMPOUND finder
 
 
-def compound_exists(code, smiles, library_id, line, error_log, row):
-	if not code or not smiles:
+def compound_exists(smiles, library_id, line, error_log):
+	if not smiles:
 		return False
 
-	try:
-		compound = Compounds.objects.get(code=code, smiles=smiles)
-	except django.core.exceptions.ObjectDoesNotExist:
-		msg = "Line " + str(line) + ": COMPOUND ERROR: '" + code + ' : ' + smiles + "': No such compound is registered in the inventory."
+	matching_smiles = Compounds.objects.filter(smiles=smiles)
+
+	if matching_smiles.count() == 0:
+		msg = "Line " + str(line) + ": COMPOUND ERROR: '" + smiles + "': No such compound is registered in the inventory."
 		update_error_log(msg, error_log)
 		return False
-	except django.core.exceptions.MultipleObjectsReturned:
-		msg = "Line " + str(line) + ": DATA INTEGRITY ERROR DETECTED: This selection cannot be uploaded because of database error. There are duplicate compounds in the database: ", row[0], ':', row[1], 'and this selection cannot be uploaded. Please contact the staff.'
 	
-	locations = compound.locations.all()
+
 	library_id = int(library_id)
 	found = False
-	
-	for location in locations:
-		if location.library_plate.library.id == library_id:
+
+	for c in matching_smiles.all():
+		if library_id in [sw.library_plate.library.id for sw in c.locations.all()]:
 			found = True
-	
+		
 	if not found:
 		try:
 			library = Library.objects.get(id=library_id)
 		except django.core.exceptions.ObjectDoesNotExist:
-			msg = "Line " + str(line) + ": DATA ERROR: Selected library does not exist"
+			msg = "APPLICATION ERROR: Selected library does not exist"
 			update_error_log(msg, error_log)
 			return False
 			
-		msg = "Line " + str(line) + ": COMPOUND ERROR: '" + code + ' : ' + smiles + "' does not belong to " + library.name
+		msg = "Line " + str(line) + ": COMPOUND ERROR: no compound with the SMILES string: " + smiles + " belongs to " + library.name
 		update_error_log(msg, error_log)
 		return False
 	return True
@@ -325,17 +324,17 @@ def compound_exists(code, smiles, library_id, line, error_log, row):
 #EXPORT FORM FOR SOAKDB-COMPATIBLE LIST OF SOURCE COMPOUNDS
 
 def export_form_is_valid(post_data):
-	proposal = None
+	project = None
 	subset_lib_ids = []
 	for key in post_data:
 		if key=='csrfmiddlewaretoken':
 			pass
-		elif key=='proposal':
+		elif key=='project':
 			try:
-				proposal = Project.objects.get(proposal=post_data.get(key))
-				subset_lib_ids = [s.library.id for s in proposal.subsets.all()]
+				project = Project.objects.get(id=post_data.get(key))
+				subset_lib_ids = [s.library.id for s in project.subsets.all()]
 			except django.core.exceptions.ObjectDoesNotExist:
-				print('No proposal found')
+				print('No project found')
 				return False
 		else:
 			if re.fullmatch('[0-9]+', key):

@@ -1,22 +1,34 @@
-from API.models import Library, LibraryPlate, LibrarySubset, Compounds, SWStatuschange, SourceWell, Preset, Proposals, PlateOpening
+
+from API.models import (Library, 
+    LibraryPlate, 
+    LibrarySubset, 
+    Compounds, 
+    SWStatuschange, 
+    SourceWell, 
+    Preset, 
+    Project,
+    PlateOpening,
+    IspybAuthorization
+    )
 import datetime
 
 libraries_data = [("lib1", True, True), ("lib2", False, True), ("lib3", True, False)]
 plates_data = [
     ("xyz", 0, True), ("xyz2", 0, False), ("xyz3", 0, False),
     ("abc1", 1, True), ("largest_small", 1, False), ("smallest_large", 1, False),
-    ("large_row", 1, False), ("large_column", 1, False), ("empty", 1, False),
+    ("large_row", 1, False), ("large_column", 1, False), ("empty", 1, False), ("abc", 2, True)
     ]
 compounds_data = [
     ("code1", "CC"), ("code2", "CCO"), ("code3", "CCI"), ("code4", "CCF"), 
     ("code5", ""),  ("code6", ""),  ("code7", ""), 
-    ("code8", "CCC"), ("code9", "CCCFO"), ("code10", "CCFC"), ]
+    ("code8", "CCC"), ("code9", "CCCF"), ("code10", "CCOF"), ]
 source_wells_data = [
     (0, 0, "A01", 30, True), (1, 0, "B01", 30, True), (2, 0, "C01", 30, True), (3, 0, "D01", 30, True),
     (0, 1, "A01", 30, False, datetime.date(2021, 2, 10)), (1, 1, "B01", 30, True), (2, 1, "C01", 30, False, datetime.date(2020, 10, 28)), (3, 1, "D01", 30, True), 
     (0, 2, "A01", 30, True), (1, 2, "B01", 30, True), (2, 2, "C01", 30, False), (3, 2, "D01", 30, True),
     (4, 3 ,"A01", 30, True), (5, 3, "B01", 30, True), (6, 3, "C01", 30, False),
     (7, 4, "P24", 30, True), (7, 5, "R25", 30, True), (7, 6, "R02", 30, True), (7, 7, "F25", 30, True),
+    (7, 9, "X1", 30, True), (8, 9, "x2", 30, True), (9, 9, "X3", 30, True),
     ]
 
 status_change_data = [
@@ -27,7 +39,8 @@ status_change_data = [
 plate_opening_data = [ (1, "2020-10-28", "reason"), (2, "2020-10-28", "reason"),]
 subsets_data = [("lib1-s1", 0, [1, 2]), ("lib1-s2", 0, [0, 3]), ("lib3-s1", 2, [7]), ("lib3-s2", 2, [7, 9]), ("test-missing", 0, [0, 2])  ]
 
-proposals_data = [("proposal1", [0], [0, 1]), ("proposal2", [2], [])]
+auths_data = [("project-str1", "project1-1"), ("project-str2", "project2-2")]
+projects_data = [(0, [0], [0, 1]), (1, [2], [])]
 
 def set_up_libraries(data):
     libs = []
@@ -85,24 +98,31 @@ def set_up_subsets(data, library_data, compounds_data):
         subs.append(l)
     return subs
 
-def set_up_proposals(data, library_data, subset_data, compounds_data):
+def set_up_auths(data):
+    for t in data:
+        IspybAuthorization.objects.create(project=t[0], proposal_visit=t[1])
+
+def set_up_projects(data, auth_data, library_data, subset_data, compounds_data):
+    set_up_auths(auths_data)
+    auths = IspybAuthorization.objects.all()
     subsets = LibrarySubset.objects.all()
     libraries = Library.objects.all()
     if subsets.count() == 0:
         subsets = set_up_subsets(subset_data, library_data, compounds_data)
     if libraries.count() ==0:
         libraries = Library.objects.all()
-    proposals = []
+    projects = []
     for t in data:
-        p =  Proposals.objects.create(proposal=t[0])
+        p =  Project.objects.create()
+        p.auth.add(auths[t[0]])
         for index in t[1]:
             p.libraries.add(libraries[index])
             p.save()
         for index in t[2]:
             p.subsets.add(subsets[index])
             p.save()        
-        proposals.append(p)
-    return proposals
+        projects.append(p)
+    return projects
 
 def set_up_status_changes(data, source_wells_data, plates_data, library_data, compounds_data):
     source_wells = SourceWell.objects.all()

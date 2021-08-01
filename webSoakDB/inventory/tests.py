@@ -6,7 +6,17 @@ import unittest
 import datetime
 
 from .dt import ensure_leading_zero, valid_wells
-from API.models import Library, LibraryPlate, LibrarySubset, Preset, Compounds, SourceWell, SWStatuschange, PlateOpening, Proposals
+from API.models import (
+	Library, 
+	LibraryPlate, 
+	LibrarySubset, 
+	Preset, 
+	Compounds, 
+	SourceWell, 
+	SWStatuschange, 
+	PlateOpening, 
+	Project
+)
 from .inv_helpers import (
 	get_plate_size, 
 	get_change_dates,
@@ -19,8 +29,8 @@ from .inv_helpers import (
 
 from tools.data_storage_classes import SubsetCopyWithAvailability
 
-from .set_up import (
-	set_up_proposals,
+from tools.set_up import (
+	set_up_projects,
 	set_up_status_changes,
 	set_up_openings,
 	status_change_data,
@@ -29,8 +39,9 @@ from .set_up import (
 	libraries_data,
 	compounds_data,
 	plate_opening_data,
-	proposals_data,
-	subsets_data
+	projects_data,
+	subsets_data,
+	auths_data
 )
 
 class DTHelperTestsNoDB(unittest.TestCase):
@@ -78,7 +89,7 @@ class HelperTestsDB(TestCase):
 	'''inventory helper functions using DB objects'''
 	def setUp(self):
 		set_up_status_changes(status_change_data, source_wells_data, plates_data, libraries_data, compounds_data)
-		set_up_proposals(proposals_data, libraries_data, subsets_data, compounds_data)
+		set_up_projects(projects_data, auths_data, libraries_data, subsets_data, compounds_data)
 
 	def test_sw_copies(self):
 		l = LibraryPlate.objects.get(barcode="xyz2")
@@ -267,7 +278,7 @@ class HelperTestsDB(TestCase):
 		self.assertEqual(output1[1].barcode, "xyz3")
 	
 	def test_get_subsets_with_availability(self):
-		p1 = Proposals.objects.get(proposal="proposal1")
+		p1 = Project.objects.get(auth__proposal_visit__startswith="project1")
 		lib = Library.objects.get(name="lib1")
 		subsets = get_subsets_with_availability(p1.subsets.all())
 		

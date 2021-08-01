@@ -1,5 +1,5 @@
 from django.test import TestCase
-from inventory.set_up import (set_up_source_wells, source_wells_data, plates_data, libraries_data, compounds_data)
+from tools.set_up import (set_up_source_wells, source_wells_data, plates_data, libraries_data, compounds_data)
 from tools.uploads_downloads import import_full_libraries
 from API.models import Project, SourceWell, LibraryPlate
 
