@@ -1,51 +1,19 @@
 import React from 'react';
-import axios from 'axios';
 import CSRFToken from './csrf.js';
+import OwnLibraryForm from './own_lib_form.js';
 
-class CherryPickForm extends React.Component {
+class CherryPickForm extends OwnLibraryForm {
   
-  constructor(props){
-    super(props);
-    this.state = {
-      //libs: [],
-      name: "",
-      file: "",
-      library: "",
-      }
-  }
-  
-  /*
-  componentDidMount() {
-    const apiUrl = '/api/in_house_library_list/';
-    
-    axios.get(apiUrl)
-      .then(res => {
-      const libs = res.data;
-      this.setState({ libs });
-      });
-  }*/
-  
-
-  changeName(e){
-    this.setState({name: e.target.value})
-  }
-
-  changeFile(e){
-    this.setState({file: e.target.value})
-  }
-
-  changeLibrary(e){
-    this.setState({library: e.target.value})
-  }
-  submit() {
-    if (!(this.state.name && this.state.file && this.state.library)){
-      return;
-    }
-    this.props.showOverlay();
-    const unsavedChanges = this.props.detectUnsavedChanges(null, null);
+  triggerFormSubmission(changesBeforeSubmission){
     document.forms["own_subset"].requestSubmit();
-    setTimeout(() => {this.props.refreshAfterUpload()}, 2000);
-    this.props.trackUnsavedChanges(unsavedChanges);
+    const initialSubNumber = this.props.proposal.subsets.length;
+    this.refreshUntilAdded(initialSubNumber, changesBeforeSubmission);
+  }
+  
+  checkForChanges(initialNumber){
+    if (this.props.proposal.subsets.length !== initialNumber){
+      this.props.updateWaitingStatus(false); //this will trigger stopReloading()
+    }
   }
   
   render(){
@@ -64,16 +32,16 @@ class CherryPickForm extends React.Component {
       <CSRFToken />
       <input type="hidden" name="project" value={this.props.proposal.id} />
       <label htmlFor="id_lib_id">Select library:</label> 
-      <select name="lib_id" id="id_lib_id" value={library} onChange={(e) => this.changeLibrary(e)}>
+      <select name="lib_id" id="id_lib_id" value={library}>
         <option>...</option>
       {options}
       </select>
   
       <label htmlFor="id_name">Name your selection: </label> 
-      <input type="text" name="name" required id="id_name_chpck" value={name} onChange={(e) => this.changeName(e)}/>
+      <input type="text" name="name" required id="id_name_chpck" value={name}/>
 
       <label htmlFor="id_data_file">Upload your selection:</label> 
-      <input type="file" name="data_file" required id="id_data_file" value={file} onChange={(e) => this.changeFile(e)} />
+      <input type="file" name="data_file" required id="id_data_file" value={file} />
       <button type="submit" onClick={ ()=> this.submit()}>Upload and add to your selection</button>
     </form>
     );

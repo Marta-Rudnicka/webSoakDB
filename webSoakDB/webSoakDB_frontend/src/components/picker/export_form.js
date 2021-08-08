@@ -73,6 +73,7 @@ class SubsetSelect extends React.Component {
       <td>
         {selects}
       </td>
+      <td><a href={"/inventory/compound-availability/" + this.props.subset.id + "/"} target="_blank">Info</a></td>
     </tr>
     
     );

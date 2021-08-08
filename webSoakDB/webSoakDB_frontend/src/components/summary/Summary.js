@@ -68,7 +68,7 @@ class Summary extends React.Component {
 		
 		return (
 		  <div id="all">
-			<h1>Selected Compounds for {this.props.proposal.proposal} </h1>
+			<h1>Selected Compounds for {this.props.proposal.auth[0].proposal_visit} </h1>
 			<main id="summary-main">
 			<section id="whole" className={this.state.libClass}>
 			  <h2>Whole libraries</h2>

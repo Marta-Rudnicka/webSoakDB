@@ -70,14 +70,12 @@ class App extends Component {
   
   updateSelection(libraries, subsets){
     const propId = this.state.proposal.id;
-    console.log(this.state.proposal);
     
     const apiUrl='/api/update_proposal_selection/' + propId + '/';
     axios.patch(apiUrl, {libraries: libraries, subsets: subsets})
     .then(res =>{
       event.preventDefault();
       if (res.status===200){
-        console.log(this.state.proposal)
         this.logIn(propId);
       }
     })
@@ -91,7 +89,7 @@ class App extends Component {
   
 
   refreshAfterUpload(){
-    this.logIn(this.state.proposal.proposal);  
+    this.logIn(this.state.proposal.id);  
   }
    
   trackUnsavedChanges(bool){

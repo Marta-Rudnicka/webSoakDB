@@ -9,7 +9,7 @@ class Home extends React.Component {
 	render() {
 		return (
 		<div id="home">
-			<h1>XChemSPA home - {this.props.proposal.proposal}</h1>
+			<h1>XChemSPA home - {this.props.proposal.auth[0].project}</h1>
 			<main>
 			<section id="prep">
 				<h2>Prepararation</h2>

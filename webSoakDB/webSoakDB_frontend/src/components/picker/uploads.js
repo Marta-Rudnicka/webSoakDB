@@ -5,6 +5,7 @@ import ExportForm from './export_form.js';
 
 class Uploads extends React.Component {
   
+  /*
   constructor(props){
     super(props)
     
@@ -18,59 +19,31 @@ class Uploads extends React.Component {
       this.setState({proposal : this.props.proposal});
     }
   }
+*/
+  getPublicSubsetIds(){
+    let publicSubsetIds = []
+    this.props.presets.forEach(preset => {
+      publicSubsetIds.push(...preset.subsets);
+      //preset.subsets.forEach(subs => publicSubsetIds.push(...subs));
+    });
+    return publicSubsetIds;
+  }
+
+  getUserSubsets(){
+    //list selected subsets uploaded by the user (not from a preset)
+    const publicSubs = this.getPublicSubsetIds();
+    const allSelected = this.props.proposal.subsets;
+    const userSubsets = allSelected.filter(subset => !publicSubs.includes(subset.id));
+    return userSubsets;
+  }
 
   render(){
-    let uploadedLibs = []
-    this.state.proposal.libraries.forEach(lib => {
-      if (!lib.public){
-        uploadedLibs.push(lib);
-        }
-      });
-    
-    const liblist = () => { 
-      if (uploadedLibs.length > 0){
-        return(
-        <React.Fragment> 
-          <h3>Already uploaded:</h3>
-          <ul className="old-uploads">
-             {uploadedLibs.map((lib, index) => <li key={index}>{lib.name}</li>)}
-          </ul>
-        </React.Fragment>
-        ); 
-        }
-      else {
-        return "";
-      }
-    };
-    
-    let publicSubsets = []
-    this.props.presets.forEach(preset => {
-      preset.subsets.forEach(subset=> publicSubsets.push(subset.id));
-    });
-    
-    let uploadedSubsets = []
-    
-    this.state.proposal.subsets.forEach(subset => {
-      if (!publicSubsets.includes(subset.id)){
-        uploadedSubsets.push(subset);
-        }
-      });
-      
-    const subsetlist = () => { 
-      if (uploadedSubsets.length > 0){
-        return(
-        <React.Fragment> 
-          <h3>Already uploaded:</h3>
-          <ul className="old-uploads">
-             {uploadedSubsets.map((subset, index) => <li key={index}>{subset.name}</li>)}
-          </ul>
-        </React.Fragment>
-        ); 
-        }
-      else {
-        return "";
-      }
-    };
+    const uploadedLibs = this.props.proposal.libraries.filter(lib => !lib.public)
+    const uploadedLibsHeader = uploadedLibs.length > 0 ? <h3>Already uploaded:</h3> : null;
+    const liblist = uploadedLibs.map((lib, index) => <li key={index}>{lib.name}</li>);
+    let uploadedSubsets = this.getUserSubsets();
+    const uploadedSubsetsHeader = uploadedSubsets.length > 0 ? <h3>Already uploaded:</h3> : null;
+    const subsetlist = uploadedSubsets.map((subset, index) => <li key={index}>{subset.name}</li>);
     
     return (
     <section id="upload">
@@ -82,8 +55,13 @@ class Uploads extends React.Component {
             detectUnsavedChanges={this.props.detectUnsavedChanges}
             trackUnsavedChanges={this.props.trackUnsavedChanges}
             showOverlay={this.props.showOverlay}
+            waiting = {this.props.waiting}
+            updateWaitingStatus = {this.props.updateWaitingStatus}
           />
-            {liblist()}      
+            {uploadedLibsHeader}
+            <ul className="old-uploads">
+              {liblist}
+            </ul>
       </div>
       <div className="form-container">
         <hr />
@@ -95,8 +73,14 @@ class Uploads extends React.Component {
           detectUnsavedChanges={this.props.detectUnsavedChanges}
           trackUnsavedChanges={this.props.trackUnsavedChanges}
           showOverlay={this.props.showOverlay}
+          waiting = {this.props.waiting}
+          updateWaitingStatus = {this.props.updateWaitingStatus}
         />
-            {subsetlist()}
+            {uploadedSubsetsHeader}
+            <ul className="old-uploads">
+            {subsetlist}
+            </ul>
+            
       </div>
       <div id="formatting-help">
         <hr />
@@ -104,7 +88,7 @@ class Uploads extends React.Component {
       </div>
       <div id="exports">
         <hr />
-        <ExportForm proposal={this.state.proposal}/>
+        <ExportForm proposal={this.props.proposal}/>
       </div>
     </section>
     )

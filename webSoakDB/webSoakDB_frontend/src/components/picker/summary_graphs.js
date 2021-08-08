@@ -2,6 +2,7 @@ import React from 'react';
 import properties_dict from './properties_dict.js'
 import CSRFToken from './csrf.js';
 import { XIcon, ChevronDown } from '../main/icons.js';
+import { shareAllElements } from '../../actions/stat_functions.js';
 
 class SelectionGraph extends React.Component {
   
@@ -90,12 +91,15 @@ class SummaryGraphs extends React.Component {
   }
   
   componentDidUpdate(prevProps, prevState){
-    if(prevProps !== this.props){
+    if( !shareAllElements(prevProps.parentState.selectedLibIds, this.props.parentState.selectedLibIds) 
+      || !shareAllElements(prevProps.parentState.selectedSubsetIds,this.props.parentState.selectedSubsetIds)
+      || prevProps.properties !== this.props.properties){
       this.setState({submit: false});
     }
   }
   submit(){
-    this.setState({submit: true})
+    this.setState({submit: true});
+    this.props.updateWaitingStatus(false);
   }
   
   render(){

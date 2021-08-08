@@ -4,7 +4,6 @@ import Uploads from './uploads.js';
 import GraphTable from './graph_table.js';
 import PresetOption from './preset_option.js';
 import axios from 'axios';
-import Overlay from './overlay.js';
 import { getProposalString } from '../../actions/stat_functions.js';
 
 import { 
@@ -27,7 +26,7 @@ class Picker extends React.Component {
       presets: [],
       currentLibOptions: null,
       inHouseCompoundCount: 0,
-      overlay: false,    
+      waitingForSave: false
     }
     
     this.detectUnsavedChanges = this.detectUnsavedChanges.bind(this);
@@ -35,7 +34,7 @@ class Picker extends React.Component {
     this.handleChangePreset = this.handleChangePreset.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
     this.selected = this.selected.bind(this);
-    this.showOverlay = this.showOverlay.bind(this);
+    this.updateWaitingStatus = this.updateWaitingStatus.bind(this);
   }
   
   componentDidMount() {
@@ -80,6 +79,7 @@ class Picker extends React.Component {
   handleChangeLib(event){
   /*add or remove library from temporary (unsaved) selection on checkbox change*/
     const id = parseInt(event.target.value);
+    this.updateWaitingStatus(false);
     
     if(event.target.checked === true){
       const newSelectedLibIds = this.state.selectedLibIds.slice(0, this.state.selectedLibIds.length);
@@ -95,6 +95,7 @@ class Picker extends React.Component {
   handleChangePreset(event){
   /*add or remove subsets from temporary (unsaved) selection on preset checkbox change*/
     const id = parseInt(event.target.value);
+    this.updateWaitingStatus(false);
     
     if(event.target.checked === true){
       const newSelectedSubsetIds = this.state.selectedSubsetIds.slice(0, this.state.selectedSubsetIds.length);
@@ -108,19 +109,12 @@ class Picker extends React.Component {
   }
 
   saveChanges(){
-    console.log('fired save changes')
-    //event.preventDefault();
-    this.props.updateSelection(this.state.selectedLibIds, this.state.selectedSubsetIds);
-    this.props.refreshAfterUpload();
-    //location.reload();
-  }
-
-
-  resetSelection(){
-    //event.preventDefault();
-    this.props.updateSelection([], []);
-    this.props.refreshAfterUpload();
-    //location.reload();
+    event.preventDefault();
+    this.updateWaitingStatus(false); //stop reload attempts
+    setTimeout(() => { //wait make sure reloading stopped
+      this.props.updateSelection(this.state.selectedLibIds, this.state.selectedSubsetIds);
+      this.props.refreshAfterUpload();
+    }, 1000);
   }
 
   selected(preset){
@@ -155,11 +149,10 @@ class Picker extends React.Component {
     });
     this.setState({inHouseCompoundCount: count});
   }
-
-  showOverlay(){
-    this.setState({overlay: true})
-  }
   
+  updateWaitingStatus(bool){
+    this.setState({waitingForSave : bool})
+  }
   render() {
     let changeStatus = "";
     if (this.props.unsavedChanges){
@@ -195,11 +188,9 @@ class Picker extends React.Component {
     const proposal = getProposalString(this.props.proposal)
     let publicSubsets = [];
     this.state.presets.forEach(preset => publicSubsets.push(...preset.subsets));
-    const overlay = this.state.overlay ? <Overlay /> : null;
 
     return (
     <div id="picker">
-      {overlay}
       <h1>Select compounds for {proposal}</h1>
       <main id="main-picker">
         <section id="libraries" className={changeStatus}>
@@ -217,22 +208,23 @@ class Picker extends React.Component {
             </ul>
           </div>
           <button type="submit" onClick={event => this.saveChanges(event)}>Save changes in your selection</button>
-          <button type="submit" onClick={event => this.resetSelection(event)}>Reset selection (demo only)</button>         
         </section>
                 
-        <Uploads proposal={this.props.proposal}
-          publicSubsets={publicSubsets} 
+        <Uploads 
+          proposal={this.props.proposal}
+          //publicSubsets={publicSubsets} 
           refreshAfterUpload={this.props.refreshAfterUpload}
           detectUnsavedChanges={this.detectUnsavedChanges}
-          proposal={this.props.proposal}
           trackUnsavedChanges={this.props.trackUnsavedChanges}
           presets={this.state.presets}
-          showOverlay={this.showOverlay}
           libs={this.state.currentLibOptions}
+          waiting = {this.state.waitingForSave}
+          updateWaitingStatus = {this.updateWaitingStatus}
         />
         <section id="stats">
           <GraphTable
             parentState = {this.state}
+            updateWaitingStatus = {this.updateWaitingStatus}
           />
         </section>
       </main>

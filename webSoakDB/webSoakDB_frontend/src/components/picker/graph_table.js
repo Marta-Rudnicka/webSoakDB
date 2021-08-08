@@ -5,6 +5,7 @@ import { removeFromArray, getSubsetIds } from  '../../actions/stat_functions.js'
 import axios from 'axios';
 import SummaryGraphs from './summary_graphs.js';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
+import { shareAllElements } from '../../actions/stat_functions.js';
 
 class GraphTr extends React.Component {
   constructor(props){
@@ -74,9 +75,26 @@ class GraphTable extends React.Component {
     }
   }
   
-  componentDidUpdate(prevProps){
-    if(this.props.parentState !== prevProps.parentState ){
-      this.setState({presets : this.sortSubsets()[0], other_subsets: this.sortSubsets()[1]});
+  
+  componentDidUpdate(prevProps, prevState){
+    if(
+      (!shareAllElements(prevProps.parentState.selectedLibIds, this.props.parentState.selectedLibIds) 
+      || !shareAllElements(prevProps.parentState.selectedSubsetIds,this.props.parentState.selectedSubsetIds))
+      && !this.props.parentState.waitingForSave
+      ){
+        console.log('fired componentDidUpdate')
+        this.setState({presets : this.sortSubsets()[0], other_subsets: this.sortSubsets()[1]});
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    //prevent continuous updates while a user file is being processed
+    if (nextProps.parentState.waitingForSave){
+      console.log('prevented GraphTable update')
+      return false;
+    }
+    else {
+      return true;
     }
   }
   
@@ -108,6 +126,7 @@ class GraphTable extends React.Component {
   }
   
   render(){
+    console.log('rendering GraphTable')
     const checkboxes = Object.keys(properties_dict).map((key, index) => {
         let checked = false;
         if (this.state.show.includes(key)){
@@ -138,7 +157,13 @@ class GraphTable extends React.Component {
     
     });
     
-    const last_row = <SummaryGraphs parentState={this.props.parentState} properties={this.state.show}/>
+    const last_row = (
+    <SummaryGraphs 
+      parentState={this.props.parentState} 
+      properties={this.state.show}
+      updateWaitingStatus = {this.props.updateWaitingStatus}
+      
+      />);
     
     return(
     <div>
