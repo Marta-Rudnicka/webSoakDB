@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="/static/inventory/style.css">
 </head>
 <body class="availability-content">
-    {% for subset in preset.subsets %}
-    <h4>{{subset.library_name}}</h4>
-    <table class="availability-details">
+    <main id="availability">
+        <h1>Compound availability details for {{preset.name}}</h1>
+        {% for subset in preset.subsets %}
+        <h4>{{subset.library_name}}({{subset.compounds.count}})</h4>
+        <table class="availability-details">
 
-          {% include "availability-details.html" with initial_class=""%}
-    </table>
-        {% endfor %}
+            {% include "availability-details.html" with initial_class=""%}
+        </table>
+            {% endfor %}
+    </main>
 
 </body>

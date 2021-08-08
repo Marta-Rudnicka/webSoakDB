@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% load static %}
+  {% block main %}
+  <h1>Browse data</h1>
+  <main id="db_search">
+    <ul>
+        <li><a href="/inventory/find-single-compound/">Find compound by code or SMILES string</a></li>
+        <li><a href="/inventory/find-library-plate/">Find library plate by barcode</a></li>
+        <li><a href="/inventory/compare-plates/">Compare library plates</a></li>
+    </ul>
+  </main>
+  {% endblock %}

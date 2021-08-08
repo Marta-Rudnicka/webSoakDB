@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% load static %}
+  {% block main %}
+  
+  <main id="db_search">
+    <h1>Compare library plates contents</h1>
+    <section>
+        <h2>Choose plates to compare</h2>
+        <form method="post" action="/inventory/compare-plates/">
+            {% csrf_token %}
+            <table>
+              {{ form.as_table }}
+            </table>
+             <button type="submit">Submit</button>
+        </form>
+    </section>
+    {% if results %}
+    <section>
+    <h2>Comparison results</h2>
+      <ul>
+
+      {% for k, v in results.items %}
+        <li>{{k}}: {{v}}</li>
+      {% endfor %}
+      </ul>
+    <section>
+    <section>
+        <table class="table">
+            <tr>
+		<th>Property</th>
+		<th>{{plate1}}</th>
+		<th>{{plate2}}</th>
+	</tr>
+	<tr>
+		<td>All compounds in plate</td>
+		<td>{{p1_data.size}}</td>
+		<td>{{p2_data.size}}}}</td>
+	</tr>
+	<tr>
+		<td>Available compounds in plate</td>
+		<td>{{p1_data.available}}</td>
+		<td>{{p2_data.available}}</td>
+	</tr>
+	<tr>
+		<td>Unavailable compounds in plate</td>
+		<td>{{p1_data.unavailable}}</td>
+		<td>{{p2_data.unavailable}}</td>
+	</tr>
+	<tr>
+		<td>Compounds in common with the other plate</td>
+		<td>{{p1_data.in_common|floatformat:"2"}}%</td>
+		<td>{{p2_data.in_common|floatformat:"2"}}%</td>
+	</tr>
+    <tr>
+		<td colspan="3">Compound codes for the same smiles</td>
+	</tr>
+    <tr>
+		<td>{% for c in p1_data.diff_codes%}<strong>{{c.smiles}}</strong><br>{%endfor%}</td>
+		<td>{% for c in p1_data.diff_codes%}<a href="/inventory/compound-lookup/{{c.id}}" target="_blank">{{c.code}}</a><br>{%endfor%}</td>
+		<td>{% for c in p2_data.diff_codes%}<a href="/inventory/compound-lookup/{{c.id}}" target="_blank">{{c.code}}</a><br>{%endfor%}</td>
+	</tr>
+
+        </table>
+    <section>
+    {% endif%}
+  </main>
+  {% endblock %}

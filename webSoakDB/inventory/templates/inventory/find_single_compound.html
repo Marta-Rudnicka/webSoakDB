@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% load static %}
+  {% block main %}
+  
+  <main id="db_search">
+    <h1>Compound search</h1>
+    <section>
+        <h2>Find compound by code or SMILES string </h2>
+        <p>Enter either the compound code or the SMILES string. 
+        The SMILES string does not need to have exctly the same form as the string stored in the database - 
+        it will be automatically converted to the appropriate form.</p>
+        <form method="post" action="/inventory/find-single-compound/">
+            {% csrf_token %}
+            <table>
+              {{ form.as_table }}
+            </table>
+             <button type="submit">Submit</button>
+        </form>
+    </section>
+    {% if compounds %}
+    <section>
+    <h2>Search results for {{code}}{{smiles}}</h2>
+      <ul>
+      {% for compound in compounds %}
+        <li><a href="/inventory/compound-lookup/{{compound.id}}/">{{compound.code}}</a></li>
+      {% endfor %}
+      </ul>
+    <section>
+    {% endif%}
+  </main>
+  {% endblock %}

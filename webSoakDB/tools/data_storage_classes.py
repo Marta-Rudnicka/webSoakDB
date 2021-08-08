@@ -1,6 +1,8 @@
 from ast import iter_fields
 from datetime import datetime
-from API.models import Compounds, SourceWell
+from tools.compounds import find_alternative_compound, find_compound_in_plate
+#from inventory.views import locate_compounds
+from API.models import Compounds, Library, SourceWell
 from django.core.exceptions import ObjectDoesNotExist
 import itertools
 '''
@@ -16,12 +18,27 @@ class SourceWellCopy:
 		self.changes = [{"date" : ch.date, "activation" : ch.activation} for ch in compound.status_changes.all()]
 
 class BasicTemporaryCompound:
-	def __init__(self, code, smiles):
-		self.code = code
+	def __init__(self, smiles, library_id):
+		print('BasicTemporaryCompound constructor: ', smiles, library_id)
+		'''find a compound with <smiles> belonging to library with <library_id>,
+		and make an object with copy of the compound's data'''
 		self.smiles = smiles
+		
+		lib = Library.objects.get(pk=library_id)
+		matching_smiles = Compounds.objects.filter(smiles=smiles)
+		
+		original = None
+		
+		for compound in matching_smiles.all(): #find first matching code
+			for sw in compound.locations.all():
+				if sw.library_plate.library == lib:
+					original = sw.compound
+
 		try:
-			self.id = Compounds.objects.get(code=code, smiles=smiles).id
+			self.code = original.code
+			self.id = original.id
 		except ObjectDoesNotExist:
+			self.code = "not-found"
 			self.id = 0
 
 class PresetCopy:
@@ -78,7 +95,8 @@ class SubsetCopyWithAvailability:
 			self.library = args[0].library
 			self.library_id = args[0].library.id
 			self.library_name = args[0].library.name
-			self.compounds = set(args[0].compounds.all())
+			#self.compounds = set(args[0].compounds.all())
+			self.compounds = args[0].compounds.all()
 			self.availability = self.get_compound_availability(self.compounds, self.library)
 
 		#for unsaved cherry-picking list uploaded from a file (where library data has to be manually entered)
@@ -130,13 +148,32 @@ class SubsetCopyWithAvailability:
 			return None	
 
 	def find_missing_compounds(self, desired_compounds, plate):
+		'''takes a list of BasicTemporaryCompound objects needed and LibraryPlate object,
+		returns a list of BasicTemporaryCompound objects that represent desired compounds
+		that are missing from <plate>'''
+
 		missing_in_plate = set()
 		for c in desired_compounds:
+			#try:
+			#	print('normal plate')
+			#	sw = find_compound_in_plate(c, plate)
+			#	if not sw or not sw.active:
+			#		missing_in_plate.add(c)
+
 			try:
 				plate.compounds.get(compound__code = c.code, compound__smiles = c.smiles, active=True)
 			except ObjectDoesNotExist:
-				missing_in_plate.add(c)
+				#look for a different compounds qith the same SMILES string
+				alt = find_alternative_compound(c, plate)
+
+				if not alt:
+					missing_in_plate.add(c)
+				if alt and not alt.active:
+					#make sure you use the compound code used in this plate
+					c.code = alt.compound.code
+					missing_in_plate.add(c)
 			except AttributeError: #combined plate
+				print('combined plate')
 				found = False
 				for q in plate.compounds:
 					try: 

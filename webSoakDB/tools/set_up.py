@@ -16,12 +16,15 @@ libraries_data = [("lib1", True, True), ("lib2", False, True), ("lib3", True, Fa
 plates_data = [
     ("xyz", 0, True), ("xyz2", 0, False), ("xyz3", 0, False),
     ("abc1", 1, True), ("largest_small", 1, False), ("smallest_large", 1, False),
-    ("large_row", 1, False), ("large_column", 1, False), ("empty", 1, False), ("abc", 2, True)
+    ("large_row", 1, False), ("large_column", 1, False), ("empty", 1, False), ("abc", 2, True),
+    ("xyz_v2", 0, True)
     ]
 compounds_data = [
     ("code1", "CC"), ("code2", "CCO"), ("code3", "CCI"), ("code4", "CCF"), 
     ("code5", ""),  ("code6", ""),  ("code7", ""), 
-    ("code8", "CCC"), ("code9", "CCCF"), ("code10", "CCOF"), ]
+    ("code8", "CCC"), ("code9", "CCCF"), ("code10", "CCOF"), 
+    ("alt_code1", "CC"), ("alt_code2", "CCO") 
+    ]
 source_wells_data = [
     (0, 0, "A01", 30, True), (1, 0, "B01", 30, True), (2, 0, "C01", 30, True), (3, 0, "D01", 30, True),
     (0, 1, "A01", 30, False, datetime.date(2021, 2, 10)), (1, 1, "B01", 30, True), (2, 1, "C01", 30, False, datetime.date(2020, 10, 28)), (3, 1, "D01", 30, True), 
@@ -29,6 +32,7 @@ source_wells_data = [
     (4, 3 ,"A01", 30, True), (5, 3, "B01", 30, True), (6, 3, "C01", 30, False),
     (7, 4, "P24", 30, True), (7, 5, "R25", 30, True), (7, 6, "R02", 30, True), (7, 7, "F25", 30, True),
     (7, 9, "X1", 30, True), (8, 9, "x2", 30, True), (9, 9, "X3", 30, True),
+    (10, 10, "A01", 30, True), (11, 10, "B01", 30, False), (2, 10, "C01", 30, True), (3, 10, "D01", 30, True)
     ]
 
 status_change_data = [

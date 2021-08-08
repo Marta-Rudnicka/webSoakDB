@@ -520,3 +520,8 @@ img.small-mol{
 	text-align: center;
 	background:url(Gear.gif) center center no-repeat;
 }
+
+main#availability {
+	width: 1000px;
+	margin: auto;
+}

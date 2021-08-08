@@ -6,33 +6,15 @@ import csv
 import re
 from datetime import date 
 from django.http import HttpResponse
+from .compounds import find_compound_in_plate, standardize_smiles
 
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Crippen, Draw
 from rdkit.Chem.SaltRemover import SaltRemover
 
-def standardize_smiles(raw_string):
-	'''Canonicalize SMILES and remove salts - use only on validated SMILES strings;
-	For parsing CSV files'''
-
-	#remove whitespace and convert to canonical form
-	smiles = Chem.CanonSmiles(raw_string.strip())
-
-	#convert to RDKit mol object 
-	mol = Chem.MolFromSmiles(smiles)
-
-	#remove salt
-	remover = SaltRemover()
-	desalted_mol = remover.StripMol(mol, dontRemoveEverything=True)
-
-	#get SMILES string of the desalted mol and return it
-	return Chem.MolToSmiles(desalted_mol)
-
-
-
-
 #LOCATING COMPOUND LIST IN INVENTORY / EXPORTING LOCATION DATA (INVENTORY)
-def upload_temporary_subset(file_name):
+def upload_temporary_subset(file_name, library_id):
+	print('fired upload_temporary_subset', library_id)
 	compounds = set()
 
 	with open(file_name, newline='') as csvfile:
@@ -41,7 +23,7 @@ def upload_temporary_subset(file_name):
 		csvfile.seek(0)
 		compound_reader = csv.reader(csvfile, dialect)
 		for row in compound_reader:
-			compound = BasicTemporaryCompound(row[0].strip(), standardize_smiles(row[1]))
+			compound = BasicTemporaryCompound(standardize_smiles(row[0]), library_id)
 			compounds.add(compound)
 			
 	return compounds
@@ -144,7 +126,7 @@ def upload_subset(file_name, library_id, name, origin):
 
 #EXPORTING SOAK-DB COMPATIBLE COMPOUND LISTS (AS CSV)
 def import_full_libraries(proposal):
-	print("import_full_libraries", proposal)
+	'''imports source well data for selected libraries'''
 	proposal = Project.objects.get(id=proposal)
 	full_plates = []
 	
@@ -158,6 +140,8 @@ def import_full_libraries(proposal):
 	return s_wells
 
 def find_source_wells(subset, plate_ids):
+	'''imports source well data for subsets (cherry-picking lists and presets)'''
+	print('fired find_source_wells ', subset, plate_ids)
 	plates = []
 	for id in plate_ids:
 		plates.append(LibraryPlate.objects.get(pk=id))
@@ -168,25 +152,34 @@ def find_source_wells(subset, plate_ids):
 	else:
 		compounds = subset.compounds.all()
 	
+	print(compounds)
+
 	for compound in compounds:
 		for plate in plates:
-			try:
-				c = plate.compounds.get(compound__code = compound.code, compound__smiles = compound.smiles, active=True)
+			c = find_compound_in_plate(compound, plate)
+			print('found compound:', c)
+			if c and c.active:
 				sw.append(c)
 				break 		#to avoid duplicates in plate combinations
-			except django.core.exceptions.ObjectDoesNotExist:
-				pass
+		#	try:
+		#		c = plate.compounds.get(compound__code = compound.code, compound__smiles = compound.smiles, active=True)
+		#		sw.append(c)
+		#		break 		#to avoid duplicates in plate combinations
+		#	except django.core.exceptions.ObjectDoesNotExist:
+		#		pass
 	sw.sort(key=lambda x: x.library_plate.id)
 
 	return sw
 		
 def import_library_parts(proposal, data):
-	proposal = Project.objects.get(id=proposal)
+	project = Project.objects.get(id=proposal)
 	sw = []
 	
-	for s in proposal.subsets.all():
+	for s in project.subsets.all():
+		print('getting sourcewells for:', s)
 		if data.get(str(s.library.id), False):
 			sw = sw + find_source_wells(s, [ data.get(str(s.library.id))])
+			
 		else:							#multiple current plates
 			lib = Library.objects.get(pk=s.library.id)
 			plates_count = lib.plates.filter(current=True).count()
@@ -194,6 +187,7 @@ def import_library_parts(proposal, data):
 				option_name = str(s.library.id) + '-' + str(i)
 				plate_id = data.get(option_name, False)
 				sw = sw + find_source_wells(s, [plate_id])
+	print(sw)
 	return sw
 
 def source_wells_to_csv(source_wells, file_path, filename_prefix):

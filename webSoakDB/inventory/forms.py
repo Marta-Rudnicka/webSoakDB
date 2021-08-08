@@ -1,10 +1,11 @@
 from django import forms
-from API.models import Library, Preset, PlateOpening, Project
+from API.models import Library, LibraryPlate, Preset, PlateOpening, Project
 
 
 #presets = [("", "Select preset...")] + [(preset.id, preset.name) for preset in Preset.objects.all()]
 #libs = [("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True)]
 libs = []
+plates = [("", "Select plate...")] + [(plate.id, plate.barcode + ': ' + plate.library.name) for plate in LibraryPlate.objects.filter(library__public=True)]
 
 '''Note on overriding __init__ : __init__ functions are overriden here to be able to dynamically generate choices
 for the ChoiceFields. The reason why there are the oher fields in the __init__ functions is ordering: 
@@ -74,3 +75,20 @@ class NewProjectForm(forms.Form):
 	proposal = forms.CharField(label="Proposal", required=True)
 	title = forms.CharField(label="Name", required=False)
 	industry_user = forms.BooleanField(label="Industry user", required=False)
+
+class FindCompoundForm(forms.Form):
+	smiles = forms.CharField(label="SMILES string", required=False)
+	code = forms.CharField(label="compound code", required=False)
+
+class FindPlateForm(forms.Form):
+	barcode = forms.CharField(label="Barcode", required=True)
+
+class ComparePlatesForm(forms.Form):
+	plate1 = forms.ChoiceField(label="Plate 1", choices = plates, required=True)
+	plate2 = forms.ChoiceField(label="Plate 2", choices = plates, required=True)
+	'''
+	def __init__(self, libs, *args, **kwargs):
+		super(PlateUpdateForm, self).__init__(*args, **kwargs)
+		self.fields['plate1'] = forms.ChoiceField(choices = plates, required=True)
+		self.fields['plate2'] = forms.ChoiceField(choices = plates, required=True)
+	'''

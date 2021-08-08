@@ -98,3 +98,13 @@ def get_project_by_proposal(proposal_str):
 	auth = IspybAuthorization.objects.filter(proposal_visit__startswith = proposal_str).all()[0]
 	return auth.project_obj.all()[0]
 
+def get_plate_stats(plate, common_smiles, different_codes):
+	different_codes = sorted(different_codes)
+	compounds = [plate.compounds.get(compound__smiles=s).compound for s in different_codes]
+	dict = {}
+	dict["size"] = plate.compounds.count()
+	dict["available"] = plate.compounds.filter(active=True).count()
+	dict["unavailable"] = plate.compounds.filter(active=False).count()
+	dict["in_common"] = len(common_smiles) / plate.compounds.count() * 100
+	dict["diff_codes"] = compounds
+	return dict

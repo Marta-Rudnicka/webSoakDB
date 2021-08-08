@@ -93,3 +93,7 @@ main#choose-proposal, main#login, main#dashboard{
 	font-size: 1.5em;
 }	
 
+main#db_search {
+	width: 800px;
+	margin: auto;
+}

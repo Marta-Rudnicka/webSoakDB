@@ -100,7 +100,8 @@
                       
                   {% endfor %}            
                   </ul>
-                  <div class="availability-details">Availability details 
+                  <div class="availability-details"><a href="/inventory/preset-availability/{{preset.id}}/" target="_blank">Availability details</a></div>
+                  {% comment %}
                         <span id="{{preset.id}}-shower" onclick=show({{preset.id}})>
                           {% include "chevron-down.html"%}
                         </span>
@@ -108,12 +109,16 @@
                           {% include "chevron-up.html"%}
                         </span> 
                       </div>
-                      <table>
-                        <div id="{{preset.id}}" class="hidden">
-                          <iframe id="{{preset.id}}-frame" loading="lazy" src="/inventory/preset-availability/{{preset.id}}/" class="preset-detail-iframe" onload=stretch(this)></iframe>
+                      
+                      
+                        <table>
+                          <div id="{{preset.id}}" class="hidden">
+                            <iframe id="{{preset.id}}-frame" loading="lazy" src="/inventory/preset-availability/{{preset.id}}/" class="preset-detail-iframe" onload=stretch(this)></iframe>
+                          </div>
+                        </table>
                         </div>
-                      </table>
-                </div>
+                      {% endcomment %}
+                
                 {% else %}
                 No libraries added yet <br>
                 {% endif %}

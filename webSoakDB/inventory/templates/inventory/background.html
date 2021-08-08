@@ -1,0 +1,5 @@
+<body>
+    {%for compound in compounds%}
+    <td>{% include "molecule-image.html" with id=compound.compound.id %}</td>
+    {%endfor%}
+</body>

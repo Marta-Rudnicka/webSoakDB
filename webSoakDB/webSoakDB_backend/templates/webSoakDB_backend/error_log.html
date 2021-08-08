@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Error log</title>
+	<title>Upload error log</title>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -23,6 +23,6 @@
 		{% endfor %}
 		{% endautoescape %}
 	</main>
-	<button id="back">Go back</button>
-	<script>document.getElementById('back').addEventListener('click', ()=>window.history.back())</script>
+	<button id="close-button">Close</button>
+	<script>document.getElementById('close-button').addEventListener('click', ()=>close());</script>
 </body>

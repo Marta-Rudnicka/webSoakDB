@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% load static %}
+  {% block main %}
+  
+  <main id="db_search">
+    <h1>Library plate search</h1>
+    <section>
+        <h2>Find library plate by barcode </h2>
+        <form method="post" action="/inventory/find-library-plate/">
+            {% csrf_token %}
+            <table>
+              {{ form.as_table }}
+            </table>
+             <button type="submit">Submit</button>
+        </form>
+    </section>
+    {% if plates %}
+    <section>
+    <h2>Search results for {{barcode}}</h2>
+      <ul>
+      {% for plate in plates %}
+        <li><a href="/inventory/update-plate/{{plate.id}}/">{{plate.library}}: {{plate.barcode}}</a></li>
+      {% endfor %}
+      </ul>
+    <section>
+    {% endif%}
+  </main>
+  {% endblock %}

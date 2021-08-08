@@ -1,3 +1,5 @@
+from tools.data_storage_classes import SubsetCopyWithAvailability
+from tools.compounds import standardize_smiles
 from django.shortcuts import redirect, render
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
@@ -16,12 +18,14 @@ from .inv_helpers import (
 	fake_preset_copy, 
 	current_library_selection,
 	set_status,
-	get_project_by_proposal
+	get_project_by_proposal,
+	get_plate_stats
 )
 from tools.uploads_downloads import upload_temporary_subset, parse_compound_list, parse_id_list
 from .dt import get_well_dictionary, manage_sw_status_change
 from .forms import (
 	AddVisitForm,
+	FindCompoundForm,
 	LibraryForm, 
 	LibraryPlateForm, 
 	PlateUpdateForm, 
@@ -31,7 +35,9 @@ from .forms import (
 	PlateOpeningForm, 
 	OldProjectForm,
 	NewProjectForm,
-	UnsavedSubsetForm
+	UnsavedSubsetForm,
+	FindPlateForm,
+	ComparePlatesForm,
 )
 from tools.validators import data_is_valid, selection_is_valid
 from tools.histograms import update_histograms
@@ -70,6 +76,10 @@ def projects(request):
 		})
 
 @staff_member_required
+def browse_data(request):
+	return render(request, "inventory/browse-data.html")
+
+@staff_member_required
 def presets(request):
 
 	presets = Preset.objects.all().order_by("name")
@@ -80,7 +90,7 @@ def presets(request):
 	presets_copy = presets 
 	form_dict = {}
 	
-	for p in presets_copy:
+	for p in presets:
 		#generate lists of valid library choices for the preset
 		old_libs_set = {(s.library.id, s.library.name) for s in p.subsets.all()}
 		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
@@ -97,7 +107,7 @@ def presets(request):
 			})
 	
 	return render(request, "inventory/presets.html", {
-		"presets": presets_copy, 
+		"presets": presets, 
 		"new_preset_form": new_preset_form,
 		"form_dict" : form_dict,
 		})
@@ -106,15 +116,6 @@ def presets(request):
 def update_plate(request, pk):
 	plate = LibraryPlate.objects.get(pk=pk)
 	compounds_count = plate.compounds.all().count()
-	opened = plate.opened.all()
-	
-	#for missing compounds, find in which library plates they are still available
-	alternatives = {}
-	for compound in plate.compounds.all():
-		if not compound.active:
-			c = Compounds.objects.get(code=compound.compound.code, smiles = compound.compound.smiles)
-			alts = [( w.library_plate.library.name + ' : ' + w.library_plate.barcode ) for w in c.locations.filter(library_plate__library__public = True) if w.active ]
-			alternatives[compound.id] = alts
 	
 	#generate info about availablity of compounds
 	if compounds_count > 0:
@@ -132,6 +133,7 @@ def update_plate(request, pk):
 	plate_opening_form = PlateOpeningForm(initial={"date" : datetime.today()})
 		
 	return render(request, "inventory/update_plate.html", {
+	#return render(request, "inventory/background.html", {
 		"plate": plate, 
 		"compounds" : plate.compounds.all().order_by("deactivation_date"),
 		"plate_form" : plate_form,
@@ -139,7 +141,6 @@ def update_plate(request, pk):
 		"active_count" : active_count, 
 		"inactive_count" : inactive_count,
 		"availability" : availability,
-		"alternatives" : alternatives,
 		"dt_map_form" : dt_map_form,
 		})
 
@@ -441,7 +442,7 @@ def delete_library(request):
 			try:
 				shutil.rmtree(path)
 			except FileNotFoundError:
-				pass #in rare cases there are no graphs
+				pass #in rare cases there are no graphs and no action needs to be taken
 
 			lib.delete()
 			return HttpResponseRedirect('../libraries/')
@@ -466,7 +467,11 @@ def delete_preset(request):
 		preset = Preset.objects.get(pk=pk)
 		
 		path = MEDIA_ROOT + '/html_graphs/preset/' + str(preset.id) + '/'
-		shutil.rmtree(path)
+
+		try:
+			shutil.rmtree(path)
+		except FileNotFoundError:
+			pass #in cases there are no graphs
 
 		preset.delete()
 		
@@ -515,7 +520,6 @@ def deactivate_compounds(request):
 		
 		return HttpResponseRedirect(redirect_url)
 
-
 @staff_member_required
 def deactivate_compounds_manually(request):
 	if request.method == "POST":
@@ -536,7 +540,6 @@ def deactivate_compounds_manually(request):
 			update_histograms(plate.library, "library")
 		
 		return HttpResponseRedirect(redirect_url)
-
 
 @staff_member_required
 def dispense_testing_map(request):
@@ -641,8 +644,6 @@ def add_project(request):
 		else:
 			return render(request, "webSoakDB_backend/error_log.html")	
 
-				
-
 def get_subset_map(request):
 	if request.method == "POST":
 		plate_id = request.POST["plate_id"]
@@ -681,7 +682,7 @@ def locate_compounds(request):
 			library_id = form.cleaned_data['library']
 			filename = MEDIA_ROOT + '/' + fs.save(source.name, source)
 			if selection_is_valid(filename, log, library_id):
-				compounds = [c for c in upload_temporary_subset(filename)]
+				compounds = [c for c in upload_temporary_subset(filename, library_id)]
 				lib = Library.objects.get(pk=library_id)
 				subset = get_subsets_with_availability(compounds, lib)						
 				fs.delete(filename)
@@ -699,6 +700,100 @@ def locate_compounds(request):
 				"errors" : [form.errors, form.non_field_errors ]
 				})
 
+def find_single_compound(request):
+	if request.method == "GET":
+		form =FindCompoundForm()
+		return render(request, "inventory/find_single_compound.html", {'form' : form})
+	
+	if request.method == "POST":
+		form =FindCompoundForm(data=request.POST)
+		if form.is_valid():
+			smiles = standardize_smiles(form.cleaned_data['smiles'])
+			code = form.cleaned_data['code']
+
+			compounds = []
+			if smiles:
+				compounds = Compounds.objects.filter(smiles=smiles)
+			if code:
+				compounds = Compounds.objects.filter(code=code)
+
+			return render(request, "inventory/find_single_compound.html", {
+				'form' : form, 
+				'compounds': compounds,
+				'smiles': smiles,
+				'code': code})
+
+def find_plate(request):
+	if request.method == "GET":
+		form =FindPlateForm()
+		return render(request, "inventory/find_plate.html", {'form' : form})
+	
+	if request.method == "POST":
+		form =FindPlateForm(data=request.POST)
+		if form.is_valid():
+			barcode = form.cleaned_data['barcode']
+			print(barcode)
+
+			plates = LibraryPlate.objects.filter(barcode=barcode)
+			print(plates)
+			return render(request, "inventory/find_plate.html", {
+				'form' : form, 
+				'plates': plates,
+				'barcode': barcode})
+
+def compare_plates(request):
+	if request.method == "GET":
+		form =ComparePlatesForm()
+		return render(request, "inventory/compare_plates.html", {'form' : form})
+	
+	if request.method == "POST":
+		form =ComparePlatesForm(data=request.POST)
+		if form.is_valid():
+			results = {}
+			p1_data = {}
+			p2_data = {}
+			plate1_id = form.cleaned_data['plate1']
+			plate2_id = form.cleaned_data['plate2']
+
+			plate1 = LibraryPlate.objects.get(pk=plate1_id)
+			plate2 = LibraryPlate.objects.get(pk=plate2_id)
+			
+			p1_compounds = set([sw.compound for sw in plate1.compounds.all() ])
+			p2_compounds = set([sw.compound for sw in plate2.compounds.all() ])
+			p1_smiles = set([sw.compound.smiles for sw in plate1.compounds.all() ])
+			p2_smiles = set([sw.compound.smiles for sw in plate2.compounds.all() ])
+			p1_available = set([sw.compound.smiles for sw in plate1.compounds.all() if sw.active])
+			p2_available = set([sw.compound.smiles for sw in plate2.compounds.all() if sw.active])
+			p1_unavailable = set([sw.compound.smiles for sw in plate1.compounds.all() if not sw.active])
+			p2_unavailable = set([sw.compound.smiles for sw in plate2.compounds.all() if not sw.active])
+
+			common_compounds = p1_compounds.intersection(p2_compounds)
+			common_smiles = p1_smiles.intersection(p2_smiles)
+			common_available = p1_available.intersection(p2_available)
+			common_unavailable = p1_unavailable.intersection(p2_unavailable)
+			smiles_with_different_codes = [s for s in common_smiles if s not in [c.smiles for c in common_compounds]]
+			
+			results["Compounds in common"] = len(common_smiles)
+			results["Compounds in common (including the same code)"] = len(common_compounds)
+			results["Compounds that have a different code in another plate"] = len(common_unavailable)
+			results["Available compounds in common"] = len(common_available)
+			results["Unvailable compounds in common"] = len(common_unavailable)
+			results["Smiles with different codes"] = len(smiles_with_different_codes)
+			p1_data = get_plate_stats(plate1, common_smiles, smiles_with_different_codes)
+			p2_data = get_plate_stats(plate2, common_smiles, smiles_with_different_codes)
+			
+			return render(request, "inventory/compare_plates.html", {
+				'form' : form, 
+				'results' : results,
+				'p1_data' : p1_data,
+				'p2_data' : p2_data,
+				'plate1' : plate1.barcode + ': ' + plate1.library.name,
+				'plate2' : plate2.barcode + ': ' + plate2.library.name,
+				})
+		else:
+			print('invalid form')
+
+
 def compound_lookup(request, pk):
 	compound = Compounds.objects.get(pk=pk)
 	return render(request, "compound_lookup.html", {'compound': compound})
@@ -708,3 +803,8 @@ def preset_availability(request, pk):
 	preset = Preset.objects.get(pk=pk)
 	preset = fake_preset_copy(preset)
 	return render(request, "inventory/preset-availability.html", {'preset': preset})
+
+def subset_availability(request, pk):
+	subset = LibrarySubset.objects.get(pk=pk)
+	subset_copy = SubsetCopyWithAvailability(subset)
+	return render(request, "inventory/subset_availability.html", {'subset': subset_copy})

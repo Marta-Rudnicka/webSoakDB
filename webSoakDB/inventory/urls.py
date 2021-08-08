@@ -34,5 +34,11 @@ urlpatterns = [
 	path("create-project/", views.add_project, name="add_project"),
 	path("subset-map/", views.get_subset_map, name="subset-map"),
 	path("locate-compounds/", views.locate_compounds, name="locate-compounds"),
-	path("compound-lookup/<int:pk>/", views.compound_lookup, name="compound-lookup")
+	path("compound-lookup/<int:pk>/", views.compound_lookup, name="compound-lookup"),
+
+	path("find-single-compound/", views.find_single_compound),
+	path("find-library-plate/", views.find_plate),
+	path("compound-availability/<int:pk>/", views.subset_availability),
+	path("browse-data/", views.browse_data),
+	path("compare-plates/", views.compare_plates)
 ]

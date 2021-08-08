@@ -151,7 +151,7 @@
             <th>Well</th>
             <th>Code</th>
             <th>SMILES</th>
-            <th>Structure</th>
+            <th>2D Structure<br>(click for details)</th>
             <th>Concentration</th>
             <th>Available</th>
             <th>Deactivated on:</th>
@@ -178,30 +178,7 @@
             {% if compound.active %}
               <td>Available</td>
             {% else %}
-              <td>
-                <p class="show-on-hover">Unavailable (more<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                </svg>)</p>
-                <div>
-                  <strong>Available in:</strong><br>
-                  {% comment %} 
-                    <!--
-                    The horrible nested thing below stands for:
-                      
-                      <p>location</p> for location in alternatives[compound.id]
-                    
-                    ...because Django template language doesn't support dictionary lookups
-                    -->
-                  {% endcomment %}
-                    {% for id, alts in alternatives.items %} 
-                      {% for location in alts %}
-                        {% if id == compound.id %}
-                          <p>{{location}}</p>
-                        {% endif %}
-                      {% endfor %}
-                    {% endfor %}
-                </div>
-              </td>
+              <td>Unavailable</td>
             {% endif %}
               
             {% if compound.deactivation_date%}
