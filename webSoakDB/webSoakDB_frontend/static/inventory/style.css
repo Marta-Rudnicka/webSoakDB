@@ -28,13 +28,22 @@ main#compound-lookup {
 	grid-template-columns: 300px auto;
 }
 
-main#project {
+main#project, main#users {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	width: 1000px;
+	
 	grid-gap: 10px;
 	margin: auto;
 }
+
+main#project{
+	width: 1000px;
+}
+
+main#users {
+	width: 1400px;
+}
+
 
 main#project button {
 	position: absolute;
@@ -47,6 +56,9 @@ main#project section {
 	padding-bottom: 25px;
 }
 
+section#pu {
+	opacity: 0.5;
+}
 main h1 {
 	grid-column: 1/-1;
 }
@@ -59,6 +71,10 @@ section#upload-form{
 	grid-column: 2/3;
 }
 
+section#browse{
+	font-size: 1.5em;
+	padding: 2em;
+}
 .list-in-table{
 	border: solid #ec0000 1px;
 	height: 6em;
@@ -157,7 +173,7 @@ main#plates {
 	border-color: #ec0000;
 }
 
-#update-plate button[type="submit"] {
+#manage-plate button[type="submit"] {
 	font-size: 1.2em;
 	padding: 5px;
 	bottom: 2px;

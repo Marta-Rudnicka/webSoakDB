@@ -12,13 +12,13 @@ class LibrarySerializer(serializers.ModelSerializer):
 class LibraryPlateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = LibraryPlate
-		fields = ['id', 'library', 'barcode', 'current', 'size']
+		fields = ['id', 'library', 'barcode', 'name', 'current', 'size']
 		depth = 1
 
 class CurrentPlateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = LibraryPlate
-		fields = ['id', 'library', 'barcode', 'size']
+		fields = ['id', 'library', 'barcode', 'name', 'size']
 		depth = 1
 
 class LibrarySubsetSerializer(serializers.Serializer):
@@ -77,6 +77,7 @@ class SourceWellStatSerializer(serializers.Serializer):
 class LibraryPlateStatSerializer(serializers.Serializer):
 	id = serializers.IntegerField()
 	barcode = serializers.CharField(max_length=32)
+	name = serializers.CharField(max_length=32)
 	library = LibrarySerializer()
 	compounds = SourceWellStatSerializer(many=True)
 

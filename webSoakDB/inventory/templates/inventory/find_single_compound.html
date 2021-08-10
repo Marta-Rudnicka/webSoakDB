@@ -17,12 +17,13 @@
              <button type="submit">Submit</button>
         </form>
     </section>
-    {% if compounds %}
+    {% if results %}
     <section>
-    <h2>Search results for {{code}}{{smiles}}</h2>
+    <h2>Search results for {{string}}</h2>
+    {{not_found}}
       <ul>
       {% for compound in compounds %}
-        <li><a href="/inventory/compound-lookup/{{compound.id}}/">{{compound.code}}</a></li>
+        <li><a href="/inventory/compound-lookup/{{compound.id}}/" target="_blank">{{compound.code}}</a></li>
       {% endfor %}
       </ul>
     <section>

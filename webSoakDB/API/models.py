@@ -66,6 +66,7 @@ class LibraryPlate(models.Model):
     library = models.ForeignKey(Library, on_delete=models.PROTECT, related_name="plates" )
     current = models.BooleanField(default=True)
     last_tested =  models.DateField(auto_now=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     unique_together = ['barcode', 'library']
 
     def size(self):
@@ -144,10 +145,6 @@ class Reference(models.Model):
 #EXPERIMENTAL DATA: old xchem_db models and new addition 
 class Project(models.Model):
 
-    # TODO - can we refactor this for title [original comment]
-    #proposal = models.CharField(max_length=255, blank=False, null=False, unique=True)
-    #title = models.CharField(max_length=10, blank=True, null=True)
-    #fedids = models.TextField(blank=True, null=True)
     auth = models.ManyToManyField(IspybAuthorization, blank=True, related_name="project_obj")
 
     #SPA-related data
@@ -155,9 +152,6 @@ class Project(models.Model):
     protein = models.OneToOneField(Protein, blank=True, null=True, on_delete=models.PROTECT)
     libraries = models.ManyToManyField(Library, blank=True)
     subsets = models.ManyToManyField(LibrarySubset, blank=True)
-
-    def __str__(self):
-         return self.proposal + "project object"
          
 class SoakdbFiles(models.Model):
     filename = models.CharField(max_length=255, blank=False, null=False, unique=True)

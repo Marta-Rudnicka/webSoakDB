@@ -91,7 +91,12 @@ class CompoundLookupPlate extends React.Component {
 
 	managePublicPlateData(data){
 		const collection = data;
-		collection.name = collection.barcode;
+		if (! collection.name){
+			collection.name = collection.barcode;
+		}
+		else {
+			collection.name = collection.name + ' (' + collection.barcode + ')';
+		}
 		this.setState({ collection });
 	}
 

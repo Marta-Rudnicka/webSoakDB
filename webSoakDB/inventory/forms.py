@@ -6,6 +6,9 @@ from API.models import Library, LibraryPlate, Preset, PlateOpening, Project
 #libs = [("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True)]
 libs = []
 plates = [("", "Select plate...")] + [(plate.id, plate.barcode + ': ' + plate.library.name) for plate in LibraryPlate.objects.filter(library__public=True)]
+#plates = []
+#LibraryPlate.objects.filter(library__public=True)
+#	print('x')
 
 '''Note on overriding __init__ : __init__ functions are overriden here to be able to dynamically generate choices
 for the ChoiceFields. The reason why there are the oher fields in the __init__ functions is ordering: 
@@ -23,6 +26,7 @@ class PlateUpdateForm(forms.Form):
 		super(PlateUpdateForm, self).__init__(*args, **kwargs)
 		self.fields['library'] = forms.ChoiceField(choices = libs, required=True)
 		self.fields['barcode'] = forms.CharField(label='Barcode')
+		self.fields['name'] = forms.CharField(label='Name', required=False)
 		self.fields['current'] = forms.BooleanField(label='Current', required=False )
 
 class LibraryPlateForm(PlateUpdateForm): 
@@ -70,6 +74,7 @@ class UnsavedSubsetForm(forms.Form):
 
 class AddVisitForm(forms.Form):
 	number = forms.IntegerField(label="Visit number", required=True)
+	proposal = forms.HiddenInput()
 
 class NewProjectForm(forms.Form):
 	proposal = forms.CharField(label="Proposal", required=True)
@@ -77,8 +82,7 @@ class NewProjectForm(forms.Form):
 	industry_user = forms.BooleanField(label="Industry user", required=False)
 
 class FindCompoundForm(forms.Form):
-	smiles = forms.CharField(label="SMILES string", required=False)
-	code = forms.CharField(label="compound code", required=False)
+	string = forms.CharField(label="SMILES string or code", required=False)
 
 class FindPlateForm(forms.Form):
 	barcode = forms.CharField(label="Barcode", required=True)
@@ -92,3 +96,16 @@ class ComparePlatesForm(forms.Form):
 		self.fields['plate1'] = forms.ChoiceField(choices = plates, required=True)
 		self.fields['plate2'] = forms.ChoiceField(choices = plates, required=True)
 	'''
+
+class AddStaffUserFrom(forms.Form):
+	username_staff = forms.CharField(label="Federal ID*")
+	first_name_staff = forms.CharField(label="First Name", required=False)
+	last_name_staff = forms.CharField(label="Last Name", required=False)
+	email_staff = forms.CharField(label="E-mail", required=False)
+
+
+class AddPowerUserFrom(forms.Form):
+	username_pu = forms.CharField(label="Federal ID")
+	first_name_pu = forms.CharField(label="First Name", required=False)
+	last_name_pu = forms.CharField(label="Last Name", required=False)
+	email_pu = forms.CharField(label="E-mail", required=False)

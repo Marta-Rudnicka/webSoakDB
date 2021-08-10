@@ -33,7 +33,7 @@
     }
   </script>
   <main id="{{main_id}}">
-    <h1>Track usage: {{plate.library.name}} - {{ plate.barcode }}  </h1>
+    <h1>Track usage: {{plate.library.name}} : {%if plate.name%}{{ plate.name }}{% endif %} - {{ plate.barcode }}  </h1>
     <section id="top">
       <div>
         <h3>Select date</h3>
@@ -78,6 +78,10 @@
             <tr>
               <td><strong>Barcode:</strong></td>
               <td>{{ plate.barcode }}</td>
+            </tr>
+            <tr>
+              <td><strong>Name:</strong></td>
+              <td>{%if plate.name%}{{ plate.name }}{% endif %}</td>
             </tr>
             <tr>
               <td><strong>Last updated:</strong></td>

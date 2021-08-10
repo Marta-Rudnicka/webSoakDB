@@ -34,7 +34,7 @@
 	<tr>
 		<td>All compounds in plate</td>
 		<td>{{p1_data.size}}</td>
-		<td>{{p2_data.size}}}}</td>
+		<td>{{p2_data.size}}</td>
 	</tr>
 	<tr>
 		<td>Available compounds in plate</td>
@@ -52,7 +52,7 @@
 		<td>{{p2_data.in_common|floatformat:"2"}}%</td>
 	</tr>
     <tr>
-		<td colspan="3">Compound codes for the same smiles</td>
+		<td colspan="3"><strong>Compound codes for the same SMILES string</strong></td>
 	</tr>
     <tr>
 		<td>{% for c in p1_data.diff_codes%}<strong>{{c.smiles}}</strong><br>{%endfor%}</td>

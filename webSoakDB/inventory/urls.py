@@ -17,7 +17,8 @@ urlpatterns = [
 	path("delete-multiple-plates/", views.delete_multiple_plates),
 	
 	path("deactivate-compounds/", views.deactivate_compounds, name="deactivate-compounds"),
-	path("deactivate-compounds-manually/", views.deactivate_compounds_manually, name="deactivate-compounds-manually"),
+	path("deactivate-compounds-manually/", views.deactivate_compounds_manually),
+	path("activate-single-compound/", views.activate_single_compound),
 	path("edit-plate/", views.edit_plate, name="edit-plate"),
 	path("track-usage/<int:pk>/<str:date>/<str:mode>/", views.track_usage, name="track-usage"),
 	path("dispense-testing-map/", views.dispense_testing_map, name="dispense-testing-map"),
@@ -30,6 +31,7 @@ urlpatterns = [
 	path("preset-availability/<int:pk>/", views.preset_availability),
 
 	path("proposal/", views.proposal, name="proposal"),
+	path("add-visit/", views.add_visit),
 	path("projects/", views.projects, name="projects"),
 	path("create-project/", views.add_project, name="add_project"),
 	path("subset-map/", views.get_subset_map, name="subset-map"),
@@ -40,5 +42,8 @@ urlpatterns = [
 	path("find-library-plate/", views.find_plate),
 	path("compound-availability/<int:pk>/", views.subset_availability),
 	path("browse-data/", views.browse_data),
-	path("compare-plates/", views.compare_plates)
+	path("compare-plates/", views.compare_plates),
+	path("users/", views.manage_users),
+	path("add-staff-member/", views.add_staff_member),
+	path("remove-staff-member/", views.remove_from_staff)
 ]

@@ -17,7 +17,7 @@
           <tbody>
             {% for plate in subset.availability %}
             <tr>
-              <td>{{ plate.barcode }} {% if plate.current %}<br>(current){% endif %}</td>
+              <td>{%if plate.name%}{{ plate.name }} <br> {% endif %}{{ plate.barcode }} {% if plate.current %}<br>(current){% endif %}</td>
               <td>{{plate.availability}} %</td>
               <td>
                 <div>({{plate.missing_compounds | length}} missing)</strong></div>

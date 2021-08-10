@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block main %}
+  
+  <main id="users">
+    <h1>Manage user permissions</h1>
+    <section id="staff">
+        <h2>Staff members</h2>
+        <table class="table">
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>E-mail</th>
+                <th>Action</th>
+            </tr>
+            {% for user in staff_members %}
+            <tr>
+                <td>{{user.username}}</td>
+                <td>{{user.get_full_name}}</td>
+                <td>{{user.email}}</td>
+                <td>
+                        <form method="post" action="/inventory/remove-staff-member/">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{user.id}}">
+                        <button type="submit">Remove from <br>staff members</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor%}
+        </table>
+        <hr>
+        <form method="post" action="/inventory/add-staff-member/">
+            <h3>Add user to staff members</h3>
+            {% csrf_token %}
+            <table>
+              {{new_staff_member.as_table}}
+            </table>
+             <button type="submit">Submit</button>
+        </form>
+        <p>Staff members have access to inventory management app and users' experimental data.</p>
+    </section>
+    <section id="pu">
+        <h2>Power users</h2>
+        <table class="table">
+        TODO
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+            {% for user in power_users %}
+            <tr>
+                <th>{{user.username}}</th>
+                <th>{{user.get_full_name}}</th>
+                <th>
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{user.id}}">
+                        <button>Remove from power users</button>
+                    </form>
+                </th>
+            </tr>
+            {% endfor%}
+        </table>
+        <hr>
+        <form method="post" action="">
+        <h3>Add user to power users</h3>
+            {% csrf_token %}
+            <table>
+              {{new_power_user.as_table}}
+            </table>
+             <button type="submit">Submit</button>
+        </form>
+        <p>Power users are users who are not XChem staff members but are allowes access to manually edit some of their experimental data.</p>
+    </section>
+   
+  </main>
+  {% endblock %}

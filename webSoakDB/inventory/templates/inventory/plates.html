@@ -40,6 +40,7 @@
         <thead>
           <th>Library</th>
           <th>Barcode</th>
+          <th>Name</th>
           <th>Current</th>
           <th>Compounds</th>
           <th>Last updated</th>
@@ -53,6 +54,7 @@
                 <tr class="plate-row" data-lib="{{library.id}}">
                   <td>{{ library.name }}</td>
                   <td>{{ plate.barcode }}</td>
+                   <td>{%if plate.name %}{{ plate.name }}{% endif %}</td>
                   {% if plate.current %}
                     <td class="highlight">Yes</td>
                     {% else %}
@@ -61,7 +63,7 @@
                   </td>
                   <td>{{plate.compounds.count}}</td>
                   <td>{{ plate.last_tested|date:"d M Y" }}</td>
-                  <td><a href="../update-plate/{{plate.id}}/">Update/delete</a></td>
+                  <td><a href="../update-plate/{{plate.id}}/">Manage plate</a></td>
                   <td><a href="../track-usage/{{plate.id}}/{{plate.last_tested|date:"Y-m-d"}}/general-view/">Track usage</a></td>
                 </tr>
               {% endfor %}
@@ -93,7 +95,7 @@
 					<label>{{library.name}}</label>
 					<select name="{{library.id}}" multiple>
 						{% for plate in library.plates.all %}
-						<option value="{{plate.id}}">{{ plate.barcode }}</option>
+						<option value="{{plate.id}}">{%if plate.name%}{{ plate.name }} {% endif %}({{ plate.barcode }})</option>
 						{% endfor %}
 					</select>
 				</div>

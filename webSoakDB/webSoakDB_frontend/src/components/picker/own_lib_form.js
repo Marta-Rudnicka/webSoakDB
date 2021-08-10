@@ -44,7 +44,7 @@ class OwnLibraryForm extends React.Component {
   }
 
   refreshUntilAdded(initialLibNumber, changesBeforeSubmission){
-    /*reload proposal data from the API every 8s until the newly uploaded 
+    /*reload proposal data from the API every 4s until the newly uploaded 
     library appears in project.libraries. Purpose: the new library will 
     eventually appear in the "already uploaded" list in the UI */
     

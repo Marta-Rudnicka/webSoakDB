@@ -31,7 +31,7 @@ class PlateList extends React.Component {
 				if (plate.current){
 					current = '(current)';
 				}
-				return <li key={index}><Link to={"/compounds/plate/" + plate.id + "/0/"}>{plate.barcode}</Link>{current}</li>;
+				return <li key={index}><Link to={"/compounds/plate/" + plate.id + "/0/"}>{plate.name} ({plate.barcode})</Link>{current}</li>;
 			});
 			
 			return (

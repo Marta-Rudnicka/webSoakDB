@@ -1,5 +1,7 @@
+from django.http.response import HttpResponse
 from tools.data_storage_classes import SubsetCopyWithAvailability
 from tools.compounds import standardize_smiles
+from tools.validators import parse_smiles
 from django.shortcuts import redirect, render
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
@@ -9,36 +11,10 @@ from webSoakDB_stack.settings import MEDIA_ROOT
 from datetime import date, datetime
 import re
 import shutil
-from .inv_helpers import (
-	sw_copies, 
-	get_plate_size, 
-	get_change_dates, 
-	get_subsets_with_availability, 
-	get_usage_stats, 
-	fake_preset_copy, 
-	current_library_selection,
-	set_status,
-	get_project_by_proposal,
-	get_plate_stats
-)
+from . import inv_helpers as h
 from tools.uploads_downloads import upload_temporary_subset, parse_compound_list, parse_id_list
 from .dt import get_well_dictionary, manage_sw_status_change
-from .forms import (
-	AddVisitForm,
-	FindCompoundForm,
-	LibraryForm, 
-	LibraryPlateForm, 
-	PlateUpdateForm, 
-	NewPresetForm, 
-	EditPresetForm, 
-	DTMapForm, 
-	PlateOpeningForm, 
-	OldProjectForm,
-	NewProjectForm,
-	UnsavedSubsetForm,
-	FindPlateForm,
-	ComparePlatesForm,
-)
+from . import forms as forms
 from tools.validators import data_is_valid, selection_is_valid
 from tools.histograms import update_histograms
 from tools.uploads_downloads import upload_plate, upload_subset, find_source_wells, source_wells_to_csv 
@@ -53,23 +29,23 @@ def index(request):
 @staff_member_required
 def libraries(request):
 	libraries = Library.objects.filter(public=True).order_by("name")
-	library_form = LibraryForm()
+	library_form = forms.LibraryForm()
 	form_dict = {}
 	for lib in libraries:
-		form_dict[lib] = LibraryForm(initial={"name": lib.name, "for_industry": lib.for_industry})
+		form_dict[lib] = forms.LibraryForm(initial={"name": lib.name, "for_industry": lib.for_industry})
 		
 	return render(request, "inventory/libraries.html", {"libraries": libraries, "library_form": library_form, "form_dict" : form_dict})
 	
 @staff_member_required
 def plates(request):
 	libraries = Library.objects.filter(public=True).order_by("name")
-	plate_form = LibraryPlateForm(libs=current_library_selection(True))
+	plate_form = forms.LibraryPlateForm(libs=h.current_library_selection(True))
 	return render(request, "inventory/plates.html", {"libraries": libraries, "plate_form" : plate_form})
 
 @staff_member_required
 def projects(request):
-	old_project_form = OldProjectForm()
-	new_project_form = NewProjectForm()
+	old_project_form = forms.OldProjectForm()
+	new_project_form = forms.NewProjectForm()
 	return render(request, "inventory/projects.html", {
 		"old_project_form" : old_project_form, 
 		"new_project_form" : new_project_form
@@ -83,8 +59,8 @@ def browse_data(request):
 def presets(request):
 
 	presets = Preset.objects.all().order_by("name")
-	all_libs = current_library_selection(False)
-	new_preset_form = NewPresetForm(libs=([("", "Select library...")] + all_libs))
+	all_libs = h.current_library_selection(False)
+	new_preset_form = forms.NewPresetForm(libs=([("", "Select library...")] + all_libs))
 
 	#make copy of presets data, and add information about availability of the compounds
 	presets_copy = presets 
@@ -96,7 +72,7 @@ def presets(request):
 		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
 		old_libs = [("", "Select library...")] + list(old_libs_set)
 		
-		form_dict[p] = EditPresetForm(old_libs=old_libs, new_libs=new_libs, initial={
+		form_dict[p] = forms.EditPresetForm(old_libs=old_libs, new_libs=new_libs, initial={
 			"name": p.name, 
 			"description": p.description, 
 			"new_library": "", 
@@ -113,6 +89,67 @@ def presets(request):
 		})
 
 @staff_member_required
+def manage_users(request):
+	new_staff_member = forms.AddStaffUserFrom()
+	new_power_user = forms.AddPowerUserFrom()
+
+	staff_members = User.objects.filter(is_staff=True)
+	power_users = []
+	print('staff_members: ', staff_members)
+	return render(request, "inventory/users.html", {
+		"staff_members": staff_members,
+		"power_users" : power_users,
+		"new_staff_member" : new_staff_member,
+		"new_power_user" : new_power_user
+	})
+
+@staff_member_required
+def add_staff_member(request):
+	form = forms.AddStaffUserFrom(request.POST)
+	if request.method == "POST":
+		if form.is_valid():
+			username = form.cleaned_data['username_staff']
+			first_name = form.cleaned_data['first_name_staff']
+			last_name = form.cleaned_data['last_name_staff']
+			email = form.cleaned_data['email_staff']
+
+			try:
+				user = User.objects.get(username=username)
+				if first_name:
+					user.first_name = first_name
+				if last_name:
+					user.last_name = last_name
+				if email:
+					user.email = email
+				user.is_staff=True
+				user.save()
+			except ObjectDoesNotExist:
+				user = User.objects.create(
+					username=username,
+					first_name=first_name,
+					last_name = last_name,
+					email=email,
+					is_staff=True
+				)
+				user.set_unusable_password()
+				user.save()
+			return HttpResponseRedirect('../users')
+		else:
+			return render(request, "webSoakDB_backend/error_log.html", {'error_log': [form.errors, form.non_field_errors]})
+
+@staff_member_required
+def remove_from_staff(request):
+	if request.method == "POST":
+		user_id = request.POST.get('user_id')
+		try:
+			user = User.objects.get(pk=user_id)
+			user.is_staff=False
+			user.save()
+		except ObjectDoesNotExist:
+			return render(request, "webSoakDB_backend/error_log.html", {'error_log': "Application error: trying to edit non-existent user"})
+		return HttpResponseRedirect('../users')
+
+@staff_member_required
 def update_plate(request, pk):
 	plate = LibraryPlate.objects.get(pk=pk)
 	compounds_count = plate.compounds.all().count()
@@ -126,11 +163,16 @@ def update_plate(request, pk):
 		active_count, inactive_count, availability = 0, 0, 0
 	
 	#generate form to update the basic information about the plate
-	libs = current_library_selection(True)
-	plate_form = PlateUpdateForm(libs=libs, initial={"library" : plate.library.id, "barcode" : plate.barcode, "current" : plate.current})
-	dt_map_form = DTMapForm()
+	libs = h.current_library_selection(True)
+	plate_form = forms.PlateUpdateForm(libs=libs, initial={
+		"library" : plate.library.id, 
+		"barcode" : plate.barcode, 
+		"name" : plate.name, 
+		"current" : plate.current
+		})
+	dt_map_form = forms.DTMapForm()
 	
-	plate_opening_form = PlateOpeningForm(initial={"date" : datetime.today()})
+	plate_opening_form = forms.PlateOpeningForm(initial={"date" : datetime.today()})
 		
 	return render(request, "inventory/update_plate.html", {
 	#return render(request, "inventory/background.html", {
@@ -148,10 +190,10 @@ def update_plate(request, pk):
 def track_usage(request, pk, date, mode):
 		
 	plate = LibraryPlate.objects.get(pk=pk)
-	compounds = sw_copies(plate.compounds.all()) #make a copy of the data to edit it without touching the db
+	compounds = h.sw_copies(plate.compounds.all()) #make a copy of the data to edit it without touching the db
 	modified_compounds = [compound for compound in compounds if len(compound.changes) > 0 ]
 	timestamp = datetime.strptime(date, "%Y-%m-%d").date() #make a datetime object based on the url
-	change_dates = get_change_dates(modified_compounds) #produce the list of all dates on which any compounds were (de)activated
+	change_dates = h.get_change_dates(modified_compounds) #produce the list of all dates on which any compounds were (de)activated
 	
 	#generate strings needed to switch between the general and the graphic view
 	if mode == "general-view":
@@ -163,15 +205,15 @@ def track_usage(request, pk, date, mode):
 	
 	#activate all the compounds that were still active on the inspected date
 	for c in modified_compounds:
-		c = set_status(c, timestamp)
+		c = h.set_status(c, timestamp)
 	
 	#decide what size the table graphically representing the library plate should be
-	size = get_plate_size(plate.compounds.all())
+	size = h.get_plate_size(plate.compounds.all())
 	rows = size['rows']
 	columns = size['columns']
 	
 	#produce basic usage statistics
-	usage_stats = get_usage_stats(compounds)
+	usage_stats = h.get_usage_stats(compounds)
 	opened = len([o for o in plate.opened.all() if o.date <= timestamp])
 		
 	return render(request, "inventory/track_usage.html", {
@@ -193,15 +235,20 @@ def track_usage(request, pk, date, mode):
 
 @staff_member_required
 def proposal(request):
-	form = OldProjectForm(request.POST)
+	form = forms.OldProjectForm(request.POST)
 	if request.method == "POST":	
 		if form.is_valid():
 			try:
 				pr = form.cleaned_data['proposal']
-				project = get_project_by_proposal(pr) #Project.objects.get(proposal=pr)
-				subsets = get_subsets_with_availability(set(project.subsets.all()))
-				
-				return render(request, "inventory/proposal.html", {'proposal' : project, 'subsets': subsets, 'visit_form' : AddVisitForm()})
+				project = h.get_project_by_proposal(pr) #Project.objects.get(proposal=pr)
+				subsets = h.get_subsets_with_availability(set(project.subsets.all()))
+								
+				return render(request, "inventory/proposal.html", {
+					'project' : project,
+					'proposal' : pr,
+					'subsets': subsets, 
+					'visit_form' : forms.AddVisitForm()
+					})
 			except(ObjectDoesNotExist):
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': ['Proposal not found']})
 				
@@ -211,7 +258,7 @@ def proposal(request):
 #FORM ACTION VIEWS (HANDLING POST REQUESTS)
 @staff_member_required
 def add_library(request):
-	form = LibraryForm(request.POST)
+	form = forms.LibraryForm(request.POST)
 	
 	if request.method == "POST":	
 		if form.is_valid():
@@ -226,7 +273,7 @@ def add_plate(request):
 	today = str(date.today())
 	
 	if request.method == "POST":
-		form = LibraryPlateForm(data=request.POST, files=request.FILES, libs=current_library_selection(True))
+		form = forms.LibraryPlateForm(data=request.POST, files=request.FILES, libs=h.current_library_selection(True))
 		
 		if form.is_valid():
 			log = []
@@ -236,12 +283,13 @@ def add_plate(request):
 			if data_is_valid(filename, log):
 				
 				barcode = form.cleaned_data['barcode']
+				name = form.cleaned_data['name']
 				library_id = form.cleaned_data['library']
 				current = form.cleaned_data['current']
 				library = Library.objects.get(pk=library_id)
 				today = str(date.today())
 				
-				plate = LibraryPlate.objects.create(library = library, barcode = barcode, current = current, last_tested = today)
+				plate = LibraryPlate.objects.create(library = library, name=name, barcode = barcode, current = current, last_tested = today)
 				
 				upload_plate(filename, plate)
 				fs.delete(filename)
@@ -262,7 +310,7 @@ def add_plate(request):
 @staff_member_required
 def add_preset(request):
 	if request.method == "POST":
-		form = NewPresetForm(data=request.POST, files=request.FILES, libs=current_library_selection(True))
+		form = forms.NewPresetForm(data=request.POST, files=request.FILES, libs=h.current_library_selection(True))
 		if form.is_valid():
 			log = []
 			fs = FileSystemStorage()
@@ -301,13 +349,13 @@ def edit_preset(request):
 	
 		#create lists of valid library choices
 		preset = Preset.objects.get(pk=request.POST["id"])
-		all_libs = current_library_selection(False)
+		all_libs = h.current_library_selection(False)
 		old_libs_set = {(s.library.id, s.library.name) for s in preset.subsets.all()}
 		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
 		old_libs = [("", "Select library...")] + list(old_libs_set)
 		
 		#create form object
-		form = EditPresetForm(data=request.POST, files=request.FILES, old_libs=old_libs, new_libs=new_libs)
+		form = forms.EditPresetForm(data=request.POST, files=request.FILES, old_libs=old_libs, new_libs=new_libs)
 		#https://django-gotchas.readthedocs.io/en/latest/forms.html <-- explanation for the weird kwargs; 
 		
 		if form.is_valid():
@@ -384,7 +432,7 @@ def edit_preset(request):
 
 @staff_member_required
 def edit_library(request):
-	form = LibraryForm(request.POST)
+	form = forms.LibraryForm(request.POST)
 	
 	if request.method == "POST":	
 		if form.is_valid():
@@ -402,7 +450,7 @@ def edit_library(request):
 
 @staff_member_required
 def edit_plate(request):
-	form = PlateUpdateForm(data=request.POST, libs=current_library_selection(True))
+	form = forms.PlateUpdateForm(data=request.POST, libs=h.current_library_selection(True))
 	
 	if request.method == "POST":	
 		if form.is_valid():
@@ -410,12 +458,14 @@ def edit_plate(request):
 			library_id = form.cleaned_data['library']
 			library = Library.objects.get(pk=library_id)
 			barcode = form.cleaned_data['barcode']
+			name = form.cleaned_data['name']
 			current = form.cleaned_data['current']
 			plate = LibraryPlate.objects.get(pk=pk)
 			old_current = plate.current
 			old_library = plate.library
 			plate.library = library
 			plate.barcode = barcode
+			plate.name = name
 			plate.current = current
 			plate.save()
 			
@@ -522,6 +572,7 @@ def deactivate_compounds(request):
 
 @staff_member_required
 def deactivate_compounds_manually(request):
+	print('fired deactivate_compounds_manually')
 	if request.method == "POST":
 		today = str(date.today())
 		plate = LibraryPlate.objects.get(pk=request.POST.get('plate_id'))
@@ -542,12 +593,31 @@ def deactivate_compounds_manually(request):
 		return HttpResponseRedirect(redirect_url)
 
 @staff_member_required
+def activate_single_compound(request):
+	print('fired activate_compounds_manually')
+	if request.method == "POST":
+		print(request.POST)
+		today = str(date.today())
+		plate = LibraryPlate.objects.get(pk=request.POST.get('plate_id'))
+		print(plate)
+		sw = SourceWell.objects.get(pk=request.POST.get('c_id'))
+		print(sw)
+		sw.active = True
+		sw.save()
+		manage_sw_status_change(sw, today, True)
+
+		if plate.current:
+			update_histograms(plate.library, "library")
+		redirect_url = '/inventory/update-plate/' + str(plate.id) + '/'
+		return HttpResponseRedirect(redirect_url)
+
+@staff_member_required
 def dispense_testing_map(request):
 	rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 	columns = [ '0' + str(i) for i in range(1, 10)] + ['10', '11', '12']
 	errors = []
 	
-	form = DTMapForm(request.POST, request.FILES)
+	form = forms.DTMapForm(request.POST, request.FILES)
 	
 	if request.method == "POST":
 		if form.is_valid():
@@ -623,7 +693,7 @@ def delete_multiple_plates(request):
 @staff_member_required
 def add_project(request):
 	if request.method == "POST":
-		form = NewProjectForm(request.POST)
+		form = forms.NewProjectForm(request.POST)
 		if form.is_valid():
 			proposal = request.POST["proposal"]
 			title = request.POST["title"]
@@ -643,6 +713,24 @@ def add_project(request):
 			return HttpResponseRedirect('../projects')
 		else:
 			return render(request, "webSoakDB_backend/error_log.html")	
+
+def add_visit(request):
+	if request.method == "POST":
+		form = forms.AddVisitForm(request.POST)
+		if form.is_valid():
+			number = form.cleaned_data['number']
+			proposal = form.cleaned_data['proposal']
+			proposal_visit = proposal + '-' + str(number)
+			project = Project.objects.get(auth__startswith=proposal)
+			project_title = project.auth.all[0].project
+			new_auth = IspybAuthorization.objects.create(project=project_title, proposal_visit=proposal_visit)	
+			project.auth.add(new_auth)
+			new_auth.save()
+			return HttpResponseRedirect('../projects')
+		else:
+			return render(request, "webSoakDB_backend/error_log.html")	
+
+
 
 def get_subset_map(request):
 	if request.method == "POST":
@@ -670,11 +758,11 @@ def locate_compounds(request):
 	libraries = [("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True)]
 	
 	if request.method == "GET":
-		form = UnsavedSubsetForm(libs=libraries)
+		form = forms.UnsavedSubsetForm(libs=libraries)
 		return render(request, "inventory/locate_compounds.html", {"form": form, "subsets" : []})
 	
 	if request.method == "POST":
-		form = UnsavedSubsetForm(data=request.POST, files=request.FILES, libs=libraries)
+		form = forms.UnsavedSubsetForm(data=request.POST, files=request.FILES, libs=libraries)
 		if form.is_valid():
 			log = []
 			fs = FileSystemStorage()
@@ -684,7 +772,7 @@ def locate_compounds(request):
 			if selection_is_valid(filename, log, library_id):
 				compounds = [c for c in upload_temporary_subset(filename, library_id)]
 				lib = Library.objects.get(pk=library_id)
-				subset = get_subsets_with_availability(compounds, lib)						
+				subset = h.get_subsets_with_availability(compounds, lib)						
 				fs.delete(filename)
 				return render(request, "inventory/locate_compounds.html", {
 					"form": form, 
@@ -702,52 +790,64 @@ def locate_compounds(request):
 
 def find_single_compound(request):
 	if request.method == "GET":
-		form =FindCompoundForm()
+		form = forms.FindCompoundForm()
 		return render(request, "inventory/find_single_compound.html", {'form' : form})
 	
 	if request.method == "POST":
-		form =FindCompoundForm(data=request.POST)
+		form = forms.FindCompoundForm(data=request.POST)
 		if form.is_valid():
-			smiles = standardize_smiles(form.cleaned_data['smiles'])
-			code = form.cleaned_data['code']
-
+			string = form.cleaned_data['string']
+			if parse_smiles(string): 	#if SMILES string is valid, returns none
+				compounds = Compounds.objects.filter(code=string)
+			else:
+				smiles = standardize_smiles(string)
+				compounds = Compounds.objects.filter(smiles=smiles)
+			
+			if compounds.count() == 0:
+				not_found = 'Compound not found'
+			else:
+				not_found = ''
+			'''
 			compounds = []
 			if smiles:
 				compounds = Compounds.objects.filter(smiles=smiles)
 			if code:
 				compounds = Compounds.objects.filter(code=code)
-
+			'''
 			return render(request, "inventory/find_single_compound.html", {
 				'form' : form, 
 				'compounds': compounds,
-				'smiles': smiles,
-				'code': code})
+				'string': string,
+				'not_found' : not_found,
+				'results': True
+				})
 
 def find_plate(request):
 	if request.method == "GET":
-		form =FindPlateForm()
+		form = forms.FindPlateForm()
 		return render(request, "inventory/find_plate.html", {'form' : form})
 	
 	if request.method == "POST":
-		form =FindPlateForm(data=request.POST)
+		form = forms.FindPlateForm(data=request.POST)
 		if form.is_valid():
 			barcode = form.cleaned_data['barcode']
 			print(barcode)
 
 			plates = LibraryPlate.objects.filter(barcode=barcode)
-			print(plates)
+
 			return render(request, "inventory/find_plate.html", {
 				'form' : form, 
 				'plates': plates,
-				'barcode': barcode})
+				'barcode': barcode,
+				})
 
 def compare_plates(request):
 	if request.method == "GET":
-		form =ComparePlatesForm()
+		form = forms.ComparePlatesForm()
 		return render(request, "inventory/compare_plates.html", {'form' : form})
 	
 	if request.method == "POST":
-		form =ComparePlatesForm(data=request.POST)
+		form = forms.ComparePlatesForm(data=request.POST)
 		if form.is_valid():
 			results = {}
 			p1_data = {}
@@ -775,20 +875,22 @@ def compare_plates(request):
 			
 			results["Compounds in common"] = len(common_smiles)
 			results["Compounds in common (including the same code)"] = len(common_compounds)
-			results["Compounds that have a different code in another plate"] = len(common_unavailable)
 			results["Available compounds in common"] = len(common_available)
 			results["Unvailable compounds in common"] = len(common_unavailable)
 			results["Smiles with different codes"] = len(smiles_with_different_codes)
-			p1_data = get_plate_stats(plate1, common_smiles, smiles_with_different_codes)
-			p2_data = get_plate_stats(plate2, common_smiles, smiles_with_different_codes)
+			p1_data = h.get_plate_stats(plate1, common_smiles, smiles_with_different_codes)
+			p2_data = h.get_plate_stats(plate2, common_smiles, smiles_with_different_codes)
+
+			plate1 = h.make_plate_name(plate1)
+			plate2 = h.make_plate_name(plate2)
 			
 			return render(request, "inventory/compare_plates.html", {
 				'form' : form, 
 				'results' : results,
 				'p1_data' : p1_data,
 				'p2_data' : p2_data,
-				'plate1' : plate1.barcode + ': ' + plate1.library.name,
-				'plate2' : plate2.barcode + ': ' + plate2.library.name,
+				'plate1' : plate1,
+				'plate2' : plate2
 				})
 		else:
 			print('invalid form')
@@ -801,7 +903,7 @@ def compound_lookup(request, pk):
 
 def preset_availability(request, pk):
 	preset = Preset.objects.get(pk=pk)
-	preset = fake_preset_copy(preset)
+	preset = h.fake_preset_copy(preset)
 	return render(request, "inventory/preset-availability.html", {'preset': preset})
 
 def subset_availability(request, pk):

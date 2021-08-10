@@ -2,7 +2,7 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from API.models import Library, LibraryPlate, IspybAuthorization
 from tools.data_storage_classes import SourceWellCopy, PresetCopy, SubsetCopyWithAvailability
-import string
+import string, re
 
 def sw_copies(queryset):
 	return [SourceWellCopy(c) for c in queryset]
@@ -108,3 +108,18 @@ def get_plate_stats(plate, common_smiles, different_codes):
 	dict["in_common"] = len(common_smiles) / plate.compounds.count() * 100
 	dict["diff_codes"] = compounds
 	return dict
+
+def get_proposal_from_visit(visit):
+    visit_pattern = '([A-Za-z0-9_]+)(\-[0-9]+)'
+    p = re.fullmatch(visit_pattern, visit)
+    try:
+        return p.group(1)
+    except AttributeError:
+        return ""
+
+def make_plate_name(plate):
+	lib_name = plate.library.name + ': '
+	if plate.name:
+		return lib_name + plate.name + ' (' + plate.barcode + ')'
+	else:
+		return lib_name + plate.barcode 

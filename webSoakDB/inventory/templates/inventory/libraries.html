@@ -7,16 +7,24 @@
       const id = "lib-" + index;
       document.getElementById(id).className = "edit-field";
     }
+
     function hideForm(index){
       const id = "lib-" + index;
       document.getElementById(id).className = "hidden";
-    }  
+    }
+
+    function deleteLib(lib_id, lib_name){
+      console.log('fired delete')
+      event.preventDefault();
+      submitDelete(lib_id, lib_name)
+      showOverlay([]);
+      } 
   </script>
 
   <main id="libraries">
+  {% include "overlay.html"%}
     <h1>Manage in-house libraries</h1>
     <section id="library-list">  
-	  <h2>User's library plates</h2>
       <table id="table" class="table">
         <thead>
           <th>Name</th>
@@ -34,7 +42,7 @@
                 <div class="list-in-table">
                   <ul>
                     {% for plate in library.plates.all %}
-                      <li>{{ plate.barcode }}</li>
+                      <li>{%if plate.name%}{{ plate.name }} : {% endif %}{{ plate.barcode }}</li>
                       {% endfor %}            
                   </ul>
                 </div>
@@ -68,14 +76,15 @@
                   
                   </form>
                   <form class="" action="../delete-library/" method="post" id="delete-{{library.id}}">
+                     <input type="hidden" name="id" value={{library.id}}>
                     {% csrf_token %}
-                    <button type="submit" value="Submit" class="delete-button" onclick="submitDelete('{{library.id}}', '{{library.name}}')">Delete {{library.name}}*</button>
-                    <br>
-                    <label>*To prevent accidental deletion, deleting a library is only possible if there are no plates related to it left in the database.</label>
-                    <br>
-                    <a href="/dummy/">Go to plate management</a>
-                    <input type="hidden" name="id" value={{library.id}}>
+                    <button class="delete-button" onclick="deleteLib('{{library.id}}', '{{library.name}}')">Delete {{library.name}}*</button>
                   </form>
+                  <label>*To prevent accidental deletion, deleting a library is only possible if there are no plates related to it left in the database.</label>
+                  <br>
+                  <a href="/inventory/plates/">Go to plate management</a>
+                 
+                  
                 </div>
               </td>
             </tr>

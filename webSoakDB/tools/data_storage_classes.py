@@ -77,6 +77,7 @@ class PlateCopy:
 		self.id = plate.id
 		self.library = plate.library
 		self.barcode = plate.barcode
+		self.name = plate.name
 		self.current = plate.current
 		self.missing_compounds = missing_compounds
 	def __str__(self):
@@ -254,3 +255,4 @@ class CombinedPlate:
 		self.barcode = barcodes
 		self.current = current
 		self.compounds = compounds
+		self.name = None

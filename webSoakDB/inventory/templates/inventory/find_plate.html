@@ -19,7 +19,7 @@
     <h2>Search results for {{barcode}}</h2>
       <ul>
       {% for plate in plates %}
-        <li><a href="/inventory/update-plate/{{plate.id}}/">{{plate.library}}: {{plate.barcode}}</a></li>
+        <li><a href="/inventory/update-plate/{{plate.id}}/">{{plate.library}}: {% if plate.name %}{{plate.name}} - {% endif %}{{plate.barcode}}</a></li>
       {% endfor %}
       </ul>
     <section>

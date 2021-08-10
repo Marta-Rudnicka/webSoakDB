@@ -12,7 +12,7 @@
       <td>{{ subset.library.name }}</td>
       <td>{{ subset.name }}</td>
       <td>{{ subset.compounds|length }}</td>
-      <td>{{ subset.availability.0.barcode}} <br>
+      <td>{{ subset.availability.0.barcode}} {%if subset.availability.0.name%}{{ subset.available.0.name }}{% endif %} <br>
         <strong>{{subset.availability.0.availability}}%</strong> available <br>
         {%if subset.availability.0.current %}(current){% endif %}
       </td>

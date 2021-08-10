@@ -39,7 +39,20 @@
 		
     function submitInactive(){
       const form = document.getElementById('compounds-form');
+      showOverlay([]);
       form.submit();
+    }
+
+    function submitActive(c_id ){
+      showOverlay([]);
+      const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      let formData = new FormData();
+      formData.append("c_id", c_id)
+      formData.append("plate_id", {{plate.id}})
+      formData.append("csrfmiddlewaretoken", token)
+      let request = new XMLHttpRequest();
+      request.open("POST", "/inventory/activate-single-compound/");
+      request.send(formData);
     }
 
 		document.addEventListener('DOMContentLoaded', () => {
@@ -57,8 +70,8 @@
   <main id="update-plate">
   {% include "overlay.html"%}
     <h2>Plate update: </h2>
-    <h1>{{plate.library.name}} - {{ plate.barcode }}</h1>
-    <section>
+    <h1>{{plate.library.name}} - {% if plate.name %}{{plate.name}}{% endif %}({{ plate.barcode }})</h1>
+    <section id="manage-plate">
 	  <h2>Manage plate</h2>
 	  <hr>
 	  <div id="download">
@@ -79,11 +92,11 @@
       <hr>
       <hr>
 			<div id="finder" >		
-				<h3>Mark as inactive:</h3>
-				<label>Type in well name and press 'Enter':</label>
+				<h3>Mark as unavailable:</h3>
+				<label>Tick the checkbox, or type in well name and press 'Enter':</label>
 				<input type="text" id="well">
 				<div id="finder-feedback"></div>
-        <button onclick="submitInactive()">Mark selected compounds as inactive</button>
+        <button onclick="submitInactive()">Mark all selected compounds as unavailable</button>
 			</div>
 			<hr>
       <div>
@@ -182,7 +195,12 @@
             {% endif %}
               
             {% if compound.deactivation_date%}
-              <td>{{compound.deactivation_date|date:"d M Y" }}</td>
+              <td>
+                {{compound.deactivation_date|date:"d M Y" }}<br>
+                   
+                    <button onclick="submitActive({{compound.id}})" class="small-button">Set to available</button>
+                  </form>
+              </td>
             {% else %}
               <td></td>
             {% endif %}
@@ -201,6 +219,7 @@
           <tbody>
             <tr><td>Library</td><td>{{ plate.library.name }}</td></tr>
             <tr><td>Barcode</td><td>{{ plate.barcode }}</td></tr>
+            <tr><td>Name</td><td>{{ plate.name }}</td></tr>
             <tr><td>Last updated</td><td>{{ plate.last_tested }}</td></tr>
             <tr><td>Current</td><td>{% if plate.current %} Yes {% else %} No {% endif %}</td></tr>
             <tr><td>Opened</td><td>{{ plate.opened.count }} times</td></tr>

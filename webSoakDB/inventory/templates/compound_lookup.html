@@ -85,7 +85,7 @@
                     <th>Locations: </th>
                     <td>{% for location in compound.locations.all %}
                             {% if location.library_plate.library.public%}
-                                {{location.library_plate.library.name }}: {{location.library_plate.barcode}} : {{location.well}} 
+                                {{location.library_plate.library.name }}: {% if location.library_plate.name %}{{ location.library_plate.name }}{%endif%} ({{location.library_plate.barcode}}) : {{location.well}} 
                                 {%if not location.active %}(unavailable){% endif %}<br/>
                             {% endif %}
                         {%endfor%}
