@@ -1,7 +1,6 @@
 <script>
 	
 	function animateDots(){
-			console.log('fired animateDots');
 			let text = '. ';
 			const dots = document.getElementById('dots');
 			for (let i = 0; i < 30; i++){
@@ -14,9 +13,9 @@
 
     function allFormDataSubmitted(id_array){
         ok = true;
+        if (id_array===[]){return true;}
+        
         id_array.forEach(id =>{
-            console.log('checking ', id)
-            console.log(document.getElementById(id).value)
             if(!document.getElementById(id).value){
                 console.log('not found')
                 ok = false;
@@ -30,7 +29,9 @@
     }
 
     function showOverlay(id_array){
+        console.log('showOverlay')
         if (allFormDataSubmitted(id_array)){
+            console.log('all ok')
             const overlay = document.getElementById('overlay').style.display = "block";
             animateDots();
         }

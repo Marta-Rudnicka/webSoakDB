@@ -26,6 +26,7 @@
   </script>
   
   <main id="proposal">
+    {% include "overlay.html"%}
     <h1>Manage project {{ project.auth.all.0.project }}({{proposal}})</h1>
     <section id="library-list">  
 	  <h2>User's library plates:</h2>
@@ -58,15 +59,20 @@
       </table>
     
     </section>
-    <section id="visits">  
+    <section id="visits"> 
+    <h3>Visits registered in XChemSPA</h3>
+    <ul>
+    {% for visit in visits%}
+      <li>{{visit.proposal_visit}}</li> 
+      {% endfor %}
+    </ul>
 	  <h3>Add new visit:</h3>
      <form action="../add-visit/" method="post">
        {% csrf_token %}
         <input type="hidden" name="proposal" value={{proposal}} >
-        <table>
-        {{ visit_form.as_table }}
-        </table>
-        <input type="submit" value="Submit">
+        <label for="number" name="number" id="number">Number: </label>
+        <input type="number" name="number" step="1" min="2">
+        <input type="submit" value="Submit" onclick="showOverlay([])">
     </form>
     <table>
 		  <thead>

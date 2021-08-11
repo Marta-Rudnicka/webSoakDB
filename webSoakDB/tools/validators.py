@@ -72,12 +72,14 @@ def selection_is_valid(file_name, error_log, library_id):
 	
 	try:
 		with open(file_name, newline='') as csvfile:
-			dialect = csv.Sniffer().sniff(csvfile.read(1024))
-			dialect.delimiter = ',' #because Sniffer gets confused with SMILES strings and requires manual correction
-			csvfile.seek(0)
-			compound_reader = csv.reader(csvfile, dialect)
+			#dialect = csv.Sniffer().sniff(csvfile.read(1024))
+			#dialect = csv.Sniffer().sniff(csvfile.readline())
+			#dialect.delimiter = ',' #because Sniffer gets confused with SMILES strings and requires manual correction
+			#csvfile.seek(0)
+			#compound_reader = csv.reader(csvfile, dialect)
+			
 			line = 1
-			for row in compound_reader:
+			for row in csvfile.readlines(): #compound_reader:
 				if not compound_is_valid(row, line, error_log, library_id):
 					valid = False
 				line += 1
@@ -140,26 +142,27 @@ def row_is_valid(row, line, error_log, well_names, codes):
 def compound_is_valid(row, line, error_log, library_id):
 	valid_row = True
 	
-	try:
-		raw_smiles = row[0].strip()
-	except (IndexError):
-		return True # ignore empty lines
+	#try:
+		#raw_smiles = row[0].strip()
+	raw_smiles = row.strip()
+	#except (IndexError):
+	#	return True # ignore empty lines
 
 	if not smiles_is_valid(raw_smiles, line, error_log):
 		return False
 
 	smiles = standardize_smiles(raw_smiles)
 
-	if not smiles_string_exists(smiles, line, error_log):
-		valid_row = False
+	#if not smiles_string_exists(smiles, line, error_log):
+	#	valid_row = False
 		
-	try: 		#if a file has too many fields, it could be a wrong file that happen to have SMILES string in it
-		extra_field = row[1]
-		msg = "Line " + str(line) + ": CSV FORMATTING ERROR: Too many fields. Line contains more than 1 field."
-		update_error_log(msg, error_log)
-		valid_row = False
-	except (IndexError):
-		pass #everything is fine
+	#try: 		#if a file has too many fields, it could be a wrong file that happen to have SMILES string in it
+	#	extra_field = row[1]
+	#	msg = "Line " + str(line) + ": CSV FORMATTING ERROR: Too many fields. Line contains more than 1 field."
+	#	update_error_log(msg, error_log)
+	#	valid_row = False
+	#except (IndexError):
+	#	pass #everything is fine
 	
 	
 	if not compound_exists(smiles, library_id, line, error_log):

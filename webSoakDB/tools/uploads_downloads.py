@@ -91,36 +91,28 @@ def upload_subset(file_name, library_id, name, origin):
 	new_subset = LibrarySubset.objects.create(library=library, name=name, origin=origin)
 	
 	with open(file_name, newline='') as csvfile:
-		dialect = csv.Sniffer().sniff(csvfile.read(1024))
-		dialect.delimiter = ','
-		csvfile.seek(0)
-		compound_reader = csv.reader(csvfile, dialect)
-		for row in compound_reader:
-			try:
-				#compound = Compounds.objects.get(code = row[0].strip(), smiles=row[1].strip())
+		for row in csvfile.readlines():
 
-				#find all compounds with matching SMILES string
-				matching_smiles = Compounds.objects.filter(smiles=standardize_smiles(row[0]))
+			#find all compounds with matching SMILES string
+			matching_smiles = Compounds.objects.filter(smiles=standardize_smiles(row))
 
-				#if you find only one, use it
-				if matching_smiles.count() == 1:
-					compound = matching_smiles.all()[0]
+			#if you find only one, use it
+			if matching_smiles.count() == 1:
+				compound = matching_smiles.all()[0]
 				
-				#if there are more, take the first one you find that belongs to <library>
-				else:
-					for c in matching_smiles.all():
-						if library.id in [sw.library_plate.library.id for sw in c.locations.all()]:
-							compound = c
-							break
-
-				new_subset.compounds.add(compound)
-				new_subset.save()
-			except django.core.exceptions.ObjectDoesNotExist:
+			#if there are more, take the first one you find that belongs to <library>
+			elif matching_smiles.count() > 1:
+				for c in matching_smiles.all():
+					if library.id in [sw.library_plate.library.id for sw in c.locations.all()]:
+						compound = c
+						break
+			else:	#this will only happen if someone messes with the code
 				print('Error: No such compound found.')
-				print('Error: upload_subset running on unvalidated data. Use validators.selection_is_valid() on the input data first!')
-			except django.core.exceptions.MultipleObjectsReturned:
-				print('Error: There are duplicate compounds in the database: ', row[0], ':', row[1])
-				print('Error: upload_subset running on unvalidated data. Use validators.selection_is_valid() on the input data first!')
+				print('Error: upload_subset() running on unvalidated data. Use validators.selection_is_valid() on the input data first!')
+				return
+
+			new_subset.compounds.add(compound)
+			new_subset.save()
 	
 	return new_subset
 

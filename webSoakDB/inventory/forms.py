@@ -1,17 +1,13 @@
 from django import forms
 from API.models import Library, LibraryPlate, Preset, PlateOpening, Project
+from .inv_helpers import make_plate_name
 
-
-#presets = [("", "Select preset...")] + [(preset.id, preset.name) for preset in Preset.objects.all()]
-#libs = [("", "Select library...")] + [(library.id, library.name) for library in Library.objects.filter(public=True)]
 libs = []
-plates = [("", "Select plate...")] + [(plate.id, plate.barcode + ': ' + plate.library.name) for plate in LibraryPlate.objects.filter(library__public=True)]
-#plates = []
-#LibraryPlate.objects.filter(library__public=True)
-#	print('x')
+plates = [(plate.id, make_plate_name(plate) ) for plate in LibraryPlate.objects.filter(library__public=True)]
+plates = [("", "Select plate...")] + sorted(plates, key=lambda x: x[1])
 
 '''Note on overriding __init__ : __init__ functions are overriden here to be able to dynamically generate choices
-for the ChoiceFields. The reason why there are the oher fields in the __init__ functions is ordering: 
+for the ChoiceFields. The reason why there are the other fields in the __init__ functions is ordering: 
 when some of the fields are declared inside __init__, and some outside of it, field_order doesn't work properly '''
 
 class DateInput(forms.DateInput):
@@ -58,11 +54,6 @@ class EditPresetForm(forms.Form):
 class DTMapForm(forms.Form):
 	dt_map = forms.FileField(label='Upload mapping file', required=False)
 
-class PlateOpeningForm(forms.ModelForm):
-	class Meta:
-		model = PlateOpening
-		fields = ['date', 'reason']
-
 class OldProjectForm(forms.Form):
 	proposal = forms.CharField(label="Proposal", required=True)
 
@@ -71,10 +62,6 @@ class UnsavedSubsetForm(forms.Form):
 		super(UnsavedSubsetForm, self).__init__(*args, **kwargs)
 		self.fields['library'] = forms.ChoiceField(choices = libs, label='Library:', required=True)
 		self.fields['compound_list'] = forms.FileField(label='Upload compounds list', required=True)
-
-class AddVisitForm(forms.Form):
-	number = forms.IntegerField(label="Visit number", required=True)
-	proposal = forms.HiddenInput()
 
 class NewProjectForm(forms.Form):
 	proposal = forms.CharField(label="Proposal", required=True)
@@ -90,12 +77,7 @@ class FindPlateForm(forms.Form):
 class ComparePlatesForm(forms.Form):
 	plate1 = forms.ChoiceField(label="Plate 1", choices = plates, required=True)
 	plate2 = forms.ChoiceField(label="Plate 2", choices = plates, required=True)
-	'''
-	def __init__(self, libs, *args, **kwargs):
-		super(PlateUpdateForm, self).__init__(*args, **kwargs)
-		self.fields['plate1'] = forms.ChoiceField(choices = plates, required=True)
-		self.fields['plate2'] = forms.ChoiceField(choices = plates, required=True)
-	'''
+
 
 class AddStaffUserFrom(forms.Form):
 	username_staff = forms.CharField(label="Federal ID*")

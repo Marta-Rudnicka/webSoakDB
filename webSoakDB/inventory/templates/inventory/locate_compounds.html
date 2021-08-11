@@ -2,13 +2,15 @@
 {% load static %}
   {% block main %}
     <main id="locate">
+    {% include "overlay.html"%}
       <h1>Locate compounds</h1>
         <section>
           <h2>Upload the list of compounds</h2>
           <form method="post" action="/inventory/locate-compounds/" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form }}
-            <button type="submit">Submit</button>
+            <button type="submit" onclick="showOverlay(['id_library', 'id_compound_list'])">Submit</button>
+                                  
           </form>
         </section>
         <section>

@@ -157,7 +157,7 @@ class CompoundLookupPlate extends React.Component {
 	}
 
 	getRows(){
-		let rows = <tr><td colSpan="6" className="large-text">Loading compounds...</td></tr>;
+		let rows = <tr><td colSpan="6" className="large-text">Loading compounds...</td></tr>;0000000
 		if (this.state.compounds.length > 0){
 			rows = this.state.compounds.map((compound, index) => {
 				return <TableRowPlate

@@ -90,7 +90,6 @@ class GraphTable extends React.Component {
   shouldComponentUpdate(nextProps, nextState){
     //prevent continuous updates while a user file is being processed
     if (nextProps.parentState.waitingForSave){
-      console.log('prevented GraphTable update')
       return false;
     }
     else {

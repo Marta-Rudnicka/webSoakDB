@@ -3,6 +3,7 @@
   {% block main %}
   
   <main id="db_search">
+  {% include "overlay.html" %}
     <h1>Compare library plates contents</h1>
     <section>
         <h2>Choose plates to compare</h2>
@@ -11,7 +12,7 @@
             <table>
               {{ form.as_table }}
             </table>
-             <button type="submit">Submit</button>
+             <button type="submit" onclick="showOverlay(['id_plate1','id_plate2'])">Submit</button>
         </form>
     </section>
     {% if results %}

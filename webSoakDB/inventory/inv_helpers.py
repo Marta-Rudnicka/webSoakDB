@@ -34,11 +34,13 @@ def get_plate_size(queryset):
 	return {'rows' : rows, 'columns' : columns}
 		
 def get_change_dates(queryset):
-		
+	#print("get_change_dates: ", queryset)
 	changes = []
 	for compound in queryset:
+		#print(compound.id, compound.changes)
 		changes += compound.changes
-		
+	
+	#print("changes: ", changes)
 	change_dates = set([ change["date"] for change in changes])
 	return sorted(change_dates, reverse=True)
 

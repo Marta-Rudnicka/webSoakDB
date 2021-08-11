@@ -118,16 +118,18 @@
 		<form method="post" action="/inventory/open-plate/">
 		  {% csrf_token %}
 		  <input type="hidden" name="id" value="{{ plate.id }}">
+      
 		  <table>
 			<tr>
 			  <th><label for="name">Date:</label></th>
-			  <td><input type="date" name="date"></td>
+			  <td><input type="date" name="date" required></td>
 			</tr>
 			<tr>
 				<th><label for="reason">Reason:</label></th>
-				<td><input type="test" name="reason"></td>
+				<td><input type="test" name="reason" required></td>
 			</tr>
 		  </table>
+      
 		  <button type="submit">Register</button>
 		</form>
 		<p><small>* If a plate is opened for an experiment or dispense testing, 

@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from tools.data_storage_classes import SubsetCopyWithAvailability
 from tools.compounds import standardize_smiles
-from tools.validators import parse_smiles
+from tools.validators import compound_exists, parse_smiles
 from django.shortcuts import redirect, render
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
@@ -172,14 +172,14 @@ def update_plate(request, pk):
 		})
 	dt_map_form = forms.DTMapForm()
 	
-	plate_opening_form = forms.PlateOpeningForm(initial={"date" : datetime.today()})
+	#plate_opening_form = forms.PlateOpeningForm(initial={"date" : datetime.today()})
 		
 	return render(request, "inventory/update_plate.html", {
 	#return render(request, "inventory/background.html", {
 		"plate": plate, 
 		"compounds" : plate.compounds.all().order_by("deactivation_date"),
 		"plate_form" : plate_form,
-		"plate_opening_form" : plate_opening_form, 
+		#"plate_opening_form" : plate_opening_form, 
 		"active_count" : active_count, 
 		"inactive_count" : inactive_count,
 		"availability" : availability,
@@ -191,10 +191,13 @@ def track_usage(request, pk, date, mode):
 		
 	plate = LibraryPlate.objects.get(pk=pk)
 	compounds = h.sw_copies(plate.compounds.all()) #make a copy of the data to edit it without touching the db
+	#print('compounds[0]: ', compounds[0], compounds[0].changes)
 	modified_compounds = [compound for compound in compounds if len(compound.changes) > 0 ]
+	#print("modified_compounds: ", modified_compounds)
 	timestamp = datetime.strptime(date, "%Y-%m-%d").date() #make a datetime object based on the url
 	change_dates = h.get_change_dates(modified_compounds) #produce the list of all dates on which any compounds were (de)activated
 	
+	#print('change_dates: ', change_dates)
 	#generate strings needed to switch between the general and the graphic view
 	if mode == "general-view":
 		switch_view = "graphic view"
@@ -242,12 +245,14 @@ def proposal(request):
 				pr = form.cleaned_data['proposal']
 				project = h.get_project_by_proposal(pr) #Project.objects.get(proposal=pr)
 				subsets = h.get_subsets_with_availability(set(project.subsets.all()))
+				visits = IspybAuthorization.objects.filter(proposal_visit__startswith=pr)
 								
 				return render(request, "inventory/proposal.html", {
 					'project' : project,
 					'proposal' : pr,
 					'subsets': subsets, 
-					'visit_form' : forms.AddVisitForm()
+					'visits' : visits
+					#'visit_form' : forms.AddVisitForm()
 					})
 			except(ObjectDoesNotExist):
 				return render(request, "webSoakDB_backend/error_log.html", {'error_log': ['Proposal not found']})
@@ -354,12 +359,17 @@ def edit_preset(request):
 		new_libs = [("", "Select library...")] + list(set(all_libs) - old_libs_set)
 		old_libs = [("", "Select library...")] + list(old_libs_set)
 		
+		print('preset: ', preset)
+		print('preset.subsets.all(): ', preset.subsets.all())
+		print('old_libs_set: ', old_libs_set)
+		print('old_libs: ', old_libs)
+		print('new_libs: ', new_libs)
 		#create form object
 		form = forms.EditPresetForm(data=request.POST, files=request.FILES, old_libs=old_libs, new_libs=new_libs)
 		#https://django-gotchas.readthedocs.io/en/latest/forms.html <-- explanation for the weird kwargs; 
 		
 		if form.is_valid():
-			
+			print('VALID FORM')
 			#check if upload files are valid
 			new_library = form.cleaned_data["new_library"]
 			new_compound_list = request.FILES.get("new_compound_list")
@@ -428,6 +438,7 @@ def edit_preset(request):
 			
 			return HttpResponseRedirect('../presets/')
 		else:
+			print('INVALID FORM')
 			return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})			
 
 @staff_member_required
@@ -716,19 +727,27 @@ def add_project(request):
 
 def add_visit(request):
 	if request.method == "POST":
-		form = forms.AddVisitForm(request.POST)
-		if form.is_valid():
-			number = form.cleaned_data['number']
-			proposal = form.cleaned_data['proposal']
+		#form = forms.AddVisitForm(request.POST)
+		#if form.is_valid():
+			number = request.POST['number']
+			proposal = request.POST['proposal']
 			proposal_visit = proposal + '-' + str(number)
-			project = Project.objects.get(auth__startswith=proposal)
-			project_title = project.auth.all[0].project
+			project = Project.objects.filter(auth__proposal_visit__startswith=proposal)[0]
+			project_title = project.auth.all()[0].project + '-' + str(number)
 			new_auth = IspybAuthorization.objects.create(project=project_title, proposal_visit=proposal_visit)	
 			project.auth.add(new_auth)
 			new_auth.save()
-			return HttpResponseRedirect('../projects')
-		else:
-			return render(request, "webSoakDB_backend/error_log.html")	
+
+			visits = IspybAuthorization.objects.filter(proposal_visit__startswith=proposal)
+			return render(request, "inventory/proposal.html", {
+					'project' : project,
+					'proposal' : proposal,
+					'subsets': h.get_subsets_with_availability(set(project.subsets.all())), 
+					'visits' : visits
+					})
+		#else:
+		#	print(request.POST)
+		#	return render(request, "webSoakDB_backend/error_log.html", {"form_errors": form.errors, "non_field_errors": form.non_field_errors})			
 
 
 
