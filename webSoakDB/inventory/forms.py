@@ -1,6 +1,6 @@
 from django import forms
 from API.models import Library, LibraryPlate, Preset, PlateOpening, Project
-from .inv_helpers import make_plate_name
+from .views.inv_helpers import make_plate_name
 
 libs = []
 plates = [(plate.id, make_plate_name(plate) ) for plate in LibraryPlate.objects.filter(library__public=True)]

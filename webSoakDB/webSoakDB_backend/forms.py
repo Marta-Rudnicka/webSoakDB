@@ -1,11 +1,8 @@
 from django import forms
 from API.models import Library, Project
-from inventory.inv_helpers import current_library_selection
-from django.forms import formset_factory
+from tools.uploads_downloads import current_library_selection
 	
 libs = current_library_selection(False)
-#proposals = list([item.id, item.proposal] for item in Project.objects.all())
-#libraries = list([item.id, item.name] for item in Library.objects.filter(public=True))
 libraries = []
 
 class DateInput(forms.DateInput):

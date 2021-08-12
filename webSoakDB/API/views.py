@@ -26,9 +26,9 @@ def choose_plate_view(request, pk, project_id):
 
 	plate = LibraryPlate.objects.get(pk=pk)
 	if plate.library.public:
-		return redirect('/api/public_library_plates/' + str(pk) + '/')
+		return redirect('/api/public_library_plates/' + str(pk) + '/') #go to PublicLibraryPlateViewSet
 	else:
-		return redirect('/api/project_compounds/' + str(project_id) +  '/')
+		return redirect('/api/project_compounds/' + str(project_id) +  '/') #go to ProjectCompoundsViewSet
 
 class ProjectCompoundsViewSet(viewsets.ReadOnlyModelViewSet):
 	#returns the project with all the libraries and their details

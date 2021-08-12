@@ -273,3 +273,14 @@ def add_subset_data_to_file(subset, file, include_details, is_preset):
 		line += "\n"
 		file.write(line)
 	return file
+
+
+	
+def current_library_selection(boolean):
+	if boolean == True:
+		first_tuple = [("", "Select library...")]
+	else:
+		first_tuple = []
+	
+	#return []
+	return  first_tuple + [(library.id, library.name) for library in Library.objects.filter(public=True)]
