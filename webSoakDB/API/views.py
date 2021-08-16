@@ -116,6 +116,7 @@ def current_library_options(request):
 			self.name = preset.name
 			self.description = preset.description
 			self.subsets = [s.id for s in preset.subsets.all()]
+			#this will be used only on presets of a single library, so the first element is the only element
 			self.library = preset.subsets.all()[0].library.id
 			self.size = preset.subsets.all()[0].size()
 			
@@ -143,7 +144,7 @@ def preset_list(request):
 			self.name = preset.name
 			self.description = preset.description
 			self.subsets = [s.id for s in preset.subsets.all()]
-			self.library = preset.subsets.all()[0].library.id
+			#self.library = preset.subsets.all()[0].library.id
 			self.size = sum([s.size() for s in p.subsets.all()])
 	
 	queryset = Preset.objects.all()

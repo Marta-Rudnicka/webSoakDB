@@ -2,24 +2,115 @@
 
 This is a reference for code included in the `inventory` app. It is recommended to read the README.md first.
 
-`inventory` is a conventional Django app that uses templates to render pages, with no ReactJS components and only some minimal JavaScript.  Most of the views either render pages listing database items, or process form data to create or update them. Here, Django forms are used both to render the form HTML, and to sanitise/validate the data. The inventory has two more complicated features which are discussed below detail: tracking compound availability at different dates, and dispense testing interface.
+`inventory` is a conventional Django app that uses templates to render pages, with no ReactJS components and only some minimal JavaScript.  Most of the views either render pages listing database items, or process form data to create or update them. Here, Django forms are used both to render the form HTML, and to sanitise/validate the data. It makes more sense to discuss inventory not by views (as there are too many of them), but by features/functionalities, so this is how this part of the documentation is organised past the general information.
 
-### Files:
-- `inv_helpers.py` - contains various helper functions utilised by this app’s views
-- `dt.py` - contains helper functions used by the dispense testing interface
+## Static files
 
-### Notes on views
+Because of how the cookiecuter template settings are configured, the static files of the inventory app (some css and js) are located in `webSoakDB_frontend/static/inventory` directory. Should've fixed that - sorry.
 
-- `libraries()` and `presets()` (urls: `inventory/plates` and `inventory/presets`) - these views list all the in-house libraries / presets in a table. For every item, two forms are rendered: one for editing, and the other for deleting the item. These forms are by default hidden and are only shown after clicking the “edit/delete” button (achieved by a simple JavaScript script manipulating the CSS classes of the forms). Each form contains a hidden input submitting the id of the item that it modifies. Besides, both pages have one form each for creating a new item.
+## `submitDelete()` JavaScript function
+Script used whenever user clicks a button that would delete something from the database. It creates a dialog box asking for confirmation and prevents form submission if user chooses 'Cancel'.
 
-- `presets()` (url: inventory/presets - the preset list includes the lists of all compounds belonging to that preset. However, the view does not simply display the values stored in the database. For every Compounds object referenced in the LibrarySubset belonging to a preset, the view checks the availability of the compound in the current library plate. If it is not available, it searches the other plates of that library, and lists the plates in which the compound is still available. The relevant values copied from Compounds objects, as well the availability data, are stored as a list of temporary objects and provided as the context to the page template.
+## `views` directory
+
+Instead of the `views.py` file, the app has a `views` directory, which contains both files with the views, and files with helper functions used only by those views. The original view.py file had over 900 lines and was difficult to navigate.
+
+### Files with views
+
+**`libraries.py`** - views for listing, creating and updating libraries
+**`plates.py`** - views for listing, creating and updating library plates; including dispense testing and tracking usage over time
+**`presets.py`** - views for listing, creating and updating presets
+**`queries.py`** - views for searching and processing data: checking availability of compounds, looking up single items
+**`other.py`** - views for managing projects and users, displaying error messages and everything else
+
+### Other files in views:
+**`dt.py`** - helper functions used by the dispense testing process only
+**`inv_helpers.py`** - other helper functions written for `inventory` views
+
+## Templates
+
+The function of most templates does not require explanation. The few less obvious ones are:
+
+**`chck-rd-fill.html`, `chck-sqr-fill.html`, `chevron-down.html`, `chevron-up.html`, `x-sqr.html`** - svg icons from Bootstrap Icons (https://icons.getbootstrap.com/) included in various other templates.
+
+**`availability-details.html`** - code rendering one row of availability table (with a nested table inside it), showing the results of availability search for one subset of compounds
+
+**`availability-table.html`** - a table displaying availability details for a set of subsets; used for projects and presets, renders an `availability-details.html`element for each subset
+
+**`molecule-image.html`** - produces a small clickable 2D structure image of a molecule, which opens a compounds detail page for the molecule in a new tab/window. Used in various places in the invetory interface. The image itself is generated by `serve_2d()` function in the `webSoakDB_backend` app using RDKit tools.
+
+**`overlay.html`** - a semi-transparent overlay element included in various other templates, together with JavaScript scripts that manage it. By default it is invisible, but the provided `showOverlay()` function make it appear and cover the whole page, with a box saying "Processing data. Please wait", preventing the user from clicking anything. The overlay is used for submitting forms that may take a while to process, to provide clear feedback to the user. It stays on the page until the automatic reload after form submission.
+
+`showOverlay()` takes a list of ids as an argument - these are ids of the obligatory form inputs. It checks if all of the necessary fields are filled before showing the overlay - otherwise, in situation where user fails to submit all required values, HTML validation would prevent form submission, but the overlay would appear anyway, providing misleading feedback (there is no data processing going on in this situation), and making it impossible to corret the errors in the form until user manually reloads the page.
+
+## Basic functionalities: views displaying, creating and deleting elements (whith views and URLs responsible for each)
+
+### Libraries:
+
+In-house libraries are listed by the `libraries()` view (url: `inventory/libraries`), each with a list of library plates belonging to it underneath. For every library, two forms are rendered: one for editing (using `edit_library()'/` view at `inventory/edit-library/` url), and the other for deleting ( `delete_library()` at `inventory/delete-library/`). These forms are by default hidden and are only shown after clicking the “edit/delete” button (achieved by a simple JavaScript script manipulating the CSS classes of the forms). Each form contains a hidden input submitting the id of the item that it modifies - to the user, delete form is only a button. The forms layout is are very similar for presets.
+
+To prevent accidental data removal, `delete_library()` only deletes a library if it has no library plates associated with it - otherwise it redirects to an error page instructing the user to delete all the plates first (rendered by `library_deletion_error()` at `inventory/library-deletion-error/`). The `libraries()` page also provides a form for creating a new library (sending data to `add-library()` at `inventory/add-library/`)
+
+### Library plates:
+
+The plates from in-house libraries are listed under each library in the `libraries()` view without any details or tools to manage them. The main starting point for managing plates is `plates()` at `inventory/plates/` : it provides a table listing all the in-house library plates, each with two links: one for accessing detail view for the pate, and one for tracking usage patterns (discussed as a separate feature below). (Note: For private library plates, such links are provided too, but not on the `plates()` page, but the page of the project in which the plate is used ). Above the table with the plates list, there is a `<select>` element that allows for filtering the plates by library (simple JavaScript; in the template file). The page with the list also provides a form for creating a new library plate ( `add_plate()` at `inventory/add-plate/`) and deleting multiple library plates at once ( `delete_multiple_plates()` at `inventory/delete-multiple-plates/`), especially useful when deleting the whole library, which requires deleting all its plates first.
+
+The detailed view of one library plate is provided by `update-plate()` at `update-plate/<int:pk>/`. The central element of the page is a table listing all the compounds (SourceWell instances) in the plate. It has a `<select>` element allowing to filter out available of unavailable compounds, similar to that which allows filtering plates by library. The view displays some informtion and statistics about the plate contents on the left, and provides several other tools:
+
+* downloading plate map (links to at `download_current_plate_map()` at `/downloads/plate-map/<int:pk>`; part of webSoakDB_backend app)
+* form to upload dispense testing mapping file and redirect to dispense testing interface (discussed as a separate feature below)
+* form to mark single compounds as unavailable manually (outside of dispense testing). There are two ways of doing it:
+	- user can manually tick a checkbox next to the desired compounds in the table
+	- user can use the 'Mark as unavailable' form  - when he or she types in the well name and presses enter, a `findAndCheck()` JavaScript function checks the appropriate checkbox
+	In both cases, a moment after checking the checkbox, the table row containing it is moved to the top of the table, so all the selected compounds are listed together ( `moveToTop()` script).
+	
+	Actually, the whole table with the compounds is at the same time a HTML table. It does not have its own 'submit' button: instead form submission is launched with the 'Mark all selected compounds as unavailable' button in the 'Mark as unavailable' section using the `submitInactive()` JS function, which sends the form data to the `deactivate_compounds_manually()` view at `inventory/deactivate-compounds-manually/`.
+	
+* buttons to mark unavailable compounds as available (appear inside the table in rows showing unavailable compounds). These buttons launch the `submitActive()` JS function, which sends the compound data to `activate_single_compound()` at `inventory/activate-single-compound/`. To prevent nesting HTML forms inside one another (the whole table is a form), the `submitActive()` function creates the formData object from scratch, based on the function argument and template variables.
+* Form for editing the plate data (not source well data). The submission is managed by `edit_plate()` view at `inventory/edit-plate/`. Note: in some cases (e.g. changing the "current" status), editing a plate results in updating cached histograms, which may take more time than one expects with a simple edit - therefore submitting this form triggers showing the overlay lement.
+* Form for registing a plate opening event - in case a staff member opened the plate in non-routine circumstances and wants to note it. The form sends data to `open_plate()` view at `inventory/open_plate/`, which creates a new instance of PlateOpening relate to the plate
+* A button for deleting the plate (in fact a form with a hidden input), which submits the plate id to `delete_plate()` at `inventory/delete-plate/`.
+
+Plates for private library plates are listed on the project lookup page, with links to the "update plate" page and usage tracking page (sometimes a user's plate might be stored in XChem, and an availability check might be requested, e.g. to see if some of the solution have dried up after a long time).
+
+###Presets
+
+The presets page ( `presets()`  at `inventory/presets`) is organised in a very similar way to the libraries page: it lists all the presets in the table and has hidden forms to edit ( `edit_preset()` at `inventory/edit-preset/`) and delete ( `delete_preset()` at `inventory/delete-preset`)them, and also features a form to create a new one ( `add_preset()` at `inventory/add-preset`). Additionaly, for each preset there is a link to availability information (this feature is discussed in detail below).
+
+
 **Note on updating creating or presets:** the form creating a preset only allows for adding compounds from one library (adding one LibrarySubset). To create a preset covering multiple libraries, user first needs to create the preset with one subset, and the edit it to add more. If a preset already contains a selection from a particular library and the user wants to update this selection, the old selection is completely overwritten by the new one. The old LibrarySubset is first deleted from the database, then new one is created based on the uplodaded file and added to the Preset. E.g. if user wants to add three compounds to the list, the new uploaded list needs to contain all the old compounds + the three new ones.
 
-- `plates()` - this view lists all library plates for XChem in-house libraries and provides links to pages processing particular plate. Above the table with the plates list, there is a `<select>` element that allows for filtering the plates by library -  this is achieved using a simple JavaScript, which is in the template file.
+###Users
 
-### `Advanced features:
+The link to user management is found not directly on the inventory home page, but on `inventory/browse-data/`.
+
+`manage_users()` at `inventory/users` is only concerned with staff members and power user prvileges. Power users are going to be regular XChem users who are not Diamond employees, but have a lot of experience with the facilities and should be allowed more access to their own data (for example, manual editing of experimental data, which is normally supposed to be limited to staff members). The specific permissions are not yet decided. It will be up to the staff to decide who should have power user permissions.
+
+At the moment only the staff member part is functional. 
+
+- `add_staff_member()` at `inventory/add-staff-member/` can either create a new Django User with the submitted FedID as the username with staff permissions, or if the username is already registered, change the user's staff status to true; if additional information about the existing user (such as name and email) is not already in the database, the information typed into the form will be added; if it is already there, it will NOT be overwritte (at the moment the only way to overwrite user's data is in the Django admin panel)
+
+- `remove_from_staff()` at `invenroty/remove-staff-member/` is sent the user's id (the button in the inerface triggers submission of form with hidden inputs) and sets the user's staff status to false - it does NOT remove the User object from the database
+#TODO prevent removing the last staff member!!! 
+
+Users are authenticated using CAS, and permissions to specific projects are managed outside of XChemSPA.
+
+###Proposals/Projects
+
+Managing projects starts from the `projects()` view at `/inventory/projects/`, which has two parts: a form for creating a new project, and a form leading to a look-up page for a specific project.
+
+- `add_project()` at `inventory/project/` creates a new Project object, as well as the first `IspybAuthorization` object related to it, which authorizes users to access visit 1 of the proposal submitted for the project.
+
+- The `proposal()` view at `inventory/proposal` leads to a project look-up found based on the proposal string submitted in the form. The view provides:
+
+* list of library plates of private (user-submitted) libraries with links to `update-plate()` view and usage tracking view for each
+* list of all subsets chosen for the project (both user's own cherry-picking lists and presets) with availability information
+* list of all the visits registered for XChemSPA, and a form to create a new one ( `add_visit()` at `inventory/add-visit`); registering a new visit in XChemSPA creates new `IspybAuthorization` object linked to the project
+* TODO: link to managing the experiment
+
+## `Advanced features:
 	
-#### Tracking plate usage across time
+### Tracking plate usage across time
 	
 Each library plate in the list at `inventory/plates` has a link labelled “track usage”, which allows ‘travelling back in time’ to see which compounds in a plate were available at a given date. The page  with the information also contains a visual representation of the library plate.
 
@@ -122,3 +213,75 @@ Note: the application cannot simply compare the 'not dispensed' list to the list
 The application will not create more than one SWStatuschange on the same day. If, on the same day, a SourceWell is set to active, and then it is set back to inactive or vice versa, the application treats it as an act of correcting a mistake, and undoes the last change. This mean that the last (today's) SWStatuschange is deleted, and `deactivation_date` as well as `active` are restored to the state from before both changes. This avoids ambiuity in tracking the changes over time. If the same change were made twice in a row (which not should happen in normal running of the application), the second one would just be ignored. 
 
 In the end, the the `last_tested` attribute of the plate is changed to the current time stamp, and id the plate tested is a current plate, histograms of the corresponding library are updated. The user is redirected back to 'update/delete' plate page.
+
+
+## Locating compound lists - availability check feature
+
+If an experiment does not require using the whole library but only a selection of compounds, it is preferable to use one of the older, more used-up plates in order to save the current used one. The availability check feature helps deciding if this is a viable option, and if yes, which of the older plates would be the best to use for this particular set of compounds. To simplify, it gets a list of compounds selected from the library and checks every library plate to see how many of them are not available in it (details are discussed later on). Then, it shows the user the list of library plates, with the information on which of the desired compounds are not available in this particular plate.
+
+The are four uses of this feature in XChemSPA:
+- On the 'Presets' page, the table with the presets list provides links to an availability check for each preset
+- The proposal page features availability checks for all the subsets selected for the project
+- 'Locate compounds` allows for uploading a list of compunds without saving it in the database as subset, and generating availability information for it
+- In the React application, in the SoakDB export form, links to availability information page is provided for each selected subset (if there are any)
+
+I will describe how the check works, and then list all the views and pages responsible for it in each case.
+
+### Ranking algorithm and 'recommended plate'
+
+The list of plates with availability information is provided to the user from the ordered from the "best" to the "worst" plate. Before I explain how the search is performed, I will explain how the plates are ranked.
+
+In case of libraries that fit into one plate, it is quite simple: the best plate is the one that misses the fewest compounds from the list. The availability is checked in all plates, and the best 10 is presented to the user (if there are fewer than 10 plates, they will all be presented). The best plate is displayed to the user as "recommended plate". There is only one complication: if there is more than one plate that has the highest availability of the compounds, the algorithm makes sure to recommend the plate that is not the current one. For example, if the list of plates has the current plate at the first place with 86% availability, and at the second place is an old plate, also with 86% availability, these plate will be swapped.
+
+For libraries that take up more than 1 plate (DSI Poised with ethylene glycol is a real-life example, taking up 3 plates), it is more complicated. The ranking starts the same way: first availability is checked for in every plate. Then, availability in each combination of two plates is checked, and then three etc. - if the library takes up *n* plates, combinations of up to *n* plates are checked. However, there is an exception: whenever a plate, or plate combination is found to have 100% of the desired compounds, the search doesn't move to combinations of a higher number of plates. So, for example, if a user wishes to use 80 compounds from DSI-P in ethylene glycol, and the algorithm finds 50 of them in one plate, and the other 30 in another one, it will never get to the stage where it inspects three-plate combinations.
+
+Just like in case of single plates, there is a preference for recommending old plates (or combinations that do not contain current plates).
+
+***Why not try to find a minimum set of plates that would have all the compounds from a list, or as many as possible?***
+
+The problem is probably an example of set cover problem (https://en.wikipedia.org/wiki/Set_cover_problem), though there is a possibility that something about the data structure decreases its computational complexity. In either case, creating an approximation or an algorithm with acceptable performance would take a lot of time, and this is not an essential feature. Still, it looks like something users might ask about in future.
+
+### Generating availability information
+
+The main entity responsible for generating the availability information is the class `SubsetCopyWithAvailability` (found in `tools/data_storage_classes`). The views that provide availability information pass a set of relevant subsets to the `get_subsets_with_availability()` function (defined in `inv_helpers.py`), which creates returns instances of `SubsetCopyWithAvailability`. The methods defined in this class are responsible for creating the availability information.
+
+`SubsetCopyWithAvailability` has attributes based on the LibrarySubset model attributes (and its foreign keys), plus the `availability` attribute. The constructor of `SubsetCopyWithAvailability` can take either take either an instance of LibrarySubset model, or a list of compounds **and** a Library model instance. In the former case, it copies the attributes from the LibrarySubset instance, and in the latter, it sets the list of compounds as its own `compounds`, copies Library attributes into its own library-related attrubutes. Then, in both cases, the `availability` attribute is set using the `get_compound_availability()` method.
+
+`get_compound_availability()` first checks how many plates the library spans based on the number of current plates(for most libraries, it's just one), and directs the rest of the process accordingly. For both single- and multi-plate library, the process starts with launching `rank_single_plates()`. This method creates instances of `PlateCopy`, which is a similar kind of class to `SubsetCopyWithAvailability` - it stores values copied from `LibraryPlate` with added extra information in the `missing_compounds` and `availability` attributes. The difference is that `PlateCopy` does not have any method that computes these values- they are is generated by `SubsetCopyWithAvailability.get_plate_copy()` and either passed to the constructor of `PlateCopy` or set as a new attribute. After `rank_single_plates()` creates `PlateCopy` objects for every plate in the relevant LibrarySubset's library, it sorts them by availability(with the mentioned preference for non-current plates), and such a list is returned to `get_compound_availability()`.
+
+If the library involved is stored in only one plate, the first 10 items of the ranked list become the `availability` attribute of the created instance of `SubsetCopyWithAvailability`. If it covers more plates, and none of the ranked single plates contains all of the desired compounds, `get_compound_availability()` launches `rank_combinations()`. This method first creates all possible combinations of 2 plates from the library, and then uses them to create instances of `CombinedPlate` - a class that stores combined data from a list of `PlateCopy` objects (e.g. its `compounds` attribute stores a set of all the `SourceWell` objects from all the plates passed to the  `CombinedPlate`'s constructor). Then, the CombinedPlate is passed to `get_plate_copy()` and processed in the same way as LibraryPlate model instance would be processed, making `PlateCopy` instances that are in fact copies of not one, but two plates. If no combination with 100% compound availability is found, the process is repeated for 3 plates, etc. until it reaches the limit (the number of plates needed to keep the whole library in). 
+The function return the top 10 `PlateCopy` objects with the best availability of the desired compounds (Note: these objects can be either based on one LibraryPlate objects, or on a CombinedPlate object), and they become the `availability` of the `SubsetCopyWithAvailability`.
+
+To describe the process itself, without the reference to models, classes and methods:
+
+1. The algorithm gets a list of desired compounds from a certain library
+
+2. A copy of that list and its related metadata is created
+
+3. For every plate in the library:
+	i. a copy of the plate data is created
+	ii. the list of desired compounds is compared to the compounds available in the plate to find out which compounds are missing
+	iii. the list of missing compounds is added to the copy of the plate data
+	
+4. If the library takes up more than one plate, and no single plate has all the desired compounds:
+	5. combinations of plates are created
+	6. fictional plates are created, whose data combine data from a combination of plates
+	7. For every such combination, the process in step 3 is repreated
+(step 4 can involve making combinations of more and more plates)
+
+8. Copies of plates (or plate combination) are ranked by the best availability (i.e. which copy has the fewest compounds missing)
+
+9. The list of ten best plate/combination copies is added to the copy of the list of compounds
+
+The views involved then `SubsetCopyWithAvailability` object to pass and display the subset data with the availability information.
+
+
+
+
+
+
+#### Outline of the algorithm for ranking plates by compound availability
+
+## Managing visits and compounds
+
+## Extra data browsing: searching for compounds and plates, comparing plates

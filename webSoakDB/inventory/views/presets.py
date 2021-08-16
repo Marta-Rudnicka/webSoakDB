@@ -20,7 +20,7 @@ def presets(request):
 	new_preset_form = forms.NewPresetForm(libs=([("", "Select library...")] + all_libs))
 
 	#make copy of presets data, and add information about availability of the compounds
-	presets_copy = presets 
+	#presets_copy = presets 
 	form_dict = {}
 	
 	for p in presets:

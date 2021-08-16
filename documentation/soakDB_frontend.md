@@ -107,6 +107,8 @@ When user saves a selection, the values of `selectedLibIds` and `selectedSubsetI
 - `handleChangePreset()` - adds and removes subset ids from `selectedSubsetIds` when the user checks or unchecks a preset
 - `saveChanges()` - sends data to <App>'s `updateSelection()` in order to update the proposal in the database
 - `selected()` - checks if a preset is selected based on whether one of its subset is selected 
+
+`handleChangeLib()`, `handleChangePreset()`, `saveChanges()` stop the process of continuously reloading data after a file upload, which normally would be needed after an unsuccessful upload (see "Reacting to changes in the database after an upload").
  
 **helpers**
 - `detectUnsavedChanges()` - checks if there are any differences between libraries and presets currently selected in the interface, and the selection saved in the database (by comparing `selectedLibIds` against `initialLibs` and `selectedSubsetIds` against `initialSubsets` ); its output is sent to <App>'s `trackUnsavedChanges()`
@@ -116,7 +118,7 @@ When user saves a selection, the values of `selectedLibIds` and `selectedSubsetI
 
 #### Selection area
 
-Each in-house library that has at least one current plate is represented by a <LibraryOption> component, and each preset is represented by a <PresetOption>. Presets with compounds from only one library are listed under that library; presets with more subsets are listed under "OTHER PRESETS". Each item for selection has a checkbox, name of the item, number of compounds in parentheses, and a <ChevronDown> icon. The number of compounds for libraries is the number of active compounds in the current plate(s). For presets, it is just the numbers of all compounds selected for the preset, since the library plate is not pre-determined. Items already selected for the project are pre-checked on load. User selects or rejects items by checking and unchecking corresponding checkboxes; and each instance of user checking or unchecking a box inside <LibraryOption> or <PresetOption> triggers `handleChangeLib()` or `handleChangePreset()` in <Picker>. These functions also trigger updating `inHouseCompoundCount`. Note: inHouseCompoundCount only sums up compounds from in-house libraries and single-library presets. Including multi-library presets would carry a high risk of accidentally duplicating compounds in the selection. The number would either be unreliable, or the application would need to download all the compound data to find possible duplicates.
+Each in-house library that has at least one current plate is represented by a <LibraryOption> component, and each preset is represented by a <PresetOption>. Presets with compounds from only one library are listed under that library; presets with more subsets are listed under "OTHER PRESETS". Each item for selection has a checkbox, name of the item, number of compounds in parentheses, and a <ChevronDown> icon. The number of compounds for libraries is the number of active compounds in the current plate(s). For presets, it is just the numbers of all compounds selected for the preset, since the library plate is not pre-determined. Items already selected for the project are pre-checked on load. User selects or rejects items by checking and unchecking corresponding checkboxes; and each instance of user checking or unchecking a box inside <LibraryOption> or <PresetOption> triggers `handleChangeLib()` or `handleChangePreset()` in <Picker>. These functions also trigger updating `inHouseCompoundCount`.
 
 The background colour of the `<section>` containing the selection options changes when there are unsaved changes detected (controlled by `changeStatus` variable in the <Picker>'s `render()` function). When user saves a new selection or undoes the changes, the colour goes back to the original one (currently the 'neutral' colour is grey, and the colour signalling unsaved changes is light blue.)
 
@@ -196,7 +198,7 @@ The graphs for the whole selection are not automatically rendered and the user n
 - `presets` - the list of preset selected by user
 - `other_subsets` - the list of subsets that are selected but do not belong to a preset (i.e. user's own cherry-picking lists)
 
-#### Methods
+#### Methods0
 - `componentDidUpdate()` - updates presets and other_subsets when the selection changes
 - `manageProperties()` - adds or removes properties from the `state.show` when user checks or unchecks corresponding checkboxes
 - `shouldComponentUpdate()` - prevents updates while a file upload is processed (to prevent unnecessary API calls creating performance issues)
@@ -359,7 +361,7 @@ This compound lists all compounds in a subset, even if it covers more than one l
 
 ### <ExportBar>
 
-Download links to CSV compound lists. 
+Download links to CSV compound lists. Generates appropriate URLs based on the props passed to it.
 
 ### <TableHeader>
 

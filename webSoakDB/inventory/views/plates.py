@@ -112,7 +112,7 @@ def add_plate(request):
 	today = str(date.today())
 	
 	if request.method == "POST":
-		form = forms.LibraryPlateForm(data=request.POST, files=request.FILES, libs=h.current_library_selection(True))
+		form = forms.LibraryPlateForm(data=request.POST, files=request.FILES, libs=current_library_selection(True))
 		
 		if form.is_valid():
 			log = []
@@ -148,7 +148,7 @@ def add_plate(request):
 
 @staff_member_required
 def edit_plate(request):
-	form = forms.PlateUpdateForm(data=request.POST, libs=h.current_library_selection(True))
+	form = forms.PlateUpdateForm(data=request.POST, libs=current_library_selection(True))
 	
 	if request.method == "POST":	
 		if form.is_valid():

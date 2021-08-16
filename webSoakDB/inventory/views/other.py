@@ -74,6 +74,11 @@ def add_staff_member(request):
 @staff_member_required
 def remove_from_staff(request):
 	if request.method == "POST":
+		staff_count = User.objects.filter(is_staff=True).count()
+		if staff_count < 2:
+			return render(request, "inventory/errors.html", {
+				'error_log': ["There is only one account left with staff permissions. If it were romoved, nobody would have access to inventory management!"]}
+				)
 		user_id = request.POST.get('user_id')
 		try:
 			user = User.objects.get(pk=user_id)
