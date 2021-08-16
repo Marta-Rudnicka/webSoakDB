@@ -40,6 +40,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    "ispyb_dja",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'API',
     'inventory',
+    "django_cas_ng",
+    "guardian"
 ]
 
 MIDDLEWARE = [
@@ -156,3 +159,31 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+#CAS setting (authorization features)
+
+# CAS parameters
+CAS_SERVER_URL = "https://auth.diamond.ac.uk:443/cas/"
+# Where to redirect to after user has logged in with CAS
+CAS_REDIRECT_URL = "/"
+CAS_FORCE_CHANGE_USERNAME_CASE = "lower"
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "django_cas_ng.backends.CASBackend",
+    "guardian.backends.ObjectPermissionBackend",
+)
+LOGIN_URL = "/accounts/login/"
+LOGOUT_URL = "/accounts/logout/"
+
+#ISPyB environment variables
+
+ISPYB_USER=
+ISPYB_PASSWORD=
+ISPYB_HOST=
+ISPYB_PORT=
+SECURITY_CONNECTOR="ssh_ispyb"
+
+SSH_HOST=ssh.diamond.ac.uk
+SSH_USER=
+SSH_PASSWORD=

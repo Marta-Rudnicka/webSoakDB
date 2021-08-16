@@ -5,7 +5,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from webSoakDB_stack.settings import MEDIA_ROOT
 from . import inv_helpers as h
 from .. import forms as forms
-from API.models import Project, IspybAuthorization
+from API.models import Project
+from ispyb_dja.django_auth.models import IspybAuthorization
 from django.contrib.auth.models import User
 
 #VIEWS HANDLING GET REQUESTS
