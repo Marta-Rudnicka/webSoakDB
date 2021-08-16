@@ -177,13 +177,3 @@ LOGIN_URL = "/accounts/login/"
 LOGOUT_URL = "/accounts/logout/"
 
 #ISPyB environment variables
-
-ISPYB_USER=
-ISPYB_PASSWORD=
-ISPYB_HOST=
-ISPYB_PORT=
-SECURITY_CONNECTOR="ssh_ispyb"
-
-SSH_HOST=ssh.diamond.ac.uk
-SSH_USER=
-SSH_PASSWORD=
