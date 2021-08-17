@@ -9,6 +9,7 @@ import itertools
 Classes used by backend views to store model data so they can be modified without affecting the database or associated with additional information
 '''
 
+
 class SourceWellCopy:
 	def __init__(self, compound):
 		self.well = compound.well         
@@ -19,9 +20,8 @@ class SourceWellCopy:
 
 class BasicTemporaryCompound:
 	def __init__(self, smiles, library_id):
-		print('BasicTemporaryCompound constructor: ', smiles, library_id)
-		'''find a compound with <smiles> belonging to library with <library_id>,
-		and make an object with copy of the compound's data'''
+		#find a compound with <smiles> belonging to library with <library_id>,
+		#and make an object with copy of the compound's data
 		self.smiles = smiles
 		
 		lib = Library.objects.get(pk=library_id)
@@ -84,9 +84,9 @@ class PlateCopy:
 		return "Plate copy: " + self.library.name + " " + self.library.barcode
 
 class SubsetCopyWithAvailability:
-	''' a library subset with added information about 10 library plates that have the largest number of the
-	desired compounds available; if a library is large and takes up n plates, the availability data include combinations
-	of up to n plates'''
+	#a library subset with added information about 10 library plates that have the largest number of the
+	#desired compounds available; if a library is large and takes up n plates, the availability data include combinations
+	#of up to n plates
 
 	def __init__(self, *args):
 		#for LbrarySubset objects saved in the database (which have library attribute available)

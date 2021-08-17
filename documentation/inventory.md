@@ -29,11 +29,11 @@ Instead of the `views.py` file, the app has a `views` directory, which contains 
 
 ## Templates
 
-The function of most templates does not require explanation. The few less obvious ones are:
+Most of the templates does not require explanation - they provide the `main` block for `layout.html` for partivulat views. The few less obvious ones are:
 
 **`chck-rd-fill.html`, `chck-sqr-fill.html`, `chevron-down.html`, `chevron-up.html`, `x-sqr.html`** - svg icons from Bootstrap Icons (https://icons.getbootstrap.com/) included in various other templates.
 
-**`availability-details.html`** - code rendering one row of availability table (with a nested table inside it), showing the results of availability search for one subset of compounds
+**`availability-details.html`** - code rendering one row of availability table (with a nested table inside it), showing the results of availability search for one subset of compounds: the library plate data, and the list of missing molecules (as clickable images). For each listed library plate, it provides a link to the `get_subset_map()` view, which creates a donwloadable CSV file listing the locations of all the compounds from that subset in the table (or a plate map but including only the compounds from the subset)
 
 **`availability-table.html`** - a table displaying availability details for a set of subsets; used for projects and presets, renders an `availability-details.html`element for each subset
 
@@ -107,6 +107,20 @@ Managing projects starts from the `projects()` view at `/inventory/projects/`, w
 * list of all subsets chosen for the project (both user's own cherry-picking lists and presets) with availability information
 * list of all the visits registered for XChemSPA, and a form to create a new one ( `add_visit()` at `inventory/add-visit`); registering a new visit in XChemSPA creates new `IspybAuthorization` object linked to the project
 * TODO: link to managing the experiment
+
+###Compounds
+
+- `compound_lookup()` at `inventory/compound-lookup/<int:pk>/` displays all the details of a compound, together with a struture image and information on where it is physically located. The location information includes only public library plates
+
+##Simple searches
+
+- `find_single_compound()` at `inventory/find-single-compound/` - provides search form and search results for finding compounds by SMILES string or the code. Both kinds of string are entered into the same field; SMILES string are converted to the standardised form used everywhere else before the executing the query
+- `find-library-plate()` provides search form and search results for looking up a library plate by barcode
+- `compare_plates()` at `inventory/compare-plates/` provides a form in which two of public library plates can be selected. When the form is submitted, provides various information allowing to compare plates, such as the overlap between the compounds, different names for the same compounds in each plates (if there are any) etc.
+
+## Navigation pages
+
+`index()` view at `inventory/` serves the inventory home page, and `browse_data()` at `inventory/browse-data/` provides links to user management and search pages.
 
 ## `Advanced features:
 	
@@ -217,7 +231,7 @@ In the end, the the `last_tested` attribute of the plate is changed to the curre
 
 ## Locating compound lists - availability check feature
 
-If an experiment does not require using the whole library but only a selection of compounds, it is preferable to use one of the older, more used-up plates in order to save the current used one. The availability check feature helps deciding if this is a viable option, and if yes, which of the older plates would be the best to use for this particular set of compounds. To simplify, it gets a list of compounds selected from the library and checks every library plate to see how many of them are not available in it (details are discussed later on). Then, it shows the user the list of library plates, with the information on which of the desired compounds are not available in this particular plate.
+If an experiment does not require using the whole library but only a selection of compounds, it is preferable to use one of the older, more used-up plates in order to save the current one. The availability check feature helps deciding if this is a viable option, and if yes, which of the older plates would be the best to use for this particular set of compounds. To simplify, it gets a list of compounds selected from the library and checks every library plate to see how many of them are not available in it (details are discussed later on). Then, it shows the user the list of library plates, with the information on which of the desired compounds are not available in this particular plate.
 
 The are four uses of this feature in XChemSPA:
 - On the 'Presets' page, the table with the presets list provides links to an availability check for each preset
@@ -229,9 +243,9 @@ I will describe how the check works, and then list all the views and pages respo
 
 ### Ranking algorithm and 'recommended plate'
 
-The list of plates with availability information is provided to the user from the ordered from the "best" to the "worst" plate. Before I explain how the search is performed, I will explain how the plates are ranked.
+The list of plates with availability information is provided to the user ordered from the "best" to the "worst" plate. Before I explain how the search is performed, I will explain how the plates are ranked.
 
-In case of libraries that fit into one plate, it is quite simple: the best plate is the one that misses the fewest compounds from the list. The availability is checked in all plates, and the best 10 is presented to the user (if there are fewer than 10 plates, they will all be presented). The best plate is displayed to the user as "recommended plate". There is only one complication: if there is more than one plate that has the highest availability of the compounds, the algorithm makes sure to recommend the plate that is not the current one. For example, if the list of plates has the current plate at the first place with 86% availability, and at the second place is an old plate, also with 86% availability, these plate will be swapped.
+In case of libraries that fit into one plate, it is quite simple: the best plate is the one that misses the fewest compounds from the list. The availability is checked in all plates, and the best 10 are presented to the user (if there are fewer than 10 plates, they will all be presented). The best plate is displayed to the user as "recommended plate". There is only one complication: if there is more than one plate that has the highest availability of the compounds, the algorithm makes sure to recommend the plate that is not the current one. For example, if the list of plates has the current plate at the first place with 86% availability, and at the second place is an old plate, also with 86% availability, these plate will be swapped and the old one will be recommended.
 
 For libraries that take up more than 1 plate (DSI Poised with ethylene glycol is a real-life example, taking up 3 plates), it is more complicated. The ranking starts the same way: first availability is checked for in every plate. Then, availability in each combination of two plates is checked, and then three etc. - if the library takes up *n* plates, combinations of up to *n* plates are checked. However, there is an exception: whenever a plate, or plate combination is found to have 100% of the desired compounds, the search doesn't move to combinations of a higher number of plates. So, for example, if a user wishes to use 80 compounds from DSI-P in ethylene glycol, and the algorithm finds 50 of them in one plate, and the other 30 in another one, it will never get to the stage where it inspects three-plate combinations.
 
@@ -243,14 +257,14 @@ The problem is probably an example of set cover problem (https://en.wikipedia.or
 
 ### Generating availability information
 
-The main entity responsible for generating the availability information is the class `SubsetCopyWithAvailability` (found in `tools/data_storage_classes`). The views that provide availability information pass a set of relevant subsets to the `get_subsets_with_availability()` function (defined in `inv_helpers.py`), which creates returns instances of `SubsetCopyWithAvailability`. The methods defined in this class are responsible for creating the availability information.
+The main entity responsible for generating the availability information is the class `SubsetCopyWithAvailability` (found in `tools/data_storage_classes`). The views that provide availability information pass a set of relevant subsets to the `get_subsets_with_availability()` function (defined in `inv_helpers.py`), which creates and returns instances of `SubsetCopyWithAvailability`. The methods defined in this class are responsible for creating the availability information.
 
 `SubsetCopyWithAvailability` has attributes based on the LibrarySubset model attributes (and its foreign keys), plus the `availability` attribute. The constructor of `SubsetCopyWithAvailability` can take either take either an instance of LibrarySubset model, or a list of compounds **and** a Library model instance. In the former case, it copies the attributes from the LibrarySubset instance, and in the latter, it sets the list of compounds as its own `compounds`, copies Library attributes into its own library-related attrubutes. Then, in both cases, the `availability` attribute is set using the `get_compound_availability()` method.
 
-`get_compound_availability()` first checks how many plates the library spans based on the number of current plates(for most libraries, it's just one), and directs the rest of the process accordingly. For both single- and multi-plate library, the process starts with launching `rank_single_plates()`. This method creates instances of `PlateCopy`, which is a similar kind of class to `SubsetCopyWithAvailability` - it stores values copied from `LibraryPlate` with added extra information in the `missing_compounds` and `availability` attributes. The difference is that `PlateCopy` does not have any method that computes these values- they are is generated by `SubsetCopyWithAvailability.get_plate_copy()` and either passed to the constructor of `PlateCopy` or set as a new attribute. After `rank_single_plates()` creates `PlateCopy` objects for every plate in the relevant LibrarySubset's library, it sorts them by availability(with the mentioned preference for non-current plates), and such a list is returned to `get_compound_availability()`.
+`get_compound_availability()` first checks how many plates the library spans based on the number of current plates(for most libraries, it's just one), and directs the rest of the process accordingly. For both single- and multi-plate library, the process starts with launching `rank_single_plates()`. This method creates instances of `PlateCopy`, which is a similar kind of class to `SubsetCopyWithAvailability` - it stores values copied from `LibraryPlate` with added extra information in the `missing_compounds` and `availability` attributes. The difference is that `PlateCopy` does not have any method that computes these values- they are is generated by `SubsetCopyWithAvailability.get_plate_copy()` and either passed to the constructor of `PlateCopy` or set as a new attribute. After `rank_single_plates()` creates `PlateCopy` objects for every plate in the library related to the  LibrarySubset, it sorts them by availability(with the mentioned preference for non-current plates), and such a list is returned to `get_compound_availability()`.
 
-If the library involved is stored in only one plate, the first 10 items of the ranked list become the `availability` attribute of the created instance of `SubsetCopyWithAvailability`. If it covers more plates, and none of the ranked single plates contains all of the desired compounds, `get_compound_availability()` launches `rank_combinations()`. This method first creates all possible combinations of 2 plates from the library, and then uses them to create instances of `CombinedPlate` - a class that stores combined data from a list of `PlateCopy` objects (e.g. its `compounds` attribute stores a set of all the `SourceWell` objects from all the plates passed to the  `CombinedPlate`'s constructor). Then, the CombinedPlate is passed to `get_plate_copy()` and processed in the same way as LibraryPlate model instance would be processed, making `PlateCopy` instances that are in fact copies of not one, but two plates. If no combination with 100% compound availability is found, the process is repeated for 3 plates, etc. until it reaches the limit (the number of plates needed to keep the whole library in). 
-The function return the top 10 `PlateCopy` objects with the best availability of the desired compounds (Note: these objects can be either based on one LibraryPlate objects, or on a CombinedPlate object), and they become the `availability` of the `SubsetCopyWithAvailability`.
+If the library involved is stored in only one plate, the first 10 items of the ranked list become the `availability` attribute of the new instance of `SubsetCopyWithAvailability`. If it covers more plates, and none of the ranked single plates contains all of the desired compounds, `get_compound_availability()` launches `rank_combinations()`. This method first creates all possible combinations of 2 plates from the library, and then uses them to create instances of `CombinedPlate` - a class that stores combined data from a list of `PlateCopy` objects (e.g. its `compounds` attribute stores a set of all the `SourceWell` objects from all the plates passed to the  `CombinedPlate`'s constructor). Then, the CombinedPlate is passed to `get_plate_copy()` and processed in the same way as LibraryPlate model instance would be processed, making `PlateCopy` instances that are in fact copies of not one, but two plates. If no combination with 100% compound availability is found, the process is repeated for 3 plates, etc. until it reaches the limit (the number of plates needed to keep the whole library in). 
+The function returns the top 10 `PlateCopy` objects with the best availability of the desired compounds (Note: these objects can be either based on one LibraryPlate objects, or on a CombinedPlate object), and they become the `availability` of the new `SubsetCopyWithAvailability`.
 
 To describe the process itself, without the reference to models, classes and methods:
 
@@ -264,24 +278,30 @@ To describe the process itself, without the reference to models, classes and met
 	iii. the list of missing compounds is added to the copy of the plate data
 	
 4. If the library takes up more than one plate, and no single plate has all the desired compounds:
-	5. combinations of plates are created
-	6. fictional plates are created, whose data combine data from a combination of plates
-	7. For every such combination, the process in step 3 is repreated
+	i. combinations of plates are created
+	ii. fictional plates are created, whose data combine data from each combination of plates
+	iii. For every such combination, the process in step 3 is repreated
 (step 4 can involve making combinations of more and more plates)
 
-8. Copies of plates (or plate combination) are ranked by the best availability (i.e. which copy has the fewest compounds missing)
+5. Copies of plates (or plate combination) are ranked by the best availability (i.e. which copy has the fewest compounds missing)
 
-9. The list of ten best plate/combination copies is added to the copy of the list of compounds
+6. The list of ten best plate/combination copies is added to the copy of the list of compounds
 
-The views involved then `SubsetCopyWithAvailability` object to pass and display the subset data with the availability information.
+### Specific views providing compound availability information:
+
+*** views where SubsetCopyWithAvailability objects are created from LibrarySubset objects***
+
+The constructor ( `__init__`) of `SubsetCopyWithAvailability` can take two kinds of arguments. The first kind is just an instance of the `LibrarySubset` model - the values are simply copied from the LibrarySubset, (or generated based on it)
 
 
+- `proposal()` at `inventory/proposal` - creates a `SubsetCopyWithAvailability` object for every LibrarySubset selected for the project, and passes it to the template; the template displays this information in `availability-table.html` subtemplate
 
+- `preset_availability()` at `inventory/preset-availability/<int:pk>/` creates `SubsetCopyWithAvailability` objects for each subset in the preset and displays them in the `availability-details.html` subtemplate. The "presets" page provides links to this view for each preset in the main table.
 
+- `subset_availability()` at `inventory/compound-availability/<int:pk>/` creates `SubsetCopyWithAvailability` for one subset; this page is linked from the SoakDB Export form in the React app. ***TODO: the same links should be provided in the experiment management app, on the page managing importing compounds from the inventory***
 
+*** the view where there is no LibrarySubset to copy from***
 
-#### Outline of the algorithm for ranking plates by compound availability
+The alternative way to create a new `SubsetCopyWithAvailability` is passing a list of `Compounds` model instances, and a `Library` instance to the constructor. This is done in one special case, where the desired selection of compounds is not supposed to be saved in the database as a `LibrarySubset`. The passed list of compounds becomes the value `SubsetCopyWithAvailability.compound`, and the library-related attributes are copied from the library.
 
-## Managing visits and compounds
-
-## Extra data browsing: searching for compounds and plates, comparing plates
+- `locate_compounds()` view at `inventory/locate-compounds/` provides tools to check availability of any list of compounds. It provides a form in which the user selects the library to search and uploads a file listing the SMILES strings of the desired compounds. After validating the form, the application creates a set of copies of compounds matching both the selected library, and the SMILES string from the file. Then the compounds and the library are used to create a `SubsetCopyWithAvailability` (so, in a way, a copy of a non-existent subset is created). During the creation, all the usual availability information is created. `SubsetCopyWithAvailability` is passed to the template, where it is presented in `availability-table.html` subtemplate.

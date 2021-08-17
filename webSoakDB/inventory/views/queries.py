@@ -60,7 +60,7 @@ def find_single_compound(request):
 		form = forms.FindCompoundForm(data=request.POST)
 		if form.is_valid():
 			string = form.cleaned_data['string']
-			if parse_smiles(string): 	#if SMILES string is valid, returns none
+			if parse_smiles(string): 	#with a valid SMILES string, it returns None
 				compounds = Compounds.objects.filter(code=string)
 			else:
 				smiles = standardize_smiles(string)
