@@ -40,7 +40,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
-    "ispyb_dja.django_auth",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'API',
     'inventory',
+    "ispyb_dja.django_auth",
     "django_cas_ng",
     "guardian"
 ]
@@ -174,7 +174,7 @@ AUTHENTICATION_BACKENDS = (
     "django_cas_ng.backends.CASBackend",
     "guardian.backends.ObjectPermissionBackend",
 )
-LOGIN_URL = "/accounts/login/"
-LOGOUT_URL = "/accounts/logout/"
+LOGIN_URL = "accounts/login/"
+LOGOUT_URL = "accounts/logout/"
 
 #ISPyB environment variables

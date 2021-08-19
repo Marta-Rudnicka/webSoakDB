@@ -4,6 +4,7 @@ from .models import Library, LibraryPlate, Project, Preset, LibrarySubset
 from rest_framework import generics, viewsets #, status
 from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
+from ispyb_dja.ispyb_auth.ispyb_djangoauth import ISpyBSafeQuerySet
 from .serializers import (
 	LibrarySerializer, 
 	SourceWellStatSerializer,
@@ -30,11 +31,13 @@ def choose_plate_view(request, pk, project_id):
 	else:
 		return redirect('/api/project_compounds/' + str(project_id) +  '/') #go to ProjectCompoundsViewSet
 
-class ProjectCompoundsViewSet(viewsets.ReadOnlyModelViewSet):
+class ProjectCompoundsViewSet(ISpyBSafeQuerySet):
 	#returns the project with all the libraries and their details
 	#linked by foreign keys - used for getting details of a non-public library plate
 	queryset = Project.objects.all()
 	serializer_class = ProjectCompoundsSerializer
+	filter_permissions = "auth_id"
+	filter_fields = ("auth")
 
 class PublicLibraryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Library.objects.filter(public=True)
@@ -58,9 +61,11 @@ class PlateWithCompoundsViewSet(viewsets.ReadOnlyModelViewSet):
 			return None
 	serializer_class = SourceWellStatSerializer
 
-class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
+class ProjectViewSet(ISpyBSafeQuerySet):
 	queryset = Project.objects.all()
 	serializer_class = ProjectListSerializer
+	filter_permissions = "auth_id"
+	filter_fields = ("auth")
 
 class PresetDetail(generics.RetrieveAPIView):
 	queryset = Preset.objects.all()
