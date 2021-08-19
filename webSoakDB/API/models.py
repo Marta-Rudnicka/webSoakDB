@@ -4,19 +4,6 @@ from django.db.models.deletion import CASCADE
 from django.contrib.auth.models import User
 from ispyb_dja.django_auth.models import IspybAuthorization
 
-'''
-class IspybAuthorization(models.Model):
-    #dummy model for testing
-    project = models.CharField(max_length=200, unique=True, blank=True, null=True)
-    proposal_visit = models.CharField(max_length=200, unique=True,  blank=True, null=True)
-    users = models.ManyToManyField(User, blank=True)
-
-    class Meta:
-        unique_together = ('project', 'proposal_visit')
-'''
-
-#INVENTORY DATA
-
 class Protein(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     space_group = models.CharField(max_length=100, null=True, blank=True)

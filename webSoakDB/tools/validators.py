@@ -22,8 +22,10 @@ import re
 import csv
 import django.core.exceptions
 from API.models import Compounds, Library, LibraryPlate, Project
-from tools.uploads_downloads import standardize_smiles
+#from tools.uploads_downloads import standardize_smiles
 
+def standardize_smiles():
+	return ""
 
 #Library plate data uploads
 def data_is_valid(file_name, error_log):

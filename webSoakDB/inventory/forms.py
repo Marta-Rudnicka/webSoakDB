@@ -1,11 +1,11 @@
 from django import forms
-from API.models import Library, LibraryPlate, Preset, PlateOpening, Project
+#from API.models import Library, LibraryPlate, Preset, PlateOpening, Project
 from .views.inv_helpers import make_plate_name
 
 libs = []
-plates = [(plate.id, make_plate_name(plate) ) for plate in LibraryPlate.objects.filter(library__public=True)]
-plates = [("", "Select plate...")] + sorted(plates, key=lambda x: x[1])
-
+#plates = [(plate.id, make_plate_name(plate) ) for plate in LibraryPlate.objects.filter(library__public=True)]
+#plates = [("", "Select plate...")] + sorted(plates, key=lambda x: x[1])
+plates = []
 '''Note on overriding __init__ : __init__ functions are overriden here to be able to dynamically generate choices
 for the ChoiceFields. The reason why there are the other fields in the __init__ functions is ordering: 
 when some of the fields are declared inside __init__, and some outside of it, field_order doesn't work properly '''

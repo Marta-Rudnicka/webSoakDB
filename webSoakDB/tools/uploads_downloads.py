@@ -1,6 +1,7 @@
 '''helper functions for uploading and downloading files'''
 import django.core.exceptions
-from API.models import Compounds, SourceWell, Library, LibrarySubset, LibraryPlate, Project
+
+from API.models import Compounds, SourceWell, LibrarySubset, LibraryPlate, Project, Library
 from .data_storage_classes import BasicTemporaryCompound
 import csv
 import re
@@ -86,7 +87,7 @@ def add_molecular_properties(compound):
 	compound.save()
 
 def upload_subset(file_name, library_id, name, origin):
-	'''assumes list have been validated before'''
+	#assumes list have been validated before
 	library = Library.objects.get(id=library_id)
 	new_subset = LibrarySubset.objects.create(library=library, name=name, origin=origin)
 	
@@ -118,7 +119,7 @@ def upload_subset(file_name, library_id, name, origin):
 
 #EXPORTING SOAK-DB COMPATIBLE COMPOUND LISTS (AS CSV)
 def import_full_libraries(proposal):
-	'''imports source well data for selected libraries'''
+	#imports source well data for selected libraries
 	proposal = Project.objects.get(id=proposal)
 	full_plates = []
 	
@@ -132,7 +133,7 @@ def import_full_libraries(proposal):
 	return s_wells
 
 def find_source_wells(subset, plate_ids):
-	'''imports source well data for subsets (cherry-picking lists and presets)'''
+	#imports source well data for subsets (cherry-picking lists and presets)
 	print('fired find_source_wells ', subset, plate_ids)
 	plates = []
 	for id in plate_ids:

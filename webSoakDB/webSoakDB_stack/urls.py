@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
+import django_cas_ng.views
 
 urlpatterns = [
     path('', include('webSoakDB_frontend.urls')),
@@ -25,4 +27,13 @@ urlpatterns = [
     path('inventory/', include('inventory.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('webSoakDB_backend.urls')),
+    url(r"^accounts/login/", django_cas_ng.views.LoginView.as_view(), name="cas_ng_login"),
+    url(r"^accounts/logout/", django_cas_ng.views.LogoutView.as_view(), name="cas_ng_logout"),
+    url(
+        r"^accounts/callback$",
+        django_cas_ng.views.CallbackView.as_view(),
+        name="cas_ng_proxy_callback",
+    ),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
