@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 from django.db import models
-from django.db.models.deletion import CASCADE
-from django.contrib.auth.models import User
 from ispyb_dja.django_auth.models import IspybAuthorization
 
 class Protein(models.Model):
