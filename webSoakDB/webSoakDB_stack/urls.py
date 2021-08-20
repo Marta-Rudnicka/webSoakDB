@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('API.urls')),
     path('inventory/', include('inventory.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
+    #path('accounts/', include('django.contrib.auth.urls')),
     path('', include('webSoakDB_backend.urls')),
     url(r"^accounts/login/", django_cas_ng.views.LoginView.as_view(), name="cas_ng_login"),
     url(r"^accounts/logout/", django_cas_ng.views.LogoutView.as_view(), name="cas_ng_logout"),

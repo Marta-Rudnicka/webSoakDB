@@ -11,7 +11,7 @@ from django.urls import include, path
 #urlpatterns = router.urls
 
 urlpatterns = [
-    path('', views.redirect_to_login),
+#    path('', views.redirect_to_login),
 #    path('', include(router.urls)),
     path('dashboard/', views.dashboard),
     path('uploads/library_upload_form/', views.upload_user_library, name="library_upload_form"),

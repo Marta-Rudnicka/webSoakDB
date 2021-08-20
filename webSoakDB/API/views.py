@@ -64,7 +64,7 @@ class PlateWithCompoundsViewSet(viewsets.ReadOnlyModelViewSet):
 class ProjectViewSet(ISpyBSafeQuerySet):
 	queryset = Project.objects.all()
 	serializer_class = ProjectListSerializer
-	filter_permissions = "auth_id"
+	filter_permissions = "auth__users"
 	filter_fields = ("auth")
 
 class PresetDetail(generics.RetrieveAPIView):

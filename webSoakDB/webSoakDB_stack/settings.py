@@ -30,6 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
 	'xchemspa-staging.diamond.ac.uk',
 	'127.0.0.1',
+    'localhost'
 ]
 
 #ALLOWED_HOSTS=['*']
