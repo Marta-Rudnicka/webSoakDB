@@ -20,8 +20,6 @@ from .serializers import (
 
 #TODO: change persmissions everywhere; temporarily [AllowAny] for early stages of testing
 
-#general-purpose generic endpoints
-
 def choose_plate_view(request, pk, project_id):
 	#decide whether to use a view that requires authorization
 
@@ -46,6 +44,7 @@ class PublicLibraryViewSet(viewsets.ReadOnlyModelViewSet):
 class LibraryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
+    filter_fields = ("public")
 
 class PublicLibraryPlateViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = LibraryPlate.objects.filter(library__public=True)
@@ -61,11 +60,12 @@ class PlateWithCompoundsViewSet(viewsets.ReadOnlyModelViewSet):
 			return None
 	serializer_class = SourceWellStatSerializer
 
+#THE VIEW TO BE FIXED FIRST <<------------------------------------------------------------------------------------------
 class ProjectViewSet(ISpyBSafeQuerySet):
-	queryset = Project.objects.all()
+	queryset = Project.objects.filter()
 	serializer_class = ProjectListSerializer
-	filter_permissions = "auth__users"
-	filter_fields = ("auth")
+	filter_permissions = "auth"
+	filter_fields = ("auth__users",)
 
 class PresetDetail(generics.RetrieveAPIView):
 	queryset = Preset.objects.all()

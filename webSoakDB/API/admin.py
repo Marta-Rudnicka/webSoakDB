@@ -21,6 +21,7 @@ class CompoundsAdmin(admin.ModelAdmin):
 	 list_per_page = 800
 
 class ProjectAdmin(admin.ModelAdmin):
+    #filter_horizontal = ['auth']
     list_display = ("protein", "industry_user")
 
 class CrystalPlateAdmin(admin.ModelAdmin):

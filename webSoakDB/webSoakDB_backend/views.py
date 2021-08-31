@@ -208,8 +208,12 @@ def dummy(request):
 def formatting(request):
 	return render(request, "webSoakDB_backend/formatting-help.html")
 
+
 def redirect_to_login(request):
-	return HttpResponseRedirect('accounts/login/')
+	if not request.user.is_authenticated:
+		return HttpResponseRedirect('accounts/login/')
+	else:
+		return HttpResponseRedirect('dashboard/')
 
 def dashboard(request):
 	if request.user.is_staff:

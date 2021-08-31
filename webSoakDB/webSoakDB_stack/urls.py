@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 import django_cas_ng.views
 
 urlpatterns = [
-    path('', include('webSoakDB_frontend.urls')),
+    
     path('admin/', admin.site.urls),
     path('api/', include('API.urls')),
     path('inventory/', include('inventory.urls')),
@@ -34,6 +34,7 @@ urlpatterns = [
         django_cas_ng.views.CallbackView.as_view(),
         name="cas_ng_proxy_callback",
     ),
+    path('', include('webSoakDB_frontend.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
