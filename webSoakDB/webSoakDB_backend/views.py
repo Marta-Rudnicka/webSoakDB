@@ -156,19 +156,13 @@ def serve_2d(request, pk):
 	compound = Compounds.objects.get(pk=pk)
 
 	mol = Chem.MolFromSmiles(compound.smiles)
-	#img = Draw.MolToImage(mol)
-	#response = HttpResponse(content_type="image/png")
-
-	#img.save(response, "PNG")
-	##############
-	
 	d2d = Draw.MolDraw2DSVG(300, 300)
 	d2d.DrawMolecule(mol)
 	d2d.FinishDrawing()
 	svg_string = d2d.GetDrawingText()
-	response2 = HttpResponse(svg_string, content_type="image/svg+xml")
+	response = HttpResponse(svg_string, content_type="image/svg+xml")
 	
-	return response2
+	return response
 
 
 def serve_histogram(request, obj_type, pk, attr):
