@@ -179,7 +179,7 @@ def import_library_parts(proposal, data):
 				option_name = str(s.library.id) + '-' + str(i)
 				plate_id = data.get(option_name, False)
 				sw = sw + find_source_wells(s, [plate_id])
-	print(sw)
+	sw = sorted(list(set(sw)), key=lambda x: x.library_plate.barcode) #remove potential duplicates
 	return sw
 
 def source_wells_to_csv(source_wells, file_path, filename_prefix):
